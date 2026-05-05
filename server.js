@@ -60,7 +60,16 @@ app.use((err, req, res, next) => {
 
 app.use(cookieParser());
 
-// ─── Health Check ─────────────────────────────────────────────
+// ─── Status Routes ────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({
+    status: 'SchoolOS API is live ✅',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date()
+  });
+});
+
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
 // ─── Public Routes ────────────────────────────────────────────
