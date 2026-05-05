@@ -42,7 +42,8 @@ const corsOptions = {
     'http://localhost:3000',
     'https://schoolos.vercel.app',
     /\.vercel\.app$/,
-    /\.schoolos\.io$/
+    /\.schoolos\.io$/,
+    /\.railway\.app$/
   ],
   credentials: true
 };
