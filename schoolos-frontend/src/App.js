@@ -24,7 +24,7 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 function AuthenticatedApp() {
   const { authSession } = useAuth();
   const [activeModule, setActiveModule] = useState('dashboard');
-  const role = (authSession?.user?.role || authSession?.role || 'admin').toLowerCase();
+  const role = (authSession?.user?.role || authSession?.role || authSession?.kind || 'admin').toLowerCase();
 
   // Unified Modules Mapping
   const modules = {
