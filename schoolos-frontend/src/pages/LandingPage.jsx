@@ -26,6 +26,7 @@ import Pricing from '../components/Pricing';
 
 const LandingPage = ({ onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -54,8 +55,14 @@ const LandingPage = ({ onNavigate }) => {
           background-image: url('${campusBg}');
           background-size: cover;
           background-position: center;
-          border-radius: 0 0 100px 100px;
+          border-radius: 0 0 40px 40px;
           overflow: visible;
+        }
+
+        @media (min-width: 1024px) {
+          .hero-section {
+            border-radius: 0 0 100px 100px;
+          }
         }
 
         .hero-section::after {
@@ -69,7 +76,13 @@ const LandingPage = ({ onNavigate }) => {
             rgba(15, 23, 42, 0.2) 100%
           );
           z-index: 1;
-          border-radius: 0 0 100px 100px;
+          border-radius: 0 0 40px 40px;
+        }
+
+        @media (min-width: 1024px) {
+          .hero-section::after {
+            border-radius: 0 0 100px 100px;
+          }
         }
 
         .hero-content {
@@ -78,36 +91,62 @@ const LandingPage = ({ onNavigate }) => {
         }
 
         .navbar {
-          padding: 32px 80px;
+          padding: 20px 16px;
           transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
           background: transparent;
         }
 
+        @media (min-width: 1024px) {
+          .navbar {
+            padding: 32px 80px;
+          }
+        }
+
         .navbar.scrolled {
-          padding: 16px 80px;
+          padding: 12px 16px;
           background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(20px) saturate(180%);
           border-bottom: 1px solid rgba(15, 23, 42, 0.05);
           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
         }
 
+        @media (min-width: 1024px) {
+          .navbar.scrolled {
+            padding: 16px 80px;
+          }
+        }
+
         .premium-heading {
           font-family: 'Playfair Display', serif;
           letter-spacing: -0.04em;
-          line-height: 0.9;
+          line-height: 1.1;
+        }
+
+        @media (min-width: 1024px) {
+          .premium-heading {
+            line-height: 0.9;
+          }
         }
 
         .black-pill {
           background: #2D7DFA;
           color: #FFFFFF;
           border-radius: 99px;
-          padding: 20px 48px;
+          padding: 16px 32px;
           font-weight: 700;
           display: inline-flex;
           align-items: center;
           gap: 12px;
           transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           box-shadow: 0 20px 40px -10px rgba(45, 125, 250, 0.4);
+          font-size: 14px;
+        }
+
+        @media (min-width: 1024px) {
+          .black-pill {
+            padding: 20px 48px;
+            font-size: 16px;
+          }
         }
 
         .black-pill:hover {
@@ -121,13 +160,21 @@ const LandingPage = ({ onNavigate }) => {
           backdrop-filter: blur(20px) !important;
           border: 1px solid rgba(255, 255, 255, 0.2) !important;
           border-radius: 99px;
-          padding: 20px 48px;
+          padding: 16px 32px;
           font-weight: 700;
           color: white !important;
           display: inline-flex;
           align-items: center;
           gap: 12px;
           transition: all 0.4s ease;
+          font-size: 14px;
+        }
+
+        @media (min-width: 1024px) {
+          .glass-pill {
+            padding: 20px 48px;
+            font-size: 16px;
+          }
         }
 
         .glass-pill:hover {
@@ -140,19 +187,34 @@ const LandingPage = ({ onNavigate }) => {
           width: 100%;
           aspect-ratio: 380 / 780;
           background: #000;
-          border-radius: 64px;
-          padding: 12px;
+          border-radius: 40px;
+          padding: 8px;
           position: relative;
           box-shadow: 0 80px 160px -30px rgba(0,0,0,0.6);
-          border: 12px solid #1f1f1f;
+          border: 8px solid #1f1f1f;
+        }
+
+        @media (min-width: 1024px) {
+          .phone-frame {
+            border-radius: 64px;
+            padding: 12px;
+            border: 12px solid #1f1f1f;
+          }
         }
 
         .feature-card {
           background: #FFFFFF;
-          border-radius: 40px;
-          padding: 48px;
+          border-radius: 32px;
+          padding: 32px;
           border: 1px solid rgba(15, 23, 42, 0.05);
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (min-width: 1024px) {
+          .feature-card {
+            border-radius: 40px;
+            padding: 48px;
+          }
         }
 
         .feature-card:hover {
@@ -199,16 +261,16 @@ const LandingPage = ({ onNavigate }) => {
             </div>
           </div>
           
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4 sm:gap-8">
             <button 
               onClick={() => onNavigate('login')} 
-              className={`text-sm font-bold transition-colors ${scrolled ? 'text-[#0F172A]' : 'text-white/80 hover:text-white'}`}
+              className={`text-sm font-bold transition-colors hidden sm:block ${scrolled ? 'text-[#0F172A]' : 'text-white/80 hover:text-white'}`}
             >
               Log In
             </button>
             <button 
               onClick={() => onNavigate('signup')} 
-              className={`rounded-full px-8 py-3.5 text-sm font-black flex items-center gap-2 transition-all group ${
+              className={`rounded-full px-6 sm:px-8 py-2.5 sm:py-3.5 text-xs sm:text-sm font-black flex items-center gap-2 transition-all group ${
                 scrolled 
                   ? 'bg-[#0F172A] text-white hover:bg-blue-600' 
                   : 'bg-white text-[#0F172A] hover:bg-blue-50'
@@ -216,12 +278,72 @@ const LandingPage = ({ onNavigate }) => {
             >
               Get Started <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
+            
+            <button 
+              onClick={() => setMobileMenuOpen(true)}
+              className={`p-2 lg:hidden transition-colors ${scrolled ? 'text-[#0F172A]' : 'text-white'}`}
+            >
+              <Menu size={24} />
+            </button>
           </div>
         </div>
       </nav>
 
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[200] bg-white p-8 flex flex-col"
+          >
+            <div className="flex items-center justify-between mb-16">
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-600 w-10 h-10 flex items-center justify-center rounded-xl shadow-lg">
+                  <Sparkles className="text-white" size={20} />
+                </div>
+                <span className="text-2xl font-black tracking-tight text-[#0F172A]">SchoolOS.</span>
+              </div>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-[#0F172A]">
+                <Menu size={32} className="rotate-45" /> {/* Close button represented as rotated Menu icon */}
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-8 mb-auto">
+              {['Platform', 'Modules', 'Pricing', 'Resources'].map(link => (
+                <a 
+                  key={link} 
+                  href="#" 
+                  className="text-4xl font-black tracking-tight text-[#0F172A] hover:text-blue-600 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link}
+                </a>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => { onNavigate('login'); setMobileMenuOpen(false); }}
+                className="w-full py-5 rounded-3xl bg-slate-100 text-[#0F172A] font-black text-lg"
+              >
+                Log In
+              </button>
+              <button 
+                onClick={() => { onNavigate('signup'); setMobileMenuOpen(false); }}
+                className="w-full py-5 rounded-3xl bg-[#0F172A] text-white font-black text-lg shadow-2xl"
+              >
+                Get Started
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
-      <header className="hero-section min-h-screen pt-48 px-10 pb-20 relative">
+      <header className="hero-section min-h-screen pt-32 sm:pt-48 px-6 sm:px-10 pb-20 relative">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center hero-content">
           
           {/* Left Content */}
@@ -359,8 +481,8 @@ const LandingPage = ({ onNavigate }) => {
       </header>
 
       {/* Trust Section */}
-      <section className="bg-slate-50 py-24 border-y border-slate-100 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-10">
+      <section className="bg-slate-50 py-16 sm:py-24 border-y border-slate-100 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10">
           <p className="text-center text-[12px] font-black uppercase tracking-[0.3em] text-slate-400 mb-16">The gold standard for modern education management</p>
           <div className="flex flex-wrap justify-center items-center gap-x-24 gap-y-16">
              {[
@@ -380,8 +502,8 @@ const LandingPage = ({ onNavigate }) => {
       </section>
 
       {/* Modules Grid */}
-      <section className="max-w-[1400px] mx-auto px-10 py-48">
-        <div className="text-center mb-32">
+      <section className="max-w-[1400px] mx-auto px-6 sm:px-10 py-24 sm:py-48">
+        <div className="text-center mb-16 sm:mb-32">
            <motion.div 
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
@@ -427,8 +549,8 @@ const LandingPage = ({ onNavigate }) => {
          {/* Transition Gradient */}
          <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-[#0F172A] to-transparent z-0" />
          
-         <section className="max-w-[1440px] mx-auto px-10 py-40 relative z-10">
-            <div className="bg-white/5 rounded-[80px] p-24 text-center text-white border border-white/5 relative overflow-hidden shadow-2xl">
+         <section className="max-w-[1440px] mx-auto px-6 sm:px-10 py-24 sm:py-40 relative z-10">
+            <div className="bg-white/5 rounded-[40px] sm:rounded-[80px] p-10 sm:p-24 text-center text-white border border-white/5 relative overflow-hidden shadow-2xl">
                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent pointer-events-none" />
                <div className="relative z-10">
                  <h2 className="premium-heading text-[clamp(40px,5vw,72px)] font-[900] mb-16 text-white leading-tight">
@@ -447,7 +569,7 @@ const LandingPage = ({ onNavigate }) => {
             </div>
          </section>
 
-         <footer className="bg-[#0F172A] py-32 px-10 border-t border-white/5">
+         <footer className="bg-[#0F172A] py-24 sm:py-32 px-6 sm:px-10 border-t border-white/5">
             <div className="max-w-[1400px] mx-auto">
                <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
                   <div className="max-w-sm">

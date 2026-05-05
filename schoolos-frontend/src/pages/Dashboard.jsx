@@ -73,7 +73,7 @@ const Dashboard = ({ onNavigate }) => {
         onMenuClick={() => setSidebarOpen(true)} 
       />
 
-      <main className="md:ml-[280px] pt-24 p-8 pb-20 relative">
+      <main className="md:ml-[280px] pt-24 p-4 sm:p-8 pb-20 relative">
         {/* Background Glows */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
@@ -82,7 +82,7 @@ const Dashboard = ({ onNavigate }) => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full rounded-[40px] overflow-hidden bg-slate-900/40 backdrop-blur-3xl border border-white/5 mb-10 p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-2xl"
+          className="relative w-full rounded-[32px] sm:rounded-[40px] overflow-hidden bg-slate-900/40 backdrop-blur-3xl border border-white/5 mb-10 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-2xl"
         >
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
           
@@ -95,7 +95,7 @@ const Dashboard = ({ onNavigate }) => {
                  Optimal Health
               </div>
             </div>
-            <h1 className="text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] uppercase italic">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] uppercase italic">
               Empowering <span className="text-blue-500">Excellence.</span>
             </h1>
             <p className="text-slate-400 font-bold text-lg leading-relaxed max-w-lg">
@@ -131,8 +131,8 @@ const Dashboard = ({ onNavigate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 relative z-10">
           
           {/* Performance Analytics */}
-          <div className="lg:col-span-2 space-y-10">
-            <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[40px] p-10 border border-white/5 shadow-xl relative overflow-hidden group">
+          <div className="lg:col-span-2 space-y-10 min-w-0">
+            <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 border border-white/5 shadow-xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/[0.02] rounded-bl-[120px] -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-1000" />
               
               <div className="flex items-center justify-between mb-12 relative z-10">
@@ -148,29 +148,24 @@ const Dashboard = ({ onNavigate }) => {
               </div>
 
               {/* Futuristic Bar Chart */}
-              <div className="flex items-end justify-between gap-5 h-64 px-2 relative z-10">
-                {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 65].map((h, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-4 group/bar">
-                    <div className="relative w-full h-full bg-white/[0.02] rounded-2xl overflow-hidden border border-white/5">
-                       <motion.div 
-                         initial={{ height: 0 }}
-                         animate={{ height: `${h}%` }}
-                         transition={{ duration: 1.5, delay: i * 0.05, ease: "easeOut" }}
-                         className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ${i === 5 ? 'bg-gradient-to-t from-blue-600 to-cyan-400 shadow-[0_0_20px_rgba(45,125,250,0.4)]' : 'bg-white/10 group-hover/bar:bg-blue-500/20'}`} 
-                       />
-                       {i === 5 && (
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-14 bg-slate-950 border border-white/10 p-4 rounded-2xl text-[10px] font-black whitespace-nowrap z-50 shadow-2xl backdrop-blur-xl">
-                             <div className="text-blue-500 mb-2 border-b border-white/5 pb-1 uppercase tracking-widest italic">Peak Growth</div>
-                             <div className="flex justify-between gap-6 mb-1 text-slate-400 uppercase tracking-widest">Attendance <span className="text-white">94%</span></div>
-                             <div className="flex justify-between gap-6 text-slate-400 uppercase tracking-widest">GPA Index <span className="text-white">3.8</span></div>
-                          </div>
-                       )}
+              <div className="overflow-x-auto no-scrollbar -mx-2">
+                <div className="flex items-end justify-between gap-3 sm:gap-5 h-64 px-2 relative z-10 min-w-[600px] sm:min-w-0">
+                  {[40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 50, 65].map((h, i) => (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-4 group/bar">
+                      <div className="relative w-full h-full bg-white/[0.02] rounded-2xl overflow-hidden border border-white/5">
+                         <motion.div 
+                           initial={{ height: 0 }}
+                           animate={{ height: `${h}%` }}
+                           transition={{ duration: 1.5, delay: i * 0.05, ease: "easeOut" }}
+                           className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ${i === 5 ? 'bg-gradient-to-t from-blue-600 to-cyan-400 shadow-[0_0_20px_rgba(45,125,250,0.4)]' : 'bg-white/10 group-hover/bar:bg-blue-500/20'}`} 
+                         />
+                      </div>
+                      <span className="text-[10px] font-black text-slate-600 uppercase tracking-tighter group-hover/bar:text-blue-500 transition-colors">
+                        {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-black text-slate-600 uppercase tracking-tighter group-hover/bar:text-blue-500 transition-colors">
-                      {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -197,8 +192,8 @@ const Dashboard = ({ onNavigate }) => {
           </div>
 
           {/* Infrastructure Sidebar */}
-          <div className="space-y-10">
-             <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[40px] p-10 border border-white/5 shadow-xl relative overflow-hidden group">
+          <div className="space-y-10 min-w-0">
+             <div className="bg-slate-900/40 backdrop-blur-3xl rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 border border-white/5 shadow-xl relative overflow-hidden group">
                 <div className="absolute bottom-0 right-0 w-32 h-32 bg-indigo-600/[0.03] rounded-tl-[120px] -mr-10 -mb-10 group-hover:scale-110 transition-transform" />
                 <div className="flex items-center justify-between mb-10 relative z-10">
                    <h3 className="text-lg font-black uppercase italic tracking-tight">Active Nodes</h3>
@@ -231,7 +226,7 @@ const Dashboard = ({ onNavigate }) => {
                 </button>
              </div>
 
-             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl group border border-white/10">
+             <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[32px] sm:rounded-[40px] p-8 sm:p-10 text-white relative overflow-hidden shadow-2xl group border border-white/10">
                 <TrendingUp className="absolute -right-10 -bottom-10 w-48 h-48 text-white/5 group-hover:scale-125 transition-transform duration-700" />
                 <div className="relative z-10">
                    <h3 className="text-2xl font-black italic uppercase tracking-tight mb-3">Scale Instance</h3>

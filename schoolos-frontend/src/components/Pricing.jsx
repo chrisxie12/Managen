@@ -74,7 +74,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section className="bg-[#0f172a] py-32 px-6 lg:px-10 overflow-hidden font-['DM_Sans',sans-serif]">
+    <section className="bg-[#0f172a] py-16 sm:py-32 px-4 sm:px-6 lg:px-10 overflow-hidden font-['DM_Sans',sans-serif]">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,700&display=swap');
         
@@ -129,7 +129,7 @@ const Pricing = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-6xl lg:text-7xl font-[900] text-white mb-8 tracking-tighter"
+            className="text-4xl sm:text-6xl lg:text-7xl font-[900] text-white mb-8 tracking-tighter"
           >
             Plans for every <span className="playfair italic text-[#f97316]">school.</span>
           </motion.h2>
@@ -180,7 +180,7 @@ const Pricing = () => {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`pricing-card relative rounded-[32px] p-10 flex flex-col ${plan.popular ? 'popular' : ''}`}
+                className={`pricing-card relative rounded-[32px] p-8 sm:p-10 flex flex-col ${plan.popular ? 'popular' : ''}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#f97316] text-white text-[11px] font-black uppercase px-6 py-2 rounded-full tracking-widest shadow-xl">

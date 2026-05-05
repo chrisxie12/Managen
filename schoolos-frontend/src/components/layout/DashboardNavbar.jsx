@@ -25,23 +25,23 @@ const DashboardNavbar = ({ activeItem = 'Dashboard', onMenuClick }) => {
   const dropdownItemClasses = "flex items-center gap-3 px-5 py-3 text-slate-400 text-sm font-bold no-underline cursor-pointer transition-all hover:bg-white/5 hover:text-blue-500 rounded-xl";
 
   return (
-    <nav className="fixed top-0 left-0 md:left-[280px] right-0 h-20 bg-[#030617]/60 backdrop-blur-3xl border-b border-white/5 z-40 px-8 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 md:left-[280px] right-0 h-20 bg-[#030617]/60 backdrop-blur-3xl border-b border-white/5 z-40 px-4 sm:px-8 flex items-center justify-between">
       {/* Left Side: Context & Breadcrumbs */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 sm:gap-6">
         <button 
           onClick={onMenuClick}
-          className="p-2 rounded-xl bg-white/5 text-white md:hidden hover:bg-white/10 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 text-white md:hidden hover:bg-white/10 transition-colors border border-white/5"
         >
-          <Menu size={22} />
+          <Menu size={20} />
         </button>
-        <div className="hidden sm:block">
+        <div className="hidden xs:block">
           <div className="flex items-center gap-2 text-[9px] font-black uppercase text-slate-500 tracking-[0.3em] mb-1">
             <Command size={10} className="text-blue-500" /> 
-            <span>Platform</span>
-            <span className="text-white/10">/</span>
+            <span className="hidden sm:inline">Platform</span>
+            <span className="text-white/10 hidden sm:inline">/</span>
             <span className="text-blue-500">{activeItem}</span>
           </div>
-          <h2 className="text-lg font-black text-white tracking-tight font-headings leading-none italic uppercase">
+          <h2 className="text-sm sm:text-lg font-black text-white tracking-tight font-headings leading-none italic uppercase">
             {activeItem.charAt(0).toUpperCase() + activeItem.slice(1)}
           </h2>
         </div>
