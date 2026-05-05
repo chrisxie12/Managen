@@ -39,8 +39,8 @@ const LandingPage = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <div className="w-9 h-9 bg-[#0F172A] rounded-xl flex items-center justify-center shadow-md overflow-hidden">
-                <img src={logo} alt="S" className="w-6 h-6 object-contain brightness-0 invert" />
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-100 overflow-hidden group-hover:scale-110 transition-transform">
+                <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
               </div>
               <span className="text-xl font-black tracking-tighter">SchoolOS.</span>
             </div>
@@ -64,7 +64,9 @@ const LandingPage = ({ onNavigate }) => {
           <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed inset-0 z-[200] bg-white p-8 flex flex-col">
             <div className="flex items-center justify-between mb-16">
                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 bg-[#0F172A] rounded-xl flex items-center justify-center"><img src={logo} alt="S" className="w-6 h-6 brightness-0 invert" /></div>
+                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md border border-slate-100 overflow-hidden">
+                     <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
+                  </div>
                   <span className="text-xl font-black tracking-tighter">SchoolOS.</span>
                </div>
                <button onClick={() => setMobileMenuOpen(false)}><X size={32} /></button>
@@ -203,7 +205,9 @@ const LandingPage = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-20">
            <div className="col-span-2">
               <div className="flex items-center gap-2.5 mb-8">
-                 <div className="w-9 h-9 bg-[#0F172A] rounded-xl flex items-center justify-center"><img src={logo} alt="S" className="w-6 h-6 brightness-0 invert" /></div>
+                 <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md border border-slate-100 overflow-hidden">
+                   <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
+                 </div>
                  <span className="text-xl font-black tracking-tighter">SchoolOS.</span>
               </div>
               <p className="text-slate-500 text-sm font-medium max-w-xs">Built for the future of institutional management. High-precision tools for academic excellence.</p>
