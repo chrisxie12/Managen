@@ -38,13 +38,27 @@ app.post(
 
 // ─── Global Middleware ────────────────────────────────────────
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://schoolos.vercel.app',
-    /\.vercel\.app$/,
-    /\.schoolos\.io$/,
-    /\.railway\.app$/
-  ],
+  origin: function(origin, callback) {
+    const allowed = [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://getschoolos.me',
+      'https://www.getschoolos.me',
+      ...corsOrigins
+    ];
+    const allowedPatterns = [
+      /\.vercel\.app$/,
+      /\.onrender\.com$/,
+      /\.railway\.app$/,
+      /\.schoolos\.io$/,
+      /\.getschoolos\.me$/
+    ];
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes('*')) return callback(null, true);
+    const isAllowed = allowed.includes(origin) || allowedPatterns.some(p => p.test(origin));
+    if (isAllowed) return callback(null, true);
+    callback(new Error(`CORS blocked: ${origin}`));
+  },
   credentials: true
 };
 app.use(cors(corsOptions));
