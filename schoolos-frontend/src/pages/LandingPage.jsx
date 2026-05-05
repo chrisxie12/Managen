@@ -18,7 +18,8 @@ import {
   Calendar,
   MessageSquare,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Menu
 } from 'lucide-react';
 import logo from '../assets/app-logo.png';
 import campusBg from '../assets/campus-bg.png';
