@@ -19,7 +19,8 @@ import {
   MessageSquare,
   ArrowRight,
   GraduationCap,
-  Menu
+  Menu,
+  Activity
 } from 'lucide-react';
 import logo from '../assets/app-logo.png';
 import campusBg from '../assets/campus-bg.png';
@@ -491,7 +492,7 @@ const LandingPage = ({ onNavigate }) => {
                { icon: GraduationCap, name: 'ACADEMIA' },
                { icon: Globe, name: 'GLOBAL-LEARN' },
                { icon: LayoutDashboard, name: 'SCHOOL-GRID' },
-               { icon: Sparkles, name: 'VIRTUE-OS' }
+               { icon: Activity, name: 'VIRTUE-OS' }
              ].map((logo, i) => (
                <div key={i} className="flex items-center gap-3 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default group">
                   <logo.icon size={28} className="text-[#0F172A] group-hover:text-blue-600 transition-colors" />
@@ -510,7 +511,7 @@ const LandingPage = ({ onNavigate }) => {
              whileInView={{ opacity: 1, y: 0 }}
              className="inline-flex items-center gap-2 bg-blue-600 px-6 py-2.5 rounded-full text-[12px] font-black text-white shadow-xl shadow-blue-500/20 tracking-widest uppercase mb-10"
            >
-              <Sparkles size={16} /> The Full Ecosystem
+              <Zap size={16} /> The Full Ecosystem
            </motion.div>
            <h2 className="premium-heading text-[clamp(48px,6vw,92px)] font-[900] text-[#0F172A] mb-10">
              Everything you need. <br/>

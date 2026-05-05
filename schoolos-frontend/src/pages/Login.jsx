@@ -131,8 +131,8 @@ export const Login = ({ onNavigate }) => {
           
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-20">
-               <div className="w-10 h-10 overflow-hidden flex items-center justify-center rounded-lg">
-                  <img src={logo} alt="SchoolOS" className="w-full h-full object-contain brightness-0 invert opacity-90 scale-[3.5]" />
+               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
+                  <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
                </div>
                <span className="text-xl font-bold tracking-tight text-white">School<span className="text-blue-400">OS</span></span>
             </div>

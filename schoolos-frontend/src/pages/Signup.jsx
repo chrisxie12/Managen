@@ -148,8 +148,10 @@ export const Signup = ({ setActiveTab }) => {
           
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-24">
-              <img src={logo} alt="SchoolOS" className="h-8 brightness-0 invert" />
-              <span className="text-white font-black tracking-tighter text-2xl">School<span className="text-blue-400">OS</span></span>
+               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
+                  <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
+               </div>
+               <span className="text-white font-black tracking-tighter text-2xl">School<span className="text-blue-400">OS</span></span>
             </div>
 
             <h1 className="text-5xl font-black text-white leading-[1.1] mb-6">
