@@ -1,0 +1,252 @@
+const express  = require('express');
+const router   = express.Router();
+const jwt      = require('jsonwebtoken');
+const schoolService = require('../services/schoolService');
+const examService = require('../services/examService');
+const { z } = require('zod');
+const { validate } = require('../middleware/validate');
+const parseInteger = (value, fallback, min = 1, max = 1000) => {
+    const parsed = Number.parseInt(value, 10);
+    if (Number.isNaN(parsed)) return fallback;
+    return Math.min(Math.max(parsed, min), max);
+};
+
+const getTenantModules = (tenant) => {
+    if (!tenant || !Array.isArray(tenant.modules)) return [];
+    return tenant.modules.map((module) => String(module).toLowerCase());
+};
+
+const ensureMatchingTenant = (decoded, tenant) => {
+    if (tenant && decoded?.tenantId && decoded.tenantId !== tenant.id) {
+        const error = new Error('Token does not match the requested school.');
+        error.statusCode = 403;
+        throw error;
+    }
+};
+
+const protect = (req, res, next) => {
+    try {
+        const token = req.cookies?.schoolos_tenant_token;
+        if (!token)
+            return res.status(401).json({ error: 'No token provided.' });
+        req.user = jwt.verify(token, process.env.JWT_SECRET);
+        ensureMatchingTenant(req.user, req.tenant);
+        next();
+    } catch (err) {
+        const statusCode = err.statusCode || 401;
+        return res.status(statusCode).json({ error: statusCode === 403 ? 'Token does not match the requested school.' : 'Invalid or expired token.' });
+    }
+};
+
+const allowRoles = (...roles) => (req, res, next) => {
+    if (!roles.includes(req.user.role))
+        return res.status(403).json({ error: 'Access denied for your role.' });
+    next();
+};
+
+const requireModule = (mod) => (req, res, next) => {
+    const modules = getTenantModules(req.tenant);
+    if (!modules.includes('all') && !modules.includes(String(mod).toLowerCase()))
+        return res.status(403).json({ error: `${mod} module not available on your plan.` });
+    next();
+};
+
+// GET /api/school/info
+router.get('/info', protect, (req, res) => {
+    return res.json({
+        data: {
+            school: {
+                id: req.tenant.id,
+                name: req.tenant.school_name,
+                subdomain: req.tenant.subdomain,
+                plan: req.tenant.plan,
+                status: req.tenant.status,
+                modules: req.tenant.modules || [],
+                maxStudents: req.tenant.max_students,
+                trialEndsAt: req.tenant.trial_ends_at,
+            }
+        }
+    });
+});
+
+// GET /api/school/dashboard
+router.get('/dashboard', protect, async (req, res) => {
+    try {
+        const stats = await schoolService.getDashboardStats(req.tenant.id);
+        return res.json({ data: stats });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching dashboard stats.' });
+    }
+});
+
+// GET /api/school/students
+router.get('/students', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const page = parseInteger(req.query.page, 1, 1, 1000000);
+        const limit = parseInteger(req.query.limit, 20, 1, 100);
+        
+        const { students, count } = await schoolService.getStudents(req.tenant.id, page, limit, req.query.className);
+        
+        return res.json({ data: { students, total: count, page, limit } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching students.' });
+    }
+});
+
+// ─── Zod Schemas ──────────────────────────────────────────────
+const studentSchema = {
+    body: z.object({
+        name: z.string().min(1, 'Name is required'),
+        class_name: z.string().min(1, 'Class name is required'),
+        gender: z.enum(['Male', 'Female', 'Other']).optional(),
+        dob: z.string().optional(),
+        admission_no: z.string().optional(),
+        parent_name: z.string().optional(),
+        parent_phone: z.string().optional(),
+        parent_email: z.string().email('Invalid email').optional().or(z.literal('')),
+        address: z.string().optional()
+    })
+};
+
+// POST /api/school/students
+router.post('/students', protect, allowRoles('admin'), validate(studentSchema), async (req, res) => {
+    try {
+        const count = await schoolService.getStudentCount(req.tenant.id);
+
+        const maxStudents = req.tenant.max_students == null ? null : Number(req.tenant.max_students);
+        if (Number.isFinite(maxStudents) && count >= maxStudents)
+            return res.status(403).json({ error: `Student limit (${req.tenant.max_students}) reached. Upgrade your plan.` });
+
+        const studentPayload = req.body;
+
+        const student = await schoolService.createStudent(req.tenant.id, studentPayload);
+        
+        return res.status(201).json({ data: { message: 'Student created.', student } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error creating student.' });
+    }
+});
+
+// GET /api/school/attendance
+router.get('/attendance', protect, requireModule('attendance'), async (req, res) => {
+    try {
+        const records = await schoolService.getAttendance(req.tenant.id, req.query.date, req.query.className);
+        return res.json({ data: { records } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching attendance.' });
+    }
+});
+
+// GET /api/school/fees
+router.get('/fees', protect, requireModule('fees'), allowRoles('admin'), async (req, res) => {
+    try {
+        const fees = await schoolService.getFees(req.tenant.id, req.query.status);
+        return res.json({ data: { fees } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching fees.' });
+    }
+});
+
+// ─── Exams & Results Routes ─────────────────────────────────────
+
+const examSchema = {
+    body: z.object({
+        name: z.string().min(1, 'Name is required'),
+        subject: z.string().min(1, 'Subject is required'),
+        class_name: z.string().min(1, 'Class is required'),
+        date: z.string().min(1, 'Date is required'),
+        total_marks: z.number().positive('Total marks must be positive')
+    })
+};
+
+const resultSchema = {
+    body: z.object({
+        exam_id: z.string().uuid(),
+        student_id: z.string().uuid(),
+        marks_obtained: z.number().min(0, 'Marks cannot be negative'),
+        remarks: z.string().optional()
+    })
+};
+
+// GET /api/school/exams
+router.get('/exams', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const exams = await examService.getExams(req.tenant.id);
+        return res.json({ data: { exams } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching exams.' });
+    }
+});
+
+// POST /api/school/exams
+router.post('/exams', protect, allowRoles('admin', 'teacher'), validate(examSchema), async (req, res) => {
+    try {
+        const exam = await examService.createExam(req.tenant.id, req.body);
+        return res.status(201).json({ data: { message: 'Exam created.', exam } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error creating exam.' });
+    }
+});
+
+// GET /api/school/results
+router.get('/results', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const { exam_id } = req.query;
+        if (!exam_id) return res.status(400).json({ error: 'exam_id query param is required' });
+        
+        const data = await examService.getResults(req.tenant.id, exam_id);
+        return res.json({ data });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching results.' });
+    }
+});
+
+// POST /api/school/results
+router.post('/results', protect, allowRoles('admin', 'teacher'), validate(resultSchema), async (req, res) => {
+    try {
+        const result = await examService.submitResult(req.tenant.id, req.body);
+        return res.status(201).json({ data: { message: 'Result saved.', result } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error saving result.' });
+    }
+});
+
+// GET /api/school/results/student/:studentId
+router.get('/results/student/:studentId', protect, async (req, res) => {
+    try {
+        const { studentId } = req.params;
+        const results = await examService.getStudentResults(req.tenant.id, studentId);
+        return res.json({ data: { results } });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error fetching student results.' });
+    }
+});
+
+module.exports = router;
