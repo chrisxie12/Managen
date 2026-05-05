@@ -250,8 +250,8 @@ const LandingPage = ({ onNavigate }) => {
         <div className="flex items-center justify-between max-w-[1440px] mx-auto w-full px-4">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-               <div className="bg-blue-600 w-10 h-10 flex items-center justify-center rounded-xl shadow-lg shadow-blue-500/20">
-                  <Sparkles className="text-white" size={20} />
+               <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
+                  <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
                </div>
                <span className={`text-2xl font-black tracking-tight transition-colors ${scrolled ? 'text-[#0F172A]' : 'text-white'}`}>SchoolOS<span className="text-blue-400">.</span></span>
             </div>
@@ -302,8 +302,8 @@ const LandingPage = ({ onNavigate }) => {
           >
             <div className="flex items-center justify-between mb-16">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-600 w-10 h-10 flex items-center justify-center rounded-xl shadow-lg">
-                  <Sparkles className="text-white" size={20} />
+                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-100 overflow-hidden">
+                  <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
                 </div>
                 <span className="text-2xl font-black tracking-tight text-[#0F172A]">SchoolOS.</span>
               </div>
@@ -575,8 +575,8 @@ const LandingPage = ({ onNavigate }) => {
                <div className="flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
                   <div className="max-w-sm">
                      <div className="flex items-center gap-3 mb-8">
-                       <div className="bg-[#2D7DFA] w-10 h-10 flex items-center justify-center rounded-xl shadow-lg">
-                         <Sparkles className="text-white" size={20} />
+                       <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
+                         <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
                        </div>
                        <span className="text-2xl font-black tracking-tight text-white">SchoolOS.</span>
                      </div>
