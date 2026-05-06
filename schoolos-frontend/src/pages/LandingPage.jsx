@@ -1356,7 +1356,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 { label: "Features", href: "/features.html" },
                 { label: "Pricing", href: "#pricing" },
                 { label: "Changelog", href: "#" },
-                { label: "Roadmap", href: "#" },
+                { label: "Roadmap", href: "/roadmap.html" },
               ],
             },
             {
