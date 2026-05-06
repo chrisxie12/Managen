@@ -15,7 +15,7 @@
   --danger: #ef4444;
   --text-primary: #381932;  /* PLUM */
   --text-secondary: #512b4a;
-  --text-muted: #7d6077;
+  --text-muted: #64748b;    /* Updated for WCAG AA compliance */
   --border: #e8dccf;
   --border-hover: rgba(56, 25, 50, 0.3);
   
@@ -102,3 +102,8 @@ h1, h2, h3, h4, h5, h6 {
 .dynamic-card { background-color: var(--card-bg); border-color: var(--border); }
 .dynamic-text { color: var(--text-primary); }
 .dynamic-muted { color: var(--text-muted); }
+
+/* Minimum readable text */
+.text-muted {
+  color: #64748b; /* slate-500 — minimum for WCAG AA on white */
+}

@@ -26,7 +26,7 @@ import { buildUrl, handleApiError } from '../services/api';
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const MUTED = "#64748b"; // Updated for WCAG AA compliance (slate-500)
 
 export const Signup = ({ setActiveTab }) => {
   const [step, setStep] = useState(1);
@@ -143,9 +143,9 @@ export const Signup = ({ setActiveTab }) => {
 
             <h1 className="text-5xl font-black text-white leading-[1.15] mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
               Provision your <br />
-              <span style={{ fontStyle: 'italic', color: 'rgba(255,243,230,0.7)' }}>institution.</span>
+              <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>institution.</span>
             </h1>
-            <p className="text-white/60 text-base font-medium leading-relaxed max-w-xs mb-16">
+            <p className="text-white font-medium leading-relaxed max-w-xs mb-16">
               Establish your school infrastructure on Africa's most advanced management node.
             </p>
 
@@ -166,11 +166,11 @@ export const Signup = ({ setActiveTab }) => {
                     `}>
                       {isCompleted ? <Check size={18} className="text-white" /> : 
                        isActive ? <s.icon size={18} color={PLUM} /> :
-                       <span className="text-white/30 font-bold text-sm">{s.id}</span>}
+                       <span className="text-white font-bold text-sm">{s.id}</span>}
                     </div>
                     <div className="flex flex-col">
-                      <span className={`text-[9px] font-black uppercase tracking-widest ${isActive ? 'text-white/50' : 'text-white/20'}`}>Step {s.id}</span>
-                      <span className={`text-sm font-bold tracking-tight ${isActive ? 'text-white' : 'text-white/40'}`}>{s.name}</span>
+                      <span className={`text-xs font-black uppercase tracking-widest ${isActive ? 'text-white' : 'text-white/60'}`}>Step {s.id}</span>
+                      <span className={`text-sm font-bold tracking-tight ${isActive ? 'text-white' : 'text-white/80'}`}>{s.name}</span>
                     </div>
                   </div>
                 );
@@ -183,8 +183,8 @@ export const Signup = ({ setActiveTab }) => {
               <ShieldCheck size={20} />
             </div>
             <div>
-              <div className="text-white font-bold text-[10px] uppercase tracking-widest mb-0.5">Surgical Encryption</div>
-              <div className="text-white/40 text-[9px] font-medium leading-tight">ISO-27001 Certified Infrastructure</div>
+              <div className="text-white font-bold text-xs uppercase tracking-widest mb-0.5">Surgical Encryption</div>
+              <div className="text-white font-medium leading-tight text-xs">ISO-27001 Certified Infrastructure</div>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export const Signup = ({ setActiveTab }) => {
 
           <div className="flex-1 flex flex-col p-8 lg:p-16 max-w-[760px] mx-auto w-full">
             <div className="mb-12">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border" style={{ background: MILK, color: PLUM, borderColor: "rgba(56,25,50,0.1)" }}>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 border" style={{ background: MILK, color: PLUM, borderColor: "rgba(56,25,50,0.1)" }}>
                 Step {step} of 5 — {steps[step-1].name}
               </div>
               
@@ -250,7 +250,7 @@ export const Signup = ({ setActiveTab }) => {
                       <div className="grid grid-cols-2 gap-6">
                         <InputGroup label="School Name" name="schoolName" value={formData.schoolName} onChange={handleInputChange} placeholder="e.g. Ridge School" icon={Building2} />
                         <div className="space-y-3">
-                          <label className="text-[10px] font-black uppercase tracking-widest block ml-1" style={{ color: MUTED }}>Workspace ID</label>
+                          <label className="text-xs font-black uppercase tracking-widest block ml-1" style={{ color: MUTED }}>Workspace ID</label>
                           <div className="relative flex items-center group">
                              <Hash size={16} className="absolute left-4" color={MUTED} />
                              <input 
@@ -260,7 +260,7 @@ export const Signup = ({ setActiveTab }) => {
                                 style={{ color: PLUM, borderColor: "rgba(56,25,50,0.08)" }}
                                 placeholder="slug"
                              />
-                             <span className="absolute right-6 font-black text-[10px] uppercase tracking-widest" style={{ color: MUTED }}>.schoolos.io</span>
+                             <span className="absolute right-6 font-black text-xs uppercase tracking-widest" style={{ color: MUTED }}>.schoolos.io</span>
                           </div>
                         </div>
                       </div>
@@ -289,9 +289,9 @@ export const Signup = ({ setActiveTab }) => {
                           className={`p-6 rounded-[32px] border-2 cursor-pointer transition-all duration-300 ${formData.plan === p.id ? 'bg-[#381932]/5 shadow-lg' : 'bg-white border-black/5 hover:border-black/10'}`}
                           style={{ borderColor: formData.plan === p.id ? PLUM : undefined }}
                         >
-                          <div className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: formData.plan === p.id ? PLUM : MUTED }}>{p.name}</div>
+                          <div className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: formData.plan === p.id ? PLUM : MUTED }}>{p.name}</div>
                           <div className="text-2xl font-black tracking-tight mb-4" style={{ color: PLUM, fontFamily: "'JetBrains Mono', monospace" }}>GHS {p.price}</div>
-                          <div className="text-[11px] font-bold leading-tight" style={{ color: MUTED }}>{p.desc}</div>
+                          <div className="text-xs font-bold leading-tight" style={{ color: MUTED }}>{p.desc}</div>
                         </div>
                       ))}
                     </div>
@@ -311,7 +311,7 @@ export const Signup = ({ setActiveTab }) => {
                               <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs" style={{ background: PLUM_LIGHT }}>{m.email[0].toUpperCase()}</div>
                               <div>
                                 <div className="text-sm font-bold" style={{ color: PLUM }}>{m.email}</div>
-                                <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: MUTED }}>{m.role} Node</div>
+                                <div className="text-xs font-black uppercase tracking-widest" style={{ color: MUTED }}>{m.role} Node</div>
                               </div>
                             </div>
                             <button aria-label="Remove team member" onClick={() => removeTeamMember(m.email)} className="text-slate-300 hover:text-red-500 transition-colors p-2"><Trash2 size={16} /></button>
@@ -328,11 +328,11 @@ export const Signup = ({ setActiveTab }) => {
                       </div>
                       <div className="bg-white rounded-[40px] p-8 border border-black/5 space-y-6">
                          <div className="grid grid-cols-2 gap-8 text-left">
-                            <div><div className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: MUTED }}>Institution</div><div className="text-lg font-bold" style={{ color: PLUM }}>{formData.schoolName}</div></div>
-                            <div><div className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: MUTED }}>Service Node</div><div className="text-lg font-bold uppercase tracking-tighter" style={{ color: PLUM }}>{formData.plan}</div></div>
+                            <div><div className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: MUTED }}>Institution</div><div className="text-lg font-bold" style={{ color: PLUM }}>{formData.schoolName}</div></div>
+                            <div><div className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: MUTED }}>Service Node</div><div className="text-lg font-bold uppercase tracking-tighter" style={{ color: PLUM }}>{formData.plan}</div></div>
                          </div>
                          <div className="pt-6 border-t border-black/5 flex items-center justify-between">
-                            <div className="flex items-center gap-2 font-black text-[10px] uppercase tracking-widest" style={{ color: PLUM_LIGHT }}><Check size={14} /> Ready for Deployment</div>
+                            <div className="flex items-center gap-2 font-black text-xs uppercase tracking-widest" style={{ color: PLUM_LIGHT }}><Check size={14} /> Ready for Deployment</div>
                             <div className="text-xs font-bold" style={{ color: MUTED }}>Instance: {formData.subdomain}.schoolos.io</div>
                          </div>
                       </div>
@@ -346,14 +346,14 @@ export const Signup = ({ setActiveTab }) => {
             <div className="mt-12 pt-8 border-t border-black/5 flex items-center justify-between">
               <button 
                 onClick={step === 1 ? () => setActiveTab('landing') : prevStep}
-                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-opacity hover:opacity-70"
+                className="flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-opacity hover:opacity-70"
                 style={{ color: MUTED }}
               >
                 <ChevronLeft size={16} /> {step === 1 ? 'Exit Portal' : 'Back'}
               </button>
               
               <div className="flex items-center gap-4">
-                {status.message && <span className={`text-[10px] font-black uppercase tracking-widest ${status.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>{status.message}</span>}
+                {status.message && <span className={`text-xs font-black uppercase tracking-widest ${status.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>{status.message}</span>}
                 <button 
                   onClick={step === 5 ? handleSubmit : nextStep}
                   disabled={isSubmitting}
@@ -374,7 +374,7 @@ export const Signup = ({ setActiveTab }) => {
 
 const InputGroup = ({ label, name, value, onChange, placeholder, icon: Icon, type = "text" }) => (
   <div className="space-y-3 group">
-    <label className="text-[10px] font-black uppercase tracking-widest block ml-1 transition-colors" style={{ color: MUTED }}>{label}</label>
+    <label className="text-xs font-black uppercase tracking-widest block ml-1 transition-colors" style={{ color: MUTED }}>{label}</label>
     <div className="relative flex items-center">
       <Icon size={16} className="absolute left-4" color={MUTED} />
       <input 
@@ -388,7 +388,7 @@ const InputGroup = ({ label, name, value, onChange, placeholder, icon: Icon, typ
 
 const SelectGroup = ({ label, name, value, onChange, options }) => (
   <div className="space-y-3">
-    <label className="text-[10px] font-black uppercase tracking-widest block ml-1" style={{ color: MUTED }}>{label}</label>
+    <label className="text-xs font-black uppercase tracking-widest block ml-1" style={{ color: MUTED }}>{label}</label>
     <select 
       name={name} value={value} onChange={onChange}
       className="w-full bg-white border py-4 px-6 rounded-2xl font-bold text-sm outline-none transition-all shadow-sm cursor-pointer appearance-none"

@@ -111,7 +111,7 @@ const Settings = ({ onNavigate }) => {
                              </button>
                           </div>
                           <div>
-                             <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.4rem", fontWeight: 800 }}>Account Profile</h3>
+                             <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.4rem", fontWeight: 800 }}>Account Profile</h2>
                              <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em" }}>Global ID: <span style={{ color: "var(--text-primary)" }}>#OS-8821-X</span></p>
                           </div>
                        </div>

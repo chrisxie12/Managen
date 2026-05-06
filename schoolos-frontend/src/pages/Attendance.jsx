@@ -130,6 +130,12 @@ const Attendance = () => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Attendance Node</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Real-time monitoring of student presence across all academic sections</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -159,7 +165,7 @@ const Attendance = () => {
               {s.value}
             </div>
             <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{s.label}</div>
-            <div style={{ color: s.color, fontSize: "0.65rem", marginTop: "0.2rem", fontWeight: 700 }}>{s.sub}</div>
+            <div style={{ color: s.color, fontSize: "0.75rem", marginTop: "0.2rem", fontWeight: 700 }}>{s.sub}</div>
           </div>
         ))}
       </div>
@@ -197,7 +203,7 @@ const Attendance = () => {
                  <thead>
                     <tr style={{ borderBottom: `1px solid var(--border)`, background: "var(--bg-secondary)" }}>
                        {["Student", "Section", "Status", "Check-in", "Marked By"].map(h => (
-                         <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{h}</th>
+                         <th key={h} className="px-6 py-4 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{h}</th>
                        ))}
                     </tr>
                  </thead>
@@ -245,7 +251,7 @@ const Attendance = () => {
                     type: 'info'
                   });
                 }}
-                className="w-full py-3 rounded-2xl bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-105 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-2xl bg-rose-500 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
                  <Send size={14} /> Send SMS Alerts
               </button>
@@ -288,16 +294,16 @@ const Attendance = () => {
                 </div>
                 <button aria-label="Close" onClick={() => setIsMarkModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
-              <div className="p-8 pt-4 space-y-4">
+               <div className="p-8 pt-4 space-y-4">
                  <div className="flex gap-4">
                     <div className="flex-1">
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Select Class</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Select Class</label>
                        <select className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
                           <option>Form 1A</option>
                        </select>
                     </div>
                     <div className="flex-1">
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Date</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Date</label>
                        <input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                     </div>
                  </div>
@@ -310,7 +316,7 @@ const Attendance = () => {
                                 <button 
                                   key={l} 
                                   onClick={() => setAttendanceState(prev => ({ ...prev, [s.id]: l }))}
-                                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${attendanceState[s.id] === l ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}
+                                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black transition-all ${attendanceState[s.id] === l ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}
                                 >
                                    {l}
                                 </button>

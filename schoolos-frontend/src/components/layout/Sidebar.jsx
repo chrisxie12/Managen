@@ -19,7 +19,9 @@ import {
   MessageSquare, 
   Settings2,
   LogOut,
-  X
+  X,
+  BellRing,
+  GraduationCap
 } from 'lucide-react';
 
 const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
@@ -53,6 +55,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
       title: "Finance & HR",
       items: [
         { id: 'fees', label: 'Fee Management', icon: Wallet, roles: ['admin', 'accountant'] },
+        { id: 'fee-reminders', label: 'Fee Reminders', icon: BellRing, roles: ['admin', 'accountant'] },
         { id: 'payroll', label: 'Payroll', icon: Banknote, roles: ['admin', 'accountant'] },
         { id: 'fee-reports', label: 'Reports', icon: Receipt, roles: ['admin', 'accountant'] },
         { id: 'subscriptions', label: 'Billing', icon: Wallet, roles: ['superadmin'] },

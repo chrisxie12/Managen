@@ -170,6 +170,10 @@ const Communication = () => {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
+      <div className="px-8 pt-8">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Unified Messaging</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional WhatsApp communication and broadcast node</p>
+      </div>
       <div className="flex-1 p-6 sm:p-8 flex gap-6 overflow-hidden min-h-0">
         {/* Contacts List */}
         <div
@@ -181,13 +185,13 @@ const Communication = () => {
           }}
         >
           <div className="p-5 border-b" style={{ borderColor: "var(--border)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1rem" }}>WhatsApp Inbox</h3>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1rem" }}>WhatsApp Inbox</h2>
             <div className="flex gap-2 mb-4">
               {["inbox", "broadcast"].map(t => (
                 <button
                   key={t}
                   onClick={() => setActiveTab(t)}
-                  className="flex-1 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                  className="flex-1 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                   style={{
                     background: activeTab === t ? "var(--accent-primary)" : "var(--bg-secondary)",
                     color: activeTab === t ? "var(--bg-primary)" : "var(--text-muted)",
@@ -226,10 +230,10 @@ const Communication = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center mb-0.5">
                     <span className="text-xs font-black truncate" style={{ color: "var(--text-primary)" }}>{conv.parent}</span>
-                    <span className="text-[9px] font-bold" style={{ color: "var(--text-muted)" }}>{conv.time}</span>
+                    <span className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>{conv.time}</span>
                   </div>
-                  <p className="text-[10px] font-bold truncate mb-1" style={{ color: "var(--text-muted)" }}>{conv.student} · {conv.class}</p>
-                  <p className="text-[11px] truncate font-medium" style={{ color: conv.unread > 0 ? "var(--text-primary)" : "var(--text-muted)" }}>{conv.lastMsg}</p>
+                  <p className="text-xs font-bold truncate mb-1" style={{ color: "var(--text-muted)" }}>{conv.student} · {conv.class}</p>
+                  <p className="text-xs truncate font-medium" style={{ color: conv.unread > 0 ? "var(--text-primary)" : "var(--text-muted)" }}>{conv.lastMsg}</p>
                 </div>
               </button>
             ))}
@@ -303,11 +307,11 @@ const Communication = () => {
                       border: msg.from === 'system' ? `1px solid ${WHATSAPP}40` : (msg.from === 'parent' ? `1px solid var(--border)` : "none")
                     }}
                   >
-                    {msg.from === 'system' && <p className="text-[9px] font-black uppercase tracking-widest mb-1" style={{ color: WHATSAPP }}>Auto-Report</p>}
+                    {msg.from === 'system' && <p className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: WHATSAPP }}>Auto-Report</p>}
                     <p className="text-xs font-medium leading-relaxed whitespace-pre-line">{msg.text}</p>
                     <div className="flex items-center justify-end gap-1 mt-2">
-                      <span className="text-[8px] font-bold opacity-60" style={{ color: "var(--text-muted)" }}>{msg.time}</span>
-                      {msg.from !== 'parent' && <CheckCheck size={10} style={{ color: "var(--text-muted)" }} className="opacity-60" />}
+                      <span className="text-xs font-bold opacity-90" style={{ color: "var(--text-muted)" }}>{msg.time}</span>
+                      {msg.from !== 'parent' && <CheckCheck size={10} style={{ color: "var(--text-muted)" }} className="opacity-90" />}
                     </div>
                   </div>
                 </div>
@@ -318,7 +322,7 @@ const Communication = () => {
             <div className="p-6 border-t" style={{ borderColor: "var(--border)" }}>
                <div className="flex gap-2 mb-4">
                   {templates.map(t => (
-                    <button 
+                     <button 
                       key={t.id} 
                       onClick={() => {
                         let tpl = "";
@@ -332,7 +336,7 @@ const Communication = () => {
                           type: 'info'
                         });
                       }}
-                      className="px-3 py-1.5 rounded-lg border flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-black/5" 
+                      className="px-3 py-1.5 rounded-lg border flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-colors hover:bg-black/5" 
                       style={{ borderColor: `${t.color}40`, color: t.color }}
                     >
                       <t.icon size={12} /> {t.label}

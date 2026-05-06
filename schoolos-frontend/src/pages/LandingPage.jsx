@@ -23,7 +23,7 @@ import {
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const MUTED = "#64748b"; // Updated for WCAG AA compliance (slate-500)
 
 const features = [
   {
@@ -487,7 +487,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               >
                 {s.value}
               </div>
-              <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>
+              <div style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.9rem" }}>
                 {s.label}
               </div>
             </div>
@@ -568,7 +568,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               <div>
                 <p
                   className="text-sm uppercase tracking-widest mb-4 font-bold"
-                  style={{ color: "rgba(255,243,230,0.6)" }}
+                  style={{ color: "rgba(255,255,255,0.9)" }}
                 >
                   Live Dashboard
                 </p>
@@ -586,7 +586,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 </h2>
                 <p
                   style={{
-                    color: "rgba(255,243,230,0.75)",
+                    color: "rgba(255,255,255,0.9)",
                     fontSize: "1rem",
                     lineHeight: 1.75,
                     marginBottom: "1.5rem",
@@ -643,7 +643,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                     >
                       {card.value}
                     </div>
-                    <div style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.78rem" }}>
+                    <div style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.78rem" }}>
                       {card.label}
                     </div>
                   </div>
@@ -740,7 +740,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 </h3>
                 <p
                   style={{
-                    color: plan.highlighted ? "rgba(255,243,230,0.65)" : MUTED,
+                    color: plan.highlighted ? "rgba(255,255,255,0.9)" : MUTED,
                     fontSize: "0.85rem",
                     marginBottom: "1.5rem",
                   }}
@@ -761,7 +761,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                   </span>
                   <span
                     style={{
-                      color: plan.highlighted ? "rgba(255,243,230,0.6)" : MUTED,
+                      color: plan.highlighted ? "rgba(255,255,255,0.9)" : MUTED,
                       fontSize: "0.85rem",
                     }}
                   >
@@ -779,7 +779,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                       />
                       <span
                         style={{
-                          color: plan.highlighted ? "rgba(255,243,230,0.85)" : PLUM_LIGHT,
+                          color: plan.highlighted ? "rgba(255,255,255,0.95)" : PLUM_LIGHT,
                           fontSize: "0.9rem",
                         }}
                       >
@@ -882,7 +882,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               boxShadow: "0 24px 80px rgba(56,25,50,0.3)",
             }}
           >
-            <Award size={36} color="rgba(255,243,230,0.7)" className="mx-auto mb-5" />
+            <Award size={36} color="rgba(255,255,255,0.95)" className="mx-auto mb-5" />
             <h2
               style={{
                 fontFamily: "'Playfair Display', serif",
@@ -897,7 +897,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             </h2>
             <p
               style={{
-                color: "rgba(255,243,230,0.7)",
+                color: "rgba(255,255,255,0.9)",
                 fontSize: "1.05rem",
                 maxWidth: 480,
                 margin: "0 auto 2rem",
@@ -1015,6 +1015,6 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </footer>
     </div>
   );
-}
+});
 
 export default LandingPage;

@@ -61,7 +61,7 @@ const StatusBadge = ({ status }) => {
   const s = map[status] || map.paid;
   return (
     <span
-      className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest"
+      className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-widest"
       style={{ background: s.bg, color: s.color }}
     >
       {s.label}
@@ -69,7 +69,7 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const FeeManagement = () => {
+const FeeManagement = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState("fees");
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -122,6 +122,12 @@ const FeeManagement = () => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Financial Ledger</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional revenue intake and faculty payroll management</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -180,10 +186,10 @@ const FeeManagement = () => {
             >
               {card.value}
             </div>
-            <div style={{ color: "var(--text-muted)", fontSize: "0.72rem", marginTop: "0.2rem", fontWeight: 600 }}>
+            <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", marginTop: "0.2rem", fontWeight: 600 }}>
               {card.label}
             </div>
-            <div style={{ color: card.color, fontSize: "0.7rem", marginTop: "0.25rem", fontWeight: 700 }}>
+            <div style={{ color: card.color, fontSize: "0.75rem", marginTop: "0.25rem", fontWeight: 700 }}>
               {card.sub}
             </div>
           </div>
@@ -235,13 +241,23 @@ const FeeManagement = () => {
           )}
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform bg-plum text-milk shadow-lg shadow-plum/20"
-        >
-          <Plus size={16} />
-          {activeTab === "payroll" ? "Run Payroll" : "Record Payment"}
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => onNavigate('fee-reminders')}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform border hover:bg-black/5"
+            style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+          >
+            <Zap size={16} className="text-[#00e5a0]" />
+            Reminders
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform bg-plum text-milk shadow-lg shadow-plum/20"
+          >
+            <Plus size={16} />
+            {activeTab === "payroll" ? "Run Payroll" : "Record Payment"}
+          </button>
+        </div>
       </div>
 
       {/* Fees Tab */}
@@ -261,7 +277,7 @@ const FeeManagement = () => {
                   {["Student", "Admission", "Amount", "Paid", "Balance", "Date", "Status"].map((h) => (
                     <th
                       key={h}
-                      className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                      className="px-6 py-4 text-xs font-black uppercase tracking-widest"
                       style={{ color: "var(--text-muted)" }}
                     >
                       {h}
@@ -280,7 +296,7 @@ const FeeManagement = () => {
                       <span style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 700 }}>{r.student_name}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600 }}>{r.admission_no}</span>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{r.admission_no}</span>
                     </td>
                     {[r.amount, r.paid_amount, (r.amount - r.paid_amount)].map((v, i) => (
                       <td key={i} className="px-6 py-4">
@@ -317,7 +333,7 @@ const FeeManagement = () => {
                   type: 'info'
                 });
               }}
-              className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
               style={{ color: "var(--text-primary)" }}
             >
               <Download size={13} /> Export CSV
@@ -343,7 +359,7 @@ const FeeManagement = () => {
                   {["Staff Member", "Role", "Salary", "Status", "Action"].map((h) => (
                     <th
                       key={h}
-                      className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                      className="px-6 py-4 text-xs font-black uppercase tracking-widest"
                       style={{ color: "var(--text-muted)" }}
                     >
                       {h}
@@ -361,7 +377,7 @@ const FeeManagement = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px] bg-plum/5 text-plum"
+                          className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-plum/5 text-plum"
                         >
                           {p.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                         </div>
@@ -376,7 +392,7 @@ const FeeManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase"
+                        className="px-2 py-0.5 rounded-full text-xs font-black uppercase"
                         style={p.paid ? { background: "#D1FAE5", color: "#065F46" } : { background: "#FEE2E2", color: "#991B1B" }}
                       >
                         {p.paid ? "Disbursed" : "Pending"}
@@ -391,7 +407,7 @@ const FeeManagement = () => {
                             type: p.paid ? 'info' : 'success'
                           });
                         }}
-                        className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-transform"
+                        className="px-3 py-1.5 rounded-xl text-xs font-black uppercase active:scale-95 transition-transform"
                         style={{
                           background: p.paid ? `var(--bg-secondary)` : "var(--accent-primary)",
                           color: p.paid ? "var(--text-muted)" : "var(--bg-primary)",
@@ -419,16 +435,16 @@ const FeeManagement = () => {
               boxShadow: "var(--shadow-card)",
             }}
           >
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
               Revenue vs Target
-            </h3>
+            </h2>
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={monthlyRevenue}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
                 <Tooltip
-                  contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 11, fontWeight: 600, color: "var(--text-primary)" }}
+                  contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}
                   formatter={(v) => [`₵${v.toLocaleString()}`]}
                 />
                 <Bar dataKey="target" fill="var(--bg-secondary)" radius={[4, 4, 0, 0]} barSize={16} name="Target" />
@@ -445,9 +461,9 @@ const FeeManagement = () => {
               boxShadow: "var(--shadow-card)",
             }}
           >
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
               Fee Status
-            </h3>
+            </h2>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={5} dataKey="value">
@@ -455,14 +471,14 @@ const FeeManagement = () => {
                     <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 11, fontWeight: 600, color: "var(--text-primary)" }} />
+                <Tooltip contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }} />
               </PieChart>
             </ResponsiveContainer>
             <div className="flex justify-center gap-4 mt-2">
               {pieData.map(d => (
                 <div key={d.name} className="flex items-center gap-1.5">
                   <div className="w-2 h-2 rounded-full" style={{ background: d.color }} />
-                  <span style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 700 }}>{d.name}</span>
+                  <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 700 }}>{d.name}</span>
                 </div>
               ))}
             </div>
@@ -490,12 +506,12 @@ const FeeManagement = () => {
                   { label: "Reference", placeholder: "e.g. TXN-8219" },
                 ].map((f) => (
                   <div key={f.label}>
-                    <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
+                    <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
                     <input placeholder={f.placeholder} className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                   </div>
                 ))}
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Method</label>
+                  <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Method</label>
                   <select className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
                     {["Cash", "Bank Transfer", "Paystack", "Flutterwave"].map(m => <option key={m}>{m}</option>)}
                   </select>

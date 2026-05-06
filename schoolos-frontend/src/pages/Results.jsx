@@ -110,6 +110,12 @@ const Results = ({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Academic Results</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional performance tracking and terminal report distribution</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -218,7 +224,7 @@ const Results = ({ onNavigate }) => {
           }}
         >
           <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: "var(--border)" }}>
-             <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem" }}>Terminal Results Ledger</h3>
+             <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem" }}>Terminal Results Ledger</h2>
              <button 
                onClick={() => {
                  showToast({
@@ -227,7 +233,7 @@ const Results = ({ onNavigate }) => {
                    type: 'info'
                  });
                }}
-               className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+               className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
                style={{ color: "var(--text-primary)" }}
              >
                <Download size={13} /> Export CSV
@@ -240,7 +246,7 @@ const Results = ({ onNavigate }) => {
                   {["#", "Student", "Subject", "Score", "Grade", "Action"].map((h) => (
                     <th
                       key={h}
-                      className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                      className="px-6 py-4 text-xs font-black uppercase tracking-widest"
                       style={{ color: "var(--text-muted)" }}
                     >
                       {h}
@@ -260,23 +266,23 @@ const Results = ({ onNavigate }) => {
                     </td>
                     <td className="px-6 py-4">
                       <p style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 700 }}>{s.student_name}</p>
-                      <p style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{s.admission_no}</p>
+                      <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{s.admission_no}</p>
                     </td>
                     <td className="px-6 py-4">
-                       <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>{s.subject_name}</span>
+                       <span className="px-2 py-0.5 rounded-full text-xs font-black uppercase" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>{s.subject_name}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 800 }}>{s.score}%</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black" style={gradeColors[s.grade] || gradeColors.B2}>
+                      <span className="px-2 py-0.5 rounded-full text-xs font-black" style={gradeColors[s.grade] || gradeColors.B2}>
                         {s.grade}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <button
                         onClick={() => handleGenerate(s.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest active:scale-95 transition-transform"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest active:scale-95 transition-transform"
                         style={{
                           background: generatingReport === s.id ? "#D1FAE5" : `var(--bg-secondary)`,
                           color: generatingReport === s.id ? "#065F46" : "var(--text-primary)",
@@ -302,15 +308,15 @@ const Results = ({ onNavigate }) => {
               boxShadow: "var(--shadow-card)",
             }}
           >
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
               Subject Performance
-            </h3>
+            </h2>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={gradeData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? "rgba(255,243,230,0.05)" : "rgba(56,25,50,0.04)"} horizontal={false} />
-                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} />
-                <YAxis dataKey="subject" type="category" tick={{ fontSize: 10, fill: "var(--text-primary)", fontWeight: 700 }} axisLine={false} tickLine={false} width={45} />
-                <Tooltip contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 11, fontWeight: 600, color: "var(--text-primary)" }} />
+                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} />
+                <YAxis dataKey="subject" type="category" tick={{ fontSize: 12, fill: "var(--text-primary)", fontWeight: 700 }} axisLine={false} tickLine={false} width={45} />
+                <Tooltip contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }} />
                 <Bar dataKey="avg" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} barSize={10} />
               </BarChart>
             </ResponsiveContainer>
@@ -323,9 +329,9 @@ const Results = ({ onNavigate }) => {
               boxShadow: "var(--shadow-glow)",
             }}
           >
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#FFF3E6", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.2rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "#FFF3E6", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.2rem" }}>
               BECE Grade Scale
-            </h3>
+            </h2>
             {[
               { grade: "A1", range: "80 – 100", desc: "Distinction" },
               { grade: "B2", range: "70 – 79", desc: "Very Good" },
@@ -334,10 +340,10 @@ const Results = ({ onNavigate }) => {
             ].map((g) => (
               <div key={g.grade} className="flex items-center justify-between py-2 border-b last:border-0" style={{ borderColor: "rgba(255,243,230,0.1)" }}>
                 <div className="flex items-center gap-2">
-                  <span className="w-8 text-center py-0.5 rounded text-[9px] font-black uppercase" style={{ background: "rgba(255,243,230,0.15)", color: "#FFF3E6" }}>{g.grade}</span>
-                  <span style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.75rem", fontWeight: 600 }}>{g.desc}</span>
+                  <span className="w-8 text-center py-0.5 rounded text-xs font-black uppercase" style={{ background: "rgba(255,243,230,0.15)", color: "#FFF3E6" }}>{g.grade}</span>
+                  <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem", fontWeight: 600 }}>{g.desc}</span>
                 </div>
-                <span style={{ color: "rgba(255,243,230,0.5)", fontSize: "0.7rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{g.range}</span>
+                <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{g.range}</span>
               </div>
             ))}
           </div>

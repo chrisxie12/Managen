@@ -138,6 +138,12 @@ const Teachers = React.memo(({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+        {/* Header */}
+        <div className="mb-2">
+           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Faculty Registry</h1>
+           <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Managing institutional academic nodes and personnel</p>
+        </div>
+
         {/* KPI Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s) => (
@@ -208,27 +214,27 @@ const Teachers = React.memo(({ onNavigate }) => {
                        {t.initials}
                     </div>
                     
-                    <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.25rem", fontWeight: 800 }} className="mb-1">{t.name}</h3>
-                    <div className="px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-6" style={{ background: "var(--bg-secondary)", color: "var(--text-muted)" }}>{t.role}</div>
+                    <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.25rem", fontWeight: 800 }} className="mb-1">{t.name}</h2>
+                    <div className="px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-6" style={{ background: "var(--bg-secondary)", color: "var(--text-muted)" }}>{t.role}</div>
 
                     <div className="flex flex-wrap justify-center gap-1.5 mb-8">
                        {t.subjects.map(s => (
-                          <span key={s} className="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-tighter" style={{ background: `var(--bg-secondary)`, color: "var(--text-primary)" }}>{s}</span>
+                          <span key={s} className="px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-tighter" style={{ background: `var(--bg-secondary)`, color: "var(--text-primary)" }}>{s}</span>
                        ))}
                     </div>
 
                     <div className="w-full grid grid-cols-3 gap-2 rounded-3xl p-4 mb-8" style={{ background: "var(--bg-secondary)" }}>
                        <div className="text-center">
                           <div style={{ color: "var(--text-primary)", fontSize: "1rem", fontWeight: 800 }}>{t.classes}</div>
-                          <div style={{ color: "var(--text-muted)", fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase" }}>Classes</div>
+                          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase" }}>Classes</div>
                        </div>
                        <div className="text-center border-x" style={{ borderColor: "var(--border)" }}>
                           <div style={{ color: "var(--text-primary)", fontSize: "1rem", fontWeight: 800 }}>{t.students}</div>
-                          <div style={{ color: "var(--text-muted)", fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase" }}>Students</div>
+                          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase" }}>Students</div>
                        </div>
                        <div className="text-center">
                           <div style={{ color: "var(--text-primary)", fontSize: "1rem", fontWeight: 800 }}>{t.exp.split(' ')[0]}</div>
-                          <div style={{ color: "var(--text-muted)", fontSize: "0.6rem", fontWeight: 800, textTransform: "uppercase" }}>Years</div>
+                          <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase" }}>Years</div>
                        </div>
                     </div>
 
@@ -241,7 +247,7 @@ const Teachers = React.memo(({ onNavigate }) => {
                              type: 'info'
                            });
                          }}
-                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         className="flex-1 py-3 rounded-2xl border text-xs font-black uppercase tracking-widest transition-colors" 
                          style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
                        >
                          Profile
@@ -254,7 +260,7 @@ const Teachers = React.memo(({ onNavigate }) => {
                              type: 'info'
                            });
                          }}
-                         className="flex-1 py-3 rounded-2xl bg-plum text-milk text-[10px] font-black uppercase tracking-widest shadow-sm"
+                         className="flex-1 py-3 rounded-2xl bg-plum text-milk text-xs font-black uppercase tracking-widest shadow-sm"
                        >
                          Message
                        </button>
@@ -281,15 +287,15 @@ const Teachers = React.memo(({ onNavigate }) => {
               <div className="p-8 pt-4 space-y-4">
                  <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Full Name</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Full Name</label>
                        <input placeholder="e.g. Mrs. Abena Mensah" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Staff ID</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Staff ID</label>
                        <input placeholder="EMP-2024-001" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Department</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Department</label>
                        <select className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
                           <option>Mathematics</option>
                           <option>Science</option>

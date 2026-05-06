@@ -25,6 +25,7 @@ const Communication = lazy(() => import('./pages/Communication'));
 const DashboardLayout = lazy(() => import('./components/layout/DashboardLayout'));
 const AccountantDashboard = lazy(() => import('./pages/AccountantDashboard'));
 const SuperAdminDashboard = lazy(() => import('./pages/SuperAdminDashboard'));
+const FeeReminders = lazy(() => import('./pages/FeeReminders'));
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
@@ -55,6 +56,7 @@ function AuthenticatedApp() {
     timetable: <Timetable onNavigate={setActiveModule} />,
     library: <Library onNavigate={setActiveModule} />,
     fees: <FeeManagement onNavigate={setActiveModule} />,
+    'fee-reminders': <FeeReminders onNavigate={setActiveModule} />,
     payroll: <Payroll onNavigate={setActiveModule} />,
     'fee-reports': <FeeReports onNavigate={setActiveModule} />,
     communication: <Communication onNavigate={setActiveModule} />,

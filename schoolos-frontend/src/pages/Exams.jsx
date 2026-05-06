@@ -98,6 +98,12 @@ const Exams = ({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Academic Assessments</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Managing examination schedules, terminal reports, and student rankings</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -224,7 +230,7 @@ const Exams = ({ onNavigate }) => {
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-black uppercase tracking-widest" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>
                       {e.subject}
                     </span>
                   </td>
@@ -239,7 +245,7 @@ const Exams = ({ onNavigate }) => {
                   </td>
                   <td className="px-6 py-5">
                     <span
-                      className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border"
+                      className="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-widest border"
                       style={new Date(e.date) < new Date() 
                         ? { background: "#D1FAE5", color: "#065F46", borderColor: "#A7F3D0" } 
                         : { background: "#FEF3C7", color: "#92400E", borderColor: "#FDE68A" }}
@@ -265,7 +271,7 @@ const Exams = ({ onNavigate }) => {
                 type: 'info'
               });
             }}
-            className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+            className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
             style={{ color: "var(--text-primary)" }}
           >
             <Download size={13} /> Export Schedule
@@ -295,7 +301,7 @@ const Exams = ({ onNavigate }) => {
                   { label: "Total Marks", key: "total_marks", type: "number", placeholder: "100" },
                 ].map((f) => (
                   <div key={f.label}>
-                    <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
+                    <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
                     <input 
                       type={f.type || 'text'} 
                       value={newExam[f.key]}

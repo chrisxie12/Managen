@@ -114,6 +114,10 @@ const Library = ({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+        <div className="mb-2">
+           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Institutional Repository</h1>
+           <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Managing academic acquisitions, resource circulation and catalog nodes</p>
+        </div>
         {/* KPI Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s) => (
@@ -177,18 +181,18 @@ const Library = ({ onNavigate }) => {
                    boxShadow: "var(--shadow-card)",
                  }}
               >
-                 <div className="aspect-[4/5] rounded-[24px] mb-4 flex items-center justify-center relative overflow-hidden" style={{ background: "var(--bg-secondary)" }}>
+                  <div className="aspect-[4/5] rounded-[24px] mb-4 flex items-center justify-center relative overflow-hidden" style={{ background: "var(--bg-secondary)" }}>
                     <div className="w-16 h-20 rounded-lg shadow-lg border flex items-center justify-center text-xl font-black bg-white" style={{ color: "var(--accent-primary)", borderColor: "var(--border)" }}>
                        {b.initials}
                     </div>
-                    <div className="absolute top-3 right-3 px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest bg-white" style={{ color: "var(--accent-primary)" }}>{b.cat}</div>
+                    <div className="absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-black uppercase tracking-widest bg-white" style={{ color: "var(--accent-primary)" }}>{b.cat}</div>
                  </div>
 
                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.1rem", fontWeight: 800 }} className="mb-0.5 truncate">{b.title}</h3>
-                 <p style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 700, marginBottom: "1rem" }} className="italic truncate">{b.author}</p>
+                 <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 700, marginBottom: "1rem" }} className="italic truncate">{b.author}</p>
 
-                 <div className="flex items-center justify-between mb-4 mt-auto">
-                    <div className="text-[10px] font-black" style={{ color: "var(--text-primary)" }}>{b.avail} <span style={{ color: "var(--text-muted)" }}>/ {b.total}</span></div>
+                  <div className="flex items-center justify-between mb-4 mt-auto">
+                    <div className="text-xs font-black" style={{ color: "var(--text-primary)" }}>{b.avail} <span style={{ color: "var(--text-muted)" }}>/ {b.total}</span></div>
                     <div className="flex gap-0.5">
                        {[1,2,3,4,5].map(i => (
                           <div key={i} className={`h-1 w-3 rounded-full ${i <= (b.avail/b.total)*5 ? 'bg-plum' : 'bg-black/5'}`} />
@@ -204,7 +208,7 @@ const Library = ({ onNavigate }) => {
                        type: 'success'
                      });
                    }}
-                   className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${b.avail > 0 ? 'bg-plum text-milk shadow-md' : 'bg-black/5 text-black/20 cursor-not-allowed'}`} 
+                   className={`w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${b.avail > 0 ? 'bg-plum text-milk shadow-md' : 'bg-black/5 text-black/20 cursor-not-allowed'}`} 
                    disabled={b.avail === 0}
                  >
                     {b.avail > 0 ? 'Issue Book' : 'Out of Stock'}
@@ -227,10 +231,10 @@ const Library = ({ onNavigate }) => {
                 </div>
                 <button onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
-              <div className="p-8 pt-4 space-y-4">
+               <div className="p-8 pt-4 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Resource Title</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Resource Title</label>
                        <input 
                         value={newBook.title}
                         onChange={(e) => setNewBook({...newBook, title: e.target.value})}
@@ -240,7 +244,7 @@ const Library = ({ onNavigate }) => {
                        />
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Category</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Category</label>
                        <select 
                         value={newBook.category}
                         onChange={(e) => setNewBook({...newBook, category: e.target.value})}
@@ -253,7 +257,7 @@ const Library = ({ onNavigate }) => {
                        </select>
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Quantity</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Quantity</label>
                        <input 
                         type="number" 
                         value={newBook.quantity}

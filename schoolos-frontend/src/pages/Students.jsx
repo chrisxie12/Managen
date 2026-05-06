@@ -29,9 +29,9 @@ const FeeStatusBadge = React.memo(({ status }) => {
   return (
     <span
       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
-      style={{ background: s.bg, color: s.color, fontSize: "0.72rem", fontWeight: 700 }}
+      style={{ background: s.bg, color: s.color, fontSize: "0.75rem", fontWeight: 700 }}
     >
-      <s.icon size={10} />
+      <s.icon size={12} />
       {s.label}
     </span>
   );
@@ -134,6 +134,10 @@ const Students = React.memo(({ onNavigate }) => {
 
   return (
     <div className="p-6 h-full overflow-hidden">
+      <div className="mb-6">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Student Node</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional enrollment management and academic profile tracking</p>
+      </div>
       <div className="flex gap-6 h-full">
           {/* Left Panel: List */}
           <div className="flex-1 flex flex-col min-w-0 h-full">
@@ -177,7 +181,7 @@ const Students = React.memo(({ onNavigate }) => {
                       {["Student", "Class", "Attendance", "Fees", "GPA", ""].map((h) => (
                         <th
                           key={h}
-                          className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                          className="px-6 py-4 text-xs font-black uppercase tracking-widest"
                           style={{ color: "var(--text-muted)" }}
                         >
                           {h}
@@ -210,12 +214,12 @@ const Students = React.memo(({ onNavigate }) => {
                             </div>
                             <div>
                               <p style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 700 }}>{s.name}</p>
-                              <p style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{s.admission_no}</p>
+                              <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{s.admission_no}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-tighter" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>
+                          <span className="px-2 py-0.5 rounded-full text-xs font-black uppercase tracking-tighter" style={{ background: `var(--bg-secondary)`, color: "var(--text-secondary)" }}>
                             {s.class_name}
                           </span>
                         </td>
@@ -243,7 +247,7 @@ const Students = React.memo(({ onNavigate }) => {
               </div>
               <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: "var(--border)" }}>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Showing {filtered.length} students</p>
-                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: "var(--text-primary)" }}>
+                <button className="flex items-center gap-1 text-xs font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: "var(--text-primary)" }}>
                   <Download size={12} /> Export
                 </button>
               </div>
@@ -271,8 +275,8 @@ const Students = React.memo(({ onNavigate }) => {
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-lg" style={{ background: "rgba(255,243,230,0.15)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Playfair Display', serif" }}>
                     {selected.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                   </div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", fontWeight: 800, color: "white" }}>{selected.name}</h3>
-                  <p style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.8rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{selected.admission_no} · {selected.class_name}</p>
+                  <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", fontWeight: 800, color: "white" }}>{selected.name}</h2>
+                  <p style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.8rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{selected.admission_no} · {selected.class_name}</p>
                 </div>
 
                 <div className="grid grid-cols-2 divide-x divide-y border-b" style={{ borderColor: "var(--border)" }}>
@@ -284,13 +288,13 @@ const Students = React.memo(({ onNavigate }) => {
                   ].map((m, i) => (
                     <div key={i} className="p-4 text-center bg-black/[0.02]">
                       <div style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.95rem", fontWeight: 800 }}>{m.value}</div>
-                      <div style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
+                      <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
                     </div>
                   ))}
                 </div>
 
                 <div className="p-6 flex-1 space-y-4">
-                  <p className="uppercase tracking-widest font-black text-[10px]" style={{ color: "var(--text-muted)" }}>Contact Information</p>
+                  <p className="uppercase tracking-widest font-black text-xs" style={{ color: "var(--text-muted)" }}>Contact Information</p>
                   <div className="space-y-3">
                     {[
                       { icon: Phone, label: selected.parent_phone },
@@ -371,7 +375,7 @@ const Students = React.memo(({ onNavigate }) => {
                   { label: "Gender", key: "gender", type: "select", options: ["Male", "Female"] },
                 ].map((f) => (
                   <div key={f.key} className={f.key === 'name' || f.key === 'address' ? 'col-span-2' : ''}>
-                    <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
+                    <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
                     {f.type === 'select' ? (
                       <select value={newStudent[f.key]} onChange={(e) => setNewStudent({...newStudent, [f.key]: e.target.value})} className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:ring-2 focus:ring-plum/10 transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
                         {f.options.map(o => <option key={o}>{o}</option>)}

@@ -54,7 +54,7 @@ const FeeReports = () => {
                   <report.icon size={24} color={report.color} />
                </div>
 
-               <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.4rem", fontWeight: 800 }} className="mb-2 relative z-10">{report.title}</h3>
+               <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.4rem", fontWeight: 800 }} className="mb-2 relative z-10">{report.title}</h2>
                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600, marginBottom: "2rem" }} className="leading-relaxed max-w-xs relative z-10">{report.desc}</p>
 
                <div className="flex gap-2 relative z-10">

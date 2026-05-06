@@ -118,6 +118,12 @@ const Timetable = ({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6 h-full min-h-0">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Academic Timetable</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Weekly scheduling of subjects, faculty allocations, and laboratory usage</p>
+      </div>
+
       {/* Header Controls */}
       <div className="flex flex-wrap gap-4 items-center justify-between">
         <div className="flex items-center gap-4">
@@ -192,9 +198,9 @@ const Timetable = ({ onNavigate }) => {
           <table className="w-full border-collapse">
             <thead className="sticky top-0 z-10">
               <tr style={{ background: "var(--bg-secondary)", borderBottom: `1px solid var(--border)` }}>
-                <th className="px-6 py-5 text-left text-[10px] font-black uppercase tracking-widest sticky left-0 z-20" style={{ background: "var(--bg-secondary)", color: "var(--text-muted)", width: 120 }}>Time</th>
+                <th className="px-6 py-5 text-left text-xs font-black uppercase tracking-widest sticky left-0 z-20" style={{ background: "var(--bg-secondary)", color: "var(--text-muted)", width: 120 }}>Time</th>
                 {days.map(day => (
-                  <th key={day} className="px-6 py-5 text-left text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{day}</th>
+                  <th key={day} className="px-6 py-5 text-left text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>{day}</th>
                 ))}
               </tr>
             </thead>
@@ -203,13 +209,13 @@ const Timetable = ({ onNavigate }) => {
                 <tr key={slot.time} className={slot.isBreak ? "bg-black/[0.02]" : ""}>
                   <td className="px-6 py-8 border-b border-r sticky left-0 z-10" style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}>
                      <p style={{ color: "var(--text-primary)", fontSize: "0.78rem", fontWeight: 800 }}>{slot.time}</p>
-                     <p style={{ color: "var(--text-muted)", fontSize: "0.6rem", fontWeight: 700, textTransform: "uppercase" }}>{slot.label}</p>
+                     <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase" }}>{slot.label}</p>
                   </td>
                   {slot.isBreak ? (
                     <td colSpan={5} className="p-0 border-b" style={{ borderColor: "var(--border)" }}>
                       <div className="w-full py-8 flex items-center justify-center gap-4">
                          <div className="h-px flex-1 max-w-[100px]" style={{ background: "var(--border)" }} />
-                         <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.4em" }}>{slot.label}</span>
+                         <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.4em" }}>{slot.label}</span>
                          <div className="h-px flex-1 max-w-[100px]" style={{ background: "var(--border)" }} />
                       </div>
                     </td>
@@ -231,11 +237,11 @@ const Timetable = ({ onNavigate }) => {
                                  </div>
                                  <div className="flex items-center gap-1.5 mb-1">
                                     <User size={10} style={{ color: "var(--text-muted)" }} />
-                                    <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontWeight: 600 }}>{session.teacher_name}</span>
+                                    <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{session.teacher_name}</span>
                                  </div>
                                  <div className="flex items-center gap-1.5">
                                     <MapPin size={10} style={{ color: "var(--text-muted)" }} />
-                                    <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontWeight: 600 }}>{session.room}</span>
+                                    <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{session.room}</span>
                                  </div>
                               </div>
                             </motion.div>
@@ -281,7 +287,7 @@ const Timetable = ({ onNavigate }) => {
                     { label: "Class", key: "class_name", options: classes.map(c => c.name) },
                   ].map((f) => (
                     <div key={f.label} className={f.key === 'class_name' ? 'col-span-2' : ''}>
-                      <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
+                      <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
                       <select 
                         value={newSession[f.key]}
                         onChange={(e) => setNewSession({...newSession, [f.key]: e.target.value})}
@@ -294,7 +300,7 @@ const Timetable = ({ onNavigate }) => {
                     </div>
                   ))}
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Classroom / Lab</label>
+                  <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Classroom / Lab</label>
                   <input 
                     value={newSession.room}
                     onChange={(e) => setNewSession({...newSession, room: e.target.value})}

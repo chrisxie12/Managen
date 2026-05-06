@@ -102,6 +102,10 @@ const Classes = React.memo(({ onNavigate }) => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+        <div className="mb-2">
+           <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Academic Structure</h1>
+           <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Managing institutional sections, enrollment capacity and classroom nodes</p>
+        </div>
         {/* Metric Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s) => (
@@ -192,7 +196,7 @@ const Classes = React.memo(({ onNavigate }) => {
                        </div>
                     </div>
 
-                    <div className="flex gap-2 relative z-10">
+                     <div className="flex gap-2 relative z-10">
                        <button 
                          onClick={() => {
                            showToast({
@@ -201,7 +205,7 @@ const Classes = React.memo(({ onNavigate }) => {
                              type: 'info'
                            });
                          }}
-                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         className="flex-1 py-3 rounded-2xl border text-xs font-black uppercase tracking-widest transition-colors" 
                          style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
                        >
                          Roster
@@ -214,7 +218,7 @@ const Classes = React.memo(({ onNavigate }) => {
                              type: 'info'
                            });
                          }}
-                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         className="flex-1 py-3 rounded-2xl border text-xs font-black uppercase tracking-widest transition-colors" 
                          style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
                        >
                          Schedule
@@ -238,19 +242,18 @@ const Classes = React.memo(({ onNavigate }) => {
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Structure • Class Management</p>
                 </div>
                 <button aria-label="Close" onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
-              </div>
-              <div className="p-8 pt-4 space-y-4">
+              </div               <div className="p-8 pt-4 space-y-4">
                  <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Class Name</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Class Name</label>
                        <input placeholder="e.g. Form 1A" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Capacity</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Capacity</label>
                        <input type="number" placeholder="40" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
                     </div>
                     <div>
-                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Department</label>
+                       <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Department</label>
                        <select className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
                           <option>Junior High</option>
                           <option>Senior High</option>
@@ -258,6 +261,7 @@ const Classes = React.memo(({ onNavigate }) => {
                     </div>
                  </div>
               </div>
+>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 

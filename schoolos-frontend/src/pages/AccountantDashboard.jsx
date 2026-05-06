@@ -36,6 +36,10 @@ const AccountantDashboard = () => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Financial Command</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional revenue auditing and ledger management node</p>
+      </div>
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -65,7 +69,7 @@ const AccountantDashboard = () => {
               {s.value}
             </div>
             <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{s.label}</div>
-            <div style={{ color: s.color, fontSize: "0.7rem", marginTop: "0.25rem", fontWeight: 700 }}>{s.sub} vs last month</div>
+            <div style={{ color: s.color, fontSize: "0.75rem", marginTop: "0.25rem", fontWeight: 700 }}>{s.sub} vs last month</div>
           </div>
         ))}
       </div>
@@ -205,7 +209,7 @@ const AccountantDashboard = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+                      className="px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-widest"
                       style={tx.status === 'Success' 
                         ? { background: "#D1FAE5", color: "#065F46" } 
                         : { background: "#FEF3C7", color: "#92400E" }}

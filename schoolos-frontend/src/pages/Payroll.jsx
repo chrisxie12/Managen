@@ -80,6 +80,12 @@ const Payroll = () => {
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="mb-2">
+         <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Faculty Payroll</h1>
+         <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional salary disbursement and statutory contribution tracking</p>
+      </div>
+
       {/* Metric Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -139,12 +145,12 @@ const Payroll = () => {
             <table className="w-full text-left">
                <thead>
                   <tr style={{ background: "var(--bg-secondary)" }}>
-                     <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Staff Member</th>
-                     <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Gross</th>
-                     <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Deductions</th>
-                     <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Net Payable</th>
-                     <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Status</th>
-                     <th className="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Actions</th>
+                     <th className="px-8 py-5 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Staff Member</th>
+                     <th className="px-6 py-5 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Gross</th>
+                     <th className="px-6 py-5 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Deductions</th>
+                     <th className="px-6 py-5 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Net Payable</th>
+                     <th className="px-6 py-5 text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Status</th>
+                     <th className="px-8 py-5 text-right text-xs font-black uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Actions</th>
                   </tr>
                </thead>
                 <tbody className="divide-y" style={{ borderColor: "var(--border)" }}>
@@ -152,10 +158,10 @@ const Payroll = () => {
                       <tr key={p.id} className="hover:bg-black/[0.02] transition-colors">
                          <td className="px-8 py-5">
                             <div className="flex items-center gap-3">
-                               <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-[10px] bg-plum text-milk">{(p.staff_name || 'S').substring(0, 2).toUpperCase()}</div>
+                               <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-xs bg-plum text-milk">{(p.staff_name || 'S').substring(0, 2).toUpperCase()}</div>
                                <div>
                                   <div style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 800 }}>{p.staff_name}</div>
-                                  <div style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 600 }}>{p.role || 'Staff'}</div>
+                                  <div style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{p.role || 'Staff'}</div>
                                </div>
                             </div>
                          </td>
@@ -163,7 +169,7 @@ const Payroll = () => {
                          <td className="px-6 py-5 text-sm font-bold text-rose-500">-₵{p.deductions.toLocaleString()}</td>
                          <td className="px-6 py-5 text-sm font-black" style={{ color: "var(--text-primary)" }}>₵{p.net_salary.toLocaleString()}</td>
                          <td className="px-6 py-5">
-                            <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${p.status === 'Paid' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                            <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${p.status === 'Paid' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
                                {p.status}
                             </span>
                          </td>
