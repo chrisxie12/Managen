@@ -6,14 +6,14 @@
 
 :root {
   --bg-primary: #FFF3E6;    /* MILK */
-  --bg-secondary: #F9F1E7;  /* Slightly darker Milk for secondary surfaces */
+  --bg-secondary: #F9F1E7;  /* Slightly darker Milk */
   --card-bg: #ffffff;
   --accent-primary: #381932;   /* PLUM */
-  --accent-secondary: #512b4a; /* Lighter Plum for hover/accents */
+  --accent-secondary: #512b4a; /* Lighter Plum */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --text-primary: #381932;  /* PLUM as main text */
+  --text-primary: #381932;  /* PLUM */
   --text-secondary: #512b4a;
   --text-muted: #7d6077;
   --border: #e8dccf;
@@ -25,13 +25,20 @@
   
   --shadow-card: 0 8px 32px rgba(56, 25, 50, 0.08);
   --shadow-glow: 0 0 40px rgba(56, 25, 50, 0.15);
-  --shadow-intense: 0 0 80px rgba(56, 25, 50, 0.25);
-  
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+}
+
+.dark {
+  --bg-primary: #2d1328;    /* Darker Plum */
+  --bg-secondary: #381932;  /* PLUM */
+  --card-bg: #381932;
+  --accent-primary: #FFF3E6;   /* MILK */
+  --accent-secondary: #e8dccf;
+  --text-primary: #FFF3E6;  /* MILK */
+  --text-secondary: #e8dccf;
+  --text-muted: #bda6b9;
+  --border: rgba(255, 243, 230, 0.1);
+  --border-hover: rgba(255, 243, 230, 0.2);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 * {
@@ -45,6 +52,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -53,24 +61,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headings);
   font-weight: 700;
   color: var(--text-primary);
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s ease;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  background: none;
-  font-family: inherit;
-}
-
-input, select, textarea {
-  font-family: inherit;
 }
 
 /* Custom Scrollbar */
@@ -83,34 +73,9 @@ input, select, textarea {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-secondary);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes glowPulse {
-  0% { opacity: 0.15; }
-  50% { opacity: 0.25; }
-  100% { opacity: 0.15; }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.staggered-fade-up {
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
+  border-radius: 10px;
+  opacity: 0.3;
 }
 
 /* Utilities */
@@ -120,13 +85,20 @@ input, select, textarea {
   -webkit-text-fill-color: transparent;
 }
 
-.blue-glow-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
+/* Global Transition for Theme */
+* {
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* Design Token Utilities - Using Variables where possible */
+.bg-plum { background-color: #381932 !important; }
+.bg-plum-light { background-color: #512b4a !important; }
+.bg-milk { background-color: #FFF3E6 !important; }
+.text-plum { color: #381932 !important; }
+.text-milk { color: #FFF3E6 !important; }
+
+/* Dynamic versions of tokens that flip */
+.dynamic-bg { background-color: var(--bg-primary); }
+.dynamic-card { background-color: var(--card-bg); border-color: var(--border); }
+.dynamic-text { color: var(--text-primary); }
+.dynamic-muted { color: var(--text-muted); }

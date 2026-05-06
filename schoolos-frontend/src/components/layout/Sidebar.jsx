@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { 
   LayoutDashboard, 
   GraduationCap, 
@@ -18,19 +19,12 @@ import {
   MessageSquare, 
   Settings2,
   LogOut,
-  X,
-  ChevronDown,
-  HelpCircle
+  X
 } from 'lucide-react';
-
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const SIDEBAR_BG = "#F9F1E7";
-const MUTED = "#7D6077";
 
 const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   const { authSession, signOut } = useAuth();
+  const { isDarkMode } = useTheme();
   const role = (authSession?.user?.role || authSession?.role || 'admin').toLowerCase();
 
   const allSections = [
@@ -79,20 +73,20 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   })).filter(section => section.items.length > 0);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full overflow-hidden" style={{ background: SIDEBAR_BG, borderRight: `1px solid rgba(56,25,50,0.07)` }}>
+    <div className="flex flex-col h-full overflow-hidden transition-all duration-300" style={{ background: "var(--bg-secondary)", borderRight: `1px solid var(--border)` }}>
       {/* Branding Section */}
       <div className="flex items-center gap-2 px-6 py-8 cursor-pointer" onClick={() => onNavigate('dashboard')}>
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
+          style={{ background: isDarkMode ? "#FFF3E6" : "#381932" }}
         >
-          <GraduationCap size={18} color={MILK} />
+          <GraduationCap size={18} color={isDarkMode ? "#381932" : "#FFF3E6"} />
         </div>
         <div>
           <div
             style={{
               fontFamily: "'Playfair Display', serif",
-              color: PLUM,
+              color: "var(--text-primary)",
               fontWeight: 700,
               fontSize: "1.1rem",
               lineHeight: 1.1,
@@ -100,7 +94,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
           >
             SchoolOS
           </div>
-          <div style={{ color: MUTED, fontSize: "0.7rem", fontWeight: 600 }}>Accra Ridge School</div>
+          <div style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 600 }}>Accra Ridge School</div>
         </div>
       </div>
 
@@ -110,7 +104,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
           <div key={idx}>
             <p
               className="px-4 mb-2 uppercase tracking-widest font-black"
-              style={{ color: MUTED, fontSize: "0.65rem" }}
+              style={{ color: "var(--text-muted)", fontSize: "0.65rem" }}
             >
               {section.title}
             </p>
@@ -126,8 +120,8 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
                     }}
                     className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl w-full text-left transition-all active:scale-95 group"
                     style={{
-                      background: active ? PLUM : "transparent",
-                      color: active ? MILK : PLUM_LIGHT,
+                      background: active ? (isDarkMode ? "#FFF3E6" : "#381932") : "transparent",
+                      color: active ? (isDarkMode ? "#381932" : "#FFF3E6") : "var(--text-secondary)",
                     }}
                   >
                     <item.icon size={18} strokeWidth={active ? 2.5 : 2} />
@@ -137,7 +131,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
                     {item.id === 'communication' && !active && (
                       <span
                         className="ml-auto px-1.5 py-0.5 rounded-full text-xs font-black"
-                        style={{ background: `rgba(56,25,50,0.1)`, color: PLUM, fontSize: "0.7rem" }}
+                        style={{ background: `rgba(56,25,50,0.1)`, color: "var(--text-primary)", fontSize: "0.7rem" }}
                       >
                         3
                       </span>
@@ -151,36 +145,36 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
       </div>
 
       {/* User Card */}
-      <div className="p-4 border-t border-black/5" style={{ background: 'rgba(56,25,50,0.02)' }}>
+      <div className="p-4 border-t" style={{ background: 'rgba(56,25,50,0.02)', borderColor: 'var(--border)' }}>
         <div
           className="p-3 rounded-2xl flex items-center gap-3"
           style={{
-            background: "rgba(255,255,255,0.5)",
-            border: `1px solid rgba(56,25,50,0.05)`,
+            background: "var(--card-bg)",
+            border: `1px solid var(--border)`,
           }}
         >
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
+            style={{ background: isDarkMode ? "#FFF3E6" : "#381932" }}
           >
-            <span style={{ color: MILK, fontSize: "0.85rem", fontWeight: 800 }}>
+            <span style={{ color: isDarkMode ? "#381932" : "#FFF3E6", fontSize: "0.85rem", fontWeight: 800 }}>
               {(authSession?.user?.name || 'AD').substring(0, 2).toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
             <div
-              style={{ color: PLUM, fontSize: "0.85rem", fontWeight: 700 }}
+              style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 700 }}
               className="truncate"
             >
               {authSession?.user?.name || 'School Admin'}
             </div>
-            <div style={{ color: MUTED, fontSize: "0.72rem", fontWeight: 600 }}>{authSession?.user?.role || 'Administrator'}</div>
+            <div style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600 }}>{authSession?.user?.role || 'Administrator'}</div>
           </div>
           <button
             onClick={signOut}
             className="hover:text-red-500 transition-colors p-1"
           >
-            <LogOut size={16} color={MUTED} />
+            <LogOut size={16} style={{ color: "var(--text-muted)" }} />
           </button>
         </div>
       </div>
@@ -216,7 +210,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
                 onClick={onClose}
                 className="absolute top-4 right-4 z-10 p-1 rounded-full bg-white/10"
               >
-                <X size={20} color={PLUM} />
+                <X size={20} style={{ color: "var(--text-primary)" }} />
               </button>
               {sidebarContent}
             </motion.aside>

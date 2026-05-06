@@ -220,6 +220,19 @@ const Login = ({ onNavigate }) => {
             <button type="button" className="w-full h-14 bg-white border rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-3" style={{ color: PLUM, borderColor: "rgba(56,25,50,0.08)" }}>
                <Sparkles size={16} style={{ color: PLUM_LIGHT }} /> Send Magic Link
             </button>
+
+            <div className="pt-6">
+              <button 
+                type="button"
+                onClick={() => {
+                  setLoginForm({ email: 'gyanchris131@gmail.com', password: 'Admin1234!' });
+                }}
+                className="w-full py-3 rounded-xl border-2 border-dashed border-plum/20 text-[10px] font-black uppercase tracking-widest hover:bg-plum/[0.03] transition-all flex items-center justify-center gap-2"
+                style={{ color: PLUM }}
+              >
+                <Zap size={14} fill={PLUM} /> Auto-fill Demo Credentials
+              </button>
+            </div>
           </form>
 
           <p className="mt-12 text-center text-sm font-bold" style={{ color: MUTED }}>
