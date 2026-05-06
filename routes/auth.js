@@ -77,6 +77,7 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         return res.json({
             data: {
                 message: 'Login successful',
+                token,
                 user: {
                     id:    user.id,
                     name:  user.name,

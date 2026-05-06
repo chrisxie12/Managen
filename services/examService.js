@@ -132,6 +132,18 @@ class ExamService {
         }
         return data || [];
     }
+    async deleteExam(tenantId, id) {
+        const { error } = await supabase.from('exams')
+            .delete()
+            .eq('id', id)
+            .eq('tenant_id', tenantId);
+        if (error) {
+            const err = new Error(error.message);
+            err.statusCode = 400;
+            throw err;
+        }
+        return true;
+    }
 }
 
 module.exports = new ExamService();

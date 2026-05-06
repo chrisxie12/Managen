@@ -133,16 +133,23 @@ router.post('/students', protect, allowRoles('admin'), validate(studentSchema), 
     }
 });
 
-// GET /api/school/attendance
-router.get('/attendance', protect, requireModule('attendance'), async (req, res) => {
+// POST /api/school/attendance
+router.post('/attendance', protect, allowRoles('admin', 'teacher'), async (req, res) => {
     try {
-        const records = await schoolService.getAttendance(req.tenant.id, req.query.date, req.query.className);
-        return res.json({ data: { records } });
+        const data = await schoolService.submitAttendance(req.tenant.id, req.body.records);
+        return res.status(201).json({ data: { message: 'Attendance recorded.', data } });
     } catch (err) {
-        if (err.statusCode) {
-            return res.status(err.statusCode).json({ error: err.message });
-        }
-        return res.status(500).json({ error: 'Error fetching attendance.' });
+        return res.status(500).json({ error: 'Error recording attendance.' });
+    }
+});
+
+// GET /api/school/attendance/stats
+router.get('/attendance/stats', protect, async (req, res) => {
+    try {
+        const stats = await schoolService.getDashboardStats(req.tenant.id);
+        return res.json({ data: { attendanceRate: stats.attendanceRate } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching attendance stats.' });
     }
 });
 
@@ -206,6 +213,16 @@ router.post('/exams', protect, allowRoles('admin', 'teacher'), validate(examSche
     }
 });
 
+// DELETE /api/school/exams/:id
+router.delete('/exams/:id', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        await examService.deleteExam(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Exam removed.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error removing exam.' });
+    }
+});
+
 // GET /api/school/results
 router.get('/results', protect, allowRoles('admin', 'teacher'), async (req, res) => {
     try {
@@ -246,6 +263,156 @@ router.get('/results/student/:studentId', protect, async (req, res) => {
             return res.status(err.statusCode).json({ error: err.message });
         }
         return res.status(500).json({ error: 'Error fetching student results.' });
+    }
+});
+
+// ─── Teachers ────────────────────────────────────────────────
+router.get('/teachers', protect, async (req, res) => {
+    try {
+        const teachers = await schoolService.getTeachers(req.tenant.id);
+        return res.json({ data: { teachers } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching teachers.' });
+    }
+});
+
+router.post('/teachers', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const teacher = await schoolService.createTeacher(req.tenant.id, req.body);
+        return res.status(201).json({ data: { teacher } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating teacher.' });
+    }
+});
+
+router.put('/teachers/:id', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const teacher = await schoolService.updateTeacher(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { teacher } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating teacher.' });
+    }
+});
+
+router.delete('/teachers/:id', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        await schoolService.deleteTeacher(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Teacher removed.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error removing teacher.' });
+    }
+});
+
+// ─── Classes ─────────────────────────────────────────────────
+router.get('/classes', protect, async (req, res) => {
+    try {
+        const classes = await schoolService.getClasses(req.tenant.id);
+        return res.json({ data: { classes } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching classes.' });
+    }
+});
+
+router.post('/classes', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const cls = await schoolService.createClass(req.tenant.id, req.body);
+        return res.status(201).json({ data: { class: cls } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating class.' });
+    }
+});
+
+// ─── Library ─────────────────────────────────────────────────
+router.get('/library/books', protect, async (req, res) => {
+    try {
+        const books = await schoolService.getBooks(req.tenant.id);
+        return res.json({ data: { books } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching books.' });
+    }
+});
+
+router.post('/library/books', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const book = await schoolService.addBook(req.tenant.id, req.body);
+        return res.status(201).json({ data: { book } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error adding book.' });
+    }
+});
+
+router.post('/library/issue', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const issue = await schoolService.issueBook(req.tenant.id, req.body);
+        return res.status(201).json({ data: { issue } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error issuing book.' });
+    }
+});
+
+router.put('/library/return/:id', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const issue = await schoolService.returnBook(req.tenant.id, req.params.id);
+        return res.json({ data: { issue } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error returning book.' });
+    }
+});
+
+// ─── Timetable ───────────────────────────────────────────────
+router.get('/timetable', protect, async (req, res) => {
+    try {
+        const timetable = await schoolService.getTimetable(req.tenant.id);
+        return res.json({ data: { timetable } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching timetable.' });
+    }
+});
+
+router.post('/timetable', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+    try {
+        const session = await schoolService.assignPeriod(req.tenant.id, req.body);
+        return res.status(201).json({ data: { session } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error assigning period.' });
+    }
+});
+
+// ─── Payroll ─────────────────────────────────────────────────
+router.get('/payroll', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const payroll = await schoolService.getPayroll(req.tenant.id);
+        return res.json({ data: { payroll } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching payroll.' });
+    }
+});
+
+router.post('/payroll/run', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const record = await schoolService.runPayroll(req.tenant.id, req.body);
+        return res.status(201).json({ data: { record } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error running payroll.' });
+    }
+});
+
+// ─── Communications ──────────────────────────────────────────
+router.post('/notifications/broadcast', protect, allowRoles('admin'), async (req, res) => {
+    try {
+        const log = await schoolService.broadcastNotification(req.tenant.id, req.body);
+        return res.status(201).json({ data: { log } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error broadcasting notification.' });
+    }
+});
+
+router.get('/notifications/log', protect, async (req, res) => {
+    try {
+        const logs = await schoolService.getNotificationLogs(req.tenant.id);
+        return res.json({ data: { logs } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching notification logs.' });
     }
 });
 
