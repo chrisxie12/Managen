@@ -25,6 +25,7 @@ import {
 } from "recharts";
 import { buildUrl } from '../services/api';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const monthlyRevenue = [
   { month: "Sep", collected: 42000, target: 52000 },
@@ -73,6 +74,7 @@ const FeeManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [fees, setFees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchFees = async () => {
@@ -299,7 +301,17 @@ const FeeManagement = () => {
           </div>
           <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: "var(--border)" }}>
             <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Showing {filtered.length} transactions</p>
-            <button className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: "var(--text-primary)" }}>
+            <button 
+              onClick={() => {
+                showToast({
+                  title: 'Data Compilation',
+                  message: 'The financial ledger is being exported to CSV format.',
+                  type: 'info'
+                });
+              }}
+              className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+              style={{ color: "var(--text-primary)" }}
+            >
               <Download size={13} /> Export CSV
             </button>
           </div>
@@ -364,6 +376,13 @@ const FeeManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <button
+                        onClick={() => {
+                          showToast({
+                            title: p.paid ? 'Viewing Payslip' : 'Processing Salary',
+                            message: p.paid ? `Opening digital slip for ${p.name}.` : `Initiating bank transfer to ${p.name}.`,
+                            type: p.paid ? 'info' : 'success'
+                          });
+                        }}
                         className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-transform"
                         style={{
                           background: p.paid ? `var(--bg-secondary)` : "var(--accent-primary)",
@@ -475,7 +494,19 @@ const FeeManagement = () => {
                 </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setShowModal(false)}>Post Transaction</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setShowModal(false);
+                    showToast({
+                      title: 'Transaction Posted',
+                      message: 'The payment has been successfully recorded in the institutional ledger.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Post Transaction
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setShowModal(false)}>Discard</Button>
               </div>
             </motion.div>

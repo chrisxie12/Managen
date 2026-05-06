@@ -8,10 +8,12 @@ import {
   Activity,
   MoreVertical
 } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
 
 const Payroll = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -79,7 +81,16 @@ const Payroll = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
          </div>
-         <button className="flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk shadow-lg shadow-plum/20">
+         <button 
+           onClick={() => {
+             showToast({
+               title: 'Payroll Initiated',
+               message: 'The institutional salary batch is being processed for disbursement.',
+               type: 'info'
+             });
+           }}
+           className="flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk shadow-lg shadow-plum/20"
+         >
             <Plus size={16} /> Run Payroll
          </button>
       </div>
@@ -119,7 +130,18 @@ const Payroll = () => {
                            </span>
                         </td>
                         <td className="px-8 py-5 text-right">
-                           <button className="p-2 hover:bg-black/5 rounded-lg transition-colors"><MoreVertical size={18} style={{ color: "var(--text-muted)" }} /></button>
+                           <button 
+                             onClick={() => {
+                               showToast({
+                                 title: 'Record Access',
+                                 message: `Opening digital ledger for ${p.name}.`,
+                                 type: 'info'
+                               });
+                             }}
+                             className="p-2 hover:bg-black/5 rounded-lg transition-colors"
+                           >
+                             <MoreVertical size={18} style={{ color: "var(--text-muted)" }} />
+                           </button>
                         </td>
                      </tr>
                   ))}

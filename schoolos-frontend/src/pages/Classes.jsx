@@ -11,11 +11,13 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const Classes = ({ onNavigate }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -136,8 +138,32 @@ const Classes = ({ onNavigate }) => {
                     </div>
 
                     <div className="flex gap-2 relative z-10">
-                       <button className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>Roster</button>
-                       <button className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>Schedule</button>
+                       <button 
+                         onClick={() => {
+                           showToast({
+                             title: 'Loading Roster',
+                             message: `Retrieving student list for ${c.name}.`,
+                             type: 'info'
+                           });
+                         }}
+                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+                       >
+                         Roster
+                       </button>
+                       <button 
+                         onClick={() => {
+                           showToast({
+                             title: 'Loading Schedule',
+                             message: `Accessing academic timetable for ${c.name}.`,
+                             type: 'info'
+                           });
+                         }}
+                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+                       >
+                         Schedule
+                       </button>
                     </div>
                  </motion.div>
               );
@@ -178,7 +204,19 @@ const Classes = ({ onNavigate }) => {
                  </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsAddModalOpen(false)}>Create Section</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    showToast({
+                      title: 'Section Provisioned',
+                      message: 'The new academic section has been integrated into the node.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Create Section
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsAddModalOpen(false)}>Discard</Button>
               </div>
             </motion.div>

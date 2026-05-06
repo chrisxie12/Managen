@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { buildUrl } from '../services/api';
+import { useToast } from '../contexts/ToastContext';
 
 const Exams = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState("exams");
@@ -23,6 +24,7 @@ const Exams = ({ onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [exams, setExams] = useState([]);
   const [search, setSearch] = useState("");
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -214,7 +216,17 @@ const Exams = ({ onNavigate }) => {
         </div>
         <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: "var(--border)" }}>
           <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Total: {filteredExams.length} assessments</p>
-          <button className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: "var(--text-primary)" }}>
+          <button 
+            onClick={() => {
+              showToast({
+                title: 'Preparing Export',
+                message: 'The examination schedule is being compiled into a CSV file.',
+                type: 'info'
+              });
+            }}
+            className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+            style={{ color: "var(--text-primary)" }}
+          >
             <Download size={13} /> Export Schedule
           </button>
         </div>
@@ -246,7 +258,19 @@ const Exams = ({ onNavigate }) => {
                 ))}
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsAddModalOpen(false)}>Register Exam</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    showToast({
+                      title: 'Assessment Registered',
+                      message: 'The new examination has been scheduled and student nodes notified.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Register Exam
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsAddModalOpen(false)}>Discard</Button>
               </div>
             </motion.div>

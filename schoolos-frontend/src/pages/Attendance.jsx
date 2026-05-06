@@ -13,10 +13,13 @@ import {
   Send
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const Attendance = () => {
   const [isMarkModalOpen, setIsMarkModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
+  const [attendanceState, setAttendanceState] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -139,7 +142,16 @@ const Attendance = () => {
               <AlertCircle className="absolute -right-6 -bottom-6 w-32 h-32 text-rose-500/10 group-hover:scale-110 transition-transform duration-700" />
               <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#991B1B", fontSize: "1.1rem", fontWeight: 800 }}>Unnotified Absences</h3>
               <p style={{ color: "#B91C1C", fontSize: "0.75rem", fontWeight: 600, lineHeight: 1.5 }}>There are 2 students absent today without parental notification. Immediate action required.</p>
-              <button className="w-full py-3 rounded-2xl bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-105 transition-all flex items-center justify-center gap-2">
+              <button 
+                onClick={() => {
+                  showToast({
+                    title: 'SMS Dispatching',
+                    message: 'Emergency absence notifications are being routed to parents.',
+                    type: 'info'
+                  });
+                }}
+                className="w-full py-3 rounded-2xl bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-rose-500/20 hover:scale-105 transition-all flex items-center justify-center gap-2"
+              >
                  <Send size={14} /> Send SMS Alerts
               </button>
            </div>
@@ -200,7 +212,11 @@ const Attendance = () => {
                           <span style={{ color: "var(--text-primary)", fontSize: "0.8rem", fontWeight: 700 }}>Student Full Name {i}</span>
                           <div className="flex gap-1">
                              {['P', 'A', 'L'].map(l => (
-                                <button key={l} className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${l === 'P' ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}>
+                                <button 
+                                  key={l} 
+                                  onClick={() => setAttendanceState(prev => ({ ...prev, [i]: l }))}
+                                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${attendanceState[i] === l ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}
+                                >
                                    {l}
                                 </button>
                              ))}

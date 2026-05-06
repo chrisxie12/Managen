@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { buildUrl } from '../services/api';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const FeeStatusBadge = ({ status }) => {
   const map = {
@@ -39,6 +40,7 @@ const Students = ({ onNavigate }) => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showToast } = useToast();
   
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,11 @@ const Students = ({ onNavigate }) => {
       }
     } catch (err) {
       console.error("Failed to fetch students", err);
+      showToast({
+        title: 'Network Error',
+        message: 'Could not synchronize student records.',
+        type: 'error'
+      });
     } finally {
       setTimeout(() => setLoading(false), 800);
     }
@@ -94,9 +101,21 @@ const Students = ({ onNavigate }) => {
         setNewStudent({
           name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'JHS 3A', address: ''
         });
+        showToast({
+          title: 'Student Provisioned',
+          message: `${newStudent.name} has been added to the node.`,
+          type: 'success'
+        });
+      } else {
+        throw new Error(json.message || 'Failed to add student');
       }
     } catch (err) {
       console.error("Error adding student", err);
+      showToast({
+        title: 'Operation Failed',
+        message: err.message,
+        type: 'error'
+      });
     }
   };
 
@@ -276,10 +295,29 @@ const Students = ({ onNavigate }) => {
                 </div>
 
                 <div className="p-5 flex flex-col gap-2">
-                  <button className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95 bg-plum text-milk">
+                  <button 
+                    onClick={() => {
+                      showToast({
+                        title: 'Sending Report',
+                        message: `WhatsApp ledger for ${selected.name} is being generated.`,
+                        type: 'info'
+                      });
+                    }}
+                    className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95 bg-plum text-milk"
+                  >
                     SEND WHATSAPP REPORT
                   </button>
-                  <button className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95 border-2" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}>
+                  <button 
+                    onClick={() => {
+                      showToast({
+                        title: 'Feature Locked',
+                        message: 'Profile editing is restricted in the preview node.',
+                        type: 'warning'
+                      });
+                    }}
+                    className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95 border-2" 
+                    style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+                  >
                     EDIT PROFILE
                   </button>
                 </div>

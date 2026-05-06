@@ -12,6 +12,7 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const timeSlots = [
   { time: '7:00 AM', label: 'Period 1' },
@@ -45,6 +46,7 @@ const Timetable = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState("class");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -91,7 +93,18 @@ const Timetable = ({ onNavigate }) => {
         </div>
 
         <div className="flex items-center gap-3">
-           <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border transition-colors" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+           <button 
+             onClick={() => {
+               showToast({
+                 title: 'Preparing Document',
+                 message: 'Generating print-optimized institutional timetable.',
+                 type: 'info'
+               });
+               window.print();
+             }}
+             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border transition-colors" 
+             style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+           >
               <Printer size={16} /> Print
            </button>
            <button
@@ -218,7 +231,19 @@ const Timetable = ({ onNavigate }) => {
                 </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsAddModalOpen(false)}>Assign Session</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    showToast({
+                      title: 'Session Assigned',
+                      message: 'The academic period has been successfully scheduled.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Assign Session
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsAddModalOpen(false)}>Discard</Button>
               </div>
             </motion.div>

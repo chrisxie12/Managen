@@ -13,6 +13,7 @@ import {
   MoreHorizontal
 } from "lucide-react";
 import { useTheme } from '../contexts/ThemeContext';
+import { useToast } from '../contexts/ToastContext';
 
 const conversations = [
   {
@@ -80,6 +81,7 @@ const Communication = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("inbox");
   const [sending, setSending] = useState(false);
+  const { showToast } = useToast();
 
   const filtered = conversations.filter(
     (c) =>
@@ -90,9 +92,19 @@ const Communication = () => {
   const handleSend = () => {
     if (!message.trim()) return;
     setSending(true);
+    showToast({
+      title: 'Message Dispatch',
+      message: 'Routing message through WhatsApp Business API...',
+      type: 'info'
+    });
     setTimeout(() => {
       setSending(false);
       setMessage("");
+      showToast({
+        title: 'Delivered',
+        message: 'Message sent to the parent node.',
+        type: 'success'
+      });
     }, 800);
   };
 
@@ -189,8 +201,32 @@ const Communication = () => {
                  </div>
               </div>
               <div className="flex gap-2">
-                 <button className="w-9 h-9 rounded-xl flex items-center justify-center border transition-colors shadow-sm" style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}><Phone size={14} style={{ color: "var(--text-primary)" }} /></button>
-                 <button className="w-9 h-9 rounded-xl flex items-center justify-center border transition-colors shadow-sm" style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}><MoreHorizontal size={14} style={{ color: "var(--text-primary)" }} /></button>
+                 <button 
+                   onClick={() => {
+                     showToast({
+                       title: 'Initiating Call',
+                       message: `Connecting to ${selected.phone}...`,
+                       type: 'info'
+                     });
+                   }}
+                   className="w-9 h-9 rounded-xl flex items-center justify-center border transition-colors shadow-sm" 
+                   style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}
+                 >
+                   <Phone size={14} style={{ color: "var(--text-primary)" }} />
+                 </button>
+                 <button 
+                   onClick={() => {
+                     showToast({
+                       title: 'Channel Settings',
+                       message: 'Opening advanced communication parameters.',
+                       type: 'info'
+                     });
+                   }}
+                   className="w-9 h-9 rounded-xl flex items-center justify-center border transition-colors shadow-sm" 
+                   style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}
+                 >
+                   <MoreHorizontal size={14} style={{ color: "var(--text-primary)" }} />
+                 </button>
               </div>
             </div>
 
@@ -222,7 +258,23 @@ const Communication = () => {
             <div className="p-6 border-t" style={{ borderColor: "var(--border)" }}>
                <div className="flex gap-2 mb-4">
                   {templates.map(t => (
-                    <button key={t.id} className="px-3 py-1.5 rounded-lg border flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-black/5" style={{ borderColor: `${t.color}40`, color: t.color }}>
+                    <button 
+                      key={t.id} 
+                      onClick={() => {
+                        let tpl = "";
+                        if (t.id === 'report') tpl = `Terminal Report Card for ${selected.student}...`;
+                        if (t.id === 'fee') tpl = `Dear ${selected.parent}, this is a reminder regarding...`;
+                        if (t.id === 'attend') tpl = `${selected.student} was marked absent today...`;
+                        setMessage(tpl);
+                        showToast({
+                          title: 'Template Loaded',
+                          message: `${t.label} draft is ready for dispatch.`,
+                          type: 'info'
+                        });
+                      }}
+                      className="px-3 py-1.5 rounded-lg border flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-black/5" 
+                      style={{ borderColor: `${t.color}40`, color: t.color }}
+                    >
                       <t.icon size={12} /> {t.label}
                     </button>
                   ))}

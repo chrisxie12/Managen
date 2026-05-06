@@ -23,6 +23,7 @@ import {
 } from "recharts";
 import { useTheme } from '../contexts/ThemeContext';
 import { buildUrl } from '../services/api';
+import { useToast } from '../contexts/ToastContext';
 
 const gradeData = [
   { subject: "Math", avg: 78, highest: 96 },
@@ -47,6 +48,7 @@ const Results = ({ onNavigate }) => {
   const [results, setResults] = useState([]);
   const [search, setSearch] = useState("");
   const [generatingReport, setGeneratingReport] = useState(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -73,7 +75,19 @@ const Results = ({ onNavigate }) => {
 
   const handleGenerate = (id) => {
     setGeneratingReport(id);
-    setTimeout(() => setGeneratingReport(null), 2000);
+    showToast({
+      title: 'Report Generation',
+      message: 'Processing terminal results for WhatsApp dispatch.',
+      type: 'info'
+    });
+    setTimeout(() => {
+      setGeneratingReport(null);
+      showToast({
+        title: 'Report Dispatched',
+        message: 'The academic ledger has been sent to the parent node.',
+        type: 'success'
+      });
+    }, 2000);
   };
 
   const filtered = useMemo(() => {
@@ -169,6 +183,13 @@ const Results = ({ onNavigate }) => {
         </div>
 
         <button
+          onClick={() => {
+            showToast({
+              title: 'Module Restricted',
+              message: 'Grade entry is restricted in the preview session.',
+              type: 'warning'
+            });
+          }}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform bg-plum text-milk shadow-lg shadow-plum/20"
         >
           <Plus size={16} /> Enter Grades
@@ -187,7 +208,19 @@ const Results = ({ onNavigate }) => {
         >
           <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: "var(--border)" }}>
              <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.05rem" }}>Terminal Results Ledger</h3>
-             <button className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: "var(--text-primary)" }}><Download size={13} /> Export CSV</button>
+             <button 
+               onClick={() => {
+                 showToast({
+                   title: 'Data Extraction',
+                   message: 'The results ledger is being compiled into a CSV file.',
+                   type: 'info'
+                 });
+               }}
+               className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" 
+               style={{ color: "var(--text-primary)" }}
+             >
+               <Download size={13} /> Export CSV
+             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">

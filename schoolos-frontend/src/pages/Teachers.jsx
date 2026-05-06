@@ -11,11 +11,13 @@ import {
   MoreVertical
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const Teachers = ({ onNavigate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -140,8 +142,31 @@ const Teachers = ({ onNavigate }) => {
                     </div>
 
                     <div className="flex w-full gap-2">
-                       <button className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>Profile</button>
-                       <button className="flex-1 py-3 rounded-2xl bg-plum text-milk text-[10px] font-black uppercase tracking-widest shadow-sm">Message</button>
+                       <button 
+                         onClick={() => {
+                           showToast({
+                             title: 'Accessing Profile',
+                             message: `Retrieving academic record for ${t.name}...`,
+                             type: 'info'
+                           });
+                         }}
+                         className="flex-1 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest transition-colors" 
+                         style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+                       >
+                         Profile
+                       </button>
+                       <button 
+                         onClick={() => {
+                           showToast({
+                             title: 'Opening Channel',
+                             message: `Establishing secure connection to ${t.name}.`,
+                             type: 'info'
+                           });
+                         }}
+                         className="flex-1 py-3 rounded-2xl bg-plum text-milk text-[10px] font-black uppercase tracking-widest shadow-sm"
+                       >
+                         Message
+                       </button>
                     </div>
                  </div>
               </motion.div>
@@ -183,7 +208,19 @@ const Teachers = ({ onNavigate }) => {
                  </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsModalOpen(false)}>Onboard Staff</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    showToast({
+                      title: 'Staff Onboarded',
+                      message: 'The new teacher has been synchronized with the institution database.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Onboard Staff
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsModalOpen(false)}>Cancel</Button>
               </div>
             </motion.div>

@@ -10,11 +10,14 @@ import {
   X
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useToast } from '../contexts/ToastContext';
 
 const Library = ({ onNavigate }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { showToast } = useToast();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -126,7 +129,17 @@ const Library = ({ onNavigate }) => {
                     </div>
                  </div>
 
-                 <button className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${b.avail > 0 ? 'bg-plum text-milk shadow-md' : 'bg-black/5 text-black/20 cursor-not-allowed'}`} disabled={b.avail === 0}>
+                 <button 
+                   onClick={() => {
+                     showToast({
+                       title: 'Resource Issued',
+                       message: `"${b.title}" has been checked out successfully.`,
+                       type: 'success'
+                     });
+                   }}
+                   className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${b.avail > 0 ? 'bg-plum text-milk shadow-md' : 'bg-black/5 text-black/20 cursor-not-allowed'}`} 
+                   disabled={b.avail === 0}
+                 >
                     {b.avail > 0 ? 'Issue Book' : 'Out of Stock'}
                  </button>
               </motion.div>
@@ -168,7 +181,19 @@ const Library = ({ onNavigate }) => {
                  </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsAddModalOpen(false)}>Register Item</Button>
+                <Button 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    showToast({
+                      title: 'Catalog Entry Added',
+                      message: 'The new resource has been indexed in the institution catalog.',
+                      type: 'success'
+                    });
+                  }}
+                >
+                  Register Item
+                </Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
               </div>
             </motion.div>

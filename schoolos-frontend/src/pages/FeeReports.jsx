@@ -9,9 +9,11 @@ import {
   Download,
   FileText
 } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
 
 const FeeReports = () => {
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);
@@ -56,10 +58,29 @@ const FeeReports = () => {
                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600, marginBottom: "2rem" }} className="leading-relaxed max-w-xs relative z-10">{report.desc}</p>
 
                <div className="flex gap-2 relative z-10">
-                  <button className="flex-1 py-3.5 rounded-2xl bg-plum text-milk text-[10px] font-black uppercase tracking-widest shadow-lg shadow-plum/20 flex items-center justify-center gap-2">
+                  <button 
+                    onClick={() => {
+                      showToast({
+                        title: 'Generating Report',
+                        message: `The ${report.title} is being compiled into an encrypted PDF.`,
+                        type: 'info'
+                      });
+                    }}
+                    className="flex-1 py-3.5 rounded-2xl bg-plum text-milk text-[10px] font-black uppercase tracking-widest shadow-lg shadow-plum/20 flex items-center justify-center gap-2"
+                  >
                      <Download size={14} /> Export PDF
                   </button>
-                  <button className="w-14 py-3.5 rounded-2xl border flex items-center justify-center hover:bg-black/5 transition-colors" style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}>
+                  <button 
+                    onClick={() => {
+                      showToast({
+                        title: 'Accessing Data',
+                        message: `Opening the raw ledger for ${report.title}.`,
+                        type: 'info'
+                      });
+                    }}
+                    className="w-14 py-3.5 rounded-2xl border flex items-center justify-center hover:bg-black/5 transition-colors" 
+                    style={{ color: "var(--text-primary)", borderColor: "var(--border)" }}
+                  >
                      <FileText size={18} />
                   </button>
                </div>
@@ -75,7 +96,16 @@ const FeeReports = () => {
                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800 }} className="mb-1 italic">Quarterly Audit Manifest</h3>
                <p style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.8rem", fontWeight: 600 }}>Export the full financial ledger for the current academic session.</p>
             </div>
-            <button className="px-10 py-4 rounded-2xl bg-milk text-plum text-xs font-black uppercase tracking-widest shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all">
+            <button 
+              onClick={() => {
+                showToast({
+                  title: 'Audit Generation',
+                  message: 'The Quarterly Audit Manifest is being serialized into Excel.',
+                  type: 'info'
+                });
+              }}
+              className="px-10 py-4 rounded-2xl bg-milk text-plum text-xs font-black uppercase tracking-widest shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-all"
+            >
                Generate Excel
             </button>
          </div>
