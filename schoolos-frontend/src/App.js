@@ -18,6 +18,7 @@ import FeeManagement from './pages/FeeManagement';
 import Payroll from './pages/Payroll';
 import FeeReports from './pages/FeeReports';
 import Dashboard from './pages/Dashboard';
+import Communication from './pages/Communication';
 import AccountantDashboard from './pages/AccountantDashboard';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
@@ -46,6 +47,7 @@ function AuthenticatedApp() {
     fees: <FeeManagement onNavigate={setActiveModule} />,
     payroll: <Payroll onNavigate={setActiveModule} />,
     'fee-reports': <FeeReports onNavigate={setActiveModule} />,
+    communication: <Communication onNavigate={setActiveModule} />,
     settings: <Settings onNavigate={setActiveModule} />,
   };
 

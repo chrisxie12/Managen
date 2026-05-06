@@ -1,57 +1,87 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Wallet, 
-  Plus, 
-  FileDown, 
   TrendingUp, 
+  TrendingDown, 
   AlertCircle, 
-  PieChart, 
-  Bell, 
+  CheckCircle2, 
+  Clock, 
+  Plus, 
+  Download, 
   Search, 
   Filter, 
-  Eye, 
-  Smartphone,
+  ArrowUpRight, 
+  ArrowDownLeft, 
+  CreditCard, 
+  Users, 
   X,
-  CreditCard,
-  Banknote,
-  MoreVertical,
-  CheckCircle,
-  ArrowUpRight,
-  ShieldCheck,
-  Send,
-  Zap,
-  Sparkles,
-  Receipt
+  Smartphone,
+  ChevronRight,
+  MoreHorizontal,
+  DollarSign
 } from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Cell,
+  PieChart,
+  Pie
+} from "recharts";
 import Sidebar from '../components/layout/Sidebar';
 import DashboardNavbar from '../components/layout/DashboardNavbar';
+import { buildUrl, handleApiError } from '../services/api';
 import { Button } from '../components/ui/Button';
-import { SkeletonLoader } from '../components/ui/SkeletonLoader';
-import { EmptyState } from '../components/ui/EmptyState';
-import { buildUrl } from '../services/api';
 
-// Count Up Component
-const CountUp = ({ value, prefix = "", suffix = "" }) => {
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { damping: 30, stiffness: 100 });
-  const [displayValue, setDisplayValue] = useState(0);
+const PLUM = "#381932";
+const PLUM_LIGHT = "#512b4a";
+const MILK = "#FFF3E6";
+const MUTED = "#7D6077";
 
-  useEffect(() => {
-    motionValue.set(value);
-  }, [value, motionValue]);
+const monthlyRevenue = [
+  { month: "Sep", collected: 42000, target: 52000 },
+  { month: "Oct", collected: 58000, target: 52000 },
+  { month: "Nov", collected: 49000, target: 52000 },
+  { month: "Dec", collected: 63000, target: 65000 },
+  { month: "Jan", collected: 71000, target: 70000 },
+  { month: "Feb", collected: 86000, target: 80000 },
+  { month: "Mar", collected: 94000, target: 88000 },
+];
 
-  useEffect(() => {
-    return springValue.on("change", (latest) => {
-      setDisplayValue(Math.floor(latest));
-    });
-  }, [springValue]);
+const pieData = [
+  { name: "Paid", value: 812, color: "#10B981" },
+  { name: "Partial", value: 276, color: "#F59E0B" },
+  { name: "Overdue", value: 160, color: "#EF4444" },
+];
 
+const payrollData = [
+  { name: "Mrs. Akua Boateng", role: "Mathematics Teacher", salary: 4200, paid: true },
+  { name: "Mr. Kofi Osei", role: "English Teacher", salary: 3800, paid: true },
+  { name: "Mrs. Esi Appiah", role: "Science Teacher", salary: 4000, paid: false },
+  { name: "Mr. Yaw Mensah", role: "ICT Teacher", salary: 3600, paid: true },
+  { name: "Mrs. Abena Kumi", role: "Deputy Head", salary: 5500, paid: false },
+];
+
+const StatusBadge = ({ status }) => {
+  const map = {
+    paid: { bg: "#D1FAE5", color: "#065F46", label: "Paid" },
+    partial: { bg: "#FEF3C7", color: "#92400E", label: "Partial" },
+    overdue: { bg: "#FEE2E2", color: "#991B1B", label: "Overdue" },
+  };
+  const s = map[status] || map.paid;
   return (
-    <span>
-      {prefix}
-      {displayValue.toLocaleString()}
-      {suffix}
+    <span
+      className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest"
+      style={{ background: s.bg, color: s.color }}
+    >
+      {s.label}
     </span>
   );
 };
@@ -59,18 +89,29 @@ const CountUp = ({ value, prefix = "", suffix = "" }) => {
 const FeeManagement = ({ onNavigate }) => {
   const [activeItem, setActiveItem] = useState('fees');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isRecordModalOpen, setIsRecordModalOpen] = useState(false);
-  const [isRemindersModalOpen, setIsRemindersModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("fees");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [showModal, setShowModal] = useState(false);
+  
   const [fees, setFees] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFees = async () => {
       try {
         const res = await fetch(buildUrl('/api/school/fees'), { credentials: 'include' });
         const json = await res.json();
-        if (json.data) setFees(json.data.fees || []);
+        if (json.data) {
+          const mapped = (json.data.fees || []).map(f => ({
+            ...f,
+            status: (f.amount - f.paid_amount) === 0 ? 'paid' : (f.paid_amount > 0 ? 'partial' : 'overdue'),
+            id: f.id.toString().padStart(4, '0'),
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            method: 'Bank Transfer'
+          }));
+          setFees(mapped);
+        }
       } catch (err) {
         console.error("Failed to fetch fees", err);
       } finally {
@@ -80,27 +121,24 @@ const FeeManagement = ({ onNavigate }) => {
     fetchFees();
   }, []);
 
-  const totalExpected = fees.reduce((acc, f) => acc + (f.amount || 0), 0) || 450000;
-  const totalPaid = fees.reduce((acc, f) => acc + (f.paid_amount || 0), 0) || 312000;
-  const outstanding = totalExpected - totalPaid;
-  const collectionRate = 72;
+  const filtered = useMemo(() => {
+    return (fees.length > 0 ? fees : []).filter((r) => {
+      const matchSearch =
+        (r.student_name || '').toLowerCase().includes(search.toLowerCase()) ||
+        (r.admission_no || '').toLowerCase().includes(search.toLowerCase());
+      const matchStatus =
+        statusFilter === "All" || r.status === statusFilter.toLowerCase();
+      return matchSearch && matchStatus;
+    });
+  }, [fees, search, statusFilter]);
 
-  const stats = [
-    { label: 'Projected Revenue', value: totalExpected, icon: Wallet, color: 'text-accent-primary', bg: 'bg-accent-primary/10', prefix: '₵' },
-    { label: 'Collections', value: totalPaid, icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10', prefix: '₵' },
-    { label: 'Outstanding', value: outstanding, icon: AlertCircle, color: 'text-rose-500', bg: 'bg-rose-500/10', prefix: '₵' },
-    { label: 'Collection Rate', value: collectionRate, icon: PieChart, color: 'text-amber-500', bg: 'bg-amber-500/10', suffix: '%' },
-  ];
-
-  const filteredFees = useMemo(() => {
-    return fees.filter(f => 
-      (f.student_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (f.class_name || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [fees, searchQuery]);
+  const totalCollected = fees.reduce((acc, r) => acc + (r.paid_amount || 0), 0) || 312000;
+  const totalOwed = fees.reduce((acc, r) => acc + (r.amount - r.paid_amount || 0), 0) || 138000;
+  const totalPayroll = payrollData.reduce((acc, p) => acc + p.salary, 0);
+  const paidPayroll = payrollData.filter((p) => p.paid).reduce((acc, p) => acc + p.salary, 0);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-bg-primary text-text-primary font-body">
       <Sidebar 
         activeItem={activeItem} 
         onNavigate={(item) => {
@@ -110,250 +148,385 @@ const FeeManagement = ({ onNavigate }) => {
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
       />
+      
       <DashboardNavbar 
         activeItem={activeItem} 
         onMenuClick={() => setSidebarOpen(true)} 
       />
 
-      <main className="md:ml-[280px] pt-20 p-8 text-text-primary">
-        {/* Page Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4"
-        >
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-500">
-                <Receipt size={24} />
-              </div>
-              <h1 className="text-3xl font-black tracking-tight font-headings">Finance</h1>
-            </div>
-            <p className="text-text-muted text-sm font-medium tracking-tight">Financial oversight, fee collection, and automated payment tracking.</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" className="px-5 border-slate-100" onClick={() => setIsRemindersModalOpen(true)}>
-              <Bell size={18} className="mr-2" /> Reminders
-            </Button>
-            <Button onClick={() => setIsRecordModalOpen(true)} className="px-5 bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/15">
-              <Plus size={18} className="mr-2" /> Record Payment
-            </Button>
-          </div>
-        </motion.div>
-
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white border border-slate-50 rounded-[28px] p-6 shadow-sm hover:shadow-md transition-all duration-300 group"
+      <main className="lg:ml-64 pt-16 p-6 sm:p-8 flex flex-col gap-6">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            {
+              label: "Total Collected",
+              value: `₵${totalCollected.toLocaleString()}`,
+              icon: ArrowUpRight,
+              color: "#10B981",
+              sub: "This term",
+            },
+            {
+              label: "Total Owed",
+              value: `₵${totalOwed.toLocaleString()}`,
+              icon: ArrowDownLeft,
+              color: "#EF4444",
+              sub: `${filtered.filter((r) => r.status !== "paid").length} students`,
+            },
+            {
+              label: "Payroll Status",
+              value: `₵${paidPayroll.toLocaleString()}`,
+              icon: Users,
+              color: "#6366F1",
+              sub: `of ₵${totalPayroll.toLocaleString()}`,
+            },
+            {
+              label: "Collection Rate",
+              value: `${((totalCollected / (totalCollected + totalOwed)) * 100).toFixed(1)}%`,
+              icon: TrendingUp,
+              color: "#F59E0B",
+              sub: "+4.2% vs last term",
+            },
+          ].map((card) => (
+            <div
+              key={card.label}
+              className="p-5 rounded-[24px] border"
+              style={{
+                background: "white",
+                borderColor: "rgba(56,25,50,0.07)",
+                boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+              }}
             >
-              <div className="flex items-center gap-5">
-                <div className={`w-14 h-14 rounded-2xl ${stat.bg} flex items-center justify-center ${stat.color} group-hover:scale-110 transition-transform`}>
-                  <stat.icon size={26} />
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-text-primary tracking-tight leading-none mb-1">
-                    <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
-                  </div>
-                  <div className="text-[10px] font-black text-text-muted uppercase tracking-widest">{stat.label}</div>
-                </div>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                style={{ background: `${card.color}15` }}
+              >
+                <card.icon size={16} color={card.color} />
               </div>
-            </motion.div>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  color: PLUM,
+                  fontSize: "clamp(1rem, 2vw, 1.3rem)",
+                  fontWeight: 700,
+                  lineHeight: 1.1,
+                }}
+              >
+                {card.value}
+              </div>
+              <div style={{ color: MUTED, fontSize: "0.72rem", marginTop: "0.2rem", fontWeight: 600 }}>
+                {card.label}
+              </div>
+              <div style={{ color: card.color, fontSize: "0.7rem", marginTop: "0.25rem", fontWeight: 700 }}>
+                {card.sub}
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Filters & Table */}
-        <div className="bg-white border border-slate-50 rounded-[40px] shadow-sm overflow-hidden">
-           <div className="p-8 border-b border-slate-50 flex flex-col lg:flex-row justify-between items-center gap-4 bg-slate-50/30">
-              <div className="flex flex-1 max-w-md relative w-full">
-                 <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" />
-                 <input 
-                    placeholder="Search by student or class..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white border border-slate-100 rounded-2xl py-3.5 pl-12 pr-6 text-xs font-bold outline-none focus:border-amber-500/20 shadow-sm"
-                 />
-              </div>
+        {/* Unified Tab Hub */}
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div
+              className="flex p-1 rounded-2xl border"
+              style={{ background: "white", borderColor: "rgba(56,25,50,0.08)" }}
+            >
+              {[
+                { id: "fees", label: "Fee Records", icon: Wallet },
+                { id: "payroll", label: "Staff Payroll", icon: Users },
+                { id: "analytics", label: "Analytics", icon: TrendingUp },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="px-5 py-2 rounded-xl text-xs flex items-center gap-2 transition-all active:scale-95"
+                  style={{
+                    background: activeTab === tab.id ? PLUM : "transparent",
+                    color: activeTab === tab.id ? MILK : MUTED,
+                    fontWeight: activeTab === tab.id ? 700 : 500,
+                  }}
+                >
+                  <tab.icon size={14} />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
-              <div className="flex items-center gap-3">
-                 <select className="bg-white border border-slate-100 rounded-xl px-5 py-3 text-[10px] font-black text-slate-500 uppercase tracking-widest outline-none shadow-sm appearance-none min-w-[140px]">
-                    <option>Current Term</option>
-                    <option>Next Term</option>
-                 </select>
-                 <Button variant="secondary" className="h-11 px-5 border-slate-100 shadow-sm">
-                    <Filter size={16} className="mr-2" /> Filter
-                 </Button>
+            {activeTab === "fees" && (
+              <div
+                className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl border transition-all focus-within:border-plum/20"
+                style={{ background: "white", borderColor: "rgba(56,25,50,0.08)", width: 240 }}
+              >
+                <Search size={14} color={MUTED} />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search students..."
+                  className="bg-transparent outline-none text-xs flex-1 font-medium"
+                  style={{ color: PLUM }}
+                />
               </div>
-           </div>
+            )}
+          </div>
 
-           <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                 <thead>
-                    <tr className="bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                       <th className="px-8 py-5">Student / Account</th>
-                       <th className="px-6 py-5">Academic Level</th>
-                       <th className="px-6 py-5">Total Billing</th>
-                       <th className="px-6 py-5">Total Paid</th>
-                       <th className="px-6 py-5">Balance</th>
-                       <th className="px-6 py-5">Financial Status</th>
-                       <th className="px-8 py-5 text-right">Actions</th>
-                    </tr>
-                 </thead>
-                 <tbody className="divide-y divide-slate-50">
-                    {loading ? (
-                       Array.from({ length: 5 }).map((_, i) => (
-                          <tr key={i}>
-                             <td className="px-8 py-6">
-                                <div className="flex items-center gap-3">
-                                   <SkeletonLoader width="36px" height="36px" borderRadius="999px" />
-                                   <SkeletonLoader width="140px" height="14px" />
-                                </div>
-                             </td>
-                             <td className="px-6 py-6"><SkeletonLoader width="80px" height="14px" /></td>
-                             <td className="px-6 py-6"><SkeletonLoader width="70px" height="14px" /></td>
-                             <td className="px-6 py-6"><SkeletonLoader width="70px" height="14px" /></td>
-                             <td className="px-6 py-6"><SkeletonLoader width="70px" height="14px" /></td>
-                             <td className="px-6 py-6"><SkeletonLoader width="90px" height="24px" borderRadius="99px" /></td>
-                             <td className="px-8 py-6 text-right"><SkeletonLoader width="32px" height="32px" borderRadius="8px" className="ml-auto" /></td>
-                          </tr>
-                       ))
-                    ) : filteredFees.length > 0 ? (
-                       filteredFees.map((f, i) => {
-                          const balance = (f.amount || 0) - (f.paid_amount || 0);
-                          return (
-                          <motion.tr 
-                            key={f.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: i * 0.03 }}
-                            className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
-                          >
-                             <td className="px-8 py-5">
-                                <div className="flex items-center gap-3">
-                                   <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-black text-amber-500 border border-slate-100 uppercase">
-                                      {(f.student_name || '??').substring(0, 2)}
-                                   </div>
-                                   <div className="text-sm font-bold text-text-primary group-hover:text-amber-600 transition-colors">{f.student_name}</div>
-                                </div>
-                             </td>
-                             <td className="px-6 py-5 text-xs font-black text-text-secondary">{f.class_name}</td>
-                             <td className="px-6 py-5 text-sm font-black text-text-primary tracking-tight">₵{f.amount || 0}</td>
-                             <td className="px-6 py-5 text-sm font-bold text-emerald-500 tracking-tight">₵{f.paid_amount || 0}</td>
-                             <td className="px-6 py-5 text-sm font-black text-rose-500 tracking-tight">₵{balance}</td>
-                             <td className="px-6 py-5">
-                                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border ${
-                                   balance === 0 ? 'bg-emerald-50 border-emerald-100 text-emerald-600' :
-                                   f.paid_amount > 0 ? 'bg-amber-50 border-amber-100 text-amber-600' :
-                                   'bg-rose-50 border-rose-100 text-rose-600'
-                                }`}>
-                                   {balance === 0 ? 'Fully Paid' : f.paid_amount > 0 ? 'Partial Payment' : 'Outstanding'}
-                                </div>
-                             </td>
-                             <td className="px-8 py-5 text-right">
-                                <button className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-text-primary hover:bg-white hover:shadow-sm transition-all"><MoreVertical size={16} /></button>
-                             </td>
-                          </motion.tr>
-                       )})
-                    ) : (
-                       <tr>
-                          <td colSpan={7}>
-                             <EmptyState 
-                                isSearch={searchQuery.length > 0}
-                                title={searchQuery ? "No financial records" : "No billing active"}
-                                description={searchQuery 
-                                   ? `No financial records match your search for "${searchQuery}".`
-                                   : "The financial roster is currently empty. Start by generating termly fee bills for students."}
-                                actionLabel={!searchQuery && "Generate Billing"}
-                                onAction={() => setIsRecordModalOpen(true)}
-                             />
-                          </td>
-                       </tr>
-                    )}
-                 </tbody>
-              </table>
-           </div>
-
-           <div className="p-8 bg-slate-50/50 flex justify-between items-center">
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                 Audit Trail: <span className="text-emerald-500 italic">All transactions are encrypted and logged</span>
-              </div>
-              <div className="flex gap-2">
-                 <Button variant="secondary" size="sm" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase border-slate-100" disabled>Previous</Button>
-                 <Button variant="secondary" size="sm" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase border-slate-100" disabled>Next</Button>
-              </div>
-           </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-transform"
+            style={{
+              background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
+              color: MILK,
+              boxShadow: "0 4px 14px rgba(56,25,50,0.25)",
+            }}
+          >
+            <Plus size={16} />
+            {activeTab === "payroll" ? "Run Payroll" : "Record Payment"}
+          </button>
         </div>
+
+        {/* ── Fees Tab ── */}
+        {activeTab === "fees" && (
+          <div
+            className="rounded-[24px] overflow-hidden border flex flex-col"
+            style={{
+              background: "white",
+              borderColor: "rgba(56,25,50,0.07)",
+              boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+            }}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr style={{ borderBottom: `1px solid rgba(56,25,50,0.06)` }}>
+                    {["Student", "Admission", "Amount", "Paid", "Balance", "Date", "Status"].map((h) => (
+                      <th
+                        key={h}
+                        className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                        style={{ color: MUTED }}
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(filtered.length > 0 ? filtered : []).map((r) => (
+                    <tr
+                      key={r.id}
+                      className="hover:bg-[#FFF3E6]/40 transition-colors border-b last:border-0"
+                      style={{ borderColor: "rgba(56,25,50,0.04)" }}
+                    >
+                      <td className="px-6 py-4">
+                        <span style={{ color: PLUM, fontSize: "0.85rem", fontWeight: 700 }}>{r.student_name}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span style={{ fontFamily: "'JetBrains Mono', monospace", color: MUTED, fontSize: "0.72rem", fontWeight: 600 }}>{r.admission_no}</span>
+                      </td>
+                      {[r.amount, r.paid_amount, (r.amount - r.paid_amount)].map((v, i) => (
+                        <td key={i} className="px-6 py-4">
+                          <span
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              color: i === 2 && v > 0 ? "#EF4444" : PLUM,
+                              fontSize: "0.8rem",
+                              fontWeight: i === 2 && v > 0 ? 800 : 600,
+                            }}
+                          >
+                            ₵{v.toLocaleString()}
+                          </span>
+                        </td>
+                      ))}
+                      <td className="px-6 py-4">
+                        <span style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>{r.date}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <StatusBadge status={r.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+              <p style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>Showing {filtered.length} transactions</p>
+              <button className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+                <Download size={13} /> Export CSV
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Payroll Tab ── */}
+        {activeTab === "payroll" && (
+          <div
+            className="rounded-[24px] overflow-hidden border flex flex-col"
+            style={{
+              background: "white",
+              borderColor: "rgba(56,25,50,0.07)",
+              boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+            }}
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr style={{ borderBottom: `1px solid rgba(56,25,50,0.06)` }}>
+                    {["Staff Member", "Role", "Salary", "Status", "Action"].map((h) => (
+                      <th
+                        key={h}
+                        className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                        style={{ color: MUTED }}
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {payrollData.map((p) => (
+                    <tr
+                      key={p.name}
+                      className="hover:bg-[#FFF3E6]/40 transition-colors border-b last:border-0"
+                      style={{ borderColor: "rgba(56,25,50,0.04)" }}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-[10px]"
+                            style={{ background: `rgba(56,25,50,0.08)`, color: PLUM }}
+                          >
+                            {p.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                          </div>
+                          <span style={{ color: PLUM, fontSize: "0.85rem", fontWeight: 700 }}>{p.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>{p.role}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.8rem", fontWeight: 800 }}>₵{p.salary.toLocaleString()}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase"
+                          style={p.paid ? { background: "#D1FAE5", color: "#065F46" } : { background: "#FEE2E2", color: "#991B1B" }}
+                        >
+                          {p.paid ? "Disbursed" : "Pending"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase active:scale-95 transition-transform"
+                          style={{
+                            background: p.paid ? `rgba(56,25,50,0.06)` : PLUM,
+                            color: p.paid ? MUTED : MILK,
+                          }}
+                        >
+                          {p.paid ? "View Slip" : "Pay Now"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ── Analytics Tab ── */}
+        {activeTab === "analytics" && (
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div
+              className="p-6 rounded-[24px] border"
+              style={{
+                background: "white",
+                borderColor: "rgba(56,25,50,0.07)",
+                boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+              }}
+            >
+              <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+                Revenue vs Target
+              </h3>
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart data={monthlyRevenue}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: MUTED, fontWeight: 600 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 10, fill: MUTED, fontWeight: 600 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
+                  <Tooltip
+                    contentStyle={{ background: "white", border: `1px solid rgba(56,25,50,0.1)`, borderRadius: 12, fontSize: 11, fontWeight: 600 }}
+                    formatter={(v) => [`₵${v.toLocaleString()}`]}
+                  />
+                  <Bar dataKey="target" fill="rgba(56,25,50,0.08)" radius={[4, 4, 0, 0]} barSize={16} name="Target" />
+                  <Bar dataKey="collected" fill={PLUM} radius={[4, 4, 0, 0]} barSize={16} name="Collected" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div
+              className="p-6 rounded-[24px] border"
+              style={{
+                background: "white",
+                borderColor: "rgba(56,25,50,0.07)",
+                boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+              }}
+            >
+              <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.5rem" }}>
+                Fee Status
+              </h3>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={5} dataKey="value">
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "white", border: `1px solid rgba(56,25,50,0.1)`, borderRadius: 12, fontSize: 11, fontWeight: 600 }} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex justify-center gap-4 mt-2">
+                {pieData.map(d => (
+                  <div key={d.name} className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full" style={{ background: d.color }} />
+                    <span style={{ color: MUTED, fontSize: "0.7rem", fontWeight: 700 }}>{d.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
-      {/* Record Payment Modal */}
+      {/* Payment Modal */}
       <AnimatePresence>
-        {isRecordModalOpen && (
+        {showModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsRecordModalOpen(false)}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl bg-white rounded-[40px] shadow-2xl relative z-[101] overflow-hidden border border-slate-100"
-            >
-              <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowModal(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-md bg-white rounded-[40px] shadow-2xl relative z-10 overflow-hidden border">
+              <div className="p-8 pb-4 flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-black tracking-tight text-text-primary font-headings">Revenue Collection</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Finance • Payment Recording</p>
+                  <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: PLUM }}>Record Payment</h2>
+                  <p style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>Financial Ledger Entry</p>
                 </div>
-                <button onClick={() => setIsRecordModalOpen(false)} className="w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-100 text-slate-400 hover:text-text-primary transition-colors shadow-sm">
-                  <X size={20} />
-                </button>
+                <button onClick={() => setShowModal(false)} className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center"><X size={20} color={MUTED} /></button>
               </div>
-
-              <div className="p-10 max-h-[60vh] overflow-y-auto no-scrollbar">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div className="flex flex-col gap-2">
-                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Search Student</label>
-                       <input 
-                         placeholder="Name or Admission No..."
-                         className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-text-primary outline-none focus:bg-white focus:border-emerald-500/30 transition-all shadow-sm"
-                       />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Amount (₵)</label>
-                       <input 
-                         type="number"
-                         placeholder="0.00"
-                         className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-black text-text-primary outline-none focus:bg-white focus:border-emerald-500/30 transition-all shadow-sm"
-                       />
-                    </div>
-                 </div>
-
-                 <div className="flex flex-col gap-2 mb-8">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment Method</label>
-                    <div className="grid grid-cols-3 gap-3">
-                       {['Bank Transfer', 'MTN MoMo', 'Cash'].map(method => (
-                          <button key={method} className="py-4 rounded-xl border border-slate-100 bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-white hover:border-accent-primary hover:text-accent-primary transition-all">
-                             {method}
-                          </button>
-                       ))}
-                    </div>
-                 </div>
-
-                 <div className="bg-amber-50 rounded-2xl p-6 border border-amber-100 italic text-amber-700 text-xs font-medium">
-                    A digital receipt will be automatically generated and sent to the parent's registered mobile number upon confirmation.
-                 </div>
+              <div className="p-8 pt-4 space-y-4">
+                {[
+                  { label: "Student Name / ID", placeholder: "e.g. Ama Owusu" },
+                  { label: "Amount Received (₵)", placeholder: "e.g. 1800" },
+                  { label: "Reference", placeholder: "e.g. TXN-8219" },
+                ].map((f) => (
+                  <div key={f.label}>
+                    <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: MUTED }}>{f.label}</label>
+                    <input placeholder={f.placeholder} className="w-full bg-slate-50 border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-plum/30 transition-all" style={{ color: PLUM }} />
+                  </div>
+                ))}
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: MUTED }}>Method</label>
+                  <select className="w-full bg-slate-50 border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-plum/30 transition-all" style={{ color: PLUM }}>
+                    {["Cash", "Bank Transfer", "Paystack", "Flutterwave"].map(m => <option key={m}>{m}</option>)}
+                  </select>
+                </div>
               </div>
-
-              <div className="px-10 py-8 bg-slate-50/50 border-t border-slate-50 flex gap-4">
-                <Button className="flex-1 h-14 rounded-2xl shadow-xl shadow-emerald-500/10 font-black text-sm uppercase tracking-widest bg-emerald-500 hover:bg-emerald-600">Post Transaction</Button>
-                <Button variant="secondary" className="flex-1 h-14 rounded-2xl font-black text-xs uppercase tracking-widest border-slate-200" onClick={() => setIsRecordModalOpen(false)}>Discard</Button>
+              <div className="p-8 bg-slate-50 flex gap-3">
+                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" onClick={() => setShowModal(false)}>Post Transaction</Button>
+                <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest border-slate-200" onClick={() => setShowModal(false)}>Discard</Button>
               </div>
             </motion.div>
           </div>
