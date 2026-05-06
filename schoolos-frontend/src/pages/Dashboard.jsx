@@ -103,7 +103,12 @@ const Dashboard = React.memo(({ onNavigate }) => {
             <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Welcome back, <span className="underline decoration-plum/20 underline-offset-4" style={{ color: "var(--text-primary)" }}>{authSession?.user?.name || 'Administrator'}</span></p>
          </div>
          <div className="flex gap-2">
-            <button className="p-2.5 rounded-xl border shadow-sm hover:bg-black/5 transition-colors" title="Notifications" style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}>
+            <button 
+               className="p-2.5 rounded-xl border shadow-sm hover:bg-black/5 transition-colors" 
+               title="Notifications" 
+               aria-label="Notifications"
+               style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}
+            >
                <Bell size={18} style={{ color: "var(--text-primary)" }} />
             </button>
             <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-plum/20 hover:scale-105 active:scale-95 transition-all bg-plum text-milk">

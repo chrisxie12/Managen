@@ -235,6 +235,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden"
+            aria-label="Toggle menu"
             style={{ color: PLUM }}
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}

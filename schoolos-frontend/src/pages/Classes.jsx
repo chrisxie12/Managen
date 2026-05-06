@@ -172,7 +172,7 @@ const Classes = React.memo(({ onNavigate }) => {
                     <div className="absolute top-0 right-0 w-24 h-24 bg-black/[0.02] rounded-bl-[60px] -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-500" />
                     <div className="flex justify-between items-start mb-6 relative z-10">
                        <span className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest" style={{ background: "var(--bg-secondary)", color: "var(--text-muted)" }}>{c.dept}</span>
-                       <button className="text-slate-300 hover:text-plum transition-colors"><MoreVertical size={18} /></button>
+                       <button aria-label="More options" className="text-slate-300 hover:text-plum transition-colors"><MoreVertical size={18} /></button>
                     </div>
 
                     <h3 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.5rem", fontWeight: 800, marginBottom: "0.5rem" }} className="relative z-10">{c.name}</h3>
@@ -237,7 +237,7 @@ const Classes = React.memo(({ onNavigate }) => {
                   <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--text-primary)" }}>New Academic Section</h2>
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Structure • Class Management</p>
                 </div>
-                <button onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
+                <button aria-label="Close" onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 space-y-4">
                  <div className="grid grid-cols-2 gap-4">

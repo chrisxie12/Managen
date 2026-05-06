@@ -248,7 +248,7 @@ const Exams = ({ onNavigate }) => {
                     </span>
                   </td>
                   <td className="px-6 py-5">
-                    <button className="p-2 hover:bg-black/5 rounded-lg transition-colors"><MoreVertical size={16} style={{ color: "var(--text-muted)" }} /></button>
+                    <button aria-label="More options" className="p-2 hover:bg-black/5 rounded-lg transition-colors"><MoreVertical size={16} style={{ color: "var(--text-muted)" }} /></button>
                   </td>
                 </tr>
               ))}
@@ -284,7 +284,7 @@ const Exams = ({ onNavigate }) => {
                   <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--text-primary)" }}>New Assessment</h2>
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Examination Registration Portal</p>
                 </div>
-                <button onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
+                <button aria-label="Close" onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 space-y-4">
                 {[

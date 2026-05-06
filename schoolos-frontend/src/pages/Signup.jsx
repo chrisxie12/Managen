@@ -314,7 +314,7 @@ export const Signup = ({ setActiveTab }) => {
                                 <div className="text-[9px] font-black uppercase tracking-widest" style={{ color: MUTED }}>{m.role} Node</div>
                               </div>
                             </div>
-                            <button onClick={() => removeTeamMember(m.email)} className="text-slate-300 hover:text-red-500 transition-colors p-2"><Trash2 size={16} /></button>
+                            <button aria-label="Remove team member" onClick={() => removeTeamMember(m.email)} className="text-slate-300 hover:text-red-500 transition-colors p-2"><Trash2 size={16} /></button>
                           </div>
                         ))}
                       </div>

@@ -182,9 +182,9 @@ const Attendance = () => {
               </div>
               <div className="flex gap-2">
                  <div className="flex items-center gap-2 border rounded-xl px-3 py-2 shadow-sm" style={{ background: "var(--bg-secondary)", borderColor: "var(--border)" }}>
-                    <button className="hover:opacity-60 transition-opacity"><ChevronLeft size={14} style={{ color: "var(--text-primary)" }} /></button>
+                    <button aria-label="Previous day" className="hover:opacity-60 transition-opacity"><ChevronLeft size={14} style={{ color: "var(--text-primary)" }} /></button>
                     <span style={{ color: "var(--text-primary)", fontSize: "0.7rem", fontWeight: 800 }}>May 1, 2026</span>
-                    <button className="hover:opacity-60 transition-opacity"><ChevronRight size={14} style={{ color: "var(--text-primary)" }} /></button>
+                    <button aria-label="Next day" className="hover:opacity-60 transition-opacity"><ChevronRight size={14} style={{ color: "var(--text-primary)" }} /></button>
                  </div>
                  <button onClick={() => setIsMarkModalOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-plum text-milk shadow-lg shadow-plum/20">
                     <Plus size={14} /> Mark Roll
@@ -286,7 +286,7 @@ const Attendance = () => {
                   <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--text-primary)" }}>Mark Presence</h2>
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Daily Roll Management</p>
                 </div>
-                <button onClick={() => setIsMarkModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
+                <button aria-label="Close" onClick={() => setIsMarkModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 space-y-4">
                  <div className="flex gap-4">

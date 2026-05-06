@@ -359,7 +359,7 @@ const Students = React.memo(({ onNavigate }) => {
                   <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: "var(--text-primary)" }}>New Student</h2>
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Institutional Enrollment Form</p>
                 </div>
-                <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
+                <button aria-label="Close" onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 grid grid-cols-2 gap-4">
                 {[
