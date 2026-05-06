@@ -404,6 +404,36 @@ export const LandingPage = React.memo(({ onNavigate }) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const revealNodes = Array.from(document.querySelectorAll(".landing-reveal"));
+    if (!revealNodes.length) return undefined;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      revealNodes.forEach((node) => node.classList.add("in-view"));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    revealNodes.forEach((node, index) => {
+      node.style.setProperty("--reveal-delay", `${Math.min(index * 45, 280)}ms`);
+      observer.observe(node);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: MILK }}
@@ -535,7 +565,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-32 pb-20 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left copy */}
@@ -635,7 +665,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             </div>
 
             {/* Right — hero image + floating cards */}
-            <div className="relative hidden lg:block">
+            <div className="relative hidden lg:block landing-reveal">
               <div
                 className="rounded-[48px] overflow-hidden"
                 style={{
@@ -653,7 +683,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
 
               {/* Floating metric card */}
               <div
-                className="absolute -left-10 top-16 p-4 rounded-2xl"
+                className="absolute -left-10 top-16 p-4 rounded-2xl landing-float"
                 style={{
                   background: "white",
                   boxShadow: "0 8px 32px rgba(56,25,50,0.12)",
@@ -684,11 +714,12 @@ export const LandingPage = React.memo(({ onNavigate }) => {
 
               {/* Floating attendance badge */}
               <div
-                className="absolute -right-6 bottom-24 p-4 rounded-2xl"
+                className="absolute -right-6 bottom-24 p-4 rounded-2xl landing-float"
                 style={{
                   background: "white",
                   boxShadow: "0 8px 32px rgba(56,25,50,0.12)",
                   border: `1px solid rgba(56,25,50,0.07)`,
+                  animationDelay: "1.3s",
                 }}
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -721,7 +752,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── DIFFERENTIATORS ── */}
-      <section className="px-6 pb-20">
+      <section className="px-6 pb-20 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div className="mb-8 text-center">
             <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
@@ -743,7 +774,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {differentiators.map((item) => (
               <div
                 key={item.title}
-                className="p-6 rounded-[20px]"
+                className="p-6 rounded-[20px] landing-card-hover"
                 style={{
                   background: "white",
                   border: "1px solid rgba(56,25,50,0.07)",
@@ -769,7 +800,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── ONBOARDING FLOW ── */}
-      <section className="px-6 pb-24">
+      <section className="px-6 pb-24 landing-reveal">
         <div
           className="max-w-[1280px] mx-auto rounded-[32px] p-8 md:p-10"
           style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}
@@ -803,7 +834,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {launchSteps.map((step, index) => (
               <div
                 key={step}
-                className="p-4 rounded-2xl"
+                className="p-4 rounded-2xl landing-card-hover"
                 style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.06)" }}
               >
                 <div
@@ -821,7 +852,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
 
       {/* ── STATS ── */}
       <section
-        className="py-14"
+        className="py-14 landing-reveal"
         style={{
           background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`,
         }}
@@ -848,7 +879,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── FEATURES ── */}
-      <section id="features" className="py-24 px-6">
+      <section id="features" className="py-24 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-16">
             <p
@@ -873,7 +904,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {features.map((f) => (
               <div
                 key={f.title}
-                className="p-8 rounded-[24px] group hover:scale-[1.02] transition-transform cursor-pointer"
+                className="p-8 rounded-[24px] group transition-transform cursor-pointer landing-card-hover"
                 style={{
                   background: "white",
                   border: `1px solid rgba(56,25,50,0.07)`,
@@ -906,7 +937,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── DASHBOARD PREVIEW ── */}
-      <section className="py-16 px-6">
+      <section className="py-16 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div
             className="rounded-[48px] overflow-hidden relative"
@@ -972,7 +1003,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 ].map((card) => (
                   <div
                     key={card.label}
-                    className="p-4 rounded-2xl"
+                      className="p-4 rounded-2xl landing-card-hover"
                     style={{
                       background: "rgba(255,255,255,0.08)",
                       backdropFilter: "blur(12px)",
@@ -1007,7 +1038,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── PRICING ── */}
-      <section id="pricing" className="py-24 px-6">
+      <section id="pricing" className="py-24 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-6">
             <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
@@ -1060,7 +1091,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {pricingPlans.map((plan) => (
               <div
                 key={plan.name}
-                className="p-8 rounded-[32px] relative"
+                className="p-8 rounded-[32px] relative landing-card-hover"
                 style={{
                   background: plan.highlighted
                     ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`
@@ -1166,7 +1197,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section id="testimonials" className="py-24 px-6">
+      <section id="testimonials" className="py-24 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-16">
             <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
@@ -1188,7 +1219,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {testimonials.map((t) => (
               <div
                 key={t.name}
-                className="p-8 rounded-[24px]"
+                className="p-8 rounded-[24px] landing-card-hover"
                 style={{
                   background: "white",
                   border: `1px solid rgba(56,25,50,0.07)`,
@@ -1232,7 +1263,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="pb-16 px-6">
+      <section className="pb-16 px-6 landing-reveal">
         <div className="max-w-[980px] mx-auto">
           <div className="text-center mb-10">
             <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
@@ -1273,7 +1304,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 landing-reveal">
         <div className="max-w-[1280px] mx-auto">
           <div
             className="text-center py-20 px-8 rounded-[48px]"

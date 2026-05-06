@@ -107,3 +107,62 @@ h1, h2, h3, h4, h5, h6 {
 .text-muted {
   color: #64748b; /* slate-500 — minimum for WCAG AA on white */
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes landingFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .landing-float {
+    animation: landingFloat 7s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .landing-reveal {
+    opacity: 0;
+    transform: translateY(26px) scale(0.99);
+    filter: blur(6px);
+    transition:
+      opacity 560ms ease,
+      transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 520ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+
+  .landing-reveal.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+
+  .landing-card-hover {
+    transition: transform 260ms ease, box-shadow 260ms ease;
+  }
+
+  .landing-card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 34px rgba(56, 25, 50, 0.12) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .landing-float,
+  .landing-card-hover {
+    animation: none !important;
+    transition: none !important;
+  }
+}
