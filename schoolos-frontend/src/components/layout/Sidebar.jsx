@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../../assets/app-logo.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { 
@@ -11,27 +10,24 @@ import {
   FileText, 
   BarChart3, 
   Calendar, 
-  BookMarked, 
   Wallet, 
   Banknote, 
   Receipt, 
   Library, 
   Building2, 
-  Bus, 
-  Megaphone, 
   MessageSquare, 
-  Bell, 
-  UserPlus, 
-  Users2, 
-  PieChart, 
   Settings2,
   LogOut,
   X,
-  ChevronRight,
-  ShieldCheck,
-  Zap,
-  ChevronDown
+  ChevronDown,
+  HelpCircle
 } from 'lucide-react';
+
+const PLUM = "#381932";
+const PLUM_LIGHT = "#512b4a";
+const MILK = "#FFF3E6";
+const SIDEBAR_BG = "#F9F1E7";
+const MUTED = "#7D6077";
 
 const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   const { authSession, signOut } = useAuth();
@@ -39,19 +35,13 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
 
   const allSections = [
     {
-      title: "Platform",
-      items: [
-        { id: 'superadmin-dashboard', label: 'Platform Hub', icon: LayoutDashboard, roles: ['superadmin'] },
-        { id: 'schools', label: 'Institutions', icon: Building2, roles: ['superadmin'] },
-        { id: 'subscriptions', label: 'Billing', icon: Wallet, roles: ['superadmin'] },
-      ]
-    },
-    {
-      title: "Main",
+      title: "Main Menu",
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'accountant'] },
+        { id: 'superadmin-dashboard', label: 'Platform Hub', icon: LayoutDashboard, roles: ['superadmin'] },
         { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant'] },
         { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin'] },
+        { id: 'schools', label: 'Institutions', icon: Building2, roles: ['superadmin'] },
       ]
     },
     {
@@ -71,11 +61,13 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
         { id: 'fees', label: 'Fee Management', icon: Wallet, roles: ['admin', 'accountant'] },
         { id: 'payroll', label: 'Payroll', icon: Banknote, roles: ['admin', 'accountant'] },
         { id: 'fee-reports', label: 'Reports', icon: Receipt, roles: ['admin', 'accountant'] },
+        { id: 'subscriptions', label: 'Billing', icon: Wallet, roles: ['superadmin'] },
       ]
     },
     {
-      title: "Management",
+      title: "Support",
       items: [
+        { id: 'communication', label: 'Communication', icon: MessageSquare, roles: ['admin', 'accountant'] },
         { id: 'settings', label: 'Settings', icon: Settings2, roles: ['admin', 'superadmin'] },
       ]
     }
@@ -86,77 +78,111 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
     items: section.items.filter(item => !item.roles || item.roles.includes(role))
   })).filter(section => section.items.length > 0);
 
-  const getItemClasses = (isActive) => `
-    group relative flex items-center gap-3.5 px-4 py-3 mx-3 my-1 rounded-2xl cursor-pointer transition-all duration-300
-    ${isActive 
-      ? 'bg-accent-primary text-white shadow-lg shadow-black/20' 
-      : 'opacity-70 hover:bg-white/5 hover:opacity-100'}
-  `;
-
   const sidebarContent = (
-    <div className="h-full flex flex-col bg-accent-primary text-white overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden" style={{ background: SIDEBAR_BG, borderRight: `1px solid rgba(56,25,50,0.07)` }}>
       {/* Branding Section */}
-      <div className="px-8 pt-10 pb-8 flex flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10">
-             <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
+      <div className="flex items-center gap-2 px-6 py-8 cursor-pointer" onClick={() => onNavigate('dashboard')}>
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
+        >
+          <GraduationCap size={18} color={MILK} />
+        </div>
+        <div>
+          <div
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: PLUM,
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              lineHeight: 1.1,
+            }}
+          >
+            SchoolOS
           </div>
-          <span className="text-xl font-black tracking-tight">SchoolOS<span className="text-accent-secondary">.</span></span>
+          <div style={{ color: MUTED, fontSize: "0.7rem", fontWeight: 600 }}>Accra Ridge School</div>
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-grow overflow-y-auto no-scrollbar px-3 pb-10">
+      <div className="flex-grow overflow-y-auto no-scrollbar px-3 pb-6 flex flex-col gap-6">
         {navSections.map((section, idx) => (
-          <div key={idx} className="mb-6">
-            <div className="px-6 mb-3 flex items-center justify-between text-[10px] font-bold uppercase text-slate-500 tracking-widest">
+          <div key={idx}>
+            <p
+              className="px-4 mb-2 uppercase tracking-widest font-black"
+              style={{ color: MUTED, fontSize: "0.65rem" }}
+            >
               {section.title}
+            </p>
+            <div className="flex flex-col gap-1">
+              {section.items.map((item) => {
+                const active = activeItem === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onNavigate(item.id);
+                      if (isOpen) onClose();
+                    }}
+                    className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl w-full text-left transition-all active:scale-95 group"
+                    style={{
+                      background: active ? PLUM : "transparent",
+                      color: active ? MILK : PLUM_LIGHT,
+                    }}
+                  >
+                    <item.icon size={18} strokeWidth={active ? 2.5 : 2} />
+                    <span style={{ fontSize: "0.9rem", fontWeight: active ? 700 : 500 }}>
+                      {item.label}
+                    </span>
+                    {item.id === 'communication' && !active && (
+                      <span
+                        className="ml-auto px-1.5 py-0.5 rounded-full text-xs font-black"
+                        style={{ background: `rgba(56,25,50,0.1)`, color: PLUM, fontSize: "0.7rem" }}
+                      >
+                        3
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
-            {section.items.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => {
-                  onNavigate(item.id);
-                  if (isOpen) onClose();
-                }}
-                className={getItemClasses(activeItem === item.id)}
-              >
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${activeItem === item.id ? 'bg-white/10' : 'bg-white/5 group-hover:bg-white/10'}`}>
-                  <item.icon size={18} strokeWidth={2.5} />
-                </div>
-                <span className="text-sm font-bold tracking-tight">{item.label}</span>
-                {activeItem === item.id && (
-                  <motion.div 
-                    layoutId="activePill"
-                    className="ml-auto w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white]"
-                  />
-                )}
-              </div>
-            ))}
           </div>
         ))}
       </div>
 
-      {/* User & Logout */}
-      <div className="mt-auto p-6 border-t border-white/5 bg-white/2">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-11 h-11 rounded-2xl bg-white/5 p-1">
-             <div className="w-full h-full rounded-[14px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-black text-xs shadow-inner">
-                {(authSession?.user?.name || 'Admin').substring(0, 1).toUpperCase()}
-             </div>
+      {/* User Card */}
+      <div className="p-4 border-t border-black/5" style={{ background: 'rgba(56,25,50,0.02)' }}>
+        <div
+          className="p-3 rounded-2xl flex items-center gap-3"
+          style={{
+            background: "rgba(255,255,255,0.5)",
+            border: `1px solid rgba(56,25,50,0.05)`,
+          }}
+        >
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
+          >
+            <span style={{ color: MILK, fontSize: "0.85rem", fontWeight: 800 }}>
+              {(authSession?.user?.name || 'AD').substring(0, 2).toUpperCase()}
+            </span>
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold text-white truncate">{authSession?.user?.name || 'School Admin'}</div>
-            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{authSession?.user?.role || 'Administrator'}</div>
+            <div
+              style={{ color: PLUM, fontSize: "0.85rem", fontWeight: 700 }}
+              className="truncate"
+            >
+              {authSession?.user?.name || 'School Admin'}
+            </div>
+            <div style={{ color: MUTED, fontSize: "0.72rem", fontWeight: 600 }}>{authSession?.user?.role || 'Administrator'}</div>
           </div>
-          <ChevronDown size={14} className="text-slate-500" />
+          <button
+            onClick={signOut}
+            className="hover:text-red-500 transition-colors p-1"
+          >
+            <LogOut size={16} color={MUTED} />
+          </button>
         </div>
-        <button 
-          onClick={signOut}
-          className="w-full py-3.5 px-4 bg-white/5 hover:bg-rose-500/10 rounded-2xl text-[10px] font-black text-slate-400 hover:text-rose-500 transition-all flex items-center justify-center gap-2 group border border-white/5"
-        >
-          <LogOut size={14} /> Sign Out
-        </button>
       </div>
     </div>
   );
@@ -164,31 +190,37 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="fixed left-0 top-0 bottom-0 w-[280px] bg-accent-primary z-50 hidden md:flex">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 z-50">
         {sidebarContent}
-      </div>
+      </aside>
 
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isOpen && (
-          <>
+          <div className="fixed inset-0 z-[100] lg:hidden">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-accent-primary/80 z-[60] backdrop-blur-sm"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             />
-            <motion.div
+            <motion.aside
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 bottom-0 w-[280px] bg-accent-primary z-[70] shadow-2xl"
+              className="relative w-64 h-full flex flex-col"
             >
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-10 p-1 rounded-full bg-white/10"
+              >
+                <X size={20} color={PLUM} />
+              </button>
               {sidebarContent}
-            </motion.div>
-          </>
+            </motion.aside>
+          </div>
         )}
       </AnimatePresence>
     </>

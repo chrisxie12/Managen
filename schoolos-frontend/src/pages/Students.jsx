@@ -1,53 +1,44 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  GraduationCap, 
   Plus, 
-  FileDown, 
   Search, 
-  Filter, 
   CheckCircle2, 
-  XCircle, 
-  UserPlus, 
-  Eye, 
-  Edit2, 
-  Trash2, 
+  Clock, 
+  AlertCircle, 
   X,
   ChevronRight,
-  ChevronLeft,
-  Mail,
   Phone,
-  Calendar,
-  MoreVertical
+  Mail,
+  MapPin,
+  Download,
+  Filter,
+  MoreHorizontal
 } from 'lucide-react';
 import Sidebar from '../components/layout/Sidebar';
 import DashboardNavbar from '../components/layout/DashboardNavbar';
 import { buildUrl } from '../services/api';
 import { Button } from '../components/ui/Button';
-import { SkeletonLoader } from '../components/ui/SkeletonLoader';
-import { EmptyState } from '../components/ui/EmptyState';
 
-// Count Up Component
-const CountUp = ({ value, prefix = "", suffix = "" }) => {
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { damping: 30, stiffness: 100 });
-  const [displayValue, setDisplayValue] = useState(0);
+const PLUM = "#381932";
+const PLUM_LIGHT = "#512b4a";
+const MILK = "#FFF3E6";
+const MUTED = "#7D6077";
 
-  useEffect(() => {
-    motionValue.set(value);
-  }, [value, motionValue]);
-
-  useEffect(() => {
-    return springValue.on("change", (latest) => {
-      setDisplayValue(Math.floor(latest));
-    });
-  }, [springValue]);
-
+const FeeStatusBadge = ({ status }) => {
+  const map = {
+    paid: { bg: "#D1FAE5", color: "#065F46", label: "Paid", icon: CheckCircle2 },
+    partial: { bg: "#FEF3C7", color: "#92400E", label: "Partial", icon: Clock },
+    overdue: { bg: "#FEE2E2", color: "#991B1B", label: "Overdue", icon: AlertCircle },
+  };
+  const s = map[status] || map.paid;
   return (
-    <span>
-      {prefix}
-      {displayValue.toLocaleString()}
-      {suffix}
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
+      style={{ background: s.bg, color: s.color, fontSize: "0.72rem", fontWeight: 700 }}
+    >
+      <s.icon size={10} />
+      {s.label}
     </span>
   );
 };
@@ -55,21 +46,14 @@ const CountUp = ({ value, prefix = "", suffix = "" }) => {
 const Students = ({ onNavigate }) => {
   const [activeItem, setActiveItem] = useState('students');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [hoveredRow, setHoveredRow] = useState(null);
   
   const [students, setStudents] = useState([]);
-  const [totalStudents, setTotalStudents] = useState(0);
   const [loading, setLoading] = useState(true);
   const [newStudent, setNewStudent] = useState({
-    name: '',
-    admission_no: '',
-    email: '',
-    parent_phone: '',
-    dob: '',
-    gender: 'Male',
-    class_name: 'Form 1A'
+    name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'JHS 3A', address: ''
   });
 
   const fetchStudents = async () => {
@@ -78,13 +62,19 @@ const Students = ({ onNavigate }) => {
       const res = await fetch(buildUrl('/api/school/students'), { credentials: 'include' });
       const json = await res.json();
       if (json.data) {
-        setStudents(json.data.students || []);
-        setTotalStudents(json.data.total || 0);
+        // Map backend data to UI format if needed
+        const mapped = (json.data.students || []).map(s => ({
+          ...s,
+          feeStatus: s.is_active !== false ? 'paid' : 'overdue', // Mocking fee status for now
+          attendance: Math.floor(Math.random() * 20) + 80, // Mocking attendance
+          gpa: Math.floor(Math.random() * 30) + 70, // Mocking gpa
+          address: s.address || 'Cantonments, Accra'
+        }));
+        setStudents(mapped);
       }
     } catch (err) {
       console.error("Failed to fetch students", err);
     } finally {
-      // Simulate a bit of loading for premium feel
       setTimeout(() => setLoading(false), 800);
     }
   };
@@ -93,12 +83,12 @@ const Students = ({ onNavigate }) => {
     fetchStudents();
   }, []);
 
-  const filteredStudents = useMemo(() => {
+  const filtered = useMemo(() => {
     return students.filter(s => 
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.admission_no.toLowerCase().includes(searchQuery.toLowerCase())
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.admission_no.toLowerCase().includes(search.toLowerCase())
     );
-  }, [students, searchQuery]);
+  }, [students, search]);
 
   const handleAddStudent = async () => {
     try {
@@ -113,7 +103,7 @@ const Students = ({ onNavigate }) => {
         setIsModalOpen(false);
         fetchStudents();
         setNewStudent({
-          name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'Form 1A'
+          name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'JHS 3A', address: ''
         });
       }
     } catch (err) {
@@ -121,15 +111,8 @@ const Students = ({ onNavigate }) => {
     }
   };
 
-  const stats = [
-    { label: 'Total Students', value: totalStudents, icon: GraduationCap, color: 'text-accent-primary', bg: 'bg-accent-primary/10' },
-    { label: 'Active', value: totalStudents, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Inactive', value: 0, icon: XCircle, color: 'text-red-500', bg: 'bg-red-500/10' },
-    { label: 'New This Month', value: 0, icon: UserPlus, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-  ];
-
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-bg-primary text-text-primary font-body">
       <Sidebar 
         activeItem={activeItem} 
         onNavigate={(item) => {
@@ -139,298 +122,254 @@ const Students = ({ onNavigate }) => {
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
       />
+      
       <DashboardNavbar 
         activeItem={activeItem} 
         onMenuClick={() => setSidebarOpen(true)} 
       />
 
-      <main className="md:ml-[260px] pt-20 p-8 text-text-primary">
-        {/* Page Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4"
-        >
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-10 h-10 bg-accent-primary/10 rounded-xl flex items-center justify-center text-accent-primary">
-                <GraduationCap size={24} />
+      <main className="lg:ml-64 pt-16 p-6 h-[calc(100vh-64px)] overflow-hidden">
+        <div className="flex gap-6 h-full">
+          {/* Left Panel: List */}
+          <div className="flex-1 flex flex-col min-w-0 h-full">
+            {/* Toolbar */}
+            <div className="flex flex-wrap gap-3 mb-6">
+              <div
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 min-w-[200px] border transition-all focus-within:border-plum/20 shadow-sm"
+                style={{ background: "white", borderColor: "rgba(56,25,50,0.08)" }}
+              >
+                <Search size={14} color={MUTED} />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search students or IDs..."
+                  className="bg-transparent outline-none text-sm flex-1 font-medium"
+                  style={{ color: PLUM }}
+                />
               </div>
-              <h1 className="text-3xl font-black tracking-tight font-headings">Students</h1>
+
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold active:scale-95 transition-transform"
+                style={{
+                  background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
+                  color: MILK,
+                  boxShadow: "0 4px 14px rgba(56,25,50,0.2)",
+                }}
+              >
+                <Plus size={16} /> Add Student
+              </button>
             </div>
-            <p className="text-text-muted text-sm font-medium">Centralized repository for all student profiles and academic history.</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" className="px-5">
-              <FileDown size={18} className="mr-2" /> Export
-            </Button>
-            <Button onClick={() => setIsModalOpen(true)} className="px-5 shadow-lg shadow-accent-primary/20">
-              <Plus size={18} className="mr-2" /> Add Student
-            </Button>
-          </div>
-        </motion.div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white border border-slate-100 rounded-[24px] p-6 shadow-sm hover:shadow-md transition-all duration-300 group"
+            {/* Table Container */}
+            <div
+              className="rounded-[24px] overflow-hidden flex-1 border flex flex-col"
+              style={{
+                background: "white",
+                borderColor: "rgba(56,25,50,0.07)",
+                boxShadow: "0 4px 24px rgba(56,25,50,0.06)",
+              }}
             >
-              <div className="flex items-center gap-5">
-                <div className={`w-14 h-14 rounded-2xl ${stat.bg} flex items-center justify-center ${stat.color} group-hover:scale-110 transition-transform`}>
-                  <stat.icon size={28} />
-                </div>
-                <div>
-                  <div className="text-3xl font-black text-text-primary tracking-tight">
-                    <CountUp value={stat.value} />
-                  </div>
-                  <div className="text-[10px] text-text-muted font-black uppercase tracking-widest">{stat.label}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Filter Bar */}
-        <div className="bg-slate-50 border border-slate-100 rounded-[28px] p-2 mb-8 flex flex-col lg:flex-row items-center gap-2">
-          <div className="relative flex-1 w-full lg:w-auto">
-            <Search size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input 
-              placeholder="Search by name, admission ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-100 rounded-[22px] py-4 pl-14 pr-6 text-sm text-text-primary outline-none focus:border-accent-primary/30 transition-all font-medium placeholder:text-slate-400"
-            />
-          </div>
-          <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar p-1">
-            {['All Classes', 'Status', 'Gender'].map((label, idx) => (
-              <div key={idx} className="relative group">
-                <select className="appearance-none bg-white border border-slate-100 rounded-[20px] px-6 py-3.5 pr-10 text-xs font-bold text-slate-600 outline-none cursor-pointer hover:border-accent-primary/30 transition-all min-w-[140px]">
-                  <option>{label}</option>
-                </select>
-                <Filter size={12} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-              </div>
-            ))}
-            <Button variant="ghost" className="h-12 w-12 p-0 rounded-full bg-white border border-slate-100">
-              <MoreVertical size={18} />
-            </Button>
-          </div>
-        </div>
-
-        {/* Data Table */}
-        <div className="bg-white border border-slate-100 rounded-[32px] overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50 text-slate-400 text-[10px] uppercase tracking-widest font-black">
-                  <th className="px-8 py-5 w-12"><input type="checkbox" className="rounded-md border-slate-200 text-accent-primary focus:ring-accent-primary/20" /></th>
-                  <th className="px-6 py-5">Full Student Name</th>
-                  <th className="px-6 py-5">Admission</th>
-                  <th className="px-6 py-5">Assigned Class</th>
-                  <th className="px-6 py-5">Guardianship</th>
-                  <th className="px-6 py-5">Current Status</th>
-                  <th className="px-8 py-5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {loading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <tr key={i}>
-                      <td className="px-8 py-6"><SkeletonLoader width="18px" height="18px" /></td>
-                      <td className="px-6 py-6">
-                        <div className="flex items-center gap-3">
-                          <SkeletonLoader width="36px" height="36px" borderRadius="999px" />
-                          <div className="space-y-2">
-                            <SkeletonLoader width="140px" height="14px" />
-                            <SkeletonLoader width="100px" height="10px" />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-6"><SkeletonLoader width="80px" height="14px" /></td>
-                      <td className="px-6 py-6"><SkeletonLoader width="70px" height="14px" /></td>
-                      <td className="px-6 py-6"><SkeletonLoader width="110px" height="14px" /></td>
-                      <td className="px-6 py-6"><SkeletonLoader width="60px" height="20px" borderRadius="99px" /></td>
-                      <td className="px-8 py-6 text-right"><SkeletonLoader width="80px" height="32px" className="ml-auto" /></td>
+              <div className="overflow-y-auto flex-1 no-scrollbar">
+                <table className="w-full text-left">
+                  <thead className="sticky top-0 bg-white z-10">
+                    <tr style={{ borderBottom: `1px solid rgba(56,25,50,0.06)` }}>
+                      {["Student", "Class", "Attendance", "Fees", "GPA", ""].map((h) => (
+                        <th
+                          key={h}
+                          className="px-6 py-4 text-[10px] font-black uppercase tracking-widest"
+                          style={{ color: MUTED }}
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
-                  ))
-                ) : filteredStudents.length > 0 ? (
-                  filteredStudents.map((s, i) => (
-                    <motion.tr
-                      key={s.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      onMouseEnter={() => setHoveredRow(s.id)}
-                      onMouseLeave={() => setHoveredRow(null)}
-                      className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
-                    >
-                      <td className="px-8 py-5"><input type="checkbox" className="rounded-md border-slate-200 text-accent-primary" /></td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 flex items-center justify-center text-accent-primary font-black text-xs border border-accent-primary/5">
-                            {s.name.substring(0, 2).toUpperCase()}
-                          </div>
-                          <div>
-                            <div className="text-sm font-bold text-text-primary group-hover:text-accent-primary transition-colors">{s.name}</div>
-                            <div className="text-[11px] text-text-muted font-medium flex items-center gap-1.5">
-                              <Mail size={10} /> {s.email || 'No email registered'}
+                  </thead>
+                  <tbody>
+                    {filtered.map((s) => (
+                      <tr
+                        key={s.id}
+                        onClick={() => setSelected(s)}
+                        className="cursor-pointer hover:bg-[#FFF3E6]/40 transition-colors border-b last:border-0"
+                        style={{
+                          borderColor: "rgba(56,25,50,0.04)",
+                          background: selected?.id === s.id ? `rgba(56,25,50,0.04)` : undefined,
+                        }}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs"
+                              style={{
+                                background: `linear-gradient(135deg, ${PLUM}15, ${PLUM_LIGHT}25)`,
+                                color: PLUM,
+                              }}
+                            >
+                              {s.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                            </div>
+                            <div>
+                              <p style={{ color: PLUM, fontSize: "0.85rem", fontWeight: 700 }}>{s.name}</p>
+                              <p style={{ color: MUTED, fontSize: "0.7rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{s.admission_no}</p>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="text-xs font-black text-slate-400 uppercase tracking-tighter">ID: </span>
-                        <span className="text-xs font-bold text-text-secondary">{s.admission_no}</span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-accent-primary" />
-                          <span className="text-sm font-bold text-text-primary tracking-tight">{s.class_name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-text-secondary flex items-center gap-1.5">
-                            <Phone size={10} className="text-slate-300" /> {s.parent_phone}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-tighter" style={{ background: `rgba(56,25,50,0.07)`, color: PLUM_LIGHT }}>
+                            {s.class_name}
                           </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5">
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border ${
-                          s.is_active !== false 
-                            ? 'bg-emerald-50 border-emerald-100 text-emerald-600' 
-                            : 'bg-rose-50 border-rose-100 text-rose-600'
-                        }`}>
-                          <div className={`w-1.5 h-1.5 rounded-full ${s.is_active !== false ? 'bg-emerald-500' : 'bg-rose-500'}`} />
-                          <span className="text-[10px] font-black uppercase tracking-wider">
-                            {s.is_active !== false ? 'Enrolled' : 'Withdrawn'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-8 py-5 text-right">
-                        <div className={`inline-flex items-center gap-1 transition-all duration-200 ${hoveredRow === s.id ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'}`}>
-                          <Button variant="ghost" size="sm" className="w-9 h-9 p-0 rounded-xl hover:bg-white hover:shadow-sm"><Eye size={16} /></Button>
-                          <Button variant="ghost" size="sm" className="w-9 h-9 p-0 rounded-xl text-accent-primary hover:bg-white hover:shadow-sm"><Edit2 size={16} /></Button>
-                          <Button variant="ghost" size="sm" className="w-9 h-9 p-0 rounded-xl text-rose-500 hover:bg-rose-50"><Trash2 size={16} /></Button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7}>
-                      <EmptyState 
-                        isSearch={searchQuery.length > 0}
-                        title={searchQuery ? "No matching students" : "Start your student roster"}
-                        description={searchQuery 
-                          ? `We couldn't find any student matching "${searchQuery}". Please refine your search terms.`
-                          : "Your school doesn't have any students enrolled yet. Digitalize your records by adding your first student profile."}
-                        actionLabel={!searchQuery && "Onboard First Student"}
-                        onAction={() => setIsModalOpen(true)}
-                      />
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <div className="h-1.5 w-12 rounded-full overflow-hidden bg-black/5">
+                              <div className="h-full rounded-full" style={{ width: `${s.attendance}%`, background: s.attendance > 90 ? '#10B981' : '#F59E0B' }} />
+                            </div>
+                            <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.75rem", fontWeight: 700 }}>{s.attendance}%</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <FeeStatusBadge status={s.feeStatus} />
+                        </td>
+                        <td className="px-6 py-4">
+                          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.8rem", fontWeight: 800 }}>{s.gpa}%</span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <ChevronRight size={14} color={MUTED} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+                <p style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>Showing {filtered.length} students</p>
+                <button className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+                  <Download size={12} /> Export
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Footer Controls */}
-          <div className="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">
-              Total Managed: <span className="text-text-primary">{filteredStudents.length}</span> / {totalStudents}
-            </div>
-            <div className="flex items-center gap-3">
-              <Button variant="secondary" size="sm" className="h-10 px-4 rounded-xl text-xs font-bold border-slate-200" disabled>
-                <ChevronLeft size={16} className="mr-1" /> Previous
-              </Button>
-              <div className="flex gap-1.5">
-                {[1].map((n) => (
-                  <button key={n} className="w-10 h-10 rounded-xl text-xs font-black bg-accent-primary text-white shadow-lg shadow-accent-primary/20">
-                    {n}
+          {/* Right Panel: Detail */}
+          <AnimatePresence mode="wait">
+            {selected ? (
+              <motion.div
+                key={selected.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                className="w-80 flex-shrink-0 rounded-[24px] overflow-hidden flex flex-col border"
+                style={{
+                  background: "white",
+                  borderColor: "rgba(56,25,50,0.07)",
+                  boxShadow: "0 4px 24px rgba(56,25,50,0.08)",
+                }}
+              >
+                <div className="p-6 pb-8 text-white relative" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
+                  <button onClick={() => setSelected(null)} className="absolute top-4 right-4 p-1 hover:bg-white/10 rounded-full transition-colors">
+                    <X size={18} />
                   </button>
-                ))}
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-lg" style={{ background: "rgba(255,243,230,0.15)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "'Playfair Display', serif" }}>
+                    {selected.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.25rem", fontWeight: 800 }}>{selected.name}</h3>
+                  <p style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.8rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{selected.admission_no} · {selected.class_name}</p>
+                  <div className="flex gap-2 mt-4">
+                    <FeeStatusBadge status={selected.feeStatus} />
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase" style={{ background: "rgba(255,243,230,0.12)", color: "rgba(255,243,230,0.8)" }}>{selected.gender}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 divide-x divide-y border-b" style={{ borderColor: "rgba(56,25,50,0.05)" }}>
+                  {[
+                    { label: "GPA", value: `${selected.gpa}%` },
+                    { label: "Attendance", value: `${selected.attendance}%` },
+                    { label: "Class", value: selected.class_name },
+                    { label: "Gender", value: selected.gender },
+                  ].map((m, i) => (
+                    <div key={i} className="p-4 text-center bg-slate-50/30">
+                      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.95rem", fontWeight: 800 }}>{m.value}</div>
+                      <div style={{ color: MUTED, fontSize: "0.7rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>{m.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-6 flex-1 space-y-4">
+                  <p className="uppercase tracking-widest font-black text-[10px]" style={{ color: MUTED }}>Contact Information</p>
+                  <div className="space-y-3">
+                    {[
+                      { icon: Phone, label: selected.parent_phone },
+                      { icon: Mail, label: selected.email || 'No email' },
+                      { icon: MapPin, label: selected.address },
+                    ].map(({ icon: Icon, label }, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `rgba(56,25,50,0.05)` }}>
+                          <Icon size={14} color={PLUM_LIGHT} />
+                        </div>
+                        <span style={{ color: PLUM_LIGHT, fontSize: "0.82rem", fontWeight: 600 }} className="truncate">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-5 flex flex-col gap-2">
+                  <button className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                    SEND WHATSAPP REPORT
+                  </button>
+                  <button className="w-full py-3 rounded-full text-xs font-black transition-all active:scale-95 border-2" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+                    EDIT PROFILE
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="w-80 flex-shrink-0 hidden lg:flex flex-col items-center justify-center rounded-[24px] border-2 border-dashed p-8 text-center" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+                <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4 bg-slate-50">
+                  <GraduationCap size={28} color={MUTED} />
+                </div>
+                <p style={{ color: PLUM, fontWeight: 800, fontSize: "0.95rem" }}>Select a student</p>
+                <p style={{ color: MUTED, fontSize: "0.8rem", fontWeight: 500, lineHeight: 1.6, marginTop: "0.5rem" }}>Click any row to view the full student profile and academic stats.</p>
               </div>
-              <Button variant="secondary" size="sm" className="h-10 px-4 rounded-xl text-xs font-bold border-slate-200" disabled>
-                Next <ChevronRight size={16} className="ml-1" />
-              </Button>
-            </div>
-          </div>
+            )}
+          </AnimatePresence>
         </div>
       </main>
 
-      {/* Add Student Modal */}
+      {/* Modal remains largely same but updated aesthetic */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl bg-white rounded-[40px] shadow-2xl relative z-[101] overflow-hidden border border-slate-100"
-            >
-              <div className="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-xl bg-white rounded-[40px] shadow-2xl relative z-10 overflow-hidden border">
+              <div className="p-8 pb-4 flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-black tracking-tight text-text-primary font-headings">New Student Profile</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Academics • Student Onboarding</p>
+                  <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 800, color: PLUM }}>New Student</h2>
+                  <p style={{ color: MUTED, fontSize: "0.75rem", fontWeight: 600 }}>Institutional Enrollment Form</p>
                 </div>
-                <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-100 text-slate-400 hover:text-text-primary transition-colors shadow-sm">
-                  <X size={20} />
-                </button>
+                <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center"><X size={20} color={MUTED} /></button>
               </div>
-
-              <div className="p-10 max-h-[60vh] overflow-y-auto no-scrollbar">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {[
-                    { label: 'Full Student Name', key: 'name', placeholder: 'e.g. John Smith' },
-                    { label: 'Admission ID', key: 'admission_no', placeholder: 'OS-2026-001' },
-                    { label: 'Email Address', key: 'email', type: 'email', placeholder: 'student@school.com' },
-                    { label: 'Guardian Phone', key: 'parent_phone', placeholder: '+233...' },
-                    { label: 'Date of Birth', key: 'dob', type: 'date' },
-                  ].map((field) => (
-                    <div key={field.key} className="flex flex-col gap-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">{field.label}</label>
-                      <input 
-                        type={field.type || 'text'}
-                        value={newStudent[field.key]}
-                        onChange={(e) => setNewStudent({...newStudent, [field.key]: e.target.value})}
-                        placeholder={field.placeholder}
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-text-primary outline-none focus:bg-white focus:border-accent-primary/30 transition-all shadow-sm"
-                      />
-                    </div>
-                  ))}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] ml-1">Assigned Class</label>
-                    <div className="relative group">
-                      <select 
-                        value={newStudent.class_name}
-                        onChange={(e) => setNewStudent({...newStudent, class_name: e.target.value})}
-                        className="w-full appearance-none bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-text-primary outline-none focus:bg-white focus:border-accent-primary/30 transition-all shadow-sm cursor-pointer"
-                      >
-                        <option value="Form 1A">Form 1A</option>
-                        <option value="Form 1B">Form 1B</option>
-                        <option value="Form 2A">Form 2A</option>
+              <div className="p-8 pt-4 grid grid-cols-2 gap-4">
+                {[
+                  { label: "Full Name", key: "name", placeholder: "e.g. Ama Mensah" },
+                  { label: "Admission ID", key: "admission_no", placeholder: "OS-2024-001" },
+                  { label: "Parent Phone", key: "parent_phone", placeholder: "+233..." },
+                  { label: "Email", key: "email", placeholder: "optional" },
+                  { label: "Address", key: "address", placeholder: "e.g. Accra" },
+                  { label: "Gender", key: "gender", type: "select", options: ["Male", "Female"] },
+                ].map((f) => (
+                  <div key={f.key} className={f.key === 'name' || f.key === 'address' ? 'col-span-2' : ''}>
+                    <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: MUTED }}>{f.label}</label>
+                    {f.type === 'select' ? (
+                      <select value={newStudent[f.key]} onChange={(e) => setNewStudent({...newStudent, [f.key]: e.target.value})} className="w-full bg-slate-50 border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-plum/30 transition-all" style={{ color: PLUM }}>
+                        {f.options.map(o => <option key={o}>{o}</option>)}
                       </select>
-                      <Filter size={14} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" />
-                    </div>
+                    ) : (
+                      <input value={newStudent[f.key]} onChange={(e) => setNewStudent({...newStudent, [f.key]: e.target.value})} placeholder={f.placeholder} className="w-full bg-slate-50 border rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-plum/30 transition-all" style={{ color: PLUM }} />
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
-
-              <div className="px-10 py-8 bg-slate-50/50 border-t border-slate-50 flex gap-4">
-                <Button className="flex-1 h-14 rounded-2xl shadow-xl shadow-accent-primary/10 font-black text-sm uppercase tracking-widest" onClick={handleAddStudent}>Create Profile</Button>
-                <Button variant="secondary" className="flex-1 h-14 rounded-2xl font-black text-xs uppercase tracking-widest border-slate-200" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+              <div className="p-8 bg-slate-50 flex gap-3">
+                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" onClick={handleAddStudent}>Onboard Student</Button>
+                <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest border-slate-200" onClick={() => setIsModalOpen(false)}>Cancel</Button>
               </div>
             </motion.div>
           </div>

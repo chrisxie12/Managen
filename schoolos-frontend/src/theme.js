@@ -48,7 +48,7 @@ export const theme = {
       --text-primary: #381932;
       --text-secondary: #512b4a;
       --text-muted: #7d6077;
-      --border: #e8dccf;
+      --border: rgba(56, 25, 50, 0.08);
       --border-hover: rgba(56, 25, 50, 0.3);
       --surface-hover: rgba(56, 25, 50, 0.05);
       --shadow-card: 0 4px 24px rgba(56, 25, 50, 0.08);
