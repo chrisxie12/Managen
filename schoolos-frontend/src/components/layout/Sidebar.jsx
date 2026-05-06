@@ -89,19 +89,19 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   const getItemClasses = (isActive) => `
     group relative flex items-center gap-3.5 px-4 py-3 mx-3 my-1 rounded-2xl cursor-pointer transition-all duration-300
     ${isActive 
-      ? 'bg-[#2D7DFA] text-white shadow-lg shadow-blue-500/20' 
-      : 'text-slate-400 hover:bg-white/5 hover:text-white'}
+      ? 'bg-accent-primary text-white shadow-lg shadow-black/20' 
+      : 'opacity-70 hover:bg-white/5 hover:opacity-100'}
   `;
 
   const sidebarContent = (
-    <div className="h-full flex flex-col bg-[#0F172A] text-white overflow-hidden">
+    <div className="h-full flex flex-col bg-accent-primary text-white overflow-hidden">
       {/* Branding Section */}
       <div className="px-8 pt-10 pb-8 flex flex-col gap-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10">
              <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
           </div>
-          <span className="text-xl font-black tracking-tight">SchoolOS<span className="text-[#2D7DFA]">.</span></span>
+          <span className="text-xl font-black tracking-tight">SchoolOS<span className="text-accent-secondary">.</span></span>
         </div>
       </div>
 
@@ -164,7 +164,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="fixed left-0 top-0 bottom-0 w-[280px] bg-[#0F172A] z-50 hidden md:flex">
+      <div className="fixed left-0 top-0 bottom-0 w-[280px] bg-accent-primary z-50 hidden md:flex">
         {sidebarContent}
       </div>
 
@@ -177,14 +177,14 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-[#0F172A]/80 z-[60] backdrop-blur-sm"
+              className="fixed inset-0 bg-accent-primary/80 z-[60] backdrop-blur-sm"
             />
             <motion.div
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 bottom-0 w-[280px] bg-[#0F172A] z-[70] shadow-2xl"
+              className="fixed left-0 top-0 bottom-0 w-[280px] bg-accent-primary z-[70] shadow-2xl"
             >
               {sidebarContent}
             </motion.div>

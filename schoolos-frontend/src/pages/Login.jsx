@@ -79,21 +79,22 @@ const Login = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex overflow-hidden font-['DM_Sans',sans-serif]">
+    <div className="min-h-screen bg-bg-primary flex overflow-hidden font-body">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,700&display=swap');
-        .playfair { font-family: 'Playfair Display', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        .playfair { font-family: var(--font-headings); }
         .mesh-gradient {
-          background-color: #0f172a;
+          background-color: var(--accent-primary);
           background-image: 
-            radial-gradient(at 0% 0%, rgba(45, 125, 250, 0.15) 0px, transparent 50%),
-            radial-gradient(at 100% 0%, rgba(45, 125, 250, 0.1) 0px, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(45, 125, 250, 0.15) 0px, transparent 50%),
-            radial-gradient(at 0% 100%, rgba(45, 125, 250, 0.1) 0px, transparent 50%);
+            radial-gradient(at 0% 0%, rgba(255, 243, 230, 0.05) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(255, 243, 230, 0.03) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(255, 243, 230, 0.05) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, rgba(255, 243, 230, 0.03) 0px, transparent 50%);
         }
         .surgical-input:focus {
           background: white;
-          box-shadow: 0 0 0 4px rgba(45, 125, 250, 0.1);
+          box-shadow: 0 0 0 4px rgba(56, 25, 50, 0.1);
+          border-color: var(--accent-primary);
         }
       `}</style>
 
@@ -110,21 +111,21 @@ const Login = ({ onNavigate }) => {
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
               <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
             </div>
-            <span className="text-xl font-black tracking-tighter text-white">SchoolOS<span className="text-blue-400">.</span></span>
+            <span className="text-xl font-black tracking-tighter text-bg-primary">SchoolOS<span className="text-accent-secondary">.</span></span>
           </div>
 
           <div className="max-w-md">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="playfair italic text-5xl text-white leading-tight mb-8"
+              className="playfair italic text-5xl text-bg-primary leading-tight mb-8"
             >
               "The standard for <br/> 
-              <span className="text-blue-400 not-italic">Institutional </span> 
+              <span className="text-bg-secondary not-italic">Institutional </span> 
               excellence."
             </motion.h2>
-            <div className="flex items-center gap-4 text-white/40 text-sm font-bold uppercase tracking-[0.2em]">
-               <div className="w-12 h-px bg-white/20" /> 
+            <div className="flex items-center gap-4 text-bg-primary/40 text-sm font-bold uppercase tracking-[0.2em]">
+               <div className="w-12 h-px bg-bg-primary/20" /> 
                Platform Node US-EAST
             </div>
           </div>
@@ -164,8 +165,8 @@ const Login = ({ onNavigate }) => {
               <span className="text-xl font-black tracking-tighter">SchoolOS.</span>
             </div>
             
-            <h1 className="text-4xl font-black text-[#0F172A] tracking-tighter mb-3">Welcome back.</h1>
-            <p className="text-slate-500 font-medium leading-relaxed">Enter your credentials to access your campus node.</p>
+            <h1 className="text-4xl font-black text-text-primary tracking-tighter mb-3">Welcome back.</h1>
+            <p className="text-text-secondary font-medium leading-relaxed">Enter your credentials to access your campus node.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -225,7 +226,7 @@ const Login = ({ onNavigate }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-14 bg-[#0F172A] hover:bg-black text-white rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-black/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+              className="w-full h-14 bg-accent-primary hover:bg-accent-secondary text-bg-primary rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-accent-primary/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
             >
               {loading ? 'Authenticating Node...' : 'Access Dashboard'}
               {!loading && <ChevronRight size={18} />}

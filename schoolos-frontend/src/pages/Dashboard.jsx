@@ -57,7 +57,7 @@ const Dashboard = ({ onNavigate }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#030617] text-white selection:bg-blue-500/30 font-['Inter',sans-serif]">
+    <div className="min-h-screen bg-bg-primary text-text-primary selection:bg-accent-primary/30 font-body">
       <Sidebar 
         activeItem={activeItem} 
         onNavigate={(item) => {
@@ -75,14 +75,14 @@ const Dashboard = ({ onNavigate }) => {
 
       <main className="md:ml-[280px] pt-24 p-4 sm:p-8 pb-20 relative">
         {/* Background Glows */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent-primary/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-secondary/5 rounded-full blur-[100px] pointer-events-none" />
 
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full rounded-[32px] sm:rounded-[40px] overflow-hidden bg-slate-900/40 backdrop-blur-3xl border border-white/5 mb-10 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-2xl"
+          className="relative w-full rounded-[32px] sm:rounded-[40px] overflow-hidden bg-card-bg/80 backdrop-blur-3xl border border-border mb-10 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-intense"
         >
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
           
@@ -96,16 +96,16 @@ const Dashboard = ({ onNavigate }) => {
               </div>
             </div>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] uppercase italic">
-              Empowering <span className="text-blue-500">Excellence.</span>
+              Empowering <span className="text-accent-primary">Excellence.</span>
             </h1>
-            <p className="text-slate-400 font-bold text-lg leading-relaxed max-w-lg">
+            <p className="text-text-secondary font-bold text-lg leading-relaxed max-w-lg">
               Manage your institution with surgical precision. All systems are currently operational and synchronized.
             </p>
             <div className="flex items-center gap-4">
-               <Button className="px-8 h-14 rounded-2xl bg-blue-600 text-white font-black text-xs uppercase tracking-widest hover:bg-blue-500 shadow-2xl shadow-blue-600/20">
+               <Button className="px-8 h-14 rounded-2xl bg-accent-primary text-bg-primary font-black text-xs uppercase tracking-widest hover:bg-accent-secondary shadow-2xl shadow-accent-primary/20">
                   Quick Action <Plus size={18} className="ml-2" />
                </Button>
-               <Button variant="secondary" className="px-8 h-14 rounded-2xl border-white/10 text-white font-black text-xs uppercase tracking-widest hover:bg-white/5">
+               <Button variant="secondary" className="px-8 h-14 rounded-2xl border-border text-text-primary font-black text-xs uppercase tracking-widest hover:bg-bg-secondary">
                   Full Reports <FileText size={18} className="ml-2" />
                </Button>
             </div>
@@ -138,7 +138,7 @@ const Dashboard = ({ onNavigate }) => {
               <div className="flex items-center justify-between mb-12 relative z-10">
                 <div>
                    <h3 className="text-2xl font-black tracking-tight uppercase italic mb-1">Performance Matrix</h3>
-                   <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Cross-sectional institutional analytics</p>
+                   <p className="text-xs font-bold text-text-muted uppercase tracking-widest">Cross-sectional institutional analytics</p>
                 </div>
                 <div className="flex items-center gap-3">
                    <div className="px-4 py-2 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
@@ -157,10 +157,10 @@ const Dashboard = ({ onNavigate }) => {
                            initial={{ height: 0 }}
                            animate={{ height: `${h}%` }}
                            transition={{ duration: 1.5, delay: i * 0.05, ease: "easeOut" }}
-                           className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ${i === 5 ? 'bg-gradient-to-t from-blue-600 to-cyan-400 shadow-[0_0_20px_rgba(45,125,250,0.4)]' : 'bg-white/10 group-hover/bar:bg-blue-500/20'}`} 
+                           className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ${i === 5 ? 'bg-accent-primary shadow-[0_0_20px_rgba(56,25,50,0.4)]' : 'bg-accent-primary/10 group-hover/bar:bg-accent-primary/20'}`} 
                          />
                       </div>
-                      <span className="text-[10px] font-black text-slate-600 uppercase tracking-tighter group-hover/bar:text-blue-500 transition-colors">
+                      <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter group-hover/bar:text-accent-primary transition-colors">
                         {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]}
                       </span>
                     </div>

@@ -7,10 +7,10 @@ export const FeatureCard = ({ icon: Icon, title, desc }) => {
       whileInView={{ opacity: 1, y: 0 }}
       initial={{ opacity: 0, y: 40 }}
       viewport={{ once: true }}
-      whileHover={{ y: -8, backgroundColor: "rgba(15, 23, 42, 0.02)", borderColor: "rgba(45, 125, 250, 0.3)" }}
+      whileHover={{ y: -8, backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-hover)" }}
       style={{
-        background: '#ffffff',
-        border: '1px solid #e2e8f0',
+        background: 'var(--card-bg)',
+        border: '1px solid var(--border)',
         borderRadius: '24px',
         padding: '40px',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -18,7 +18,7 @@ export const FeatureCard = ({ icon: Icon, title, desc }) => {
         overflow: 'hidden',
       }}
     >
-      <div style={{ fontSize: '40px', marginBottom: '24px', color: '#2D7DFA' }}>
+      <div style={{ fontSize: '40px', marginBottom: '24px', color: 'var(--accent-primary)' }}>
         <Icon size={40} strokeWidth={1.5} />
       </div>
       <h3 style={{

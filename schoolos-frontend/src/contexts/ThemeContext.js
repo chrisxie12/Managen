@@ -18,9 +18,9 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     
     if (isDarkMode) {
-      document.body.classList.remove('light-mode');
+      document.body.classList.add('dark-mode');
     } else {
-      document.body.classList.add('light-mode');
+      document.body.classList.remove('dark-mode');
     }
   }, [isDarkMode]);
 

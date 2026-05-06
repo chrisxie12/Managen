@@ -3,7 +3,7 @@ import './index.css';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import LandingPage from './pages/LandingPage';
-import { Login } from './pages/Login';
+import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Settings from './pages/Settings';
 import Students from './pages/Students';

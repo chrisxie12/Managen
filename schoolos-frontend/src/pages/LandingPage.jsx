@@ -25,13 +25,13 @@ const LandingPage = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white font-['DM_Sans',sans-serif] text-[#0F172A] overflow-x-hidden">
+    <div className="min-h-screen bg-bg-primary font-body text-text-primary overflow-x-hidden">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,700&display=swap');
-        .playfair { font-family: 'Playfair Display', serif; }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px) saturate(180%); }
-        .bento-card { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .bento-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.08); }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        .playfair { font-family: var(--font-headings); }
+        .glass-nav { background: rgba(255, 243, 230, 0.8); backdrop-filter: blur(20px) saturate(180%); }
+        .bento-card { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); background: var(--card-bg); border: 1px solid var(--border); }
+        .bento-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-card); border-color: var(--accent-secondary); }
       `}</style>
 
       {/* Navbar */}
@@ -51,9 +51,9 @@ const LandingPage = ({ onNavigate }) => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => onNavigate('login')} className="hidden sm:block text-sm font-bold text-slate-600 hover:text-black px-4 transition-colors">Log In</button>
-            <button onClick={() => onNavigate('signup')} className="bg-[#0F172A] text-white px-7 py-3 rounded-full text-sm font-bold hover:bg-black/90 transition-all active:scale-95 shadow-xl shadow-black/10">Start Free Trial</button>
-            <button className="lg:hidden p-2 text-slate-900" onClick={() => setMobileMenuOpen(true)}><Menu size={24} /></button>
+            <button onClick={() => onNavigate('login')} className="hidden sm:block text-sm font-bold text-text-secondary hover:text-text-primary px-4 transition-colors">Log In</button>
+            <button onClick={() => onNavigate('signup')} className="bg-accent-primary text-bg-primary px-7 py-3 rounded-full text-sm font-bold hover:bg-accent-secondary transition-all active:scale-95 shadow-xl shadow-accent-primary/10">Start Free Trial</button>
+            <button className="lg:hidden p-2 text-text-primary" onClick={() => setMobileMenuOpen(true)}><Menu size={24} /></button>
           </div>
         </div>
       </nav>
@@ -91,14 +91,14 @@ const LandingPage = ({ onNavigate }) => {
             <motion.h1 variants={fadeInUp} className="text-[clamp(48px,6vw,84px)] font-[900] leading-[0.95] mb-8 tracking-tighter">
               Manage your school <br/> without spreadsheets <br/> or stress.
             </motion.h1>
-            <motion.p variants={fadeInUp} className="text-lg text-slate-500 font-medium max-w-[480px] leading-relaxed mb-10">
+            <motion.p variants={fadeInUp} className="text-lg text-text-secondary font-medium max-w-[480px] leading-relaxed mb-10">
               Automate student records, fee collection, and terminal reports in one seamless workspace. Built for the future of African education.
             </motion.p>
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
-              <button onClick={() => onNavigate('signup')} className="bg-[#0F172A] text-white px-9 py-4.5 rounded-full font-black shadow-2xl shadow-black/20 hover:bg-black/90 transition-all">
+              <button onClick={() => onNavigate('signup')} className="bg-accent-primary text-bg-primary px-9 py-4.5 rounded-full font-black shadow-2xl shadow-accent-primary/20 hover:bg-accent-secondary transition-all">
                 Start 14-Day Free Trial
               </button>
-              <button className="bg-slate-50 border border-slate-100 px-9 py-4.5 rounded-full font-black text-slate-700 hover:bg-slate-100 transition-all">
+              <button className="bg-bg-secondary border border-border px-9 py-4.5 rounded-full font-black text-text-secondary hover:bg-border/20 transition-all">
                 Watch Product Tour
               </button>
             </motion.div>
@@ -143,17 +143,17 @@ const LandingPage = ({ onNavigate }) => {
       </section>
 
       {/* The Comparison */}
-      <section className="py-32 px-6 bg-slate-50">
+      <section className="py-32 px-6 bg-bg-secondary">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20">
-           <div className="p-12 rounded-[48px] bg-white border border-rose-50 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full blur-[60px] -mr-10 -mt-10" />
-              <h3 className="text-2xl font-black text-rose-600 mb-6">The Chaos</h3>
-              <p className="text-xl font-medium text-slate-400 leading-relaxed">Manual paperwork, unread SMS, and hidden revenue leaks hold you back.</p>
+           <div className="p-12 rounded-[48px] bg-bg-primary border border-border/50 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent-primary/5 rounded-full blur-[60px] -mr-10 -mt-10" />
+              <h3 className="text-2xl font-black text-accent-primary mb-6">The Chaos</h3>
+              <p className="text-xl font-medium text-text-muted leading-relaxed">Manual paperwork, unread SMS, and hidden revenue leaks hold you back.</p>
            </div>
-           <div className="p-12 rounded-[48px] bg-[#0F172A] text-white shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 rounded-full blur-[60px] -mr-10 -mt-10" />
-              <h3 className="text-2xl font-black text-blue-400 mb-6">The Clarity</h3>
-              <p className="text-xl font-medium text-white/60 leading-relaxed">One-click reports, automated WhatsApp reminders, and 100% financial transparency—powered by SchoolOS.</p>
+           <div className="p-12 rounded-[48px] bg-accent-primary text-bg-primary shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent-secondary/20 rounded-full blur-[60px] -mr-10 -mt-10" />
+              <h3 className="text-2xl font-black text-accent-secondary mb-6">The Clarity</h3>
+              <p className="text-xl font-medium text-bg-primary/60 leading-relaxed">One-click reports, automated WhatsApp reminders, and 100% financial transparency—powered by SchoolOS.</p>
            </div>
         </div>
       </section>
@@ -179,10 +179,10 @@ const LandingPage = ({ onNavigate }) => {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-32 px-6 bg-slate-50">
+      <section id="pricing" className="py-32 px-6 bg-bg-secondary">
         <div className="max-w-7xl mx-auto text-center mb-24">
-           <h2 className="text-[clamp(40px,5vw,64px)] font-[900] tracking-tight">Surgical Pricing</h2>
-           <p className="text-slate-400 font-bold mt-4">No credit card required. Pay in GHS/NGN.</p>
+           <h2 className="text-[clamp(40px,5vw,64px)] font-headings font-[900] tracking-tight">Surgical Pricing</h2>
+           <p className="text-text-muted font-bold mt-4">No credit card required. Pay in GHS/NGN.</p>
         </div>
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
            {[
@@ -190,11 +190,11 @@ const LandingPage = ({ onNavigate }) => {
              { name: 'Pro', price: 'GHS 999', desc: 'Advanced finance, WhatsApp nodes, full integrations.', active: true },
              { name: 'Enterprise', price: 'Custom', desc: 'Full suite, white-glove onboarding, local support.' },
            ].map((p, i) => (
-             <div key={i} className={`p-10 rounded-[40px] bg-white border transition-all ${p.active ? 'border-[#0F172A] shadow-2xl scale-105 z-10' : 'border-slate-100 shadow-sm'}`}>
+             <div key={i} className={`p-10 rounded-[40px] bg-card-bg border transition-all ${p.active ? 'border-accent-primary shadow-2xl scale-105 z-10' : 'border-border shadow-sm'}`}>
                 <h3 className="text-lg font-black mb-2">{p.name}</h3>
-                <div className="text-4xl font-black mb-6">{p.price}<span className="text-sm text-slate-400 font-bold">/mo</span></div>
-                <p className="text-slate-500 text-sm font-medium mb-10 h-12">{p.desc}</p>
-                <button onClick={() => onNavigate('signup')} className={`w-full py-4 rounded-full font-black transition-all ${p.active ? 'bg-[#0F172A] text-white hover:bg-black' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}`}>Get Started</button>
+                <div className="text-4xl font-black mb-6 text-accent-primary">{p.price}<span className="text-sm text-text-muted font-bold">/mo</span></div>
+                <p className="text-text-secondary text-sm font-medium mb-10 h-12">{p.desc}</p>
+                <button onClick={() => onNavigate('signup')} className={`w-full py-4 rounded-full font-black transition-all ${p.active ? 'bg-accent-primary text-bg-primary hover:bg-accent-secondary' : 'bg-bg-secondary text-text-primary hover:bg-border/20'}`}>Get Started</button>
              </div>
            ))}
         </div>

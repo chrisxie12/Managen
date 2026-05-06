@@ -129,17 +129,17 @@ export const Signup = ({ setActiveTab }) => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-[#f8fafc] flex items-center justify-center p-6 lg:p-12 font-['DM_Sans',sans-serif]">
+    <div className="min-h-screen w-full bg-bg-secondary flex items-center justify-center p-6 lg:p-12 font-body">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@1,700&display=swap');
-        .playfair { font-family: 'Playfair Display', serif; }
-        .gradient-left { background: linear-gradient(160deg, #0f172a, #1e3a8a 60%, #1d4ed8); }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        .playfair { font-family: var(--font-headings); }
+        .gradient-left { background: var(--accent-primary); }
       `}</style>
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-[1280px] h-full min-h-[850px] bg-white rounded-[40px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] flex overflow-hidden border border-slate-200"
+        className="w-full max-w-[1280px] h-full min-h-[850px] bg-card-bg rounded-[40px] shadow-intense flex overflow-hidden border border-border"
       >
         {/* LEFT PANEL */}
         <div className="hidden lg:flex w-[420px] gradient-left p-12 flex-col justify-between relative overflow-hidden">
@@ -151,12 +151,12 @@ export const Signup = ({ setActiveTab }) => {
                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg border border-white/10 overflow-hidden">
                   <img src={logo} alt="S" className="w-7 h-7 object-contain mix-blend-multiply" />
                </div>
-               <span className="text-white font-black tracking-tighter text-2xl">School<span className="text-blue-400">OS</span></span>
+               <span className="text-bg-primary font-black tracking-tighter text-2xl">School<span className="text-accent-secondary">OS</span></span>
             </div>
 
-            <h1 className="text-5xl font-black text-white leading-[1.1] mb-6">
+            <h1 className="text-5xl font-black text-bg-primary leading-[1.1] mb-6">
               Set up your <br />
-              <span className="playfair italic text-[#f97316]">institution.</span>
+              <span className="playfair italic text-accent-secondary">institution.</span>
             </h1>
             <p className="text-white/60 text-lg font-medium leading-relaxed max-w-xs mb-20">
               Get your school live on SchoolOS in under 5 minutes.
@@ -182,8 +182,8 @@ export const Signup = ({ setActiveTab }) => {
                        <span className="text-white/30 font-bold text-sm">{s.id}</span>}
                     </div>
                     <div className="flex flex-col">
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-blue-400' : 'text-white/30'}`}>Step {s.id}</span>
-                      <span className={`text-sm font-bold tracking-tight ${isActive ? 'text-white' : 'text-white/50'}`}>{s.name}</span>
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${isActive ? 'text-accent-secondary' : 'text-bg-primary/30'}`}>Step {s.id}</span>
+                      <span className={`text-sm font-bold tracking-tight ${isActive ? 'text-bg-primary' : 'text-bg-primary/50'}`}>{s.name}</span>
                     </div>
                   </div>
                 );
@@ -208,14 +208,14 @@ export const Signup = ({ setActiveTab }) => {
           <div className="h-1.5 w-full bg-slate-100 relative">
             <motion.div 
               animate={{ width: `${(step / 5) * 100}%` }}
-              className="absolute top-0 left-0 h-full bg-blue-600 transition-all duration-700 ease-out"
+              className="absolute top-0 left-0 h-full bg-accent-primary transition-all duration-700 ease-out"
             />
           </div>
 
           <div className="flex-1 flex flex-col p-8 lg:p-16 max-w-[800px] mx-auto w-full">
             {/* Step Header */}
             <div className="mb-12">
-              <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+              <div className="inline-flex items-center gap-2 bg-bg-secondary text-accent-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-border">
                 Step {step} of 5 — {steps[step-1].name}
               </div>
               
@@ -227,14 +227,14 @@ export const Signup = ({ setActiveTab }) => {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-4"
                 >
-                  <h2 className="text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                  <h2 className="text-4xl font-black text-text-primary tracking-tight leading-tight">
                     {step === 1 && "Create your master account"}
                     {step === 2 && "Tell us about your school"}
                     {step === 3 && "Choose your growth tier"}
                     {step === 4 && "Invite your core team"}
                     {step === 5 && "Everything looks perfect!"}
                   </h2>
-                  <p className="text-slate-500 font-medium text-lg leading-relaxed">
+                  <p className="text-text-secondary font-medium text-lg leading-relaxed">
                     {step === 1 && "This will be the primary administrator account for your entire institution."}
                     {step === 2 && "This information will be used to set up your institution's custom workspace."}
                     {step === 3 && "Select a plan that fits your current needs. You can scale anytime."}
@@ -315,9 +315,9 @@ export const Signup = ({ setActiveTab }) => {
                             ${formData.plan === p.id ? 'border-blue-600 bg-blue-50 shadow-lg' : 'border-slate-100 bg-slate-50 hover:border-slate-200'}
                           `}
                         >
-                          <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${formData.plan === p.id ? 'text-blue-600' : 'text-slate-400'}`}>{p.name}</div>
-                          <div className="text-2xl font-black text-slate-900 tracking-tight mb-4">GHS {p.price}</div>
-                          <div className="text-[11px] font-bold text-slate-500 leading-tight">{p.desc}</div>
+                          <div className={`text-[10px] font-black uppercase tracking-widest mb-2 ${formData.plan === p.id ? 'text-accent-primary' : 'text-text-muted'}`}>{p.name}</div>
+                          <div className="text-2xl font-black text-text-primary tracking-tight mb-4">GHS {p.price}</div>
+                          <div className="text-[11px] font-bold text-text-secondary leading-tight">{p.desc}</div>
                         </div>
                       ))}
                       {/* Feature summary for selected plan */}
@@ -447,8 +447,8 @@ export const Signup = ({ setActiveTab }) => {
                   disabled={isSubmitting}
                   className={`
                     flex items-center gap-3 px-10 py-5 rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all shadow-2xl active:scale-95
-                    ${step === 5 ? 'bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-blue-500/20' : 'bg-slate-900 text-white shadow-slate-900/10'}
-                    ${isSubmitting ? 'opacity-50' : 'hover:shadow-xl'}
+                    ${step === 5 ? 'bg-accent-primary text-bg-primary shadow-accent-primary/20' : 'bg-accent-primary text-bg-primary shadow-accent-primary/10'}
+                    ${isSubmitting ? 'opacity-50' : 'hover:shadow-xl hover:bg-accent-secondary'}
                   `}
                 >
                   {isSubmitting ? 'Deploying...' : step === 5 ? 'Launch My School' : 'Continue'}
@@ -466,16 +466,16 @@ export const Signup = ({ setActiveTab }) => {
 // Helper Components
 const InputGroup = ({ label, name, value, onChange, placeholder, icon: Icon, type = "text" }) => (
   <div className="space-y-3 group">
-    <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest block ml-1 transition-colors group-focus-within:text-blue-500">{label}</label>
+    <label className="text-[11px] font-black text-text-muted uppercase tracking-widest block ml-1 transition-colors group-focus-within:text-accent-primary">{label}</label>
     <div className="relative flex items-center">
-      <Icon size={18} className="absolute left-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+      <Icon size={18} className="absolute left-4 text-text-muted group-focus-within:text-accent-primary transition-colors" />
       <input 
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full bg-slate-50 border border-slate-200 py-4 pl-12 pr-6 rounded-2xl text-slate-900 font-bold placeholder:text-slate-300 outline-none focus:border-blue-500 focus:bg-white transition-all shadow-sm"
+        className="w-full bg-bg-secondary border border-border py-4 pl-12 pr-6 rounded-2xl text-text-primary font-bold placeholder:text-text-muted outline-none focus:border-accent-primary focus:bg-white transition-all shadow-sm"
       />
     </div>
   </div>

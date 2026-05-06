@@ -5,27 +5,27 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
+  --bg-primary: #FFF3E6;    /* MILK */
+  --bg-secondary: #F9F1E7;  /* Slightly darker Milk for secondary surfaces */
   --card-bg: #ffffff;
-  --accent-primary: #2D7DFA;   /* Logo OS Blue */
-  --accent-secondary: #4AA9FF; /* Logo Sky Blue */
+  --accent-primary: #381932;   /* PLUM */
+  --accent-secondary: #512b4a; /* Lighter Plum for hover/accents */
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --border-hover: rgba(45, 125, 250, 0.3);
+  --text-primary: #381932;  /* PLUM as main text */
+  --text-secondary: #512b4a;
+  --text-muted: #7d6077;
+  --border: #e8dccf;
+  --border-hover: rgba(56, 25, 50, 0.3);
   
   --font-headings: 'Playfair Display', serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.06);
-  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
-  --shadow-intense: 0 0 80px rgba(59, 130, 246, 0.25);
+  --shadow-card: 0 8px 32px rgba(56, 25, 50, 0.08);
+  --shadow-glow: 0 0 40px rgba(56, 25, 50, 0.15);
+  --shadow-intense: 0 0 80px rgba(56, 25, 50, 0.25);
   
   --radius-sm: 8px;
   --radius-md: 12px;
