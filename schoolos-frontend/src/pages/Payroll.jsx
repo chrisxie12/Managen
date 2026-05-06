@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Banknote, 
   Plus, 
@@ -68,10 +68,10 @@ const Payroll = () => {
   };
 
   const stats = [
-    { label: 'Total Volume', value: 124500, icon: Banknote, color: '#6366F1', prefix: '₵' },
+    { label: 'Total Volume', value: 124500, icon: Banknote, color: '#6366F1', prefix: 'USD ' },
     { label: 'Staff Paid', value: 42, icon: CheckCircle2, color: '#10B981' },
     { label: 'Processing', value: 8, icon: History, color: '#F59E0B' },
-    { label: 'Statutory Dues', value: 18200, icon: Activity, color: '#EC4899', prefix: '₵' },
+    { label: 'Statutory Dues', value: 18200, icon: Activity, color: '#EC4899', prefix: 'USD ' },
   ];
 
   const filteredPayroll = payroll.filter(p => 
@@ -165,9 +165,9 @@ const Payroll = () => {
                                </div>
                             </div>
                          </td>
-                         <td className="px-6 py-5 text-sm font-black" style={{ color: "var(--text-primary)" }}>₵{(p.base_salary + p.allowances).toLocaleString()}</td>
-                         <td className="px-6 py-5 text-sm font-bold text-rose-500">-₵{p.deductions.toLocaleString()}</td>
-                         <td className="px-6 py-5 text-sm font-black" style={{ color: "var(--text-primary)" }}>₵{p.net_salary.toLocaleString()}</td>
+                         <td className="px-6 py-5 text-sm font-black" style={{ color: "var(--text-primary)" }}>USD {(p.base_salary + p.allowances).toLocaleString()}</td>
+                         <td className="px-6 py-5 text-sm font-bold text-rose-500">-USD {p.deductions.toLocaleString()}</td>
+                         <td className="px-6 py-5 text-sm font-black" style={{ color: "var(--text-primary)" }}>USD {p.net_salary.toLocaleString()}</td>
                          <td className="px-6 py-5">
                             <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${p.status === 'Paid' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
                                {p.status}
@@ -203,3 +203,4 @@ const Payroll = () => {
 };
 
 export default Payroll;
+

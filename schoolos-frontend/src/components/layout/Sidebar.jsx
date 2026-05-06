@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import Logo from '../ui/Logo';
+import { useLocalization } from '../../contexts/LocalizationContext';
 import { 
   LayoutDashboard, 
   Users, 
@@ -33,12 +34,14 @@ import {
   History,
   Activity,
   Shield,
-  Globe
+  Globe,
+  Zap
 } from 'lucide-react';
 
 const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, onToggleCollapse, onClose }) => {
   const { authSession, signOut } = useAuth();
   const { isDarkMode } = useTheme();
+  const { config } = useLocalization();
   const role = (authSession?.user?.role || authSession?.role || 'admin').toLowerCase();
 
   const allSections = [
@@ -53,9 +56,9 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
       title: "Management",
       items: [
         { id: 'schools', label: 'Schools', icon: Building2, roles: ['superadmin'] },
-        { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant', 'headmaster'] },
-        { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin', 'headmaster'] },
-        { id: 'classes', label: 'Classes', icon: BookOpen, roles: ['admin', 'teacher', 'headmaster'] },
+        { id: 'students', label: `${config.terminology.student}s`, icon: GraduationCap, roles: ['admin', 'accountant', 'headmaster'] },
+        { id: 'teachers', label: `${config.terminology.teacher}s`, icon: Users, roles: ['admin', 'headmaster'] },
+        { id: 'classes', label: `${config.terminology.class}${config.terminology.class.endsWith('y') ? 's' : 'es'}`, icon: BookOpen, roles: ['admin', 'teacher', 'headmaster'] },
         { id: 'global-users', label: 'Users', icon: Users, roles: ['superadmin'] },
       ]
     },
@@ -63,7 +66,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
       title: "Finance",
       items: [
         { id: 'fees', label: 'Fees', icon: Wallet, roles: ['admin', 'accountant', 'headmaster'] },
-        { id: 'fees', label: 'Pay via MoMo', icon: Zap, roles: ['parent'] },
+        { id: 'fees', label: 'Global Gateway', icon: Zap, roles: ['parent'] },
         { id: 'billing', label: 'Billing', icon: CreditCard, roles: ['superadmin'] },
         { id: 'subscriptions', label: 'Subscriptions', icon: History, roles: ['superadmin'] },
       ]
@@ -73,7 +76,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
       items: [
         { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
         { id: 'exams', label: 'Exams', icon: FileText, roles: ['admin', 'teacher', 'headmaster'] },
-        { id: 'results', label: 'Results', icon: BarChart3, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
+        { id: 'results', label: config.terminology.results, icon: BarChart3, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
         { id: 'timetable', label: 'Timetable', icon: Calendar, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
       ]
     },
@@ -240,3 +243,4 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
 };
 
 export default Sidebar;
+

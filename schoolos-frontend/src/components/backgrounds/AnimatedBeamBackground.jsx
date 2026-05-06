@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 
 export const AnimatedBeamBackground = () => {
@@ -41,3 +41,4 @@ const styles = {
     filter: 'blur(40px)',
   }
 };
+

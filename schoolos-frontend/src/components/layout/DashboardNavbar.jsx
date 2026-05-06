@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { 
   Menu, 
   Search, 
@@ -84,3 +84,4 @@ const DashboardNavbar = ({ activeItem = 'Dashboard', onMenuClick, isCollapsed })
 };
 
 export default DashboardNavbar;
+

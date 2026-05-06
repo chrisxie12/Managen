@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowLeft, 
@@ -47,7 +47,7 @@ const Login = ({ onNavigate }) => {
     if (loginForm.email.includes('@')) {
       const domain = loginForm.email.split('@')[1];
       if (domain.length > 3) {
-        setDetectedSchool('Accra Ridge School Node');
+        setDetectedSchool('Global Institution Node');
       }
     } else {
       setDetectedSchool(null);
@@ -274,3 +274,4 @@ const Login = ({ onNavigate }) => {
 };
 
 export default Login;
+

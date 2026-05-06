@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
@@ -279,3 +279,4 @@ const Classes = React.memo(({ onNavigate }) => {
 });
 
 export default Classes;
+

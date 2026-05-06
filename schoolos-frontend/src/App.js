@@ -3,6 +3,7 @@ import './index.css';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { LocalizationProvider } from './contexts/LocalizationContext';
 
 // Lazy load page components
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -118,15 +119,17 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <ToastProvider>
-          <Suspense fallback={<LoadingSpinner />}>
-            <AppContent />
-          </Suspense>
-        </ToastProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <LocalizationProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <Suspense fallback={<LoadingSpinner />}>
+              <AppContent />
+            </Suspense>
+          </ToastProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

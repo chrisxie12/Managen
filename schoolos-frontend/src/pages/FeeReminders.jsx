@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BellRing, 
@@ -49,8 +49,8 @@ const styles = `
     --email-dim-dark: rgba(99,102,241,0.12);
     --danger-dark: #ef4444;
     --danger-dim-dark: rgba(239,68,68,0.12);
-    --momo-dark: #ffcc00;
-    --momo-dim-dark: rgba(255,204,0,0.1);
+    --Digital-dark: #ffcc00;
+    --Digital-dim-dark: rgba(255,204,0,0.1);
   }
 
   .stat-card-premium {
@@ -64,7 +64,7 @@ const styles = `
     position: absolute; top: 0; left: 0; right: 0; height: 2px;
   }
   .stat-card-premium.green::before { background: var(--accent-dark); }
-  .stat-card-premium.yellow::before { background: var(--momo-dark); }
+  .stat-card-premium.yellow::before { background: var(--Digital-dark); }
   .stat-card-premium.orange::before { background: var(--sms-dark); }
   .stat-card-premium.red::before { background: var(--danger-dark); }
 
@@ -93,7 +93,7 @@ const FeeReminders = ({ onNavigate }) => {
   const [sendProgress, setSendProgress] = useState(0);
 
   const [students, setStudents] = useState([
-    { id:1, name:'Ama Mensah Boateng', class:'7A', parent:'Mrs. Abena Boateng', balance:600, days:18, risk:'high', wa:true, sms:true, email:true },
+    { id:1, name:'Sarah Jenkins', class:'7A', parent:'Mrs. Emily Jenkins', balance:600, days:18, risk:'high', wa:true, sms:true, email:true },
     { id:2, name:'Kweku Asante', class:'8B', parent:'Mr. Frank Asante', balance:480, days:31, risk:'high', wa:false, sms:true, email:true },
     { id:3, name:'Adjoa Tetteh', class:'6C', parent:'Mrs. Grace Tetteh', balance:250, days:7, risk:'med', wa:true, sms:false, email:true },
     { id:4, name:'Kofi Darko', class:'9A', parent:'Dr. Emmanuel Darko', balance:720, days:22, risk:'high', wa:true, sms:true, email:false },
@@ -106,8 +106,8 @@ const FeeReminders = ({ onNavigate }) => {
   ]);
 
   const [activities, setActivities] = useState([
-    { time:'2m ago', color:'#25d366', text:<span>WhatsApp delivered to <strong>Mrs. Abena Boateng</strong> · Ama Mensah · GHS 600</span> },
-    { time:'4m ago', color:'#ffcc00', text:<span><strong>MoMo payment received</strong> · Kwame Darko · GHS 480 ✅</span> },
+    { time:'2m ago', color:'#25d366', text:<span>WhatsApp delivered to <strong>Mrs. Emily Jenkins</strong> · Ama Mensah · USD 600</span> },
+    { time:'4m ago', color:'#ffcc00', text:<span><strong>Digital payment received</strong> · Kwame Darko · USD 480 ✅</span> },
     { time:'12m ago', color:'#f59e0b', text:<span>SMS fallback sent to <strong>Mr. Joseph Ankrah</strong> (WA undelivered)</span> },
     { time:'18m ago', color:'#6366f1', text:<span>Email sent to <strong>Dr. Emmanuel Darko</strong> · full fee breakdown attached</span> },
   ]);
@@ -183,7 +183,7 @@ const FeeReminders = ({ onNavigate }) => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold font-['Syne'] text-[#f0f2f8]">Smart Fee Reminders</h1>
-          <p className="text-xs text-[#555a72] mt-1 uppercase tracking-widest font-black">Kwame Nkrumah Memorial JHS · Node Alpha</p>
+          <p className="text-xs text-[#555a72] mt-1 uppercase tracking-widest font-black">Memorial Global Academy · Node Alpha</p>
         </div>
         <div className="flex gap-3">
            <button className="px-5 py-2.5 rounded-xl border border-[rgba(255,255,255,0.12)] text-sm font-bold text-[#8b90a8] hover:bg-[#1c2030] transition-colors flex items-center gap-2">
@@ -201,9 +201,9 @@ const FeeReminders = ({ onNavigate }) => {
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total fees due', val: 'GHS 48,200', sub: '↑ 12% vs last term', color: 'green' },
-          { label: 'Collected via MoMo', val: 'GHS 31,450', sub: '65% of total · 142 payments', color: 'yellow' },
-          { label: 'Outstanding balance', val: 'GHS 16,750', sub: '58 students pending', color: 'orange' },
+          { label: 'Total fees due', val: 'USD 48,200', sub: '↑ 12% vs last term', color: 'green' },
+          { label: 'Collected via Digital', val: 'USD 31,450', sub: '65% of total · 142 payments', color: 'yellow' },
+          { label: 'Outstanding balance', val: 'USD 16,750', sub: '58 students pending', color: 'orange' },
           { label: 'High-risk defaulters', val: '14', sub: 'Overdue 14+ days', color: 'red' },
         ].map((s, i) => (
           <div key={i} className={`stat-card-premium ${s.color} p-6 rounded-2xl`}>
@@ -296,7 +296,7 @@ const FeeReminders = ({ onNavigate }) => {
                         <div className="text-[11px] text-[#555a72] font-bold">{s.class} · {s.parent}</div>
                       </td>
                       <td className="p-4">
-                        <div className={`font-['Syne'] font-bold ${s.days > 14 ? 'text-[#ef4444]' : 'text-[#f0f2f8]'}`}>GHS {s.balance.toLocaleString()}</div>
+                        <div className={`font-['Syne'] font-bold ${s.days > 14 ? 'text-[#ef4444]' : 'text-[#f0f2f8]'}`}>USD {s.balance.toLocaleString()}</div>
                       </td>
                       <td className="p-4">
                         <span className={`px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
@@ -348,7 +348,7 @@ const FeeReminders = ({ onNavigate }) => {
              <h2 className="font-['Syne'] font-bold text-sm mb-6 flex items-center gap-2"><Zap size={16} className="text-[#00e5a0]" /> Automated Fallback Chain</h2>
              <div className="space-y-8 relative">
                 {[
-                  { icon: 'W', color: 'wa', title: '1. WhatsApp + MoMo link', desc: 'Sent first. High conversion path with one-tap checkout.', trigger: 'Immediate' },
+                  { icon: 'W', color: 'wa', title: '1. WhatsApp + Digital link', desc: 'Sent first. High conversion path with one-tap checkout.', trigger: 'Immediate' },
                   { icon: 'S', color: 'sms', title: '2. SMS Fallback', desc: 'Triggered if WA undelivered in 2 hours. Legacy carrier node.', trigger: '+2 hours' },
                   { icon: 'E', color: 'em', title: '3. Institutional Email', desc: 'Formal letter with encrypted fee breakdown PDF.', trigger: '+24 hours' },
                   { icon: '!', color: 'block', title: '4. Node Suspension', desc: 'Portal access restricted until balance cleared.', trigger: 'Day 30' },
@@ -368,23 +368,23 @@ const FeeReminders = ({ onNavigate }) => {
              </div>
           </div>
 
-          {/* MoMo Card */}
+          {/* Digital Card */}
           <div className="bg-[#14171f] border border-[rgba(255,255,255,0.07)] rounded-2xl p-6">
              <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-[#ffcc00]/10 border border-[#ffcc00]/20 flex items-center justify-center text-lg">💳</div>
                 <div>
-                   <div className="text-sm font-bold font-['Syne']">MoMo Smart Link</div>
+                   <div className="text-sm font-bold font-['Syne']">Digital Smart Link</div>
                    <div className="text-[10px] text-[#555a72] font-black uppercase tracking-widest">Paystack Integrated</div>
                 </div>
              </div>
              <div className="bg-[#1c2030] rounded-xl p-4 mb-6 border border-[rgba(255,255,255,0.05)]">
                 <div className="text-[10px] text-[#555a72] uppercase font-black tracking-widest mb-4">Payload Preview</div>
-                <div className="text-sm font-bold mb-1">Ama Mensah Boateng</div>
-                <div className="text-[11px] text-[#555a72] mb-4">Class 7A · Mrs. Abena Boateng</div>
+                <div className="text-sm font-bold mb-1">Sarah Jenkins</div>
+                <div className="text-[11px] text-[#555a72] mb-4">Class 7A · Mrs. Emily Jenkins</div>
                 <div className="space-y-2 border-t border-[rgba(255,255,255,0.07)] pt-4">
-                   <div className="flex justify-between text-[11px] text-[#8b90a8]"><span>School Fees</span> <span className="font-bold">GHS 480</span></div>
-                   <div className="flex justify-between text-[11px] text-[#8b90a8]"><span>Levies</span> <span className="font-bold">GHS 120</span></div>
-                   <div className="flex justify-between text-sm font-black text-[#ffcc00] pt-2"><span>Total</span> <span>GHS 600</span></div>
+                   <div className="flex justify-between text-[11px] text-[#8b90a8]"><span>School Fees</span> <span className="font-bold">USD 480</span></div>
+                   <div className="flex justify-between text-[11px] text-[#8b90a8]"><span>Levies</span> <span className="font-bold">USD 120</span></div>
+                   <div className="flex justify-between text-sm font-black text-[#ffcc00] pt-2"><span>Total</span> <span>USD 600</span></div>
                 </div>
                 <div className="mt-4 text-[10px] text-[#00e5a0] font-bold truncate">🔗 pay.schoolos.app/ama-m-2t25</div>
              </div>
@@ -405,9 +405,9 @@ const FeeReminders = ({ onNavigate }) => {
              </div>
              <div className="wa-bubble-dark rounded-tr-xl rounded-br-xl rounded-bl-xl p-4 text-[11px] leading-relaxed relative mb-2">
                 Dear <strong>Mrs. Boateng</strong> 👋<br /><br />
-                Ama (Class 7A) has a balance of <span className="text-[#4ade80] font-bold">GHS 600</span> due by 31 May.<br /><br />
-                Pay instantly with <strong>MTN MoMo</strong>:<br />
-                <button className="w-full mt-3 py-2.5 rounded-lg bg-[#25d366] text-black font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#25d366]/20">💳 Open MoMo Checkout</button>
+                Ama (Class 7A) has a balance of <span className="text-[#4ade80] font-bold">USD 600</span> due by 31 May.<br /><br />
+                Pay instantly with <strong>MTN Digital</strong>:<br />
+                <button className="w-full mt-3 py-2.5 rounded-lg bg-[#25d366] text-black font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#25d366]/20">💳 Open Digital Checkout</button>
              </div>
              <div className="text-[9px] text-[#555a72] text-right">6:00 PM · Delivered ✓✓</div>
           </div>
@@ -443,7 +443,7 @@ const FeeReminders = ({ onNavigate }) => {
                     <div className="text-[10px] text-[#555a72] uppercase font-black tracking-widest mb-4">Message Template</div>
                     <div className="text-[11px] text-[#8b90a8] leading-relaxed">
                        Dear <span className="text-[#00e5a0]">[Parent]</span> 👋<br /><br />
-                       This is a reminder that <span className="text-[#00e5a0]">[Student]</span> has a balance of <span className="text-[#00e5a0]">GHS [Amount]</span>.<br /><br />
+                       This is a reminder that <span className="text-[#00e5a0]">[Student]</span> has a balance of <span className="text-[#00e5a0]">USD [Amount]</span>.<br /><br />
                        Pay instantly: <span className="text-[#00e5a0]">pay.schoolos.app/[ID]</span>
                     </div>
                  </div>
@@ -481,3 +481,4 @@ const FeeReminders = ({ onNavigate }) => {
 };
 
 export default FeeReminders;
+

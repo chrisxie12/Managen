@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   MessageSquare,
@@ -10,7 +10,9 @@ import {
   Users,
   Bell,
   FileText,
-  MoreHorizontal
+  MoreHorizontal,
+  Smartphone,
+  Zap
 } from "lucide-react";
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
@@ -86,6 +88,8 @@ const Communication = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("inbox");
   const [sending, setSending] = useState(false);
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [automationSettings, setAutomationSettings] = useState({
     feeReminders: true,
     attendanceAlerts: true,
@@ -435,3 +439,4 @@ const Communication = () => {
 };
 
 export default Communication;
+

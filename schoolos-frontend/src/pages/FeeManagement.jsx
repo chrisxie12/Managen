@@ -28,6 +28,7 @@ import { buildUrl, getHeaders } from '../services/api';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useLocalization } from '../contexts/LocalizationContext';
 
 const monthlyRevenue = [
   { month: "Sep", collected: 42000, target: 52000 },
@@ -71,6 +72,7 @@ const StatusBadge = ({ status }) => {
 };
 
 const FeeManagement = ({ onNavigate }) => {
+  const { formatCurrency, config } = useLocalization();
   const [activeTab, setActiveTab] = useState("fees");
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -143,9 +145,9 @@ const FeeManagement = ({ onNavigate }) => {
                       <span className="px-4 py-2 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/20">Active Gateway</span>
                    </div>
                    <div className="mb-10">
-                      <div className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Total MoMo Collections (Term)</div>
-                      <div className="text-5xl font-black tracking-tighter">₵142,850.40</div>
-                      <p className="text-[11px] font-bold opacity-40 mt-2 italic">Settled to: {momoSettings.settlementBank} (****6218)</p>
+                      <div className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Total Collections (Global)</div>
+                      <div className="text-5xl font-black tracking-tighter">USD 142,850.40</div>
+                      <p className="text-[11px] font-bold opacity-40 mt-2 italic">Settling to: {momoSettings.settlementBank}</p>
                    </div>
                    <div className="flex gap-4">
                       <button className="flex-1 h-14 rounded-2xl bg-white text-emerald-600 font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">
@@ -179,7 +181,7 @@ const FeeManagement = ({ onNavigate }) => {
                             </div>
                          </div>
                          <div className="text-right">
-                            <div className="text-lg font-black text-emerald-600 tracking-tighter">₵{tx.amount.toLocaleString()}</div>
+                            <div className="text-lg font-black text-emerald-600 tracking-tighter">USD {tx.amount.toLocaleString()}</div>
                             <div className="text-[10px] font-bold text-slate-400">{tx.time}</div>
                          </div>
                       </div>
@@ -247,24 +249,24 @@ const FeeManagement = ({ onNavigate }) => {
         {[
           {
             label: "Total Collected",
-            value: `₵${totalCollected.toLocaleString()}`,
+            value: formatCurrency(totalCollected),
             icon: ArrowUpRight,
             color: "#10B981",
-            sub: "This term",
+            sub: "This period",
           },
           {
-            label: "Total Owed",
-            value: `₵${totalOwed.toLocaleString()}`,
+            label: "Accounts Receivable",
+            value: formatCurrency(totalOwed),
             icon: ArrowDownLeft,
             color: "#EF4444",
-            sub: `${filtered.filter((r) => r.status !== "paid").length} students`,
+            sub: `${filtered.filter((r) => r.status !== "paid").length} accounts`,
           },
           {
             label: "Payroll Status",
-            value: `₵${paidPayroll.toLocaleString()}`,
+            value: formatCurrency(paidPayroll),
             icon: Users,
             color: "#6366F1",
-            sub: `of ₵${totalPayroll.toLocaleString()}`,
+            sub: `of ${formatCurrency(totalPayroll)}`,
           },
           {
             label: "Collection Rate",
@@ -318,10 +320,10 @@ const FeeManagement = ({ onNavigate }) => {
             style={{ background: "var(--card-bg)", borderColor: "var(--border)" }}
           >
             {[
-              { id: "fees", label: "Fee Records", icon: Wallet },
-              { id: "momo", label: "MoMo Gateway", icon: Zap },
+              { id: "fees", label: "Ledger", icon: Wallet },
+              { id: "momo", label: "Global Gateway", icon: Zap },
               { id: "payroll", label: "Staff Payroll", icon: Users },
-              { id: "analytics", label: "Analytics", icon: TrendingUp },
+              { id: "analytics", label: "Insights", icon: TrendingUp },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -427,7 +429,7 @@ const FeeManagement = ({ onNavigate }) => {
                             fontWeight: i === 2 && v > 0 ? 800 : 600,
                           }}
                         >
-                          ₵{v.toLocaleString()}
+                          {formatCurrency(v)}
                         </span>
                       </td>
                     ))}
@@ -504,7 +506,7 @@ const FeeManagement = ({ onNavigate }) => {
                       <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>{p.role}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.8rem", fontWeight: 800 }}>₵{p.salary.toLocaleString()}</span>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.8rem", fontWeight: 800 }}>{formatCurrency(p.salary)}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span
@@ -558,7 +560,7 @@ const FeeManagement = ({ onNavigate }) => {
                 <YAxis tick={{ fontSize: 12, fill: "var(--text-muted)", fontWeight: 600 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
                 <Tooltip
                   contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 12, fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}
-                  formatter={(v) => [`₵${v.toLocaleString()}`]}
+                  formatter={(v) => [formatCurrency(v)]}
                 />
                 <Bar dataKey="target" fill="var(--bg-secondary)" radius={[4, 4, 0, 0]} barSize={16} name="Target" />
                 <Bar dataKey="collected" fill="var(--accent-primary)" radius={[4, 4, 0, 0]} barSize={16} name="Collected" />
@@ -615,7 +617,7 @@ const FeeManagement = ({ onNavigate }) => {
               <div className="p-8 pt-4 space-y-4">
                 {[
                   { label: "Student Name / ID", placeholder: "e.g. Ama Owusu" },
-                  { label: "Amount Received (₵)", placeholder: "e.g. 1800" },
+                  { label: "Amount Received (USD )", placeholder: "e.g. 1800" },
                   { label: "Reference", placeholder: "e.g. TXN-8219" },
                 ].map((f) => (
                   <div key={f.label}>
@@ -655,3 +657,4 @@ const FeeManagement = ({ onNavigate }) => {
 };
 
 export default FeeManagement;
+

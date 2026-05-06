@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+﻿import React, { useEffect, useRef } from 'react';
 import { useInView, animate } from 'framer-motion';
 
 export const AnimatedCounter = ({ from = 0, to, duration = 2, suffix = '' }) => {
@@ -21,3 +21,4 @@ export const AnimatedCounter = ({ from = 0, to, duration = 2, suffix = '' }) => 
 
   return <span ref={nodeRef}>{from}{suffix}</span>;
 };
+

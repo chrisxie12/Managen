@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+﻿import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
@@ -66,7 +66,7 @@ const PlatformOverview = ({ stats, loading }) => {
     { label: 'Total Schools', value: '1,245', change: '+12%', icon: Building2, color: 'indigo' },
     { label: 'Total Users', value: '45,230', change: '+8%', icon: Users, color: 'purple' },
     { label: 'Active Subs', value: '1,102', change: '+5%', icon: CreditCard, color: 'blue' },
-    { label: 'Revenue', value: '₵120k', change: '+18%', icon: Wallet, color: 'emerald', chart: true },
+    { label: 'Revenue', value: 'USD 120k', change: '+18%', icon: Wallet, color: 'emerald', chart: true },
     { label: 'System Health', value: '99.9%', change: 'Uptime', icon: Activity, color: 'cyan' },
     { label: 'Pending Issues', value: '8', change: 'Critical', icon: ShieldAlert, color: 'rose' },
   ];
@@ -400,8 +400,8 @@ const InstitutionManagement = ({ schools = [] }) => {
 
 const SubscriptionManagement = ({ stats }) => {
   const plans = [
-    { name: 'Basic', price: '₵499/mo', schools: 45, features: ['Core Admin', '500 Students', 'Email Support'] },
-    { name: 'Premium', price: '₵999/mo', schools: 62, features: ['Advanced Analytics', 'Unlimited Students', 'WhatsApp Bot', 'Priority Support'] },
+    { name: 'Basic', price: 'USD 499/mo', schools: 45, features: ['Core Admin', '500 Students', 'Email Support'] },
+    { name: 'Premium', price: 'USD 999/mo', schools: 62, features: ['Advanced Analytics', 'Unlimited Students', 'WhatsApp Bot', 'Priority Support'] },
     { name: 'Enterprise', price: 'Custom', schools: 17, features: ['White Label', 'SLA Guarantee', 'Dedicated Manager', 'API Access'] },
   ];
 
@@ -853,3 +853,4 @@ const SuperAdminDashboard = ({ activeModule = 'dashboard' }) => {
 };
 
 export default SuperAdminDashboard;
+

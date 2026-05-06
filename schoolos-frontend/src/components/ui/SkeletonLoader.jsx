@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export const SkeletonLoader = ({ width = '100%', height = '20px', borderRadius = '8px', className = '' }) => {
   return (
@@ -19,3 +19,4 @@ export const SkeletonLoader = ({ width = '100%', height = '20px', borderRadius =
     </div>
   );
 };
+

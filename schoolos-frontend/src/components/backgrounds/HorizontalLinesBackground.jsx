@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export const HorizontalLinesBackground = () => {
   return (
@@ -34,3 +34,4 @@ const styles = {
     filter: 'blur(60px)',
   }
 };
+

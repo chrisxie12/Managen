@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLocalization } from '../contexts/LocalizationContext';
 import { 
   Users, 
   Wallet, 
@@ -36,7 +37,7 @@ import { buildUrl } from '../services/api';
 const ParentDashboard = lazy(() => import('./ParentDashboard'));
 const AccountantDashboard = lazy(() => import('./AccountantDashboard'));
 
-const DefaultDashboard = ({ stats, authSession, onNavigate, isDarkMode, revenueData, pieData, recentActivity, topStudents, metrics, handleNavigate }) => (
+const DefaultDashboard = ({ stats, authSession, onNavigate, isDarkMode, revenueData, pieData, recentActivity, topStudents, metrics, handleNavigate, formatCurrency }) => (
   <div className="p-6 sm:p-8 flex flex-col gap-6">
     {/* Welcome Header */}
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -119,7 +120,7 @@ const DefaultDashboard = ({ stats, authSession, onNavigate, isDarkMode, revenueD
             <YAxis tick={{ fontSize: 12, fill: "var(--text-muted)", fontWeight: 700 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
             <Tooltip
               contentStyle={{ background: "var(--card-bg)", border: `1px solid var(--border)`, borderRadius: 16, fontSize: 11, fontWeight: 700, boxShadow: "var(--shadow-card)", color: "var(--text-primary)" }}
-              formatter={(v) => [`₵${v.toLocaleString()}`, "Revenue"]}
+              formatter={(v) => [formatCurrency(v), "Revenue"]}
             />
             <Area type="monotone" dataKey="amount" stroke={isDarkMode ? "var(--text-primary)" : "#381932"} strokeWidth={3} fill="url(#revenueGrad)" />
           </AreaChart>
@@ -226,6 +227,7 @@ const DefaultDashboard = ({ stats, authSession, onNavigate, isDarkMode, revenueD
 const Dashboard = React.memo(({ onNavigate }) => {
   const { authSession } = useAuth();
   const { isDarkMode } = useTheme();
+  const { config, formatCurrency } = useLocalization();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   
@@ -267,25 +269,25 @@ const Dashboard = React.memo(({ onNavigate }) => {
   ], []);
 
   const recentActivity = useMemo(() => [
-    { type: "fee", text: "Fee payment from Kofi Adu (JHS 3)", time: "2 min ago", status: "success" },
-    { type: "report", text: "Term 1 reports sent to 248 parents via WhatsApp", time: "1 hr ago", status: "success" },
-    { type: "alert", text: "6 students overdue on fees (>30 days)", time: "3 hrs ago", status: "warning" },
-    { type: "attend", text: "Attendance marked for all 12 classes", time: "This morning", status: "success" },
-  ], []);
+    { type: "fee", text: `Fee payment from Alex Johnson (${config.terminology.class} 3)`, time: "2 min ago", status: "success" },
+    { type: "report", text: `${config.terminology.results}s sent to 248 parents via WhatsApp`, time: "1 hr ago", status: "success" },
+    { type: "alert", text: `6 ${config.terminology.student}s overdue on fees (>30 days)`, time: "3 hrs ago", status: "warning" },
+    { type: "attend", text: `Attendance marked for all 12 ${config.terminology.class}es`, time: "This morning", status: "success" },
+  ], [config]);
 
   const topStudents = useMemo(() => [
-    { id: "GH-24-001", name: "Ama Owusu", class: "JHS 3A", avg: 96.4, trend: "up" },
-    { id: "GH-24-012", name: "Kwesi Boateng", class: "JHS 2B", avg: 94.1, trend: "up" },
-    { id: "GH-24-034", name: "Efua Mensah", class: "JHS 3A", avg: 91.7, trend: "down" },
-    { id: "GH-24-047", name: "Yaw Darko", class: "JHS 1C", avg: 90.2, trend: "up" },
-  ], []);
+    { id: "S-24-001", name: "Sarah Jenkins", class: `${config.terminology.class} 3A`, avg: 96.4, trend: "up" },
+    { id: "S-24-012", name: "Leo Martinez", class: `${config.terminology.class} 2B`, avg: 94.1, trend: "up" },
+    { id: "S-24-034", name: "Yuki Tanaka", class: `${config.terminology.class} 3A`, avg: 91.7, trend: "down" },
+    { id: "S-24-047", name: "Ahmed Khan", class: `${config.terminology.class} 1C`, avg: 90.2, trend: "up" },
+  ], [config]);
 
   const metrics = useMemo(() => [
-    { label: "Total Students", value: stats?.totalStudents || "1,248", change: "+24 this term", positive: true, icon: Users, color: "#6366F1", path: "students" },
-    { label: "Term Revenue", value: stats?.revenue ? `₵${stats.revenue.toLocaleString()}` : "₵186,400", change: "+18.2%", positive: true, icon: Wallet, color: "#10B981", path: "fee-reminders" },
+    { label: `Total ${config.terminology.student}s`, value: stats?.totalStudents || "1,248", change: "+24 this term", positive: true, icon: Users, color: "#6366F1", path: "students" },
+    { label: "Term Revenue", value: stats?.revenue ? formatCurrency(stats.revenue) : formatCurrency(186400), change: "+18.2%", positive: true, icon: Wallet, color: "#10B981", path: "fees" },
     { label: "Avg Attendance", value: "91.4%", change: "-2.1% week", positive: false, icon: Clock, color: "#F59E0B", path: "attendance" },
     { label: "Reports Sent", value: "2,340", change: "WhatsApp Live", positive: true, icon: MessageSquare, color: "#25D366", path: "communication" },
-  ], [stats]);
+  ], [stats, config]);
 
   const handleNavigate = useCallback((path) => {
     onNavigate(path);
@@ -324,4 +326,4 @@ const Dashboard = React.memo(({ onNavigate }) => {
 });
 
 export default Dashboard;
-oard;
+

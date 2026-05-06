@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 
 export const FeatureCard = ({ icon: Icon, title, desc }) => {
@@ -35,3 +35,4 @@ export const FeatureCard = ({ icon: Icon, title, desc }) => {
     </motion.div>
   );
 };
+

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export const WarmDarkBackground = () => {
   return (
@@ -35,3 +35,4 @@ const styles = {
     filter: 'blur(40px)',
   }
 };
+

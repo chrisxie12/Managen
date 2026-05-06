@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   User, 
@@ -14,7 +14,8 @@ import {
   Bell,
   Smartphone,
   Calendar,
-  FileText
+  FileText,
+  CreditCard
 } from 'lucide-react';
 import {
   AreaChart,
@@ -64,7 +65,7 @@ const ParentDashboard = ({ onNavigate }) => {
            {children.map((child, i) => (
               <button 
                  key={i}
-                 onClick={() => setSelectedRole(i)}
+                 onClick={() => setSelectedChild(i)}
                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all ${selectedChild === i ? 'bg-plum text-milk border-plum shadow-xl shadow-plum/20 scale-105' : 'bg-white border-slate-100 text-slate-500 hover:border-plum/20'}`}
               >
                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-black text-xs">{child.avatar}</div>
@@ -169,25 +170,25 @@ const ParentDashboard = ({ onNavigate }) => {
                     <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md">
                        <Wallet size={24} />
                     </div>
-                    <span className="px-3 py-1 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest">Term 2 Dues</span>
+                    <span className="px-3 py-1 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest">Global Billing</span>
                  </div>
                  
                  <div className="mb-8">
                     <div className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Outstanding Balance</div>
-                    <div className="text-4xl font-black tracking-tighter">₵1,450.00</div>
+                    <div className="text-4xl font-black tracking-tighter">USD 1,450.00</div>
                     <p className="text-[10px] font-bold opacity-40 mt-1 italic">Due: April 15, 2026</p>
                  </div>
 
                  <div className="space-y-3">
                     <button className="w-full h-14 rounded-2xl bg-milk text-indigo-600 font-black text-xs uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all">
-                       <Smartphone size={18} /> Pay with MoMo
+                       <CreditCard size={18} /> Digital Payment
                     </button>
                     <button className="w-full py-4 rounded-2xl bg-white/10 text-white font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all">
-                       View Payment History
+                       Payment History
                     </button>
                  </div>
               </div>
-              <Smartphone className="absolute -right-10 -bottom-10 w-48 h-48 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-1000" />
+              <CreditCard className="absolute -right-10 -bottom-10 w-48 h-48 opacity-10 rotate-12 group-hover:scale-110 transition-transform duration-1000" />
            </div>
 
            {/* School Feed */}
@@ -227,3 +228,4 @@ const ParentDashboard = ({ onNavigate }) => {
 };
 
 export default ParentDashboard;
+

@@ -54,7 +54,7 @@ const Students = React.memo(({ onNavigate }) => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newStudent, setNewStudent] = useState({
-    name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'JHS 3A', address: ''
+    name: '', admission_no: '', email: '', parent_phone: '', dob: '', gender: 'Male', class_name: 'Grade 9A', address: ''
   });
 
   const fetchStudents = async () => {
@@ -68,7 +68,7 @@ const Students = React.memo(({ onNavigate }) => {
           feeStatus: s.is_active !== false ? 'paid' : 'overdue',
           attendance: Math.floor(Math.random() * 20) + 80,
           gpa: Math.floor(Math.random() * 30) + 70,
-          address: s.address || 'Cantonments, Accra'
+          address: s.address || '123 Global Street, Metropolis'
         }));
         setStudents(mapped);
       }
@@ -398,3 +398,4 @@ const Students = React.memo(({ onNavigate }) => {
 });
 
 export default Students;
+

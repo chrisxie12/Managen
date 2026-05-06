@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 
 export const StatCard = ({ icon: Icon, label, value, color }) => {
@@ -47,3 +47,4 @@ export const StatCard = ({ icon: Icon, label, value, color }) => {
     </motion.div>
   );
 };
+

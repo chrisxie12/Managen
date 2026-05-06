@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star } from 'lucide-react';
 import { theme } from '../theme';
@@ -257,3 +257,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

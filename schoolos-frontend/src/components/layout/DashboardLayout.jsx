@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import DashboardNavbar from './DashboardNavbar';
 
@@ -31,3 +31,4 @@ const DashboardLayout = ({ children, activeModule, onNavigate }) => {
 };
 
 export default DashboardLayout;
+

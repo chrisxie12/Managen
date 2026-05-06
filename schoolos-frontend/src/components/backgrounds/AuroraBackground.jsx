@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 
 export const AuroraBackground = () => {
@@ -37,3 +37,4 @@ const styles = {
     filter: 'blur(80px)',
   }
 };
+

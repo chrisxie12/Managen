@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronDown, 
@@ -365,3 +365,4 @@ const LandingBottom = () => {
 };
 
 export default LandingBottom;
+

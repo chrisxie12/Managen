@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Wallet, 
@@ -21,10 +21,10 @@ const AccountantDashboard = () => {
   }, []);
 
   const stats = [
-    { label: 'Total Revenue', value: '₵482,500', icon: Wallet, color: '#6366F1', sub: '+12.4%' },
-    { label: 'Collections', value: '₵312,400', icon: TrendingUp, color: '#10B981', sub: '+8.2%' },
-    { label: 'Outstanding', value: '₵170,100', icon: AlertCircle, color: '#EF4444', sub: '-2.1%' },
-    { label: 'Operational', value: '₵89,400', icon: TrendingDown, color: '#F59E0B', sub: '+4.2%' },
+    { label: 'Total Revenue', value: 'USD 482,500', icon: Wallet, color: '#6366F1', sub: '+12.4%' },
+    { label: 'Collections', value: 'USD 312,400', icon: TrendingUp, color: '#10B981', sub: '+8.2%' },
+    { label: 'Outstanding', value: 'USD 170,100', icon: AlertCircle, color: '#EF4444', sub: '-2.1%' },
+    { label: 'Operational', value: 'USD 89,400', icon: TrendingDown, color: '#F59E0B', sub: '+4.2%' },
   ];
 
   const recentTransactions = [
@@ -196,7 +196,7 @@ const AccountantDashboard = () => {
                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-plum/5 text-plum">{tx.type}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 800 }}>₵{tx.amount.toLocaleString()}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 800 }}>USD {tx.amount.toLocaleString()}</span>
                   </td>
                   <td className="px-6 py-4">
                      <div className="flex items-center gap-2">
@@ -228,3 +228,4 @@ const AccountantDashboard = () => {
 };
 
 export default AccountantDashboard;
+

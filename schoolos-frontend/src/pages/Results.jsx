@@ -25,6 +25,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { buildUrl, getHeaders } from '../services/api';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useLocalization } from '../contexts/LocalizationContext';
 
 const gradeData = [
   { subject: "Math", avg: 78, highest: 96 },
@@ -36,13 +37,14 @@ const gradeData = [
 ];
 
 const gradeColors = {
-  A1: { bg: "#D1FAE5", color: "#065F46" },
-  A2: { bg: "#DBEAFE", color: "#1E40AF" },
-  B2: { bg: "#FEF3C7", color: "#92400E" },
-  C4: { bg: "#FEE2E2", color: "#991B1B" },
+  "A+": { bg: "#D1FAE5", color: "#065F46" },
+  "A": { bg: "#DBEAFE", color: "#1E40AF" },
+  "B": { bg: "#FEF3C7", color: "#92400E" },
+  "C": { bg: "#FEE2E2", color: "#991B1B" },
 };
 
 const Results = ({ onNavigate }) => {
+  const { config } = useLocalization();
   const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("results");
   const [loading, setLoading] = useState(true);
@@ -276,7 +278,7 @@ const Results = ({ onNavigate }) => {
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-0.5 rounded-full text-xs font-black" style={gradeColors[s.grade] || gradeColors.B2}>
-                        {s.grade}
+                        {s.grade || 'A'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -330,17 +332,12 @@ const Results = ({ onNavigate }) => {
             }}
           >
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: "#FFF3E6", fontWeight: 800, fontSize: "1.05rem", marginBottom: "1.2rem" }}>
-              BECE Grade Scale
+              {config.name} Grading Scale
             </h2>
-            {[
-              { grade: "A1", range: "80 – 100", desc: "Distinction" },
-              { grade: "B2", range: "70 – 79", desc: "Very Good" },
-              { grade: "C4", range: "50 – 59", desc: "Credit" },
-              { grade: "F9", range: "0 – 39", desc: "Fail" },
-            ].map((g) => (
+            {config.gradingScale.map((g) => (
               <div key={g.grade} className="flex items-center justify-between py-2 border-b last:border-0" style={{ borderColor: "rgba(255,243,230,0.1)" }}>
                 <div className="flex items-center gap-2">
-                  <span className="w-8 text-center py-0.5 rounded text-xs font-black uppercase" style={{ background: "rgba(255,243,230,0.15)", color: "#FFF3E6" }}>{g.grade}</span>
+                  <span className="w-10 text-center py-0.5 rounded text-xs font-black uppercase" style={{ background: "rgba(255,243,230,0.15)", color: "#FFF3E6" }}>{g.grade}</span>
                   <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem", fontWeight: 600 }}>{g.desc}</span>
                 </div>
                 <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.75rem", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{g.range}</span>
@@ -354,3 +351,4 @@ const Results = ({ onNavigate }) => {
 };
 
 export default Results;
+

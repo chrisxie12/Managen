@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const Logo = ({ size = 36, className = "" }) => {
   return (
@@ -40,3 +40,4 @@ const Logo = ({ size = 36, className = "" }) => {
 };
 
 export default Logo;
+

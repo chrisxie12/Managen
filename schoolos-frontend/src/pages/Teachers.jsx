@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -328,3 +328,4 @@ const Teachers = React.memo(({ onNavigate }) => {
 });
 
 export default Teachers;
+

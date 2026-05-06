@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
@@ -60,3 +60,4 @@ const ToastItem = ({ toast, onClose }) => {
     </div>
   );
 };
+

@@ -22,6 +22,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { buildUrl, handleApiError } from '../services/api';
+import { useLocalization, countryConfigs } from '../contexts/LocalizationContext';
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -29,6 +30,7 @@ const MILK = "#FFF3E6";
 const MUTED = "#64748b"; // Updated for WCAG AA compliance (slate-500)
 
 export const Signup = ({ setActiveTab }) => {
+  const { changeCountry, config } = useLocalization();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
@@ -41,7 +43,7 @@ export const Signup = ({ setActiveTab }) => {
     schoolName: '',
     subdomain: '',
     schoolType: 'Primary',
-    country: 'Ghana',
+    country: 'GLOBAL',
     address: '',
     phone: '',
     expectedStudents: '100-500',
@@ -61,6 +63,10 @@ export const Signup = ({ setActiveTab }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    if (name === 'country') {
+      changeCountry(value);
+    }
   };
 
   const nextStep = () => setStep(s => Math.min(s + 1, 5));
@@ -265,8 +271,23 @@ export const Signup = ({ setActiveTab }) => {
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-6">
-                        <SelectGroup label="School Level" name="schoolType" value={formData.schoolType} onChange={handleInputChange} options={['Primary', 'JHS', 'SHS', 'University', 'Mixed']} />
-                        <SelectGroup label="Country" name="country" value={formData.country} onChange={handleInputChange} options={['Ghana', 'Nigeria', 'Kenya', 'Other']} />
+                        <SelectGroup 
+                          label="Institutional Level" 
+                          name="schoolType" 
+                          value={formData.schoolType} 
+                          onChange={handleInputChange} 
+                          options={config.schoolLevels} 
+                        />
+                        <SelectGroup 
+                          label="Country Hub" 
+                          name="country" 
+                          value={formData.country} 
+                          onChange={handleInputChange} 
+                          options={Object.keys(countryConfigs).map(code => ({
+                            value: code,
+                            label: countryConfigs[code].name
+                          }))} 
+                        />
                       </div>
                       <div className="grid grid-cols-2 gap-6">
                         <InputGroup label="Primary Phone" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="+233..." icon={Phone} />
@@ -394,9 +415,14 @@ const SelectGroup = ({ label, name, value, onChange, options }) => (
       className="w-full bg-white border py-4 px-6 rounded-2xl font-bold text-sm outline-none transition-all shadow-sm cursor-pointer appearance-none"
       style={{ color: PLUM, borderColor: "rgba(56,25,50,0.08)" }}
     >
-      {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+      {options.map(opt => (
+        <option key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
+          {typeof opt === 'string' ? opt : opt.label}
+        </option>
+      ))}
     </select>
   </div>
 );
 
 export default Signup;
+

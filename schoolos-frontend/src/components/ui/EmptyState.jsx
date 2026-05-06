@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { SearchX, Inbox } from 'lucide-react';
 import { Button } from './Button';
@@ -34,3 +34,4 @@ export const EmptyState = ({
     </motion.div>
   );
 };
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, ArrowUpRight, Sparkles, BookOpen, School, Building2, ShieldCheck } from 'lucide-react';
 
@@ -278,3 +278,4 @@ const Pricing = () => {
 };
 
 export default Pricing;
+

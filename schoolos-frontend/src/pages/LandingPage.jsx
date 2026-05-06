@@ -19,6 +19,7 @@ import {
   Clock,
   Award,
 } from "lucide-react";
+import { useLocalization, countryConfigs } from "../contexts/LocalizationContext";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -67,50 +68,53 @@ const features = [
 const pricingPlans = [
   {
     name: "Starter",
-    tagline: "For small schools just getting started",
-    priceGHS: "GHS 180",
-    priceNGN: "₦15,000",
-    period: "/ month",
+    tagline: "For boutique schools getting started",
+    priceUSD: "$25",
+    priceGHS: "USD 400",
+    priceNGN: "₦40,000",
+    period: "/ mo",
     features: [
-      "Up to 200 students",
-      "Fee tracking & invoicing",
-      "Basic attendance",
-      "WhatsApp reports (100/mo)",
-      "Email support",
+      "Up to 200 scholars",
+      "Unified Ledger & Invoicing",
+      "Smart Attendance",
+      "WhatsApp & SMS alerts",
+      "Global Gateway Access",
     ],
     cta: "Start Free Trial",
     highlighted: false,
   },
   {
-    name: "Growth",
-    tagline: "The most popular plan for scaling institutions",
-    priceGHS: "GHS 420",
-    priceNGN: "₦35,000",
-    period: "/ month",
+    name: "Professional",
+    tagline: "The gold standard for scaling institutions",
+    priceUSD: "$75",
+    priceGHS: "USD 1,200",
+    priceNGN: "₦120,000",
+    period: "/ mo",
     features: [
-      "Up to 1,000 students",
-      "Full fee & payroll module",
-      "WAEC/BECE report cards",
-      "Unlimited WhatsApp reports",
-      "Paystack & Flutterwave integration",
-      "Priority support",
+      "Up to 1,500 scholars",
+      "Full Financial Citadel",
+      "Global Results Engine",
+      "Unlimited Broadcaster",
+      "Stripe & MoMo Integration",
+      "24/7 Concierge Support",
     ],
-    cta: "Get Started",
+    cta: "Scale Now",
     highlighted: true,
   },
   {
-    name: "Enterprise",
-    tagline: "For school groups and large institutions",
+    name: "Institution",
+    tagline: "For school groups and networks",
+    priceUSD: "Custom",
     priceGHS: "Custom",
     priceNGN: "Custom",
     period: "",
     features: [
-      "Unlimited students",
-      "Multi-branch management",
-      "Custom branding & domain",
-      "Dedicated account manager",
-      "SLA & on-site training",
-      "API access",
+      "Unlimited scholars",
+      "Multi-Campus Management",
+      "White-label Branding",
+      "Dedicated Success Lead",
+      "Full API & Webhooks",
+      "On-site Deployment",
     ],
     cta: "Contact Sales",
     highlighted: false,
@@ -135,15 +139,16 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "340+", label: "Schools Active" },
-  { value: "92,000+", label: "Students Managed" },
-  { value: "GHS 8.4M", label: "Fees Collected" },
-  { value: "99.7%", label: "Uptime SLA" },
+  { value: "340+", label: "Global Schools" },
+  { value: "92K+", label: "Scholars Managed" },
+  { value: "$12.4M", label: "Volume Processed" },
+  { value: "99.9%", label: "System Uptime" },
 ];
 
 export const LandingPage = React.memo(({ onNavigate }) => {
+  const { config, changeCountry } = useLocalization();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [currency, setCurrency] = useState("GHS");
+  const [currency, setCurrency] = useState("GLOBAL");
   const [scrolled, setScrolled] = useState(false);
 
   const handleNavigate = useCallback((v) => {
@@ -294,7 +299,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 }}
               >
                 <Zap size={13} fill={PLUM_LIGHT} />
-                Built for African Institutions
+                Global Educational Infrastructure
               </div>
 
               <h1
@@ -323,9 +328,9 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 style={{ color: MUTED, fontSize: "1.1rem", lineHeight: 1.75 }}
                 className="mb-8 max-w-lg font-medium"
               >
-                SchoolOS is the all-in-one school management platform for Ghana
-                and Nigeria — from fee tracking to WhatsApp reports, WAEC
-                results to payroll. Everything automated.
+                SchoolOS is the ultimate institutional operating system. From 
+                automated digital payments to global academic standards, we
+                empower schools to scale with precision.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -613,10 +618,10 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               {/* Mini dashboard preview */}
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Total Students", value: "1,248", icon: Users, color: "#6366F1" },
-                  { label: "Term Revenue", value: "GHS 186K", icon: Wallet, color: "#10B981" },
-                  { label: "Avg Attendance", value: "91.4%", icon: Clock, color: "#F59E0B" },
-                  { label: "Reports Sent", value: "2,340", icon: Bell, color: "#EC4899" },
+                  { label: "Total Scholars", value: "1,248", icon: Users, color: "#6366F1" },
+                  { label: "Revenue Volume", value: "$186K", icon: Wallet, color: "#10B981" },
+                  { label: "Attendance Rate", value: "91.4%", icon: Clock, color: "#F59E0B" },
+                  { label: "Alerts Dispatched", value: "2,340", icon: Bell, color: "#EC4899" },
                 ].map((card) => (
                   <div
                     key={card.label}
@@ -674,27 +679,34 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             </h2>
           </div>
 
-          {/* Currency toggle */}
-          <div className="flex justify-center mb-12">
+          {/* Country/System Preview Toggle */}
+          <div className="flex flex-col items-center mb-12">
+            <span className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: MUTED }}>Preview System For:</span>
             <div
-              className="flex rounded-full p-1"
+              className="flex flex-wrap justify-center rounded-3xl p-1.5 gap-1"
               style={{ background: "white", border: `1px solid rgba(56,25,50,0.10)` }}
             >
-              {["GHS", "NGN"].map((c) => (
+              {Object.keys(countryConfigs).map((c) => (
                 <button
                   key={c}
-                  onClick={() => setCurrency(c)}
-                  className="px-5 py-2 rounded-full text-sm transition-all active:scale-95"
+                  onClick={() => {
+                    setCurrency(c);
+                    changeCountry(c);
+                  }}
+                  className="px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95"
                   style={{
                     background: currency === c ? PLUM : "transparent",
                     color: currency === c ? MILK : MUTED,
-                    fontWeight: currency === c ? 600 : 400,
+                    boxShadow: currency === c ? "0 8px 20px rgba(56,25,50,0.15)" : "none"
                   }}
                 >
-                  {c}
+                  {countryConfigs[c].name}
                 </button>
               ))}
             </div>
+            <p className="mt-4 text-[11px] font-bold" style={{ color: PLUM }}>
+              <Zap size={10} className="inline mr-1" /> Auto-Configured: {config.currency} Finance + {config.terminology.results} Engine
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -757,7 +769,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                       fontWeight: 700,
                     }}
                   >
-                    {currency === "GHS" ? plan.priceGHS : plan.priceNGN}
+                    {currency === 'GH' ? plan.priceGHS : currency === 'NG' ? plan.priceNGN : plan.priceUSD}
                   </span>
                   <span
                     style={{
@@ -1018,3 +1030,4 @@ export const LandingPage = React.memo(({ onNavigate }) => {
 });
 
 export default LandingPage;
+
