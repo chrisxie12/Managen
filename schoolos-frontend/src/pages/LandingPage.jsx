@@ -1354,18 +1354,18 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               title: "Product",
               links: [
                 { label: "Features", href: "/features.html" },
-                { label: "Pricing", href: "#pricing" },
-                { label: "Changelog", href: "#" },
+                { label: "Pricing", href: "/pricing.html" },
+                { label: "Changelog", href: "/changelog.html" },
                 { label: "Roadmap", href: "/roadmap.html" },
               ],
             },
             {
               title: "Company",
               links: [
-                { label: "About", href: "#" },
-                { label: "Blog", href: "#" },
-                { label: "Careers", href: "#" },
-                { label: "Press", href: "#" },
+                { label: "About", href: "/about.html" },
+                { label: "Blog", href: "/blog.html" },
+                { label: "Careers", href: "/careers.html" },
+                { label: "Press", href: "/press.html" },
               ],
             },
             {
