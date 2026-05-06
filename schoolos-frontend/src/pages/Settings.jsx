@@ -16,16 +16,12 @@ import {
   Zap,
   Smartphone
 } from 'lucide-react';
-import Sidebar from '../components/layout/Sidebar';
-import DashboardNavbar from '../components/layout/DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Settings = ({ onNavigate }) => {
   const { authSession } = useAuth();
   const { isDarkMode } = useTheme();
-  const [activeItem, setActiveItem] = useState('settings');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -51,23 +47,7 @@ const Settings = ({ onNavigate }) => {
   ].filter(tab => !tab.roles || tab.roles.includes(role));
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-body transition-all duration-300">
-      <Sidebar 
-        activeItem={activeItem} 
-        onNavigate={(item) => {
-          setActiveItem(item);
-          onNavigate(item);
-        }} 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-      />
-      
-      <DashboardNavbar 
-        activeItem={activeItem} 
-        onMenuClick={() => setSidebarOpen(true)} 
-      />
-
-      <main className="lg:ml-64 pt-16 p-6 sm:p-8 flex flex-col gap-8">
+    <div className="p-6 sm:p-8 flex flex-col gap-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
            <div>
@@ -171,7 +151,6 @@ const Settings = ({ onNavigate }) => {
               </motion.div>
            </div>
         </div>
-      </main>
     </div>
   );
 };

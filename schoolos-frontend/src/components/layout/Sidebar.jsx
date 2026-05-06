@@ -2,9 +2,9 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import Logo from '../ui/Logo';
 import { 
   LayoutDashboard, 
-  GraduationCap, 
   Users, 
   BookOpen, 
   ClipboardCheck, 
@@ -75,27 +75,8 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   const sidebarContent = (
     <div className="flex flex-col h-full overflow-hidden transition-all duration-300" style={{ background: "var(--bg-secondary)", borderRight: `1px solid var(--border)` }}>
       {/* Branding Section */}
-      <div className="flex items-center gap-2 px-6 py-8 cursor-pointer" onClick={() => onNavigate('dashboard')}>
-        <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: isDarkMode ? "#FFF3E6" : "#381932" }}
-        >
-          <GraduationCap size={18} color={isDarkMode ? "#381932" : "#FFF3E6"} />
-        </div>
-        <div>
-          <div
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              color: "var(--text-primary)",
-              fontWeight: 700,
-              fontSize: "1.1rem",
-              lineHeight: 1.1,
-            }}
-          >
-            SchoolOS
-          </div>
-          <div style={{ color: "var(--text-muted)", fontSize: "0.7rem", fontWeight: 600 }}>Accra Ridge School</div>
-        </div>
+      <div className="px-6 py-8">
+        <Logo size={40} className="cursor-pointer" />
       </div>
 
       {/* Navigation */}

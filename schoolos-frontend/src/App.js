@@ -19,6 +19,7 @@ import Payroll from './pages/Payroll';
 import FeeReports from './pages/FeeReports';
 import Dashboard from './pages/Dashboard';
 import Communication from './pages/Communication';
+import DashboardLayout from './components/layout/DashboardLayout';
 import AccountantDashboard from './pages/AccountantDashboard';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
@@ -31,8 +32,8 @@ function AuthenticatedApp() {
   const modules = {
     // Platform Level (Superadmin)
     'superadmin-dashboard': <SuperAdminDashboard onNavigate={setActiveModule} />,
-    schools: <SuperAdminDashboard onNavigate={setActiveModule} />, // Placeholder for institutions list
-    subscriptions: <SuperAdminDashboard onNavigate={setActiveModule} />, // Placeholder for billing list
+    schools: <SuperAdminDashboard onNavigate={setActiveModule} />,
+    subscriptions: <SuperAdminDashboard onNavigate={setActiveModule} />,
     
     // School Level (Admin/Accountant)
     dashboard: <Dashboard onNavigate={setActiveModule} />,
@@ -51,22 +52,22 @@ function AuthenticatedApp() {
     settings: <Settings onNavigate={setActiveModule} />,
   };
 
-  // Logic to determine initial landing page after login
   useEffect(() => {
     if (role === 'superadmin' && activeModule === 'dashboard') {
       setActiveModule('superadmin-dashboard');
     }
   }, [role, activeModule]);
 
-  // Accountant specialized root
-  if (role === 'accountant' && activeModule === 'dashboard') {
-    return <AccountantDashboard onNavigate={setActiveModule} />;
-  }
-
-  // Fallback to Dashboard if module not found
-  return modules[activeModule] || (role === 'superadmin' 
+  const content = modules[activeModule] || (role === 'superadmin' 
     ? <SuperAdminDashboard onNavigate={setActiveModule} />
     : <Dashboard onNavigate={setActiveModule} />);
+
+  // Use DashboardLayout for all authenticated views
+  return (
+    <DashboardLayout activeModule={activeModule} onNavigate={setActiveModule}>
+      {content}
+    </DashboardLayout>
+  );
 }
 
 function AppContent() {

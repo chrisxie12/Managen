@@ -10,13 +10,9 @@ import {
   X,
   MoreVertical
 } from 'lucide-react';
-import Sidebar from '../components/layout/Sidebar';
-import DashboardNavbar from '../components/layout/DashboardNavbar';
 import { Button } from '../components/ui/Button';
 
 const Teachers = ({ onNavigate }) => {
-  const [activeItem, setActiveItem] = useState('teachers');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -48,23 +44,7 @@ const Teachers = ({ onNavigate }) => {
   );
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-body transition-all duration-300">
-      <Sidebar 
-        activeItem={activeItem} 
-        onNavigate={(item) => {
-          setActiveItem(item);
-          onNavigate(item);
-        }} 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-      />
-      
-      <DashboardNavbar 
-        activeItem={activeItem} 
-        onMenuClick={() => setSidebarOpen(true)} 
-      />
-
-      <main className="lg:ml-64 pt-16 p-6 sm:p-8 flex flex-col gap-6">
+    <div className="p-6 sm:p-8 flex flex-col gap-6">
         {/* KPI Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s) => (
@@ -167,7 +147,7 @@ const Teachers = ({ onNavigate }) => {
               </motion.div>
            ))}
         </div>
-      </main>
+    </div>
 
       {/* Modal */}
       <AnimatePresence>

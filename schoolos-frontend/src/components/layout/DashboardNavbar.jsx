@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
+import Logo from '../ui/Logo';
 
 const DashboardNavbar = ({ activeItem = 'Dashboard', onMenuClick }) => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -32,7 +33,7 @@ const DashboardNavbar = ({ activeItem = 'Dashboard', onMenuClick }) => {
         >
           <Menu size={22} />
         </button>
-        <div>
+        <div className="hidden lg:block">
           <h2 
             style={{ 
               fontFamily: "'Playfair Display', serif", 
@@ -47,6 +48,9 @@ const DashboardNavbar = ({ activeItem = 'Dashboard', onMenuClick }) => {
           <p style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600 }}>
             Term 2, 2025/2026 Academic Year
           </p>
+        </div>
+        <div className="lg:hidden">
+          <Logo size={32} />
         </div>
       </div>
 

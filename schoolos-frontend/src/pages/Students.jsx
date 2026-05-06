@@ -14,8 +14,6 @@ import {
   Download,
   GraduationCap
 } from 'lucide-react';
-import Sidebar from '../components/layout/Sidebar';
-import DashboardNavbar from '../components/layout/DashboardNavbar';
 import { buildUrl } from '../services/api';
 import { Button } from '../components/ui/Button';
 
@@ -38,8 +36,6 @@ const FeeStatusBadge = ({ status }) => {
 };
 
 const Students = ({ onNavigate }) => {
-  const [activeItem, setActiveItem] = useState('students');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -105,24 +101,8 @@ const Students = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-body transition-all duration-300">
-      <Sidebar 
-        activeItem={activeItem} 
-        onNavigate={(item) => {
-          setActiveItem(item);
-          onNavigate(item);
-        }} 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-      />
-      
-      <DashboardNavbar 
-        activeItem={activeItem} 
-        onMenuClick={() => setSidebarOpen(true)} 
-      />
-
-      <main className="lg:ml-64 pt-16 p-6 h-[calc(100vh-64px)] overflow-hidden">
-        <div className="flex gap-6 h-full">
+    <div className="p-6 h-full overflow-hidden">
+      <div className="flex gap-6 h-full">
           {/* Left Panel: List */}
           <div className="flex-1 flex flex-col min-w-0 h-full">
             {/* Toolbar */}
@@ -315,7 +295,7 @@ const Students = ({ onNavigate }) => {
             )}
           </AnimatePresence>
         </div>
-      </main>
+      </div>
 
       {/* Modal */}
       <AnimatePresence>

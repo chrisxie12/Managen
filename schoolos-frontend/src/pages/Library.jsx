@@ -9,13 +9,9 @@ import {
   Search, 
   X
 } from 'lucide-react';
-import Sidebar from '../components/layout/Sidebar';
-import DashboardNavbar from '../components/layout/DashboardNavbar';
 import { Button } from '../components/ui/Button';
 
 const Library = ({ onNavigate }) => {
-  const [activeItem, setActiveItem] = useState('library');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,23 +43,7 @@ const Library = ({ onNavigate }) => {
   );
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary font-body transition-all duration-300">
-      <Sidebar 
-        activeItem={activeItem} 
-        onNavigate={(item) => {
-          setActiveItem(item);
-          onNavigate(item);
-        }} 
-        isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
-      />
-      
-      <DashboardNavbar 
-        activeItem={activeItem} 
-        onMenuClick={() => setSidebarOpen(true)} 
-      />
-
-      <main className="lg:ml-64 pt-16 p-6 sm:p-8 flex flex-col gap-6">
+    <div className="p-6 sm:p-8 flex flex-col gap-6">
         {/* KPI Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((s) => (
@@ -152,7 +132,7 @@ const Library = ({ onNavigate }) => {
               </motion.div>
            ))}
         </div>
-      </main>
+    </div>
 
       {/* Modal */}
       <AnimatePresence>
