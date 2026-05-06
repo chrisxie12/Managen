@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -8,20 +8,58 @@ import {
   Clock, 
   BookOpen,
   X,
-  MoreVertical
+  MoreVertical,
+  Mail,
+  Phone,
+  Trash2,
+  ChevronRight,
+  GraduationCap,
+  MapPin
 } from 'lucide-react';
+import { buildUrl, getHeaders, handleApiError } from '../services/api';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Teachers = ({ onNavigate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [teachers, setTeachers] = useState([]);
+  const [newTeacher, setNewTeacher] = useState({
+    name: '', email: '', phone: '', subject: 'Mathematics', role: 'Teacher', status: 'Active'
+  });
+
+  const fetchTeachers = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/teachers'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok && json.data) {
+        setTeachers(json.data.teachers || []);
+      } else {
+        throw new Error(json.error || 'Failed to load teachers');
+      }
+    } catch (err) {
+      showToast({
+        title: 'Sync Failed',
+        message: err.message,
+        type: 'error'
+      });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetchTeachers();
   }, []);
 
   const stats = [
@@ -31,19 +69,63 @@ const Teachers = ({ onNavigate }) => {
     { label: 'Specialties', value: 18, icon: BookOpen, color: '#EC4899' },
   ];
 
-  const teachers = [
-    { id: 1, name: 'Mrs. Abena Mensah', dept: 'Mathematics', role: 'Form 1 Teacher', exp: '8 years', classes: 4, students: 140, subjects: ['Maths', 'Core Maths'], initials: 'AM' },
-    { id: 2, name: 'Mr. Kofi Asante', dept: 'English', role: 'Form 2 Teacher', exp: '5 years', classes: 5, students: 165, subjects: ['English', 'Lit'], initials: 'KA' },
-    { id: 3, name: 'Mrs. Akosua Boateng', dept: 'Science', role: 'Subject Teacher', exp: '12 years', classes: 6, students: 210, subjects: ['Physics', 'Chem'], initials: 'AB' },
-    { id: 4, name: 'Mr. Kwame Osei', dept: 'Social Studies', role: 'Form 3 Teacher', exp: '3 years', classes: 3, students: 105, subjects: ['Social'], initials: 'KO' },
-    { id: 5, name: 'Mrs. Efua Darko', dept: 'ICT', role: 'Subject Teacher', exp: '6 years', classes: 4, students: 140, subjects: ['ICT', 'CS'], initials: 'ED' },
-    { id: 6, name: 'Mr. Yaw Mensah', dept: 'Languages', role: 'Subject Teacher', exp: '9 years', classes: 4, students: 140, subjects: ['French', 'Ga'], initials: 'YM' },
-  ];
+  const handleAddTeacher = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/teachers'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify(newTeacher),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setIsModalOpen(false);
+        fetchTeachers();
+        showToast({
+          title: 'Staff Onboarded',
+          message: `${newTeacher.name} has been added to the registry.`,
+          type: 'success'
+        });
+        setNewTeacher({ name: '', email: '', phone: '', subject: 'Mathematics', role: 'Teacher', status: 'Active' });
+      } else {
+        throw new Error(json.error || 'Failed to add teacher');
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
-  const filteredTeachers = teachers.filter(t => 
-    t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.dept.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleDeleteTeacher = async (id) => {
+    if (!window.confirm('Are you sure you want to remove this staff member?')) return;
+    try {
+      const res = await fetch(buildUrl(`/api/school/teachers/${id}`), {
+        method: 'DELETE',
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setSelected(null);
+        fetchTeachers();
+        showToast({
+          title: 'Staff Removed',
+          message: 'The record has been purged from the system.',
+          type: 'success'
+        });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
+
+  const filteredTeachers = useMemo(() => {
+    return teachers.filter(t => 
+      t.name.toLowerCase().includes(search.toLowerCase()) ||
+      (t.subject || t.dept || '').toLowerCase().includes(search.toLowerCase())
+    );
+  }, [teachers, search]);
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">

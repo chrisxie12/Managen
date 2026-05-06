@@ -66,6 +66,7 @@ const Login = ({ onNavigate }) => {
 
       setAuthSession({
         kind: 'tenant',
+        token: data?.data?.token,
         label: data?.data?.user?.name || 'Admin',
         school: data?.data?.school || null,
         user: data?.data?.user || null

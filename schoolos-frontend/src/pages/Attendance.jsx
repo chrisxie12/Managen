@@ -14,17 +14,112 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import { buildUrl, getHeaders } from '../services/api';
 
 const Attendance = () => {
   const [isMarkModalOpen, setIsMarkModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [records, setRecords] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [classStudents, setClassStudents] = useState([]);
   const [attendanceState, setAttendanceState] = useState({});
 
+  const fetchAttendance = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl(`/api/school/attendance?date=${selectedDate}`), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setRecords(json.data.records || []);
+      }
+    } catch (err) {
+      showToast({ title: 'Sync Error', message: err.message, type: 'error' });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
+
+  const fetchClasses = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/classes'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok && json.data.classes?.length > 0) {
+        setClasses(json.data.classes);
+        setSelectedClass(json.data.classes[0].name);
+      }
+    } catch (e) {}
+  };
+
+  const fetchClassStudents = async (className) => {
+    try {
+      const res = await fetch(buildUrl(`/api/school/students?className=${className}`), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setClassStudents(json.data.students || []);
+        // Reset attendance state
+        const initial = {};
+        (json.data.students || []).forEach(s => initial[s.id] = 'P');
+        setAttendanceState(initial);
+      }
+    } catch (e) {}
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, []);
+    fetchAttendance();
+    fetchClasses();
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (selectedClass) fetchClassStudents(selectedClass);
+  }, [selectedClass]);
+
+  const handleSyncRoll = async () => {
+    try {
+      const recordsToSubmit = Object.entries(attendanceState).map(([student_id, status]) => ({
+        student_id,
+        status: status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Late',
+        date: selectedDate,
+        class_name: selectedClass
+      }));
+
+      const res = await fetch(buildUrl('/api/school/attendance'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify({ records: recordsToSubmit }),
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        setIsMarkModalOpen(false);
+        fetchAttendance();
+        showToast({
+          title: 'Roll Synchronized',
+          message: `Attendance for ${selectedClass} has been securely logged.`,
+          type: 'success'
+        });
+      } else {
+        const json = await res.json();
+        throw new Error(json.error || 'Failed to sync roll');
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
   const stats = [
     { label: 'Present Today', value: '812', icon: CheckCircle2, color: '#10B981', sub: '+12 vs yesterday' },
@@ -207,15 +302,15 @@ const Attendance = () => {
                     </div>
                  </div>
                  <div className="max-h-[300px] overflow-y-auto pr-2 space-y-2">
-                    {[1,2,3,4,5].map(i => (
-                       <div key={i} className="flex items-center justify-between p-3 rounded-2xl border border-transparent hover:border-plum/10 transition-all" style={{ background: "var(--bg-secondary)" }}>
-                          <span style={{ color: "var(--text-primary)", fontSize: "0.8rem", fontWeight: 700 }}>Student Full Name {i}</span>
+                    {classStudents.map(s => (
+                       <div key={s.id} className="flex items-center justify-between p-3 rounded-2xl border border-transparent hover:border-plum/10 transition-all" style={{ background: "var(--bg-secondary)" }}>
+                          <span style={{ color: "var(--text-primary)", fontSize: "0.8rem", fontWeight: 700 }}>{s.name}</span>
                           <div className="flex gap-1">
                              {['P', 'A', 'L'].map(l => (
                                 <button 
                                   key={l} 
-                                  onClick={() => setAttendanceState(prev => ({ ...prev, [i]: l }))}
-                                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${attendanceState[i] === l ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}
+                                  onClick={() => setAttendanceState(prev => ({ ...prev, [s.id]: l }))}
+                                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${attendanceState[s.id] === l ? 'bg-plum text-milk shadow-md' : 'bg-white/10 border text-slate-400'}`}
                                 >
                                    {l}
                                 </button>
@@ -223,10 +318,11 @@ const Attendance = () => {
                           </div>
                        </div>
                     ))}
+                    {classStudents.length === 0 && <p className="text-center py-4 text-xs font-bold" style={{ color: "var(--text-muted)" }}>No students found in this section.</p>}
                  </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
-                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={() => setIsMarkModalOpen(false)}>Sync Roll</Button>
+                <Button className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" onClick={handleSyncRoll}>Sync Roll</Button>
                 <Button variant="secondary" className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest" style={{ borderColor: "var(--border)", color: "var(--text-primary)" }} onClick={() => setIsMarkModalOpen(false)}>Discard</Button>
               </div>
             </motion.div>

@@ -23,9 +23,10 @@ import {
   Pie,
   Cell
 } from "recharts";
-import { buildUrl } from '../services/api';
+import { buildUrl, getHeaders } from '../services/api';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const monthlyRevenue = [
   { month: "Sep", collected: 42000, target: 52000 },
@@ -76,17 +77,24 @@ const FeeManagement = () => {
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
 
+  const { authSession } = useAuth();
+
   useEffect(() => {
     const fetchFees = async () => {
       try {
-        const res = await fetch(buildUrl('/api/school/fees'), { credentials: 'include' });
+        const res = await fetch(buildUrl('/api/school/fees'), {
+          headers: getHeaders(authSession?.token),
+          credentials: 'include'
+        });
         const json = await res.json();
         if (json.data) {
           const mapped = (json.data.fees || []).map(f => ({
             ...f,
-            status: (f.amount - f.paid_amount) === 0 ? 'paid' : (f.paid_amount > 0 ? 'partial' : 'overdue'),
+            student_name: f.student?.name || 'Unknown',
+            admission_no: f.student?.admission_no || 'N/A',
+            status: (f.amount - f.paid_amount) <= 0 ? 'paid' : (f.paid_amount > 0 ? 'partial' : 'overdue'),
             id: f.id.toString().padStart(4, '0'),
-            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            date: new Date(f.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             method: 'Bank Transfer'
           }));
           setFees(mapped);

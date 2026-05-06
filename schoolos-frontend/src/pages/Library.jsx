@@ -11,18 +11,94 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import { buildUrl, getHeaders, handleApiError } from '../services/api';
 
 const Library = ({ onNavigate }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState("");
   const { showToast } = useToast();
-  const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [books, setBooks] = useState([]);
+  const [newBook, setNewBook] = useState({
+    title: '', author: '', category: 'Textbook', quantity: 5
+  });
+
+  const fetchBooks = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/library/books'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setBooks(json.data.books || []);
+      } else {
+        throw new Error(json.error || 'Failed to load books');
+      }
+    } catch (err) {
+      showToast({ title: 'Sync Error', message: err.message, type: 'error' });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetchBooks();
   }, []);
+
+  const handleAddBook = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/library/books'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify(newBook),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setIsAddModalOpen(false);
+        fetchBooks();
+        showToast({
+          title: 'Catalog Entry Added',
+          message: `"${newBook.title}" has been indexed in the institution catalog.`,
+          type: 'success'
+        });
+        setNewBook({ title: '', author: '', category: 'Textbook', quantity: 5 });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
+
+  const handleIssueBook = async (book) => {
+    try {
+      const res = await fetch(buildUrl('/api/school/library/issue'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify({ book_id: book.id, student_id: 'auto' }), // Mock student for now
+        credentials: 'include'
+      });
+      if (res.ok) {
+        fetchBooks();
+        showToast({
+          title: 'Resource Issued',
+          message: `"${book.title}" has been checked out successfully.`,
+          type: 'success'
+        });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
   const stats = [
     { label: 'Total Catalog', value: 1240, icon: BookMarked, color: '#6366F1' },
@@ -31,18 +107,9 @@ const Library = ({ onNavigate }) => {
     { label: 'Overdue', value: 18, icon: AlertCircle, color: '#EF4444' },
   ];
 
-  const booksData = [
-    { id: 1, title: 'Mathematics for JHS', author: 'Dr. K. Ababio', cat: 'Textbook', total: 5, avail: 3, initials: 'MJ' },
-    { id: 2, title: 'English Grammar Master', author: 'R. Murphy', cat: 'Reference', total: 8, avail: 8, initials: 'EG' },
-    { id: 3, title: 'Integrated Science Pro', author: 'Prof. Wiredu', cat: 'Textbook', total: 6, avail: 2, initials: 'IS' },
-    { id: 4, title: 'Social Studies Atlas', author: 'E. Antwi', cat: 'Textbook', total: 4, avail: 0, initials: 'SS' },
-    { id: 5, title: 'ICT Fundamentals 2.0', author: 'S. Mensah', cat: 'Textbook', total: 3, avail: 3, initials: 'IF' },
-    { id: 6, title: 'French for Beginners', author: 'Jean Dubois', cat: 'Language', total: 5, avail: 4, initials: 'FB' },
-  ];
-
-  const filteredBooks = booksData.filter(b => 
-    b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    b.author.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredBooks = books.filter(b => 
+    (b.title || '').toLowerCase().includes(search.toLowerCase()) ||
+    (b.author || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -88,8 +155,8 @@ const Library = ({ onNavigate }) => {
                 placeholder="Search catalog or author..."
                 className="bg-transparent border-none outline-none text-sm font-medium w-full"
                 style={{ color: "var(--text-primary)" }}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
            </div>
            <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk shadow-lg shadow-plum/20">
@@ -161,14 +228,25 @@ const Library = ({ onNavigate }) => {
                 <button onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 space-y-4">
-                 <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                        <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Resource Title</label>
-                       <input placeholder="e.g. Mathematics for JHS" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
+                       <input 
+                        value={newBook.title}
+                        onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+                        placeholder="e.g. Mathematics for JHS" 
+                        className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" 
+                        style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} 
+                       />
                     </div>
                     <div>
                        <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Category</label>
-                       <select className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
+                       <select 
+                        value={newBook.category}
+                        onChange={(e) => setNewBook({...newBook, category: e.target.value})}
+                        className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all cursor-pointer" 
+                        style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}
+                       >
                           <option>Textbook</option>
                           <option>Reference</option>
                           <option>Novel</option>
@@ -176,21 +254,21 @@ const Library = ({ onNavigate }) => {
                     </div>
                     <div>
                        <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Quantity</label>
-                       <input type="number" placeholder="5" className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
+                       <input 
+                        type="number" 
+                        value={newBook.quantity}
+                        onChange={(e) => setNewBook({...newBook, quantity: parseInt(e.target.value)})}
+                        placeholder="5" 
+                        className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" 
+                        style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} 
+                       />
                     </div>
                  </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    showToast({
-                      title: 'Catalog Entry Added',
-                      message: 'The new resource has been indexed in the institution catalog.',
-                      type: 'success'
-                    });
-                  }}
+                  onClick={handleAddBook}
                 >
                   Register Item
                 </Button>

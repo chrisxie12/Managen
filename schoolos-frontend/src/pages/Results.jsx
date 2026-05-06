@@ -22,8 +22,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useTheme } from '../contexts/ThemeContext';
-import { buildUrl } from '../services/api';
+import { buildUrl, getHeaders } from '../services/api';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const gradeData = [
   { subject: "Math", avg: 78, highest: 96 },
@@ -50,17 +51,27 @@ const Results = ({ onNavigate }) => {
   const [generatingReport, setGeneratingReport] = useState(null);
   const { showToast } = useToast();
 
+  const { authSession } = useAuth();
+
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await fetch(buildUrl('/api/school/results'), { credentials: 'include' });
+        const res = await fetch(buildUrl('/api/school/results'), {
+          headers: getHeaders(authSession?.token),
+          credentials: 'include'
+        });
         const json = await res.json();
         if (json.data) {
           const mapped = (json.data.results || []).map((r, i) => ({
             ...r,
-            grade: r.score >= 80 ? 'A1' : (r.score >= 70 ? 'A2' : 'B2'),
+            id: r.id,
+            student_name: r.student?.name || 'Unknown',
+            admission_no: r.student?.admission_no || 'N/A',
+            subject_name: r.exam?.subject || 'N/A',
+            score: r.marks_obtained,
+            grade: r.grade,
             position: i + 1,
-            avg: r.score
+            avg: r.marks_obtained
           }));
           setResults(mapped);
         }

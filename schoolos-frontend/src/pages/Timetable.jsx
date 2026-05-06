@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import { buildUrl, getHeaders, handleApiError } from '../services/api';
 
 const timeSlots = [
   { time: '7:00 AM', label: 'Period 1' },
@@ -29,29 +31,90 @@ const timeSlots = [
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-const schedule = {
-  'Monday': {
-    '7:00 AM': { subject: 'Mathematics', teacher: 'Mrs. Mensah', room: 'Lab 1', color: '#6366F1' },
-    '7:45 AM': { subject: 'English Language', teacher: 'Mr. Asante', room: 'Room 2', color: '#10B981' },
-    '8:30 AM': { subject: 'Science', teacher: 'Mrs. Boateng', room: 'Lab 2', color: '#F59E0B' },
-    '9:45 AM': { subject: 'Social Studies', teacher: 'Mr. Osei', room: 'Room 1', color: '#EC4899' },
-  },
-  'Tuesday': {
-     '7:00 AM': { subject: 'ICT', teacher: 'Mrs. Darko', room: 'Comp Lab', color: '#8B5CF6' },
-     '7:45 AM': { subject: 'Science', teacher: 'Mrs. Boateng', room: 'Lab 2', color: '#F59E0B' },
-  }
-};
-
 const Timetable = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState("class");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [schedule, setSchedule] = useState({});
+  const [classes, setClasses] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [newSession, setNewSession] = useState({
+    day: 'Monday', time_slot: '7:00 AM', subject: 'Mathematics', teacher_name: '', room: '', class_name: ''
+  });
+
+  const fetchTimetable = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/timetable'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        // Map list to schedule object: { day: { time: session } }
+        const mapped = {};
+        (json.data.timetable || []).forEach(s => {
+          if (!mapped[s.day]) mapped[s.day] = {};
+          mapped[s.day][s.time_slot] = {
+            ...s,
+            color: s.subject === 'Mathematics' ? '#6366F1' : (s.subject === 'Science' ? '#F59E0B' : '#10B981')
+          };
+        });
+        setSchedule(mapped);
+      }
+    } catch (err) {
+      showToast({ title: 'Sync Error', message: err.message, type: 'error' });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
+
+  const fetchOptions = async () => {
+    try {
+      const [cRes, tRes] = await Promise.all([
+        fetch(buildUrl('/api/school/classes'), { headers: getHeaders(authSession?.token), credentials: 'include' }),
+        fetch(buildUrl('/api/school/teachers'), { headers: getHeaders(authSession?.token), credentials: 'include' })
+      ]);
+      const cJson = await cRes.json();
+      const tJson = await tRes.json();
+      if (cRes.ok) setClasses(cJson.data.classes || []);
+      if (tRes.ok) setTeachers(tJson.data.teachers || []);
+    } catch (e) {}
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetchTimetable();
+    fetchOptions();
   }, []);
+
+  const handleAssignSession = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/timetable'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify(newSession),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setIsAddModalOpen(false);
+        fetchTimetable();
+        showToast({
+          title: 'Session Assigned',
+          message: 'The academic period has been successfully scheduled.',
+          type: 'success'
+        });
+        setNewSession({ day: 'Monday', time_slot: '7:00 AM', subject: 'Mathematics', teacher_name: '', room: '', class_name: '' });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6 h-full min-h-0">
@@ -168,7 +231,7 @@ const Timetable = ({ onNavigate }) => {
                                  </div>
                                  <div className="flex items-center gap-1.5 mb-1">
                                     <User size={10} style={{ color: "var(--text-muted)" }} />
-                                    <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontWeight: 600 }}>{session.teacher}</span>
+                                    <span style={{ color: "var(--text-muted)", fontSize: "0.65rem", fontWeight: 600 }}>{session.teacher_name}</span>
                                  </div>
                                  <div className="flex items-center gap-1.5">
                                     <MapPin size={10} style={{ color: "var(--text-muted)" }} />
@@ -210,37 +273,41 @@ const Timetable = ({ onNavigate }) => {
                 <button onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
               </div>
               <div className="p-8 pt-4 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: "Select Day", options: days },
-                    { label: "Select Period", options: timeSlots.filter(s => !s.isBreak).map(s => s.time) },
-                    { label: "Subject", options: ["Mathematics", "English", "Science", "ICT"] },
-                    { label: "Teacher", options: ["Mrs. Mensah", "Mr. Asante", "Mrs. Boateng"] },
+                    { label: "Select Day", key: "day", options: days },
+                    { label: "Select Period", key: "time_slot", options: timeSlots.filter(s => !s.isBreak).map(s => s.time) },
+                    { label: "Subject", key: "subject", options: ["Mathematics", "English Language", "Integrated Science", "Social Studies", "ICT", "RME", "French", "Creative Arts"] },
+                    { label: "Teacher", key: "teacher_name", options: teachers.map(t => t.name) },
+                    { label: "Class", key: "class_name", options: classes.map(c => c.name) },
                   ].map((f) => (
-                    <div key={f.label}>
+                    <div key={f.label} className={f.key === 'class_name' ? 'col-span-2' : ''}>
                       <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
-                      <select className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all cursor-pointer" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}>
-                        {f.options.map(o => <option key={o}>{o}</option>)}
+                      <select 
+                        value={newSession[f.key]}
+                        onChange={(e) => setNewSession({...newSession, [f.key]: e.target.value})}
+                        className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all cursor-pointer" 
+                        style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }}
+                      >
+                        <option value="">Select {f.label}</option>
+                        {f.options.map(o => <option key={o} value={o}>{o}</option>)}
                       </select>
                     </div>
                   ))}
-                </div>
                 <div>
                   <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Classroom / Lab</label>
-                  <input placeholder="e.g. Science Lab 1" className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
+                  <input 
+                    value={newSession.room}
+                    onChange={(e) => setNewSession({...newSession, room: e.target.value})}
+                    placeholder="e.g. Science Lab 1" 
+                    className="w-full border rounded-xl px-4 py-3 text-xs font-bold outline-none transition-all" 
+                    style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} 
+                  />
                 </div>
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    showToast({
-                      title: 'Session Assigned',
-                      message: 'The academic period has been successfully scheduled.',
-                      type: 'success'
-                    });
-                  }}
+                  onClick={handleAssignSession}
                 >
                   Assign Session
                 </Button>

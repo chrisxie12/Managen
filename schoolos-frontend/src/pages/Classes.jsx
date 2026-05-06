@@ -12,17 +12,70 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import { buildUrl, getHeaders } from '../services/api';
 
 const Classes = ({ onNavigate }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [classes, setClasses] = useState([]);
+  const [newClass, setNewClass] = useState({
+    name: '', capacity: 40, department: 'Junior High', teacher_id: ''
+  });
+
+  const fetchClasses = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/classes'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setClasses(json.data.classes || []);
+      } else {
+        throw new Error(json.error || 'Failed to load classes');
+      }
+    } catch (err) {
+      showToast({ title: 'Sync Error', message: err.message, type: 'error' });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetchClasses();
   }, []);
+
+  const handleAddClass = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/classes'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify(newClass),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setIsAddModalOpen(false);
+        fetchClasses();
+        showToast({
+          title: 'Section Provisioned',
+          message: `${newClass.name} has been integrated into the node.`,
+          type: 'success'
+        });
+        setNewClass({ name: '', capacity: 40, department: 'Junior High', teacher_id: '' });
+      } else {
+        const json = await res.json();
+        throw new Error(json.error || 'Failed to create class');
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
   const stats = [
     { label: 'Academic Classes', value: 24, icon: BookOpen, color: '#6366F1' },
@@ -31,18 +84,9 @@ const Classes = ({ onNavigate }) => {
     { label: 'Lead Teachers', value: 24, icon: UserCheck, color: '#EC4899' },
   ];
 
-  const classesData = [
-    { id: 1, name: 'Form 1A', teacher: 'Mrs. Abena Mensah', students: 35, capacity: 40, dept: 'Junior High', initials: 'AM' },
-    { id: 2, name: 'Form 1B', teacher: 'Mr. Kofi Asante', students: 32, capacity: 40, dept: 'Junior High', initials: 'KA' },
-    { id: 3, name: 'Form 2A', teacher: 'Mrs. Akosua Boateng', students: 38, capacity: 40, dept: 'Junior High', initials: 'AB' },
-    { id: 4, name: 'Form 2B', teacher: 'Mr. Kwame Osei', students: 36, capacity: 40, dept: 'Junior High', initials: 'KO' },
-    { id: 5, name: 'Form 3A', teacher: 'Mrs. Efua Darko', students: 34, capacity: 40, dept: 'Senior High', initials: 'ED' },
-    { id: 6, name: 'Form 3B', teacher: 'Mr. Yaw Mensah', students: 33, capacity: 40, dept: 'Senior High', initials: 'YM' },
-  ];
-
-  const filteredClasses = classesData.filter(c => 
-    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.teacher.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredClasses = classes.filter(c => 
+    (c.name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.teacher || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -88,8 +132,8 @@ const Classes = ({ onNavigate }) => {
                 placeholder="Search class or teacher..."
                 className="bg-transparent border-none outline-none text-sm font-medium w-full"
                 style={{ color: "var(--text-primary)" }}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
            </div>
            <div className="flex gap-2">
@@ -206,14 +250,7 @@ const Classes = ({ onNavigate }) => {
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    showToast({
-                      title: 'Section Provisioned',
-                      message: 'The new academic section has been integrated into the node.',
-                      type: 'success'
-                    });
-                  }}
+                  onClick={handleAddClass}
                 >
                   Create Section
                 </Button>

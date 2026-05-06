@@ -15,8 +15,9 @@ import {
   ClipboardList
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { buildUrl } from '../services/api';
+import { buildUrl, getHeaders, handleApiError } from '../services/api';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const Exams = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState("exams");
@@ -25,21 +26,61 @@ const Exams = ({ onNavigate }) => {
   const [exams, setExams] = useState([]);
   const [search, setSearch] = useState("");
   const { showToast } = useToast();
+  const { authSession } = useAuth();
+  
+  const [newExam, setNewExam] = useState({
+    name: '', date: new Date().toISOString().split('T')[0], total_marks: 100, subject: 'Mathematics', class_name: ''
+  });
+
+  const fetchExams = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/exams'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setExams(json.data.exams || []);
+      } else {
+        throw new Error(json.error || 'Failed to fetch exams');
+      }
+    } catch (err) {
+      showToast({ title: 'Sync Error', message: err.message, type: 'error' });
+    } finally {
+      setTimeout(() => setLoading(false), 800);
+    }
+  };
 
   useEffect(() => {
-    const fetchExams = async () => {
-      try {
-        const res = await fetch(buildUrl('/api/school/exams'), { credentials: 'include' });
-        const json = await res.json();
-        if (json.data) setExams(json.data.exams || []);
-      } catch (err) {
-        console.error("Failed to fetch exams", err);
-      } finally {
-        setTimeout(() => setLoading(false), 800);
-      }
-    };
     fetchExams();
   }, []);
+
+  const handleAddExam = async () => {
+    try {
+      const res = await fetch(buildUrl('/api/school/exams'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify(newExam),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setIsAddModalOpen(false);
+        fetchExams();
+        showToast({
+          title: 'Assessment Registered',
+          message: `${newExam.name} has been scheduled successfully.`,
+          type: 'success'
+        });
+        setNewExam({ name: '', date: new Date().toISOString().split('T')[0], total_marks: 100, subject: 'Mathematics', class_name: '' });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Error', message: err.message, type: 'error' });
+    }
+  };
 
   const stats = [
     { label: 'Upcoming', value: '12', icon: Clock, color: '#6366F1' },
@@ -247,27 +288,29 @@ const Exams = ({ onNavigate }) => {
               </div>
               <div className="p-8 pt-4 space-y-4">
                 {[
-                  { label: "Exam Name", placeholder: "e.g. End of Term Math" },
-                  { label: "Date", type: "date" },
-                  { label: "Total Marks", placeholder: "100" },
+                  { label: "Exam Name", key: "name", placeholder: "e.g. End of Term Math" },
+                  { label: "Subject", key: "subject", placeholder: "Mathematics" },
+                  { label: "Class", key: "class_name", placeholder: "e.g. Form 1A" },
+                  { label: "Date", key: "date", type: "date" },
+                  { label: "Total Marks", key: "total_marks", type: "number", placeholder: "100" },
                 ].map((f) => (
                   <div key={f.label}>
                     <label className="text-[10px] font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>{f.label}</label>
-                    <input type={f.type || 'text'} placeholder={f.placeholder} className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} />
+                    <input 
+                      type={f.type || 'text'} 
+                      value={newExam[f.key]}
+                      onChange={(e) => setNewExam({...newExam, [f.key]: f.type === 'number' ? parseInt(e.target.value) : e.target.value})}
+                      placeholder={f.placeholder} 
+                      className="w-full border rounded-xl px-4 py-3 text-sm font-bold outline-none transition-all" 
+                      style={{ background: "var(--bg-secondary)", color: "var(--text-primary)", borderColor: "var(--border)" }} 
+                    />
                   </div>
                 ))}
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    showToast({
-                      title: 'Assessment Registered',
-                      message: 'The new examination has been scheduled and student nodes notified.',
-                      type: 'success'
-                    });
-                  }}
+                  onClick={handleAddExam}
                 >
                   Register Exam
                 </Button>

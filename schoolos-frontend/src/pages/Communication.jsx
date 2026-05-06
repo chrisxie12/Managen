@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import { buildUrl, getHeaders, handleApiError } from '../services/api';
 
 const conversations = [
   {
@@ -76,12 +78,70 @@ const WHATSAPP = "#25D366";
 
 const Communication = () => {
   const { isDarkMode } = useTheme();
+  const { showToast } = useToast();
+  const { authSession } = useAuth();
+
   const [selected, setSelected] = useState(conversations[0]);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("inbox");
   const [sending, setSending] = useState(false);
-  const { showToast } = useToast();
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/notifications'), {
+        headers: getHeaders(authSession?.token),
+        credentials: 'include'
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setLogs(json.data.notifications || []);
+      }
+    } catch (e) {}
+    finally { setLoading(false); }
+  };
+
+  React.useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const handleSend = async () => {
+    if (!message.trim()) return;
+    setSending(true);
+    try {
+      const res = await fetch(buildUrl('/api/school/notifications'), {
+        method: 'POST',
+        headers: getHeaders(authSession?.token),
+        body: JSON.stringify({
+          type: 'WhatsApp',
+          recipient: selected.phone,
+          message: message,
+          status: 'Delivered'
+        }),
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        setMessage("");
+        fetchLogs();
+        showToast({
+          title: 'Delivered',
+          message: 'Message dispatched through WhatsApp API.',
+          type: 'success'
+        });
+      } else {
+        const error = await handleApiError(res);
+        throw new Error(error);
+      }
+    } catch (err) {
+      showToast({ title: 'Dispatch Error', message: err.message, type: 'error' });
+    } finally {
+      setSending(false);
+    }
+  };
 
   const filtered = conversations.filter(
     (c) =>
