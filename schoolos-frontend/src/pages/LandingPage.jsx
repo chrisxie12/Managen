@@ -70,8 +70,7 @@ const pricingPlans = [
   {
     name: "Starter",
     tagline: "For boutique schools getting started",
-    priceUSD: "$25",
-    priceGHS: "USD 400",
+    priceGHS: "GHS 400",
     priceNGN: "₦40,000",
     period: "/ mo",
     features: [
@@ -87,8 +86,7 @@ const pricingPlans = [
   {
     name: "Professional",
     tagline: "The gold standard for scaling institutions",
-    priceUSD: "$75",
-    priceGHS: "USD 1,200",
+    priceGHS: "GHS 1,200",
     priceNGN: "₦120,000",
     period: "/ mo",
     features: [
@@ -105,7 +103,6 @@ const pricingPlans = [
   {
     name: "Institution",
     tagline: "For school groups and networks",
-    priceUSD: "Custom",
     priceGHS: "Custom",
     priceNGN: "Custom",
     period: "",
@@ -121,6 +118,8 @@ const pricingPlans = [
     highlighted: false,
   },
 ];
+
+const AFRICAN_COUNTRY_KEYS = ["GH", "NG"];
 
 const testimonials = [
   {
@@ -221,7 +220,7 @@ const faqs = [
 export const LandingPage = React.memo(({ onNavigate }) => {
   const { config, changeCountry } = useLocalization();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [currency, setCurrency] = useState("GLOBAL");
+  const [currency, setCurrency] = useState("GH");
   const [scrolled, setScrolled] = useState(false);
   const [showStickyCta, setShowStickyCta] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -235,6 +234,10 @@ export const LandingPage = React.memo(({ onNavigate }) => {
     country: "Ghana",
     message: "",
   });
+
+  useEffect(() => {
+    changeCountry("GH");
+  }, [changeCountry]);
 
   const heroVariantKey = useMemo(() => {
     if (typeof window === "undefined") return "control";
@@ -1030,7 +1033,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               className="flex flex-wrap justify-center rounded-3xl p-1.5 gap-1"
               style={{ background: "white", border: `1px solid rgba(56,25,50,0.10)` }}
             >
-              {Object.keys(countryConfigs).map((c) => (
+              {AFRICAN_COUNTRY_KEYS.map((c) => (
                 <button
                   key={c}
                   onClick={() => {
@@ -1044,7 +1047,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                     boxShadow: currency === c ? "0 8px 20px rgba(56,25,50,0.15)" : "none"
                   }}
                 >
-                  {countryConfigs[c].name}
+                    {countryConfigs[c]?.name || c}
                 </button>
               ))}
             </div>
@@ -1113,7 +1116,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                       fontWeight: 700,
                     }}
                   >
-                    {currency === 'GH' ? plan.priceGHS : currency === 'NG' ? plan.priceNGN : plan.priceUSD}
+                    {currency === 'NG' ? plan.priceNGN : plan.priceGHS}
                   </span>
                   <span
                     style={{
