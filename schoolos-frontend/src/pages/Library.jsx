@@ -216,9 +216,8 @@ const Library = ({ onNavigate }) => {
               </motion.div>
            ))}
         </div>
-    </div>
 
-      {/* Modal */}
+        {/* Modal */}
       <AnimatePresence>
         {isAddModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">

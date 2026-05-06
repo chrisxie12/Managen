@@ -41,9 +41,14 @@ function AuthenticatedApp() {
   // Unified Modules Mapping
   const modules = {
     // Platform Level (Superadmin)
-    'superadmin-dashboard': <SuperAdminDashboard onNavigate={setActiveModule} />,
-    schools: <SuperAdminDashboard onNavigate={setActiveModule} />,
-    subscriptions: <SuperAdminDashboard onNavigate={setActiveModule} />,
+    'superadmin-dashboard': <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    schools: <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    subscriptions: <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    billing: <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    'global-users': <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    'system-config': <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    'audit-logs': <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
+    support: <SuperAdminDashboard activeModule={activeModule} onNavigate={setActiveModule} />,
     
     // School Level (Admin/Accountant)
     dashboard: <Dashboard onNavigate={setActiveModule} />,

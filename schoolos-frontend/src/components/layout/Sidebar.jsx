@@ -21,51 +21,75 @@ import {
   LogOut,
   X,
   BellRing,
-  GraduationCap
+  GraduationCap,
+  ChevronLeft,
+  ChevronRight,
+  ShieldAlert,
+  HardDrive,
+  Database,
+  LifeBuoy,
+  Flag,
+  CreditCard,
+  History,
+  Activity,
+  Shield,
+  Globe
 } from 'lucide-react';
 
-const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
+const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, onToggleCollapse, onClose }) => {
   const { authSession, signOut } = useAuth();
   const { isDarkMode } = useTheme();
   const role = (authSession?.user?.role || authSession?.role || 'admin').toLowerCase();
 
   const allSections = [
     {
-      title: "Main Menu",
+      title: "Main",
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'accountant'] },
-        { id: 'superadmin-dashboard', label: 'Platform Hub', icon: LayoutDashboard, roles: ['superadmin'] },
-        { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant'] },
-        { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin'] },
-        { id: 'schools', label: 'Institutions', icon: Building2, roles: ['superadmin'] },
+        { id: 'superadmin-dashboard', label: 'Overview', icon: LayoutDashboard, roles: ['superadmin'] },
       ]
     },
     {
-      title: "Academic Hub",
+      title: "Management",
       items: [
+        { id: 'schools', label: 'Schools', icon: Building2, roles: ['superadmin'] },
+        { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant'] },
+        { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin'] },
         { id: 'classes', label: 'Classes', icon: BookOpen, roles: ['admin'] },
+        { id: 'global-users', label: 'Users', icon: Users, roles: ['superadmin'] },
+      ]
+    },
+    {
+      title: "Finance",
+      items: [
+        { id: 'fees', label: 'Fees', icon: Wallet, roles: ['admin', 'accountant'] },
+        { id: 'billing', label: 'Billing', icon: CreditCard, roles: ['superadmin'] },
+        { id: 'subscriptions', label: 'Subscriptions', icon: History, roles: ['superadmin'] },
+      ]
+    },
+    {
+      title: "Academic",
+      items: [
         { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, roles: ['admin'] },
         { id: 'exams', label: 'Exams', icon: FileText, roles: ['admin'] },
         { id: 'results', label: 'Results', icon: BarChart3, roles: ['admin'] },
         { id: 'timetable', label: 'Timetable', icon: Calendar, roles: ['admin'] },
-        { id: 'library', label: 'Library', icon: Library, roles: ['admin'] },
       ]
     },
     {
-      title: "Finance & HR",
-      items: [
-        { id: 'fees', label: 'Fee Management', icon: Wallet, roles: ['admin', 'accountant'] },
-        { id: 'fee-reminders', label: 'Fee Reminders', icon: BellRing, roles: ['admin', 'accountant'] },
-        { id: 'payroll', label: 'Payroll', icon: Banknote, roles: ['admin', 'accountant'] },
-        { id: 'fee-reports', label: 'Reports', icon: Receipt, roles: ['admin', 'accountant'] },
-        { id: 'subscriptions', label: 'Billing', icon: Wallet, roles: ['superadmin'] },
-      ]
+        title: "Analytics",
+        items: [
+           { id: 'global-reports', label: 'Reports', icon: BarChart3, roles: ['superadmin'] },
+           { id: 'usage-stats', label: 'Usage', icon: Activity, roles: ['superadmin'] },
+        ]
     },
     {
-      title: "Support",
+      title: "Platform",
       items: [
-        { id: 'communication', label: 'Communication', icon: MessageSquare, roles: ['admin', 'accountant'] },
-        { id: 'settings', label: 'Settings', icon: Settings2, roles: ['admin', 'superadmin'] },
+        { id: 'communication', label: 'Communication', icon: MessageSquare, roles: ['admin', 'superadmin'] },
+        { id: 'system-config', label: 'System', icon: Settings2, roles: ['superadmin'] },
+        { id: 'security', label: 'Security', icon: ShieldAlert, roles: ['superadmin'] },
+        { id: 'support', label: 'Support', icon: LifeBuoy, roles: ['superadmin'] },
       ]
     }
   ];
@@ -76,22 +100,40 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   })).filter(section => section.items.length > 0);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full overflow-hidden transition-all duration-300" style={{ background: "var(--bg-secondary)", borderRight: `1px solid var(--border)` }}>
+    <div 
+      className={`flex flex-col h-full overflow-hidden transition-all duration-300 relative`} 
+      style={{ 
+        background: "#1E1B4B", // Deep Indigo
+        color: "#E2E8F0",
+        width: isCollapsed ? '80px' : '260px'
+      }}
+    >
       {/* Branding Section */}
-      <div className="px-6 py-8">
-        <Logo size={40} className="cursor-pointer" />
+      <div className={`px-6 py-8 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+        {!isCollapsed && <Logo size={32} light />}
+        {isCollapsed && <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-black">S</div>}
       </div>
+
+      {/* Collapse Toggle (Desktop only) */}
+      <button 
+        onClick={onToggleCollapse}
+        className="hidden lg:flex absolute top-10 -right-3 w-6 h-6 bg-[#4338CA] rounded-full items-center justify-center border border-white/20 shadow-lg text-white hover:bg-[#4F46E5] transition-all z-[60]"
+      >
+        {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+      </button>
 
       {/* Navigation */}
       <div className="flex-grow overflow-y-auto no-scrollbar px-3 pb-6 flex flex-col gap-6">
         {navSections.map((section, idx) => (
           <div key={idx}>
-            <p
-              className="px-4 mb-2 uppercase tracking-widest font-black"
-              style={{ color: "var(--text-muted)", fontSize: "0.65rem" }}
-            >
-              {section.title}
-            </p>
+            {!isCollapsed && (
+              <p
+                className="px-4 mb-2 uppercase tracking-widest font-black opacity-40"
+                style={{ fontSize: "0.6rem" }}
+              >
+                {section.title}
+              </p>
+            )}
             <div className="flex flex-col gap-1">
               {section.items.map((item) => {
                 const active = activeItem === item.id;
@@ -102,22 +144,17 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
                       onNavigate(item.id);
                       if (isOpen) onClose();
                     }}
-                    className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl w-full text-left transition-all active:scale-95 group"
+                    className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl w-full text-left transition-all active:scale-95 group ${isCollapsed ? 'justify-center' : ''}`}
                     style={{
-                      background: active ? (isDarkMode ? "#FFF3E6" : "#381932") : "transparent",
-                      color: active ? (isDarkMode ? "#381932" : "#FFF3E6") : "var(--text-secondary)",
+                      background: active ? "rgba(255,255,255,0.1)" : "transparent",
+                      color: active ? "#FFF" : "rgba(255,255,255,0.6)",
                     }}
+                    title={isCollapsed ? item.label : ''}
                   >
-                    <item.icon size={18} strokeWidth={active ? 2.5 : 2} />
-                    <span style={{ fontSize: "0.9rem", fontWeight: active ? 700 : 500 }}>
-                      {item.label}
-                    </span>
-                    {item.id === 'communication' && !active && (
-                      <span
-                        className="ml-auto px-1.5 py-0.5 rounded-full text-xs font-black"
-                        style={{ background: `rgba(56,25,50,0.1)`, color: "var(--text-primary)", fontSize: "0.7rem" }}
-                      >
-                        3
+                    <item.icon size={20} strokeWidth={active ? 2.5 : 2} />
+                    {!isCollapsed && (
+                      <span style={{ fontSize: "0.85rem", fontWeight: active ? 700 : 500 }}>
+                        {item.label}
                       </span>
                     )}
                   </button>
@@ -129,37 +166,33 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
       </div>
 
       {/* User Card */}
-      <div className="p-4 border-t" style={{ background: 'rgba(56,25,50,0.02)', borderColor: 'var(--border)' }}>
+      <div className="p-4 border-t border-white/5 bg-black/20">
         <div
-          className="p-3 rounded-2xl flex items-center gap-3"
-          style={{
-            background: "var(--card-bg)",
-            border: `1px solid var(--border)`,
-          }}
+          className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : ''}`}
         >
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-            style={{ background: isDarkMode ? "#FFF3E6" : "#381932" }}
+            className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center flex-shrink-0 border border-white/10"
           >
-            <span style={{ color: isDarkMode ? "#381932" : "#FFF3E6", fontSize: "0.85rem", fontWeight: 800 }}>
+            <span className="text-white text-xs font-black">
               {(authSession?.user?.name || 'AD').substring(0, 2).toUpperCase()}
             </span>
           </div>
-          <div className="flex-1 min-w-0">
-            <div
-              style={{ color: "var(--text-primary)", fontSize: "0.85rem", fontWeight: 700 }}
-              className="truncate"
-            >
-              {authSession?.user?.name || 'School Admin'}
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="text-white text-sm font-bold truncate">
+                {authSession?.user?.name || 'Super Admin'}
+              </div>
+              <div className="text-white/40 text-[10px] font-black uppercase tracking-widest">{role}</div>
             </div>
-            <div style={{ color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600 }}>{authSession?.user?.role || 'Administrator'}</div>
-          </div>
-          <button
-            onClick={signOut}
-            className="hover:text-red-500 transition-colors p-1"
-          >
-            <LogOut size={16} style={{ color: "var(--text-muted)" }} />
-          </button>
+          )}
+          {!isCollapsed && (
+            <button
+              onClick={signOut}
+              className="text-white/40 hover:text-rose-400 transition-colors"
+            >
+              <LogOut size={16} />
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -168,7 +201,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 z-50">
+      <aside className={`hidden lg:flex fixed left-0 top-0 bottom-0 z-50 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
         {sidebarContent}
       </aside>
 
@@ -194,7 +227,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, onClose }) => {
                 onClick={onClose}
                 className="absolute top-4 right-4 z-10 p-1 rounded-full bg-white/10"
               >
-                <X size={20} style={{ color: "var(--text-primary)" }} />
+                <X size={20} className="text-white" />
               </button>
               {sidebarContent}
             </motion.aside>

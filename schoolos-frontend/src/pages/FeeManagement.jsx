@@ -9,7 +9,8 @@ import {
   ArrowUpRight, 
   ArrowDownLeft, 
   Users, 
-  X
+  X,
+  Zap
 } from 'lucide-react';
 import {
   BarChart,

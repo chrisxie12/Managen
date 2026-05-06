@@ -228,9 +228,8 @@ const Classes = React.memo(({ onNavigate }) => {
               );
            })}
         </div>
-    </div>
 
-      {/* Add Class Modal */}
+        {/* Add Class Modal */}
       <AnimatePresence>
         {isAddModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
@@ -242,7 +241,8 @@ const Classes = React.memo(({ onNavigate }) => {
                   <p style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontWeight: 600 }}>Structure • Class Management</p>
                 </div>
                 <button aria-label="Close" onClick={() => setIsAddModalOpen(false)} className="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center"><X size={20} style={{ color: "var(--text-muted)" }} /></button>
-              </div               <div className="p-8 pt-4 space-y-4">
+              </div>
+              <div className="p-8 pt-4 space-y-4">
                  <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2">
                        <label className="text-xs font-black uppercase tracking-widest mb-1.5 block ml-1" style={{ color: "var(--text-muted)" }}>Class Name</label>
@@ -259,9 +259,8 @@ const Classes = React.memo(({ onNavigate }) => {
                           <option>Senior High</option>
                        </select>
                     </div>
-                 </div>
-              </div>
->
+                  </div>
+               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
                   className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
@@ -277,6 +276,6 @@ const Classes = React.memo(({ onNavigate }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
 
 export default Classes;

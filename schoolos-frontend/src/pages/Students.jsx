@@ -350,7 +350,6 @@ const Students = React.memo(({ onNavigate }) => {
             )}
           </AnimatePresence>
         </div>
-      </div>
 
       {/* Modal */}
       <AnimatePresence>
@@ -396,6 +395,6 @@ const Students = React.memo(({ onNavigate }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
 
 export default Students;

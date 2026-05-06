@@ -281,6 +281,6 @@ const Dashboard = React.memo(({ onNavigate }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Dashboard;

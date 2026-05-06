@@ -149,25 +149,6 @@ const Communication = () => {
       c.student.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    setSending(true);
-    showToast({
-      title: 'Message Dispatch',
-      message: 'Routing message through WhatsApp Business API...',
-      type: 'info'
-    });
-    setTimeout(() => {
-      setSending(false);
-      setMessage("");
-      showToast({
-        title: 'Delivered',
-        message: 'Message sent to the parent node.',
-        type: 'success'
-      });
-    }, 800);
-  };
-
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-8 pt-8">
