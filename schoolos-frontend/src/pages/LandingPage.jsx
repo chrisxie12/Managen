@@ -1352,15 +1352,29 @@ export const LandingPage = React.memo(({ onNavigate }) => {
           {[
             {
               title: "Product",
-              links: ["Features", "Pricing", "Changelog", "Roadmap"],
+              links: [
+                { label: "Features", href: "#features" },
+                { label: "Pricing", href: "#pricing" },
+                { label: "Changelog", href: "#" },
+                { label: "Roadmap", href: "#" },
+              ],
             },
             {
               title: "Company",
-              links: ["About", "Blog", "Careers", "Press"],
+              links: [
+                { label: "About", href: "#" },
+                { label: "Blog", href: "#" },
+                { label: "Careers", href: "#" },
+                { label: "Press", href: "#" },
+              ],
             },
             {
               title: "Contact",
-              links: ["support@schoolos.app", "+233 55 000 1234", "Accra, Ghana"],
+              links: [
+                { label: "support@schoolos.app", href: "mailto:support@schoolos.app" },
+                { label: "+233532785149", href: "tel:+233532785149" },
+                { label: "Accra, Ghana" },
+              ],
             },
           ].map((col) => (
             <div key={col.title}>
@@ -1375,16 +1389,22 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 {col.title}
               </h4>
               <div className="flex flex-col gap-2">
-                {col.links.map((link) => (
-                  <a
-                    key={link}
-                    href={col.title === "Contact" && link.includes("@") ? `mailto:${link}` : col.title === "Contact" && link.startsWith("+") ? `tel:${link.replace(/\s+/g, "")}` : "#"}
-                    style={{ color: MUTED, fontSize: "0.85rem" }}
-                    className="hover:opacity-70 transition-opacity"
-                  >
-                    {link}
-                  </a>
-                ))}
+                {col.links.map((link) =>
+                  link.href ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      style={{ color: MUTED, fontSize: "0.85rem" }}
+                      className="hover:opacity-70 transition-opacity"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <span key={link.label} style={{ color: MUTED, fontSize: "0.85rem" }}>
+                      {link.label}
+                    </span>
+                  )
+                )}
               </div>
             </div>
           ))}
