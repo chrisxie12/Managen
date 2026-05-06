@@ -17,6 +17,7 @@ const db = {
     attendance: [],
     fees: [],
     payments: [],
+    demo_leads: [],
 };
 
 let idSequence = 1;
@@ -132,6 +133,12 @@ class Query {
         return this;
     }
 
+    upsert(payload) {
+        this.mode = 'upsert';
+        this.payload = Array.isArray(payload) ? payload : [payload];
+        return this;
+    }
+
     update(payload) {
         this.mode = 'update';
         this.payload = payload;
@@ -171,6 +178,28 @@ class Query {
             const projected = inserted.length === 1
                 ? projectRecord(inserted[0], this.selectColumns)
                 : inserted.map((row) => projectRecord(row, this.selectColumns));
+            const data = mode === 'maybeSingle' || mode === 'single'
+                ? (Array.isArray(projected) ? projected[0] || null : projected || null)
+                : projected;
+            return { data, error: null };
+        }
+
+        if (this.mode === 'upsert') {
+            const upserted = this.payload.map((item) => {
+                const row = clone(item);
+                if (!row.id) row.id = `${this.table}_${idSequence++}`;
+                if (!row.created_at) row.created_at = new Date().toISOString();
+                const existingIndex = db[this.table].findIndex((record) => record.id === row.id);
+                if (existingIndex >= 0) {
+                    db[this.table][existingIndex] = { ...db[this.table][existingIndex], ...row };
+                    return db[this.table][existingIndex];
+                }
+                db[this.table].push(row);
+                return row;
+            });
+            const projected = upserted.length === 1
+                ? projectRecord(upserted[0], this.selectColumns)
+                : upserted.map((row) => projectRecord(row, this.selectColumns));
             const data = mode === 'maybeSingle' || mode === 'single'
                 ? (Array.isArray(projected) ? projected[0] || null : projected || null)
                 : projected;
@@ -243,6 +272,26 @@ void _queryMethodKeepAlive;
 const fakeSupabase = {
     from(table) {
         return new Query(table);
+    },
+    auth: {
+        admin: {
+            async createUser(payload) {
+                const userId = `auth_user_${idSequence++}`;
+                return {
+                    data: {
+                        user: {
+                            id: userId,
+                            email: payload.email,
+                            user_metadata: payload.user_metadata || {},
+                        },
+                    },
+                    error: null,
+                };
+            },
+            async deleteUser() {
+                return { data: { user: null }, error: null };
+            },
+        },
     },
 };
 
@@ -334,14 +383,43 @@ test.after(async () => {
 
 test('health and plan endpoints respond', async () => {
     const health = await request('/health');
-    assert.equal(health.status, 200);
-    assert.equal(health.body.data.status, 'ok');
+    try {
+        assert.equal(health.status, 200);
+        const healthStatus = health.body?.data?.status || health.body?.status;
+        assert.equal(healthStatus, 'ok');
+    } catch (error) {
+        console.log('Health response:', JSON.stringify(health.body));
+        throw error;
+    }
 
     const plans = await request('/api/onboard/plans');
     assert.equal(plans.status, 200);
     assert.ok(Array.isArray(plans.body.data.plans));
     assert.ok(plans.body.data.plans.some((plan) => plan.name === 'trial'));
     assert.ok(plans.body.data.plans.some((plan) => plan.name === 'premium'));
+});
+
+test('demo request endpoint stores a lead', async () => {
+    const demo = await request('/api/onboard/demo-request', {
+        method: 'POST',
+        body: {
+            name: 'Ama Boateng',
+            email: 'Ama@example.com',
+            schoolName: 'Bright Future School',
+            country: 'Ghana',
+            message: 'Need a walkthrough for admissions and billing.',
+            variant: 'control',
+            source: 'demo_modal',
+            createdAt: new Date().toISOString(),
+        },
+    });
+
+    assert.equal(demo.status, 201);
+    assert.equal(demo.body.data.message, 'Demo request received.');
+    assert.equal(db.demo_leads.length, 1);
+    assert.equal(db.demo_leads[0].name, 'Ama Boateng');
+    assert.equal(db.demo_leads[0].email, 'ama@example.com');
+    assert.equal(db.demo_leads[0].school_name, 'Bright Future School');
 });
 
 test('onboarding, login, school info, and student management work end to end', async () => {

@@ -20,6 +20,7 @@ import {
   Award,
 } from "lucide-react";
 import { useLocalization, countryConfigs } from "../contexts/LocalizationContext";
+import { buildUrl, handleApiError } from "../services/api";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -145,18 +146,257 @@ const stats = [
   { value: "99.9%", label: "System Uptime" },
 ];
 
+const differentiators = [
+  {
+    title: "WhatsApp-First Parent Communication",
+    description:
+      "Send attendance alerts, exam results, and fee reminders to where parents already are.",
+    icon: MessageSquare,
+  },
+  {
+    title: "Mobile Money Ready",
+    description:
+      "Support MoMo-oriented fee flows with payment links and instant confirmation records.",
+    icon: Wallet,
+  },
+  {
+    title: "WAEC/BECE-Aligned Academics",
+    description:
+      "Run grading and reports with regional standards out of the box.",
+    icon: GraduationCap,
+  },
+];
+
+const launchSteps = [
+  "Create school workspace and admin access",
+  "Import classes, staff, and students",
+  "Enable fees, reminders, and payment channels",
+  "Go live with parent communication",
+];
+
+const HERO_VARIANTS = {
+  control: {
+    headingPrefix: "Run Your Entire School.",
+    headingAccent: "No Spreadsheets.",
+    subtext:
+      "SchoolOS helps schools run academics, finance, and communication in one operating system. Built for Ghana, Nigeria, and expansion markets.",
+    primaryCta: "Start for Free",
+    secondaryCta: "Book a Demo",
+  },
+  speed: {
+    headingPrefix: "Launch in 30 Minutes.",
+    headingAccent: "Scale with Confidence.",
+    subtext:
+      "Onboard your school fast, automate fees and reminders, and keep parents informed from day one.",
+    primaryCta: "Start 30-Min Setup",
+    secondaryCta: "Book a Fast Demo",
+  },
+};
+
+const LANDING_METRICS_KEY = "schoolos_landing_metrics";
+
+const faqs = [
+  {
+    question: "How fast can my school start using SchoolOS?",
+    answer:
+      "Most schools can complete setup in under 30 minutes with class, staff, and student imports.",
+  },
+  {
+    question: "Does SchoolOS support local payment workflows?",
+    answer:
+      "Yes. SchoolOS is designed for mobile-money-oriented fee collection and payment-link experiences.",
+  },
+  {
+    question: "Can we notify parents on WhatsApp?",
+    answer:
+      "Yes. Attendance, reminders, and key announcements can be sent through WhatsApp-compatible communication flows.",
+  },
+  {
+    question: "Do you support WAEC/BECE-style reporting?",
+    answer:
+      "Yes. Academic and report structures are aligned with regional exam/reporting expectations.",
+  },
+];
+
 export const LandingPage = React.memo(({ onNavigate }) => {
   const { config, changeCountry } = useLocalization();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState("GLOBAL");
   const [scrolled, setScrolled] = useState(false);
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [demoSubmitting, setDemoSubmitting] = useState(false);
+  const [demoSuccess, setDemoSuccess] = useState("");
+  const [demoError, setDemoError] = useState("");
+  const [demoForm, setDemoForm] = useState({
+    name: "",
+    email: "",
+    schoolName: "",
+    country: "Ghana",
+    message: "",
+  });
 
-  const handleNavigate = useCallback((v) => {
+  const heroVariantKey = useMemo(() => {
+    if (typeof window === "undefined") return "control";
+
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = String(params.get("lp_variant") || "").toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(HERO_VARIANTS, fromQuery)) {
+      try {
+        window.localStorage.setItem("schoolos_lp_variant", fromQuery);
+      } catch (err) {
+        // ignore local storage errors
+      }
+      return fromQuery;
+    }
+
+    try {
+      const fromStorage = String(window.localStorage.getItem("schoolos_lp_variant") || "").toLowerCase();
+      if (Object.prototype.hasOwnProperty.call(HERO_VARIANTS, fromStorage)) {
+        return fromStorage;
+      }
+    } catch (err) {
+      // ignore local storage errors
+    }
+
+    return "control";
+  }, []);
+
+  const heroVariant = HERO_VARIANTS[heroVariantKey] || HERO_VARIANTS.control;
+
+  const trackLandingEvent = useCallback((eventName, payload = {}) => {
+    try {
+      if (typeof window === "undefined") return;
+
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, payload);
+      }
+
+      if (window.dataLayer && typeof window.dataLayer.push === "function") {
+        window.dataLayer.push({ event: eventName, ...payload });
+      }
+
+      window.dispatchEvent(
+        new CustomEvent("schoolos:landing-analytics", {
+          detail: { event: eventName, ...payload },
+        })
+      );
+    } catch (err) {
+      // Keep navigation resilient even if analytics hooks are unavailable.
+    }
+  }, []);
+
+  const incrementConversionCounter = useCallback((counter) => {
+    try {
+      if (typeof window === "undefined") return;
+      const raw = window.localStorage.getItem(LANDING_METRICS_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      const current = Number(parsed[counter] || 0);
+      const next = {
+        ...parsed,
+        [counter]: current + 1,
+        updatedAt: new Date().toISOString(),
+      };
+      window.localStorage.setItem(LANDING_METRICS_KEY, JSON.stringify(next));
+    } catch (err) {
+      // ignore local storage errors
+    }
+  }, []);
+
+  const handleNavigate = useCallback((v, source = "unknown") => {
+    trackLandingEvent("landing_cta_click", { target: v, source });
+    if (v === "signup") incrementConversionCounter("signupClicks");
+    if (v === "login") incrementConversionCounter("loginClicks");
     onNavigate(v);
-  }, [onNavigate]);
+  }, [onNavigate, trackLandingEvent, incrementConversionCounter]);
+
+  const openDemoModal = useCallback((source = "unknown") => {
+    setDemoError("");
+    setDemoSuccess("");
+    setIsDemoModalOpen(true);
+    incrementConversionCounter("demoOpenClicks");
+    trackLandingEvent("landing_demo_open", { source });
+  }, [incrementConversionCounter, trackLandingEvent]);
+
+  const closeDemoModal = useCallback(() => {
+    setIsDemoModalOpen(false);
+    setDemoError("");
+  }, []);
+
+  const handleDemoFieldChange = useCallback((event) => {
+    const { name, value } = event.target;
+    setDemoForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const isValidEmail = useCallback((value) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+  }, []);
+
+  const submitDemoRequest = useCallback(async (event) => {
+    event.preventDefault();
+    setDemoError("");
+    setDemoSuccess("");
+
+    const payload = {
+      name: demoForm.name.trim(),
+      email: demoForm.email.trim().toLowerCase(),
+      schoolName: demoForm.schoolName.trim(),
+      country: demoForm.country,
+      message: demoForm.message.trim(),
+      createdAt: new Date().toISOString(),
+      variant: heroVariantKey,
+      source: "demo_modal",
+    };
+
+    if (!payload.name || !payload.email || !payload.schoolName) {
+      setDemoError("Please fill your name, school name, and email.");
+      return;
+    }
+
+    if (!isValidEmail(payload.email)) {
+      setDemoError("Please enter a valid email address.");
+      return;
+    }
+
+    setDemoSubmitting(true);
+    trackLandingEvent("landing_demo_submit_attempt", { source: "demo_modal" });
+
+    try {
+      const response = await fetch(buildUrl("/api/onboard/demo-request"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(await handleApiError(response));
+      }
+
+      incrementConversionCounter("demoSubmitSuccess");
+      trackLandingEvent("landing_demo_submit_success", { source: "demo_modal" });
+      setDemoSuccess("Thanks. We received your request and will reach out shortly.");
+      setDemoForm({
+        name: "",
+        email: "",
+        schoolName: "",
+        country: "Ghana",
+        message: "",
+      });
+    } catch (err) {
+      incrementConversionCounter("demoSubmitFailed");
+      trackLandingEvent("landing_demo_submit_failed", { source: "demo_modal" });
+      setDemoError("We could not submit your demo request right now. Please try again.");
+    } finally {
+      setDemoSubmitting(false);
+    }
+  }, [demoForm, heroVariantKey, incrementConversionCounter, isValidEmail, trackLandingEvent]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      setShowStickyCta(y > 360);
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -164,8 +404,15 @@ export const LandingPage = React.memo(({ onNavigate }) => {
   return (
     <div
       style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: MILK }}
-      className="min-h-screen"
+      className="min-h-screen pb-20 md:pb-0"
     >
+      <div
+        className="text-center text-xs md:text-sm py-2 px-4"
+        style={{ background: PLUM, color: "rgba(255,243,230,0.95)" }}
+      >
+        Built for African schools: multi-tenant, WhatsApp alerts, and payment-ready operations.
+      </div>
+
       {/* ── NAV ── */}
       <nav
         className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
@@ -217,14 +464,14 @@ export const LandingPage = React.memo(({ onNavigate }) => {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <button
-              onClick={() => handleNavigate('login')}
+              onClick={() => handleNavigate('login', 'nav_sign_in')}
               style={{ color: PLUM, fontSize: "0.9rem" }}
               className="px-4 py-2 hover:opacity-70 transition-opacity font-bold"
             >
               Sign in
             </button>
             <button
-              onClick={() => handleNavigate('signup')}
+              onClick={() => handleNavigate('signup', 'nav_start_free')}
               className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform font-bold"
               style={{
                 background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -264,14 +511,14 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               </a>
             ))}
             <button
-              onClick={() => onNavigate('login')}
+              onClick={() => handleNavigate('login', 'mobile_menu_sign_in')}
               style={{ color: PLUM }}
               className="text-left font-bold"
             >
               Sign in
             </button>
             <button
-              onClick={() => onNavigate('signup')}
+              onClick={() => handleNavigate('signup', 'mobile_menu_start_trial')}
               className="px-5 py-2.5 rounded-full text-sm active:scale-95 transition-transform w-fit font-bold"
               style={{
                 background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -312,7 +559,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 }}
                 className="mb-6"
               >
-                Run Your Entire School.{" "}
+                {heroVariant.headingPrefix}{" "}
                 <span
                   style={{
                     background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -320,22 +567,20 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  No Spreadsheets.
+                  {heroVariant.headingAccent}
                 </span>
               </h1>
 
-              <p
+                <p
                 style={{ color: MUTED, fontSize: "1.1rem", lineHeight: 1.75 }}
                 className="mb-8 max-w-lg font-medium"
               >
-                SchoolOS is the ultimate institutional operating system. From 
-                automated digital payments to global academic standards, we
-                empower schools to scale with precision.
+                  {heroVariant.subtext}
               </p>
 
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => handleNavigate('signup')}
+                  onClick={() => handleNavigate('signup', 'hero_start_for_free')}
                   className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -344,10 +589,10 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                     boxShadow: "0 8px 28px rgba(56,25,50,0.28)",
                   }}
                 >
-                  Start for Free <ArrowRight size={16} />
+                  {heroVariant.primaryCta} <ArrowRight size={16} />
                 </button>
                 <button
-                  onClick={() => handleNavigate('login')}
+                  onClick={() => openDemoModal('hero_book_demo')}
                   className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: "white",
@@ -357,7 +602,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                     boxShadow: "0 4px 16px rgba(56,25,50,0.06)",
                   }}
                 >
-                  View Demo
+                  {heroVariant.secondaryCta}
                 </button>
               </div>
 
@@ -468,6 +713,105 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DIFFERENTIATORS ── */}
+      <section className="px-6 pb-20">
+        <div className="max-w-[1280px] mx-auto">
+          <div className="mb-8 text-center">
+            <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
+              Why Schools Switch
+            </p>
+            <h2
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                color: PLUM,
+                fontSize: "clamp(1.7rem, 2.8vw, 2.4rem)",
+                fontWeight: 700,
+              }}
+            >
+              Built for Local Reality, Not Generic Templates
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {differentiators.map((item) => (
+              <div
+                key={item.title}
+                className="p-6 rounded-[20px]"
+                style={{
+                  background: "white",
+                  border: "1px solid rgba(56,25,50,0.07)",
+                  boxShadow: "0 4px 18px rgba(56,25,50,0.05)",
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: "rgba(56,25,50,0.08)" }}
+                >
+                  <item.icon size={18} color={PLUM_LIGHT} />
+                </div>
+                <h3 className="mb-2" style={{ color: PLUM, fontWeight: 700, fontSize: "1rem" }}>
+                  {item.title}
+                </h3>
+                <p style={{ color: MUTED, fontSize: "0.92rem", lineHeight: 1.65 }}>
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ONBOARDING FLOW ── */}
+      <section className="px-6 pb-24">
+        <div
+          className="max-w-[1280px] mx-auto rounded-[32px] p-8 md:p-10"
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}
+        >
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+            <div>
+              <p className="uppercase tracking-widest mb-2 text-sm font-bold" style={{ color: MUTED }}>
+                Fast Launch
+              </p>
+              <h2
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  color: PLUM,
+                  fontSize: "clamp(1.6rem, 2.8vw, 2.3rem)",
+                  fontWeight: 700,
+                }}
+              >
+                Go Live in 30 Minutes
+              </h2>
+            </div>
+            <button
+              onClick={() => handleNavigate('signup', 'launch_wizard')}
+              className="px-6 py-3 rounded-full text-sm font-bold"
+              style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}
+            >
+              Start Setup Wizard
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-4">
+            {launchSteps.map((step, index) => (
+              <div
+                key={step}
+                className="p-4 rounded-2xl"
+                style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.06)" }}
+              >
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center mb-3"
+                  style={{ background: PLUM, color: MILK, fontSize: "0.8rem", fontWeight: 700 }}
+                >
+                  {index + 1}
+                </div>
+                <p style={{ color: PLUM_LIGHT, fontSize: "0.9rem", lineHeight: 1.6 }}>{step}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -602,7 +946,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                   a single bento dashboard.
                 </p>
                 <button
-                  onClick={() => handleNavigate('login')}
+                  onClick={() => handleNavigate('login', 'dashboard_preview_explore')}
                   className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: MILK,
@@ -802,7 +1146,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 </div>
 
                 <button
-                  onClick={() => onNavigate('signup')}
+                  onClick={() => handleNavigate('signup', `pricing_${plan.name.toLowerCase()}`)}
                   className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm font-bold"
                   style={{
                     background: plan.highlighted ? MILK : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -884,6 +1228,47 @@ export const LandingPage = React.memo(({ onNavigate }) => {
         </div>
       </section>
 
+      {/* ── FAQ ── */}
+      <section className="pb-16 px-6">
+        <div className="max-w-[980px] mx-auto">
+          <div className="text-center mb-10">
+            <p className="uppercase tracking-widest mb-3 text-sm font-bold" style={{ color: MUTED }}>
+              FAQs
+            </p>
+            <h2
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                color: PLUM,
+                fontSize: "clamp(1.6rem, 2.8vw, 2.3rem)",
+                fontWeight: 700,
+              }}
+            >
+              Questions School Leaders Ask First
+            </h2>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq) => (
+              <details
+                key={faq.question}
+                className="rounded-2xl p-5"
+                style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}
+              >
+                <summary
+                  style={{ color: PLUM, fontWeight: 700, cursor: "pointer", listStyle: "none" }}
+                  className="flex items-center justify-between"
+                >
+                  {faq.question}
+                </summary>
+                <p style={{ color: MUTED, marginTop: "0.8rem", lineHeight: 1.7, fontSize: "0.92rem" }}>
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA BANNER ── */}
       <section className="py-20 px-6">
         <div className="max-w-[1280px] mx-auto">
@@ -920,7 +1305,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
               eliminated spreadsheets forever.
             </p>
             <button
-              onClick={() => onNavigate('signup')}
+              onClick={() => handleNavigate('signup', 'final_cta_banner')}
               className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform font-bold"
               style={{
                 background: MILK,
@@ -993,7 +1378,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
                 {col.links.map((link) => (
                   <a
                     key={link}
-                    href="#"
+                    href={col.title === "Contact" && link.includes("@") ? `mailto:${link}` : col.title === "Contact" && link.startsWith("+") ? `tel:${link.replace(/\s+/g, "")}` : "#"}
                     style={{ color: MUTED, fontSize: "0.85rem" }}
                     className="hover:opacity-70 transition-opacity"
                   >
@@ -1025,6 +1410,124 @@ export const LandingPage = React.memo(({ onNavigate }) => {
           </div>
         </div>
       </footer>
+
+      {/* Mobile sticky CTA for fast conversion while scrolling */}
+      {showStickyCta && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 p-3 z-50" style={{ background: "rgba(255,243,230,0.92)", backdropFilter: "blur(8px)", borderTop: "1px solid rgba(56,25,50,0.12)" }}>
+          <button
+            onClick={() => handleNavigate('signup', 'mobile_sticky_cta')}
+            className="w-full py-3.5 rounded-full text-sm font-bold flex items-center justify-center gap-2"
+            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}
+          >
+            Start Free Trial <ArrowRight size={14} />
+          </button>
+        </div>
+      )}
+
+      {/* Demo modal */}
+      {isDemoModalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ background: "rgba(19,12,18,0.58)" }}>
+          <div className="w-full max-w-lg rounded-3xl p-6 md:p-7" style={{ background: "white", border: "1px solid rgba(56,25,50,0.12)" }}>
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h3 style={{ color: PLUM, fontSize: "1.25rem", fontWeight: 700 }}>Book a Live Demo</h3>
+                <p style={{ color: MUTED, fontSize: "0.9rem", marginTop: "0.2rem" }}>
+                  Share your details and we will schedule a walkthrough.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeDemoModal}
+                aria-label="Close demo form"
+                className="p-1 rounded-lg"
+                style={{ color: PLUM_LIGHT }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {demoError && (
+              <div className="mb-3 p-3 rounded-xl" style={{ background: "#FEF2F2", color: "#B91C1C", fontSize: "0.85rem" }}>
+                {demoError}
+              </div>
+            )}
+
+            {demoSuccess && (
+              <div className="mb-3 p-3 rounded-xl" style={{ background: "#ECFDF5", color: "#065F46", fontSize: "0.85rem" }}>
+                {demoSuccess}
+              </div>
+            )}
+
+            <form onSubmit={submitDemoRequest} className="space-y-3">
+              <input
+                name="name"
+                value={demoForm.name}
+                onChange={handleDemoFieldChange}
+                placeholder="Your full name"
+                className="w-full h-11 rounded-xl px-4"
+                style={{ border: "1px solid rgba(56,25,50,0.18)", outline: "none" }}
+              />
+              <input
+                name="email"
+                value={demoForm.email}
+                onChange={handleDemoFieldChange}
+                placeholder="Work email"
+                type="email"
+                className="w-full h-11 rounded-xl px-4"
+                style={{ border: "1px solid rgba(56,25,50,0.18)", outline: "none" }}
+              />
+              <input
+                name="schoolName"
+                value={demoForm.schoolName}
+                onChange={handleDemoFieldChange}
+                placeholder="School name"
+                className="w-full h-11 rounded-xl px-4"
+                style={{ border: "1px solid rgba(56,25,50,0.18)", outline: "none" }}
+              />
+              <select
+                name="country"
+                value={demoForm.country}
+                onChange={handleDemoFieldChange}
+                className="w-full h-11 rounded-xl px-4"
+                style={{ border: "1px solid rgba(56,25,50,0.18)", outline: "none", background: "white" }}
+              >
+                <option>Ghana</option>
+                <option>Nigeria</option>
+                <option>Kenya</option>
+                <option>Other</option>
+              </select>
+              <textarea
+                name="message"
+                value={demoForm.message}
+                onChange={handleDemoFieldChange}
+                placeholder="What would you like to see during the demo?"
+                rows={3}
+                className="w-full rounded-xl p-4"
+                style={{ border: "1px solid rgba(56,25,50,0.18)", outline: "none", resize: "vertical" }}
+              />
+
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={closeDemoModal}
+                  className="flex-1 h-11 rounded-xl font-bold"
+                  style={{ border: "1px solid rgba(56,25,50,0.18)", color: PLUM }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={demoSubmitting}
+                  className="flex-1 h-11 rounded-xl font-bold"
+                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, opacity: demoSubmitting ? 0.75 : 1 }}
+                >
+                  {demoSubmitting ? "Submitting..." : "Request Demo"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 });

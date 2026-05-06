@@ -1,6 +1,7 @@
 const express  = require('express');
 const router   = express.Router();
 const supabase = require('../config/db');
+const axios    = require('axios');
 const { provisionSchool, getPublicPlans } = require('../services/provisionService');
 
 // ─── POST /api/onboard/signup ─────────────────────────────────
@@ -63,6 +64,85 @@ router.post('/signup', async (req, res) => {
         return res.status(err.statusCode || 500).json({
             error: err.statusCode && err.statusCode < 500 ? err.message : 'Failed to create school.',
         });
+    }
+});
+
+// ─── POST /api/onboard/demo-request ───────────────────────────
+router.post('/demo-request', async (req, res) => {
+    try {
+        const name = String(req.body?.name || '').trim();
+        const email = String(req.body?.email || '').trim().toLowerCase();
+        const schoolName = String(req.body?.schoolName || '').trim();
+        const country = String(req.body?.country || 'Ghana').trim();
+        const message = String(req.body?.message || '').trim();
+        const variant = String(req.body?.variant || '').trim();
+        const source = String(req.body?.source || 'landing_demo_modal').trim();
+        const requestedAt = req.body?.createdAt ? String(req.body.createdAt) : null;
+
+        if (!name || !email || !schoolName) {
+            return res.status(400).json({
+                error: 'name, email, and schoolName are required.',
+            });
+        }
+
+        const { data: lead, error } = await supabase
+            .from('demo_leads')
+            .insert({
+                name,
+                email,
+                school_name: schoolName,
+                country,
+                message: message || null,
+                source: source || null,
+                variant: variant || null,
+                metadata: requestedAt ? { requestedAt } : {},
+            })
+            .select('id, created_at')
+            .single();
+
+        if (error) {
+            console.error('Demo lead insert error:', error);
+            return res.status(500).json({ error: 'Failed to store demo request.' });
+        }
+
+        const demoWebhookUrl = process.env.DEMO_WEBHOOK_URL;
+        if (demoWebhookUrl) {
+            setImmediate(async () => {
+                try {
+                    await axios.post(
+                        demoWebhookUrl,
+                        {
+                            leadId: lead.id,
+                            name,
+                            email,
+                            schoolName,
+                            country,
+                            message,
+                            variant,
+                            source,
+                            createdAt: lead.created_at,
+                            requestedAt,
+                        },
+                        {
+                            headers: { 'Content-Type': 'application/json' },
+                            timeout: 8000,
+                        }
+                    );
+                } catch (webhookError) {
+                    console.error('Demo webhook forwarding error:', webhookError?.message || webhookError);
+                }
+            });
+        }
+
+        return res.status(201).json({
+            data: {
+                message: 'Demo request received.',
+                leadId: lead.id,
+            },
+        });
+    } catch (err) {
+        console.error('Demo request error:', err);
+        return res.status(500).json({ error: 'Failed to submit demo request.' });
     }
 });
 
