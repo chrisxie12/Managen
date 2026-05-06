@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
@@ -14,13 +14,22 @@ import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 import { buildUrl, getHeaders } from '../services/api';
+import { debounce } from '../utils/debounce';
 
-const Classes = ({ onNavigate }) => {
+const Classes = React.memo(({ onNavigate }) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
   const { authSession } = useAuth();
+
+  const debouncedSearch = useMemo(() => debounce((q) => setSearchQuery(q), 300), []);
+  
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    debouncedSearch(e.target.value);
+  };
   
   const [classes, setClasses] = useState([]);
   const [newClass, setNewClass] = useState({
@@ -77,17 +86,19 @@ const Classes = ({ onNavigate }) => {
     }
   };
 
-  const stats = [
+  const stats = useMemo(() => [
     { label: 'Academic Classes', value: 24, icon: BookOpen, color: '#6366F1' },
     { label: 'Total Enrollment', value: 847, icon: GraduationCap, color: '#10B981' },
     { label: 'Avg Class Size', value: 35, icon: Users, color: '#F59E0B' },
     { label: 'Lead Teachers', value: 24, icon: UserCheck, color: '#EC4899' },
-  ];
+  ], []);
 
-  const filteredClasses = classes.filter(c => 
-    (c.name || '').toLowerCase().includes(search.toLowerCase()) ||
-    (c.teacher || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredClasses = useMemo(() => {
+    return classes.filter(c => 
+      (c.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (c.teacher || '').toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [classes, searchQuery]);
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
@@ -133,7 +144,7 @@ const Classes = ({ onNavigate }) => {
                 className="bg-transparent border-none outline-none text-sm font-medium w-full"
                 style={{ color: "var(--text-primary)" }}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
               />
            </div>
            <div className="flex gap-2">

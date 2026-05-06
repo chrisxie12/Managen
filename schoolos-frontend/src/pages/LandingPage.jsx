@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import React from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -140,10 +141,14 @@ const stats = [
   { value: "99.7%", label: "Uptime SLA" },
 ];
 
-export function LandingPage({ onNavigate }) {
+export const LandingPage = React.memo(({ onNavigate }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState("GHS");
   const [scrolled, setScrolled] = useState(false);
+
+  const handleNavigate = useCallback((v) => {
+    onNavigate(v);
+  }, [onNavigate]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -207,14 +212,14 @@ export function LandingPage({ onNavigate }) {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <button
-              onClick={() => onNavigate('login')}
+              onClick={() => handleNavigate('login')}
               style={{ color: PLUM, fontSize: "0.9rem" }}
               className="px-4 py-2 hover:opacity-70 transition-opacity font-bold"
             >
               Sign in
             </button>
             <button
-              onClick={() => onNavigate('signup')}
+              onClick={() => handleNavigate('signup')}
               className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform font-bold"
               style={{
                 background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -324,7 +329,7 @@ export function LandingPage({ onNavigate }) {
 
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => onNavigate('signup')}
+                  onClick={() => handleNavigate('signup')}
                   className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
@@ -336,7 +341,7 @@ export function LandingPage({ onNavigate }) {
                   Start for Free <ArrowRight size={16} />
                 </button>
                 <button
-                  onClick={() => onNavigate('login')}
+                  onClick={() => handleNavigate('login')}
                   className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: "white",
@@ -387,6 +392,7 @@ export function LandingPage({ onNavigate }) {
                 <img
                   src="https://images.unsplash.com/photo-1687794504223-8bdc02e25ef6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700"
                   alt="Students"
+                  loading="lazy"
                   className="w-full h-[480px] object-cover"
                 />
               </div>
@@ -590,7 +596,7 @@ export function LandingPage({ onNavigate }) {
                   a single bento dashboard.
                 </p>
                 <button
-                  onClick={() => onNavigate('login')}
+                  onClick={() => handleNavigate('login')}
                   className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold"
                   style={{
                     background: MILK,
@@ -849,6 +855,7 @@ export function LandingPage({ onNavigate }) {
                   <img
                     src={t.img}
                     alt={t.name}
+                    loading="lazy"
                     className="w-11 h-11 rounded-full object-cover"
                   />
                   <div>

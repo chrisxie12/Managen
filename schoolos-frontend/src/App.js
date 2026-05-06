@@ -1,28 +1,36 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import './index.css';
 import { ToastProvider } from './contexts/ToastContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Settings from './pages/Settings';
-import Students from './pages/Students';
-import Teachers from './pages/Teachers';
-import Classes from './pages/Classes';
-import Attendance from './pages/Attendance';
-import Results from './pages/Results';
-import Exams from './pages/Exams';
-import Timetable from './pages/Timetable';
-import Library from './pages/Library';
-import FeeManagement from './pages/FeeManagement';
-import Payroll from './pages/Payroll';
-import FeeReports from './pages/FeeReports';
-import Dashboard from './pages/Dashboard';
-import Communication from './pages/Communication';
-import DashboardLayout from './components/layout/DashboardLayout';
-import AccountantDashboard from './pages/AccountantDashboard';
-import SuperAdminDashboard from './pages/SuperAdminDashboard';
+
+// Lazy load page components
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Students = lazy(() => import('./pages/Students'));
+const Teachers = lazy(() => import('./pages/Teachers'));
+const Classes = lazy(() => import('./pages/Classes'));
+const Attendance = lazy(() => import('./pages/Attendance'));
+const Results = lazy(() => import('./pages/Results'));
+const Exams = lazy(() => import('./pages/Exams'));
+const Timetable = lazy(() => import('./pages/Timetable'));
+const Library = lazy(() => import('./pages/Library'));
+const FeeManagement = lazy(() => import('./pages/FeeManagement'));
+const Payroll = lazy(() => import('./pages/Payroll'));
+const FeeReports = lazy(() => import('./pages/FeeReports'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Communication = lazy(() => import('./pages/Communication'));
+const DashboardLayout = lazy(() => import('./components/layout/DashboardLayout'));
+const AccountantDashboard = lazy(() => import('./pages/AccountantDashboard'));
+const SuperAdminDashboard = lazy(() => import('./pages/SuperAdminDashboard'));
+
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#FDFCFB]">
+    <div className="w-12 h-12 border-4 border-plum/10 border-t-plum rounded-full animate-spin"></div>
+  </div>
+);
 
 function AuthenticatedApp() {
   const { authSession } = useAuth();
@@ -106,7 +114,9 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <ToastProvider>
-          <AppContent />
+          <Suspense fallback={<LoadingSpinner />}>
+            <AppContent />
+          </Suspense>
         </ToastProvider>
       </AuthProvider>
     </ThemeProvider>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -17,8 +17,9 @@ import {
 import { buildUrl } from '../services/api';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
+import { debounce } from '../utils/debounce';
 
-const FeeStatusBadge = ({ status }) => {
+const FeeStatusBadge = React.memo(({ status }) => {
   const map = {
     paid: { bg: "#D1FAE5", color: "#065F46", label: "Paid", icon: CheckCircle2 },
     partial: { bg: "#FEF3C7", color: "#92400E", label: "Partial", icon: Clock },
@@ -34,13 +35,21 @@ const FeeStatusBadge = ({ status }) => {
       {s.label}
     </span>
   );
-};
+});
 
-const Students = ({ onNavigate }) => {
+const Students = React.memo(({ onNavigate }) => {
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { showToast } = useToast();
+
+  const debouncedSearch = useMemo(() => debounce((q) => setSearchQuery(q), 300), []);
+  
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    debouncedSearch(e.target.value);
+  };
   
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,10 +90,14 @@ const Students = ({ onNavigate }) => {
 
   const filtered = useMemo(() => {
     return students.filter(s => 
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.admission_no.toLowerCase().includes(search.toLowerCase())
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.admission_no.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [students, search]);
+  }, [students, searchQuery]);
+
+  const handleSelect = useCallback((s) => {
+    setSelected(s);
+  }, []);
 
   const handleAddStudent = async () => {
     try {
@@ -133,7 +146,7 @@ const Students = ({ onNavigate }) => {
                 <Search size={14} style={{ color: "var(--text-muted)" }} />
                 <input
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={handleSearchChange}
                   placeholder="Search students or IDs..."
                   className="bg-transparent outline-none text-sm flex-1 font-medium"
                   style={{ color: "var(--text-primary)" }}
@@ -176,7 +189,7 @@ const Students = ({ onNavigate }) => {
                     {filtered.map((s) => (
                        <tr
                         key={s.id}
-                        onClick={() => setSelected(s)}
+                        onClick={() => handleSelect(s)}
                         className="cursor-pointer transition-colors border-b last:border-0 hover:bg-black/[0.02]"
                         style={{
                           borderColor: "var(--border)",

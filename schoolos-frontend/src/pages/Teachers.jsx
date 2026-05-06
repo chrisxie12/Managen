@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -20,14 +20,23 @@ import { buildUrl, getHeaders, handleApiError } from '../services/api';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import { debounce } from '../utils/debounce';
 
-const Teachers = ({ onNavigate }) => {
+const Teachers = React.memo(({ onNavigate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
   const { authSession } = useAuth();
+
+  const debouncedSearch = useMemo(() => debounce((q) => setSearchQuery(q), 300), []);
+  
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    debouncedSearch(e.target.value);
+  };
   
   const [teachers, setTeachers] = useState([]);
   const [newTeacher, setNewTeacher] = useState({
@@ -62,12 +71,12 @@ const Teachers = ({ onNavigate }) => {
     fetchTeachers();
   }, []);
 
-  const stats = [
+  const stats = useMemo(() => [
     { label: 'Total Teachers', value: 62, icon: Users, color: '#6366F1' },
     { label: 'Active Status', value: 58, icon: CheckCircle2, color: '#10B981' },
     { label: 'On Leave', value: 4, icon: Clock, color: '#F59E0B' },
     { label: 'Specialties', value: 18, icon: BookOpen, color: '#EC4899' },
-  ];
+  ], []);
 
   const handleAddTeacher = async () => {
     try {
@@ -122,10 +131,10 @@ const Teachers = ({ onNavigate }) => {
 
   const filteredTeachers = useMemo(() => {
     return teachers.filter(t => 
-      t.name.toLowerCase().includes(search.toLowerCase()) ||
-      (t.subject || t.dept || '').toLowerCase().includes(search.toLowerCase())
+      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (t.subject || t.dept || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [teachers, search]);
+  }, [teachers, searchQuery]);
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
@@ -170,8 +179,8 @@ const Teachers = ({ onNavigate }) => {
                 placeholder="Search staff or department..."
                 className="bg-transparent border-none outline-none text-sm font-medium w-full"
                 style={{ color: "var(--text-primary)" }}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={search}
+                onChange={handleSearchChange}
               />
            </div>
            <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk shadow-lg shadow-plum/20">

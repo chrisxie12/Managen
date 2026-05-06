@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -32,7 +32,7 @@ import {
 } from "recharts";
 import { buildUrl } from '../services/api';
 
-const Dashboard = ({ onNavigate }) => {
+const Dashboard = React.memo(({ onNavigate }) => {
   const { authSession } = useAuth();
   const { isDarkMode } = useTheme();
   const [stats, setStats] = useState(null);
@@ -53,7 +53,7 @@ const Dashboard = ({ onNavigate }) => {
     fetchStats();
   }, []);
 
-  const revenueData = [
+  const revenueData = useMemo(() => [
     { month: "Sep", amount: 42000 },
     { month: "Oct", amount: 58000 },
     { month: "Nov", amount: 49000 },
@@ -61,34 +61,38 @@ const Dashboard = ({ onNavigate }) => {
     { month: "Jan", amount: 71000 },
     { month: "Feb", amount: 86000 },
     { month: "Mar", amount: 94000 },
-  ];
+  ], []);
 
-  const pieData = [
+  const pieData = useMemo(() => [
     { name: "Paid", value: 812, color: "#10B981" },
     { name: "Partial", value: 276, color: "#F59E0B" },
     { name: "Overdue", value: 160, color: "#EF4444" },
-  ];
+  ], []);
 
-  const recentActivity = [
+  const recentActivity = useMemo(() => [
     { type: "fee", text: "Fee payment from Kofi Adu (JHS 3)", time: "2 min ago", status: "success" },
     { type: "report", text: "Term 1 reports sent to 248 parents via WhatsApp", time: "1 hr ago", status: "success" },
     { type: "alert", text: "6 students overdue on fees (>30 days)", time: "3 hrs ago", status: "warning" },
     { type: "attend", text: "Attendance marked for all 12 classes", time: "This morning", status: "success" },
-  ];
+  ], []);
 
-  const topStudents = [
+  const topStudents = useMemo(() => [
     { id: "GH-24-001", name: "Ama Owusu", class: "JHS 3A", avg: 96.4, trend: "up" },
     { id: "GH-24-012", name: "Kwesi Boateng", class: "JHS 2B", avg: 94.1, trend: "up" },
     { id: "GH-24-034", name: "Efua Mensah", class: "JHS 3A", avg: 91.7, trend: "down" },
     { id: "GH-24-047", name: "Yaw Darko", class: "JHS 1C", avg: 90.2, trend: "up" },
-  ];
+  ], []);
 
-  const metrics = [
+  const metrics = useMemo(() => [
     { label: "Total Students", value: stats?.totalStudents || "1,248", change: "+24 this term", positive: true, icon: Users, color: "#6366F1", path: "students" },
     { label: "Term Revenue", value: stats?.revenue ? `₵${stats.revenue.toLocaleString()}` : "₵186,400", change: "+18.2%", positive: true, icon: Wallet, color: "#10B981", path: "fees" },
     { label: "Avg Attendance", value: "91.4%", change: "-2.1% week", positive: false, icon: Clock, color: "#F59E0B", path: "attendance" },
     { label: "Reports Sent", value: "2,340", change: "WhatsApp Live", positive: true, icon: MessageSquare, color: "#25D366", path: "communication" },
-  ];
+  ], [stats]);
+
+  const handleNavigate = useCallback((path) => {
+    onNavigate(path);
+  }, [onNavigate]);
 
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
@@ -115,7 +119,7 @@ const Dashboard = ({ onNavigate }) => {
             key={card.label}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            onClick={() => onNavigate(card.path)}
+            onClick={() => handleNavigate(card.path)}
             className="p-5 rounded-[24px] cursor-pointer hover:shadow-xl transition-all border group relative overflow-hidden"
             style={{
               background: "var(--card-bg)",
