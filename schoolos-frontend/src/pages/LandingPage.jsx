@@ -1353,7 +1353,7 @@ export const LandingPage = React.memo(({ onNavigate }) => {
             {
               title: "Product",
               links: [
-                { label: "Features", href: "#features" },
+                { label: "Features", href: "/features.html" },
                 { label: "Pricing", href: "#pricing" },
                 { label: "Changelog", href: "#" },
                 { label: "Roadmap", href: "#" },
