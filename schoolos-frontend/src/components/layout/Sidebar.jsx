@@ -45,7 +45,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
     {
       title: "Main",
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'accountant'] },
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'accountant', 'teacher', 'headmaster', 'parent', 'student'] },
         { id: 'superadmin-dashboard', label: 'Overview', icon: LayoutDashboard, roles: ['superadmin'] },
       ]
     },
@@ -53,16 +53,17 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
       title: "Management",
       items: [
         { id: 'schools', label: 'Schools', icon: Building2, roles: ['superadmin'] },
-        { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant'] },
-        { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin'] },
-        { id: 'classes', label: 'Classes', icon: BookOpen, roles: ['admin'] },
+        { id: 'students', label: 'Students', icon: GraduationCap, roles: ['admin', 'accountant', 'headmaster'] },
+        { id: 'teachers', label: 'Teachers', icon: Users, roles: ['admin', 'headmaster'] },
+        { id: 'classes', label: 'Classes', icon: BookOpen, roles: ['admin', 'teacher', 'headmaster'] },
         { id: 'global-users', label: 'Users', icon: Users, roles: ['superadmin'] },
       ]
     },
     {
       title: "Finance",
       items: [
-        { id: 'fees', label: 'Fees', icon: Wallet, roles: ['admin', 'accountant'] },
+        { id: 'fees', label: 'Fees', icon: Wallet, roles: ['admin', 'accountant', 'headmaster'] },
+        { id: 'fees', label: 'Pay via MoMo', icon: Zap, roles: ['parent'] },
         { id: 'billing', label: 'Billing', icon: CreditCard, roles: ['superadmin'] },
         { id: 'subscriptions', label: 'Subscriptions', icon: History, roles: ['superadmin'] },
       ]
@@ -70,10 +71,10 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
     {
       title: "Academic",
       items: [
-        { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, roles: ['admin'] },
-        { id: 'exams', label: 'Exams', icon: FileText, roles: ['admin'] },
-        { id: 'results', label: 'Results', icon: BarChart3, roles: ['admin'] },
-        { id: 'timetable', label: 'Timetable', icon: Calendar, roles: ['admin'] },
+        { id: 'attendance', label: 'Attendance', icon: ClipboardCheck, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
+        { id: 'exams', label: 'Exams', icon: FileText, roles: ['admin', 'teacher', 'headmaster'] },
+        { id: 'results', label: 'Results', icon: BarChart3, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
+        { id: 'timetable', label: 'Timetable', icon: Calendar, roles: ['admin', 'teacher', 'headmaster', 'parent', 'student'] },
       ]
     },
     {
@@ -86,7 +87,7 @@ const Sidebar = ({ activeItem = 'dashboard', onNavigate, isOpen, isCollapsed, on
     {
       title: "Platform",
       items: [
-        { id: 'communication', label: 'Communication', icon: MessageSquare, roles: ['admin', 'superadmin'] },
+        { id: 'communication', label: 'Communication', icon: MessageSquare, roles: ['admin', 'superadmin', 'teacher', 'parent'] },
         { id: 'system-config', label: 'System', icon: Settings2, roles: ['superadmin'] },
         { id: 'security', label: 'Security', icon: ShieldAlert, roles: ['superadmin'] },
         { id: 'support', label: 'Support', icon: LifeBuoy, roles: ['superadmin'] },

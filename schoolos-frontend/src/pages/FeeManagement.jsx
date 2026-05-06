@@ -121,6 +121,119 @@ const FeeManagement = ({ onNavigate }) => {
   const totalPayroll = payrollData.reduce((acc, p) => acc + p.salary, 0);
   const paidPayroll = payrollData.filter((p) => p.paid).reduce((acc, p) => acc + p.salary, 0);
 
+  const [momoSettings, setMomoSettings] = useState({
+    active: true,
+    merchantName: "Golden Age Academy",
+    settlementBank: "GCB Bank PLC",
+    accountNumber: "****6218",
+    autoSettle: true
+  });
+
+  const MoMoGateway = () => (
+    <div className="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+       <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+             {/* Main Gateway Status */}
+             <div className="p-10 rounded-[48px] bg-emerald-600 text-white shadow-2xl shadow-emerald-100 relative overflow-hidden group">
+                <div className="relative z-10">
+                   <div className="flex justify-between items-center mb-10">
+                      <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                         <Zap size={28} />
+                      </div>
+                      <span className="px-4 py-2 rounded-full bg-white/10 text-[10px] font-black uppercase tracking-widest border border-white/20">Active Gateway</span>
+                   </div>
+                   <div className="mb-10">
+                      <div className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-2">Total MoMo Collections (Term)</div>
+                      <div className="text-5xl font-black tracking-tighter">₵142,850.40</div>
+                      <p className="text-[11px] font-bold opacity-40 mt-2 italic">Settled to: {momoSettings.settlementBank} (****6218)</p>
+                   </div>
+                   <div className="flex gap-4">
+                      <button className="flex-1 h-14 rounded-2xl bg-white text-emerald-600 font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">
+                         Manual Settlement
+                      </button>
+                      <button className="flex-1 h-14 rounded-2xl bg-white/10 text-white font-black text-xs uppercase tracking-widest border border-white/20 hover:bg-white/20 transition-all">
+                         Export Statement
+                      </button>
+                   </div>
+                </div>
+                <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+             </div>
+
+             {/* Live Collection Stream */}
+             <div className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-sm">
+                <h3 className="text-sm font-black text-slate-800 tracking-tight mb-6">Live Collection Stream</h3>
+                <div className="space-y-4">
+                   {[
+                      { parent: "Mrs. Owusu", amount: 1800, network: "MTN MoMo", time: "12 mins ago" },
+                      { parent: "Mr. Boateng", amount: 450, network: "Telecel Cash", time: "1 hr ago" },
+                      { parent: "Efua Mensah", amount: 2100, network: "MTN MoMo", time: "3 hrs ago" },
+                   ].map((tx, i) => (
+                      <div key={i} className="flex items-center justify-between p-5 rounded-3xl bg-slate-50 border border-slate-100 group hover:border-emerald-500/20 transition-all">
+                         <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-emerald-600 shadow-sm">
+                               <TrendingUp size={20} />
+                            </div>
+                            <div>
+                               <div className="text-sm font-black text-slate-800">{tx.parent}</div>
+                               <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{tx.network}</div>
+                            </div>
+                         </div>
+                         <div className="text-right">
+                            <div className="text-lg font-black text-emerald-600 tracking-tighter">₵{tx.amount.toLocaleString()}</div>
+                            <div className="text-[10px] font-bold text-slate-400">{tx.time}</div>
+                         </div>
+                      </div>
+                   ))}
+                </div>
+             </div>
+          </div>
+
+          <div className="space-y-6">
+             {/* Gateway Configuration */}
+             <div className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-sm">
+                <h3 className="text-sm font-black text-slate-800 tracking-tight mb-6">Gateway Parameters</h3>
+                <div className="space-y-6">
+                   <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Settlement Bank</label>
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs font-black text-slate-800">{momoSettings.settlementBank}</div>
+                   </div>
+                   <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2">Merchant Name</label>
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs font-black text-slate-800">{momoSettings.merchantName}</div>
+                   </div>
+                   <div className="pt-4 border-t border-slate-100 space-y-4">
+                      <div className="flex justify-between items-center">
+                         <div>
+                            <div className="text-xs font-black text-slate-800">Auto-Settlement</div>
+                            <div className="text-[10px] font-bold text-slate-400">Daily at 11:59 PM</div>
+                         </div>
+                         <div 
+                            onClick={() => setMomoSettings(p => ({ ...p, autoSettle: !p.autoSettle }))}
+                            className={`w-12 h-7 rounded-full p-1 cursor-pointer transition-colors ${momoSettings.autoSettle ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                         >
+                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${momoSettings.autoSettle ? 'translate-x-5' : 'translate-x-0'}`} />
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <button className="w-full mt-8 py-4 rounded-2xl border-2 border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-colors">
+                   Update Configuration
+                </button>
+             </div>
+
+             {/* Support/Info */}
+             <div className="p-8 rounded-[40px] bg-indigo-50 border border-indigo-100">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mb-4">
+                   <ArrowUpRight size={20} />
+                </div>
+                <h3 className="text-xs font-black text-indigo-900 tracking-tight mb-2">Payout Frequency</h3>
+                <p className="text-[10px] font-bold text-indigo-700/70 leading-relaxed">Collections are settled directly to your bank account within 24 hours of receipt. Flat 1.5% transaction fee applies.</p>
+             </div>
+          </div>
+       </div>
+    </div>
+  );
+
   return (
     <div className="p-6 sm:p-8 flex flex-col gap-6">
       {/* Header */}
@@ -206,6 +319,7 @@ const FeeManagement = ({ onNavigate }) => {
           >
             {[
               { id: "fees", label: "Fee Records", icon: Wallet },
+              { id: "momo", label: "MoMo Gateway", icon: Zap },
               { id: "payroll", label: "Staff Payroll", icon: Users },
               { id: "analytics", label: "Analytics", icon: TrendingUp },
             ].map((tab) => (
@@ -261,8 +375,12 @@ const FeeManagement = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Fees Tab */}
-      {activeTab === "fees" && (
+      {/* Content Area */}
+      {activeTab === "momo" ? (
+         <div className="rounded-[24px] overflow-hidden border flex flex-col" style={{ background: "var(--card-bg)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}>
+            <MoMoGateway />
+         </div>
+      ) : activeTab === "fees" ? (
         <div
           className="rounded-[24px] overflow-hidden border flex flex-col"
           style={{
@@ -341,10 +459,7 @@ const FeeManagement = ({ onNavigate }) => {
             </button>
           </div>
         </div>
-      )}
-
-      {/* Payroll Tab */}
-      {activeTab === "payroll" && (
+      ) : activeTab === "payroll" ? (
         <div
           className="rounded-[24px] overflow-hidden border flex flex-col"
           style={{
@@ -423,10 +538,7 @@ const FeeManagement = ({ onNavigate }) => {
             </table>
           </div>
         </div>
-      )}
-
-      {/* Analytics Tab */}
-      {activeTab === "analytics" && (
+      ) : (
         <div className="grid lg:grid-cols-2 gap-6">
           <div
             className="p-6 rounded-[24px] border"
@@ -520,7 +632,7 @@ const FeeManagement = ({ onNavigate }) => {
               </div>
               <div className="p-8 bg-black/[0.02] flex gap-3">
                 <Button 
-                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum text-milk" 
+                  className="flex-1 py-4 rounded-2xl text-xs font-black uppercase tracking-widest bg-plum" 
                   onClick={() => {
                     setShowModal(false);
                     showToast({

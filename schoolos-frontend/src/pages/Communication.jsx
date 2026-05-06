@@ -86,8 +86,74 @@ const Communication = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("inbox");
   const [sending, setSending] = useState(false);
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [automationSettings, setAutomationSettings] = useState({
+    feeReminders: true,
+    attendanceAlerts: true,
+    resultDispatch: false,
+    broadcastSchedule: 'Weekly'
+  });
+
+  const AutomationStation = () => (
+    <div className="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+             { id: 'feeReminders', label: 'Auto-Fee Reminders', icon: Bell, color: '#F59E0B', desc: 'Trigger WhatsApp alerts for balances > GHS 500' },
+             { id: 'attendanceAlerts', label: 'Attendance Alerts', icon: Users, color: '#EF4444', desc: 'Notify parents instantly upon absence marking' },
+             { id: 'resultDispatch', label: 'Result Dispatch', icon: FileText, color: '#6366F1', desc: 'Auto-send terminal reports on publication' },
+          ].map((item) => (
+             <div key={item.id} className="p-8 rounded-[40px] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all group">
+                <div className="flex justify-between items-start mb-6">
+                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: `${item.color}15`, color: item.color }}>
+                      <item.icon size={24} />
+                   </div>
+                   <div 
+                      onClick={() => setAutomationSettings(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
+                      className={`w-14 h-8 rounded-full p-1 cursor-pointer transition-colors ${automationSettings[item.id] ? 'bg-emerald-500' : 'bg-slate-200'}`}
+                   >
+                      <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform ${automationSettings[item.id] ? 'translate-x-6' : 'translate-x-0'}`} />
+                   </div>
+                </div>
+                <h3 className="text-sm font-black text-slate-800 tracking-tight mb-2">{item.label}</h3>
+                <p className="text-[11px] font-bold text-slate-500 leading-relaxed">{item.desc}</p>
+             </div>
+          ))}
+       </div>
+
+       <div className="p-10 rounded-[48px] border-2 border-dashed border-slate-100 flex flex-col items-center text-center gap-6">
+          <div className="w-20 h-20 rounded-[32px] bg-plum/5 flex items-center justify-center text-plum">
+             <Smartphone size={32} />
+          </div>
+          <div>
+             <h3 className="text-xl font-black text-slate-800 tracking-tight mb-2">WhatsApp Business API Node</h3>
+             <p className="text-sm font-bold text-slate-500 max-w-md">Connect your institutional WhatsApp number to unlock automated broadcasting and real-time parent engagement.</p>
+          </div>
+          <button className="px-10 py-4 rounded-2xl bg-plum text-milk font-black text-xs uppercase tracking-widest shadow-xl shadow-plum/20 hover:scale-105 active:scale-95 transition-all">
+             Configure API Credentials
+          </button>
+       </div>
+
+       <div className="bg-slate-50 rounded-[40px] p-8 border border-slate-100">
+          <div className="flex items-center gap-3 mb-6">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Scheduled Broadcasts</span>
+          </div>
+          <div className="space-y-4">
+             {[
+                { title: 'Weekly Attendance Summary', time: 'Every Friday, 4:00 PM', reach: '1,248 Parents' },
+                { title: 'Monthly Fee Ledger', time: 'Last Day of Month, 9:00 AM', reach: '412 Defaulters' },
+             ].map((b, i) => (
+                <div key={i} className="flex items-center justify-between p-5 rounded-3xl bg-white border border-slate-100 shadow-sm">
+                   <div>
+                      <div className="text-sm font-black text-slate-800">{b.title}</div>
+                      <div className="text-[10px] font-bold text-slate-400">{b.time}</div>
+                   </div>
+                   <div className="text-[10px] font-black uppercase tracking-widest text-plum bg-plum/5 px-4 py-2 rounded-xl">{b.reach}</div>
+                </div>
+             ))}
+          </div>
+       </div>
+    </div>
+  );
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -155,8 +221,9 @@ const Communication = () => {
          <h1 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontSize: "1.8rem", fontWeight: 800 }}>Unified Messaging</h1>
          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 600 }}>Institutional WhatsApp communication and broadcast node</p>
       </div>
+      
       <div className="flex-1 p-6 sm:p-8 flex gap-6 overflow-hidden min-h-0">
-        {/* Contacts List */}
+        {/* Navigation Sidebar */}
         <div
           className="w-80 flex-shrink-0 flex flex-col rounded-[32px] overflow-hidden border"
           style={{
@@ -166,63 +233,76 @@ const Communication = () => {
           }}
         >
           <div className="p-5 border-b" style={{ borderColor: "var(--border)" }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1rem" }}>WhatsApp Inbox</h2>
-            <div className="flex gap-2 mb-4">
-              {["inbox", "broadcast"].map(t => (
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: "var(--text-primary)", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1rem" }}>WhatsApp Hub</h2>
+            <div className="flex flex-col gap-2 mb-4">
+              {[
+                { id: "inbox", label: "Inbox", icon: MessageSquare },
+                { id: "automation", label: "Automation Station", icon: Zap },
+                { id: "broadcast", label: "Global Broadcast", icon: Bell }
+              ].map(t => (
                 <button
-                  key={t}
-                  onClick={() => setActiveTab(t)}
-                  className="flex-1 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                  key={t.id}
+                  onClick={() => setActiveTab(t.id)}
+                  className="flex items-center gap-3 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all text-left"
                   style={{
-                    background: activeTab === t ? "var(--accent-primary)" : "var(--bg-secondary)",
-                    color: activeTab === t ? "var(--bg-primary)" : "var(--text-muted)",
+                    background: activeTab === t.id ? "var(--accent-primary)" : "transparent",
+                    color: activeTab === t.id ? "var(--bg-primary)" : "var(--text-muted)",
                   }}
                 >
-                  {t}
+                  <t.icon size={16} />
+                  {t.label}
                 </button>
               ))}
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border group" style={{ background: "var(--bg-secondary)", borderColor: "var(--border)" }}>
-              <Search size={14} style={{ color: "var(--text-muted)" }} className="group-focus-within:scale-110 transition-transform" />
-              <input
-                placeholder="Search parents..."
-                className="bg-transparent outline-none text-xs flex-1 font-medium"
-                style={{ color: "var(--text-primary)" }}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+            {activeTab === 'inbox' && (
+               <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border group" style={{ background: "var(--bg-secondary)", borderColor: "var(--border)" }}>
+                  <Search size={14} style={{ color: "var(--text-muted)" }} className="group-focus-within:scale-110 transition-transform" />
+                  <input
+                     placeholder="Search parents..."
+                     className="bg-transparent outline-none text-xs flex-1 font-medium"
+                     style={{ color: "var(--text-primary)" }}
+                     value={search}
+                     onChange={(e) => setSearch(e.target.value)}
+                  />
+               </div>
+            )}
           </div>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar">
-            {filtered.map((conv) => (
-              <button
-                key={conv.id}
-                onClick={() => setSelected(conv)}
-                className="w-full p-4 text-left flex items-start gap-3 transition-colors hover:bg-black/[0.02]"
-                style={{
-                  borderBottom: `1px solid var(--border)`,
-                  background: selected?.id === conv.id ? "var(--bg-secondary)" : "transparent"
-                }}
-              >
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-xs" style={{ background: `${WHATSAPP}15`, color: WHATSAPP }}>
-                  {conv.parent.substring(0, 2).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-center mb-0.5">
-                    <span className="text-xs font-black truncate" style={{ color: "var(--text-primary)" }}>{conv.parent}</span>
-                    <span className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>{conv.time}</span>
-                  </div>
-                  <p className="text-xs font-bold truncate mb-1" style={{ color: "var(--text-muted)" }}>{conv.student} · {conv.class}</p>
-                  <p className="text-xs truncate font-medium" style={{ color: conv.unread > 0 ? "var(--text-primary)" : "var(--text-muted)" }}>{conv.lastMsg}</p>
-                </div>
-              </button>
-            ))}
-          </div>
+          {activeTab === 'inbox' && (
+             <div className="flex-1 overflow-y-auto no-scrollbar">
+               {filtered.map((conv) => (
+                 <button
+                   key={conv.id}
+                   onClick={() => setSelected(conv)}
+                   className="w-full p-4 text-left flex items-start gap-3 transition-colors hover:bg-black/[0.02]"
+                   style={{
+                     borderBottom: `1px solid var(--border)`,
+                     background: selected?.id === conv.id ? "var(--bg-secondary)" : "transparent"
+                   }}
+                 >
+                   <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-xs" style={{ background: `${WHATSAPP}15`, color: WHATSAPP }}>
+                     {conv.parent.substring(0, 2).toUpperCase()}
+                   </div>
+                   <div className="flex-1 min-w-0">
+                     <div className="flex justify-between items-center mb-0.5">
+                       <span className="text-xs font-black truncate" style={{ color: "var(--text-primary)" }}>{conv.parent}</span>
+                       <span className="text-xs font-bold" style={{ color: "var(--text-muted)" }}>{conv.time}</span>
+                     </div>
+                     <p className="text-xs font-bold truncate mb-1" style={{ color: "var(--text-muted)" }}>{conv.student} · {conv.class}</p>
+                     <p className="text-xs truncate font-medium" style={{ color: conv.unread > 0 ? "var(--text-primary)" : "var(--text-muted)" }}>{conv.lastMsg}</p>
+                   </div>
+                 </button>
+               ))}
+             </div>
+          )}
         </div>
 
-        {/* Chat Window */}
-        {selected ? (
+        {/* Content Area */}
+        {activeTab === 'automation' ? (
+           <div className="flex-1 flex flex-col rounded-[32px] overflow-hidden border" style={{ background: "var(--card-bg)", borderColor: "var(--border)", boxShadow: "var(--shadow-card)" }}>
+              <AutomationStation />
+           </div>
+        ) : activeTab === 'inbox' && selected ? (
           <div
             className="flex-1 flex flex-col rounded-[32px] overflow-hidden border"
             style={{
@@ -301,7 +381,7 @@ const Communication = () => {
 
             {/* Input Area */}
             <div className="p-6 border-t" style={{ borderColor: "var(--border)" }}>
-               <div className="flex gap-2 mb-4">
+               <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-2">
                   {templates.map(t => (
                      <button 
                       key={t.id} 
@@ -311,13 +391,8 @@ const Communication = () => {
                         if (t.id === 'fee') tpl = `Dear ${selected.parent}, this is a reminder regarding...`;
                         if (t.id === 'attend') tpl = `${selected.student} was marked absent today...`;
                         setMessage(tpl);
-                        showToast({
-                          title: 'Template Loaded',
-                          message: `${t.label} draft is ready for dispatch.`,
-                          type: 'info'
-                        });
                       }}
-                      className="px-3 py-1.5 rounded-lg border flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-colors hover:bg-black/5" 
+                      className="px-3 py-1.5 rounded-lg border flex-shrink-0 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors hover:bg-black/5" 
                       style={{ borderColor: `${t.color}40`, color: t.color }}
                     >
                       <t.icon size={12} /> {t.label}
@@ -351,7 +426,7 @@ const Communication = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed rounded-[32px]" style={{ borderColor: "var(--border)" }}>
              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: "var(--bg-secondary)" }}><MessageSquare size={24} style={{ color: "var(--text-muted)" }} /></div>
-             <p style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.9rem" }}>Select a conversation to start messaging</p>
+             <p style={{ color: "var(--text-primary)", fontWeight: 700, fontSize: "0.9rem" }}>Select a conversation or navigate to Automation Station</p>
           </div>
         )}
       </div>
