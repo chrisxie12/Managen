@@ -957,7 +957,7 @@ export function LandingPage() {
             },
             {
               title: "Contact",
-              links: ["support@schoolos.app", "+233 55 000 1234", "Accra, Ghana"],
+              links: ["support@getschoolos.me", "+233 55 000 1234", "Accra, Ghana"],
             },
           ].map((col) => (
             <div key={col.title}>
@@ -975,11 +975,11 @@ export function LandingPage() {
                 {col.links.map((link) => (
                   <a
                     key={link}
-                    href="#"
+                    href={link.includes("@") ? `mailto:${link}` : "#"}
                     style={{ color: MUTED, fontSize: "0.85rem" }}
                     className="hover:opacity-70 transition-opacity"
                   >
-                    {link}
+                    {link.includes("@") ? `Support: ${link}` : link}
                   </a>
                 ))}
               </div>
