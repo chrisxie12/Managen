@@ -8,11 +8,16 @@ import { Academics } from "./pages/Academics";
 import { Finance } from "./pages/Finance";
 import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
+import SchoolOSFlow from "./components/SchoolOSFlow";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: LandingPage,
+  },
+  {
+    path: "/architecture",
+    Component: SchoolOSFlow,
   },
   {
     path: "/auth",
