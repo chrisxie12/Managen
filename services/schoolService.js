@@ -1,5 +1,26 @@
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const supabase = require('../config/db');
+
+const USER_PUBLIC_COLUMNS = 'id, tenant_id, name, email, phone, role, is_active, created_at';
+const TEACHER_WRITE_FIELDS = ['name', 'email', 'phone', 'is_active'];
+
+const pickFields = (payload = {}, fields = []) => fields.reduce((acc, field) => {
+    if (Object.prototype.hasOwnProperty.call(payload, field)) {
+        acc[field] = payload[field];
+    }
+    return acc;
+}, {});
+
+const buildTeacherPayload = async (payload = {}) => {
+    const cleanPayload = pickFields(payload, TEACHER_WRITE_FIELDS);
+
+    if (payload.password) {
+        cleanPayload.password = await bcrypt.hash(String(payload.password), 12);
+    }
+
+    return cleanPayload;
+};
 
 class SchoolService {
     async getStudents(tenantId, page, limit, className) {
@@ -101,7 +122,7 @@ class SchoolService {
     // ─── Teachers ────────────────────────────────────────────────
     async getTeachers(tenantId) {
         const { data, error } = await supabase.from('users')
-            .select('*')
+            .select(USER_PUBLIC_COLUMNS)
             .eq('tenant_id', tenantId)
             .eq('role', 'teacher');
         if (error) throw error;
@@ -109,25 +130,28 @@ class SchoolService {
     }
 
     async createTeacher(tenantId, payload) {
+        const teacherPayload = await buildTeacherPayload(payload);
         const { data, error } = await supabase.from('users')
             .insert({ 
                 id: crypto.randomUUID(),
-                ...payload, 
+                ...teacherPayload,
                 role: 'teacher',
                 tenant_id: tenantId 
             })
-            .select()
+            .select(USER_PUBLIC_COLUMNS)
             .single();
         if (error) throw error;
         return data;
     }
 
     async updateTeacher(tenantId, id, payload) {
+        const teacherPayload = await buildTeacherPayload(payload);
         const { data, error } = await supabase.from('users')
-            .update(payload)
+            .update(teacherPayload)
             .eq('id', id)
             .eq('tenant_id', tenantId)
-            .select()
+            .eq('role', 'teacher')
+            .select(USER_PUBLIC_COLUMNS)
             .single();
         if (error) throw error;
         return data;

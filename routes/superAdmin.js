@@ -7,6 +7,11 @@ const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 const supabase = require('../config/db');
 const redis = require('../config/redis');
+const {
+    suspendSchool,
+    reactivateSchool,
+    PLAN_CATALOG,
+} = require('../services/provisionService');
 
 const SUPERADMIN_LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const SUPERADMIN_MAX_ATTEMPTS = 5;
@@ -36,7 +41,8 @@ const cleanupMemoryCache = () => {
         if (val.expiresAt < now) MEMORY_CACHE.mfaSessions.delete(key);
     }
 };
-setInterval(cleanupMemoryCache, 60 * 1000);
+const cleanupMemoryCacheTimer = setInterval(cleanupMemoryCache, 60 * 1000);
+cleanupMemoryCacheTimer.unref?.();
 
 const mapTenant = (tenant) => ({
     id: tenant.id,

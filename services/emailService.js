@@ -113,10 +113,26 @@ async function sendPaymentFailed({ to, name, amount, currency = 'GHS', invoiceId
     }
 }
 
+async function sendFeeReminder({ to, subject, message }) {
+    if (!to) return { success: false, error: 'Recipient (to) is required' };
+
+    const resolvedSubject = subject || 'SchoolOS fee reminder';
+    const resolvedMessage = message || 'You have an outstanding school fee payment.';
+
+    try {
+        const r = await sendMailgunMessage({ to, subject: resolvedSubject, text: resolvedMessage });
+        return r;
+    } catch (err) {
+        console.error('sendFeeReminder email error:', err.message || err);
+        return { success: false, error: err.message || String(err) };
+    }
+}
+
 module.exports = {
     sendWelcome,
     sendTrialReminder,
     sendPaymentReceipt,
     sendPaymentFailed,
+    sendFeeReminder,
 };
 

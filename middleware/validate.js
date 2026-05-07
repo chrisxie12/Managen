@@ -14,12 +14,15 @@ const validate = (schema) => (req, res, next) => {
         next();
     } catch (error) {
         if (error instanceof ZodError) {
-            const errors = error.errors.map(err => ({
+            const issues = error.issues || error.errors || [];
+            const errors = issues.map(err => ({
                 path: err.path.join('.'),
                 message: err.message
             }));
-            // Return a clean error string for the frontend, or the detailed array if needed
-            return res.status(400).json({ error: errors[0].message, details: errors });
+            return res.status(400).json({
+                error: errors[0]?.message || 'Invalid request payload.',
+                details: errors
+            });
         }
         next(error);
     }

@@ -28,15 +28,18 @@ npm test
 - `JWT_SECRET`
 - `ALLOWED_ORIGINS`
 - `TENANT_BASE_URL`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `PAYSTACK_SECRET_KEY`
 - `DEMO_WEBHOOK_URL` (optional, for forwarding demo leads after storing them)
 - `SUPER_ADMIN_EMAIL`
 - `SUPER_ADMIN_PASSWORD`
+- `MAILGUN_API_KEY` / `MAILGUN_DOMAIN` (optional email delivery)
+- `ARKESEL_API_KEY` (optional SMS delivery)
+- `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_WHATSAPP_FROM` (optional WhatsApp delivery)
 
 ## Notes
 
 - `server.js` exposes the API on `/health`, `/api/onboard`, `/api/auth`, `/api/school`, `/api/superadmin`, and `/api/billing`.
+- Paystack webhooks are accepted at `POST /webhooks/paystack` with signature verification.
 - `POST /api/onboard/demo-request` stores landing-page demo leads in Supabase (`demo_leads` table).
 - Tenant resolution supports subdomains and `x-tenant-subdomain` for local development.
 

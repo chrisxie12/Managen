@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node scripts/smoke-test.js && node --test scripts/api-tests.js"
+    "test": "node scripts/smoke-test.js && node --test scripts/api-tests.js",
+    "test:superadmin": "node scripts/test-superadmin-load.js",
+    "test:fees": "node scripts/test-fee-reminders.js"
   },
   "keywords": [],
   "author": "",

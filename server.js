@@ -3,7 +3,10 @@ const express  = require('express');
 const cors     = require('cors');
 const cookieParser = require('cookie-parser');
 
-const { handleWebhook }     = require('./services/billingService');
+const {
+    handlePaystackWebhook,
+    handleStripeWebhook,
+} = require('./services/billingService');
 
 const onboardRoutes    = require('./routes/onboard');
 const authRoutes       = require('./routes/auth');
@@ -29,11 +32,17 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
 const corsOrigins = allowedOrigins.length > 0 ? allowedOrigins : defaultOrigins;
 const allowAnyOrigin = allowedOrigins.includes('*');
 
-// ─── Stripe Webhook (must be before express.json) ─────────────
+// ─── Billing Webhooks (must be before express.json) ───────────
+app.post(
+    '/webhooks/paystack',
+    express.raw({ type: 'application/json' }),
+    handlePaystackWebhook
+);
+
 app.post(
     '/webhooks/stripe',
     express.raw({ type: 'application/json' }),
-    handleWebhook
+    handleStripeWebhook
 );
 
 // ─── Global Middleware ────────────────────────────────────────
@@ -84,7 +93,17 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
+app.get('/health', (req, res) => {
+    res.json({
+        data: {
+            status: 'ok',
+            db: true,
+            timestamp: Date.now(),
+        },
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+    });
+});
 
 // ─── Public Routes ────────────────────────────────────────────
 app.use('/api/onboard',    onboardRoutes);

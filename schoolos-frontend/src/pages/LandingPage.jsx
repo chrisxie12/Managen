@@ -193,6 +193,7 @@ const HERO_VARIANTS = {
 };
 
 const LANDING_METRICS_KEY = "schoolos_landing_metrics";
+const LANDING_BG_VIDEO_URL = process.env.REACT_APP_LANDING_BG_VIDEO_URL || "";
 
 const faqs = [
   {
@@ -565,7 +566,23 @@ export const LandingPage = React.memo(({ onNavigate }) => {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="pt-32 pb-20 px-6 landing-reveal">
+      <section className="pt-32 pb-20 px-6 landing-reveal landing-hero-video-wrap">
+        {LANDING_BG_VIDEO_URL && (
+          <>
+            <video
+              className="landing-hero-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            >
+              <source src={LANDING_BG_VIDEO_URL} type="video/mp4" />
+            </video>
+            <div className="landing-hero-video-overlay" aria-hidden="true" />
+          </>
+        )}
         <div className="max-w-[1280px] mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left copy */}

@@ -79,6 +79,25 @@ const normalizeError = (message, statusCode = 500) => {
     return error;
 };
 
+const cleanupProvisioning = async ({ tenantId, authUserId }) => {
+    const cleanupTasks = [];
+
+    if (authUserId) {
+        cleanupTasks.push(supabase.auth.admin.deleteUser(authUserId));
+    }
+
+    if (tenantId) {
+        cleanupTasks.push(supabase.from('tenants').delete().eq('id', tenantId));
+    }
+
+    const results = await Promise.allSettled(cleanupTasks);
+    for (const result of results) {
+        if (result.status === 'rejected') {
+            console.error('Provisioning cleanup error:', result.reason?.message || result.reason);
+        }
+    }
+};
+
 const generateSubdomain = async (schoolName) => {
     let base = slugifySchoolName(schoolName);
     if (RESERVED_SUBDOMAINS.has(base)) {
@@ -169,7 +188,6 @@ const provisionSchool = async ({
         throw tenantError;
     }
 
-    console.log('Provisioning Supabase Auth user for:', normalizedEmail);
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
         email: normalizedEmail,
         password: adminPassword,
@@ -179,9 +197,13 @@ const provisionSchool = async ({
 
     if (authError) {
         console.error('Supabase Auth creation error:', authError);
-        // If user already exists in Auth but not in our table, we might want to link them, 
-        // but for now we treat it as an error to keep it simple.
+        await cleanupProvisioning({ tenantId: tenant.id });
         throw authError;
+    }
+
+    if (!authUser?.user?.id) {
+        await cleanupProvisioning({ tenantId: tenant.id });
+        throw normalizeError('Supabase Auth user was not created.', 502);
     }
 
     const userPayload = {
@@ -193,8 +215,6 @@ const provisionSchool = async ({
         role: 'admin',
         is_active: true,
     };
-    console.log('Upserting user metadata with payload:', JSON.stringify(userPayload, null, 2));
-
     const { data: adminUser, error: userError } = await supabase
         .from('users')
         .upsert(userPayload)
@@ -202,7 +222,7 @@ const provisionSchool = async ({
         .single();
 
     if (userError) {
-        await supabase.from('tenants').delete().eq('id', tenant.id);
+        await cleanupProvisioning({ tenantId: tenant.id, authUserId: authUser.user.id });
         throw userError;
     }
 

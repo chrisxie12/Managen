@@ -1,6 +1,8 @@
 const supabase = require('../config/db');
 const redis = require('../config/redis');
 
+const isRedisReady = () => redis && redis.status === 'ready';
+
 const extractSubdomain = (host) => {
     if (!host) return null;
 
@@ -42,13 +44,15 @@ const tenantMiddleware = async (req, res, next) => {
         const cacheKey = `tenant:${subdomain}`;
         let tenant = null;
 
-        try {
-            const cached = await redis.get(cacheKey);
-            if (cached) {
-                tenant = JSON.parse(cached);
+        if (isRedisReady()) {
+            try {
+                const cached = await redis.get(cacheKey);
+                if (cached) {
+                    tenant = JSON.parse(cached);
+                }
+            } catch (redisErr) {
+                console.error('Redis tenant cache get error:', redisErr.message || redisErr);
             }
-        } catch (redisErr) {
-            console.error('Redis get error:', redisErr);
         }
 
         if (!tenant) {
@@ -69,10 +73,12 @@ const tenantMiddleware = async (req, res, next) => {
 
             tenant = dbTenant;
 
-            try {
-                await redis.setex(cacheKey, 300, JSON.stringify(tenant)); // Cache for 5 minutes
-            } catch (redisErr) {
-                console.error('Redis set error:', redisErr);
+            if (isRedisReady()) {
+                try {
+                    await redis.setex(cacheKey, 300, JSON.stringify(tenant));
+                } catch (redisErr) {
+                    console.error('Redis tenant cache set error:', redisErr.message || redisErr);
+                }
             }
         }
 

@@ -32,8 +32,12 @@ router.post('/signup', async (req, res) => {
                 const whatsappService = require('../services/whatsappService');
 
                 const promises = [];
-                if (email) promises.push(emailService.sendWelcome({ to: email, name: adminName, schoolName }));
-                if (phone)  promises.push(smsService.sendWelcome({ to: phone, name: adminName, schoolName }));
+                if (email && process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
+                    promises.push(emailService.sendWelcome({ to: email, name: adminName, schoolName }));
+                }
+                if (phone && process.env.ARKESEL_API_KEY) {
+                    promises.push(smsService.sendWelcome({ to: phone, name: adminName, schoolName }));
+                }
                 if (
                     phone &&
                     process.env.TWILIO_ACCOUNT_SID &&

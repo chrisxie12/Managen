@@ -3,6 +3,7 @@ const router   = express.Router();
 const jwt      = require('jsonwebtoken');
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
+const feeReminderService = require('../services/feeReminderService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
 const parseInteger = (value, fallback, min = 1, max = 1000) => {
@@ -111,6 +112,13 @@ const studentSchema = {
     })
 };
 
+const feeReminderSchema = {
+    body: z.object({
+        limit: z.number().int().min(1).max(500).optional(),
+        dryRun: z.boolean().optional(),
+    }).optional(),
+};
+
 // POST /api/school/students
 router.post('/students', protect, allowRoles('admin'), validate(studentSchema), async (req, res) => {
     try {
@@ -163,6 +171,31 @@ router.get('/fees', protect, requireModule('fees'), allowRoles('admin'), async (
             return res.status(err.statusCode).json({ error: err.message });
         }
         return res.status(500).json({ error: 'Error fetching fees.' });
+    }
+});
+
+// POST /api/school/fees/reminders/send
+router.post('/fees/reminders/send', protect, requireModule('fees'), allowRoles('admin'), validate(feeReminderSchema), async (req, res) => {
+    try {
+        const payload = req.body || {};
+        const summary = await feeReminderService.sendDueFeeReminders({
+            tenant: req.tenant,
+            actorId: req.user && req.user.userId,
+            limit: payload.limit || 100,
+            dryRun: Boolean(payload.dryRun),
+        });
+
+        return res.json({
+            data: {
+                message: payload.dryRun ? 'Dry-run completed.' : 'Fee reminder dispatch completed.',
+                ...summary,
+            },
+        });
+    } catch (err) {
+        if (err.statusCode) {
+            return res.status(err.statusCode).json({ error: err.message });
+        }
+        return res.status(500).json({ error: 'Error sending fee reminders.' });
     }
 });
 

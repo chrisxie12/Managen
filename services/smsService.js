@@ -101,10 +101,24 @@ async function sendPaymentFailed({ to, name, amount, currency = 'GHS', invoiceId
     }
 }
 
+async function sendFeeReminder({ to, message }) {
+    if (!to) return { success: false, error: 'Recipient (to) is required' };
+    if (!message) return { success: false, error: 'Message is required' };
+
+    try {
+        const r = await sendArkeselSms({ to, message });
+        return r;
+    } catch (err) {
+        console.error('sendFeeReminder sms error:', err.message || err);
+        return { success: false, error: err.message || String(err) };
+    }
+}
+
 module.exports = {
     sendWelcome,
     sendTrialReminder,
     sendPaymentReceipt,
     sendPaymentFailed,
+    sendFeeReminder,
 };
 

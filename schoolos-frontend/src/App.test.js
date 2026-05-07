@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders SchoolOS landing page', () => {
   render(<App />);
-  expect(screen.getByRole('heading', { name: /School operations, billing, and onboarding in one place/i })).toBeInTheDocument();
-  expect(screen.getByText(/A lightweight frontend starter for the Supabase-backed SchoolOS API/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /Run Your Entire School\./i })).toBeInTheDocument();
+  expect(screen.getByText(/SchoolOS helps schools run academics, finance, and communication in one operating system\./i)).toBeInTheDocument();
 });
