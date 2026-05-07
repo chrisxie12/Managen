@@ -1,11 +1,11 @@
 const supabase = require('../config/db');
 
 class AuthService {
-    async loadTenantById(tenantId) {
-        const { data: tenant, error } = await supabase
-            .from('tenants')
+    async loadSchoolById(schoolId) {
+        const { data: school, error } = await supabase
+            .from('schools')
             .select('*')
-            .eq('id', tenantId)
+            .eq('id', schoolId)
             .maybeSingle();
 
         if (error) {
@@ -13,12 +13,12 @@ class AuthService {
             err.statusCode = 400;
             throw err;
         }
-        return tenant;
+        return school;
     }
 
-    async loadTenantBySubdomain(subdomain) {
-        const { data: tenant, error } = await supabase
-            .from('tenants')
+    async loadSchoolBySubdomain(subdomain) {
+        const { data: school, error } = await supabase
+            .from('schools')
             .select('*')
             .eq('subdomain', subdomain)
             .in('status', ['active', 'trial'])
@@ -29,15 +29,15 @@ class AuthService {
             err.statusCode = 400;
             throw err;
         }
-        return tenant;
+        return school;
     }
 
-    async getUserByEmailAndTenant(email, tenantId) {
+    async getUserByEmailAndSchool(email, schoolId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, name, email, role, is_active, password')
+            .select('id, full_name, email, role_id, is_active, password')
             .eq('email', email)
-            .eq('tenant_id', tenantId)
+            .eq('school_id', schoolId)
             .maybeSingle();
 
         if (error) {
@@ -51,7 +51,7 @@ class AuthService {
     async getUserById(userId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, name, email, role')
+            .select('id, full_name, email, role_id')
             .eq('id', userId)
             .maybeSingle();
 
@@ -61,6 +61,28 @@ class AuthService {
             throw err;
         }
         return user;
+    }
+
+    async getUserPermissions(userId) {
+        const { data, error } = await supabase
+            .from('users')
+            .select(`
+                roles (
+                    name,
+                    role_permissions (
+                        permissions (
+                            name
+                        )
+                    )
+                )
+            `)
+            .eq('id', userId)
+            .single();
+
+        if (error || !data?.roles) return [];
+
+        const permissions = data.roles.role_permissions.map(rp => rp.permissions.name);
+        return permissions;
     }
 }
 

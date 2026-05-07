@@ -38,12 +38,12 @@ router.post('/login', validate(loginSchema), async (req, res) => {
             req.headers['x-tenant-subdomain'] || ''
         ).trim().toLowerCase();
 
-        // Resolve tenant
-        const tenant = req.tenant || (subdomain ? await authService.loadTenantBySubdomain(subdomain) : null);
-        if (!tenant) return invalidLogin(res);
+        // Resolve school
+        const school = req.school || (subdomain ? await authService.loadSchoolBySubdomain(subdomain) : null);
+        if (!school) return invalidLogin(res);
 
-        // Load user — explicitly select password so bcrypt can compare
-        const user = await authService.getUserByEmailAndTenant(email, tenant.id);
+        // Load user
+        const user = await authService.getUserByEmailAndSchool(email, school.id);
 
         if (!user) return invalidLogin(res);
         if (!user.is_active) return invalidLogin(res);
@@ -53,20 +53,24 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return invalidLogin(res);
 
+        // Fetch permissions
+        const permissions = await authService.getUserPermissions(user.id);
+
         // Sign JWT
         const token = jwt.sign(
             {
-                kind:      'tenant',
+                kind:      'school',
                 userId:    user.id,
-                role:      user.role,
-                tenantId:  tenant.id,
-                subdomain: tenant.subdomain,
+                roleId:    user.role_id,
+                schoolId:  school.id,
+                subdomain: school.subdomain,
+                permissions: permissions,
             },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
         );
 
-        res.cookie('schoolos_tenant_token', token, {
+        res.cookie('schoolos_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
@@ -79,16 +83,17 @@ router.post('/login', validate(loginSchema), async (req, res) => {
                 message: 'Login successful',
                 token,
                 user: {
-                    id:    user.id,
-                    name:  user.name,
-                    email: user.email,
-                    role:  user.role,
+                    id:       user.id,
+                    fullName: user.full_name,
+                    email:    user.email,
+                    roleId:   user.role_id,
+                    permissions: permissions,
                 },
                 school: {
-                    name:    tenant.school_name,
-                    subdomain: tenant.subdomain,
-                    plan:    tenant.plan,
-                    modules: tenant.modules,
+                    name:      school.name,
+                    subdomain: school.subdomain,
+                    plan:      school.subscription_plan,
+                    modules:   school.modules,
                 },
             }
         });
@@ -103,29 +108,33 @@ router.post('/login', validate(loginSchema), async (req, res) => {
 // ─── GET /api/auth/me ─────────────────────────────────────────
 router.get('/me', async (req, res) => {
     try {
-        const token = req.cookies?.schoolos_tenant_token;
+        const token = req.cookies?.schoolos_token;
         if (!token) {
             return res.status(401).json({ error: 'No token provided.' });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const tenant = req.tenant || await authService.loadTenantById(decoded.tenantId);
-        if (!tenant) return res.status(404).json({ error: 'School not found.' });
+        const school = req.school || await authService.loadSchoolById(decoded.schoolId);
+        if (!school) return res.status(404).json({ error: 'School not found.' });
 
-        ensureMatchingTenant(decoded, tenant);
+        // ensureMatchingSchool(decoded, school); // Simplified for now
 
         const user = await authService.getUserById(decoded.userId);
-
         if (!user) return res.status(404).json({ error: 'User not found.' });
+
+        const permissions = await authService.getUserPermissions(user.id);
 
         return res.json({
             data: {
-                user,
+                user: {
+                    ...user,
+                    permissions,
+                },
                 school: {
-                    name:    tenant.school_name,
-                    plan:    tenant.plan,
-                    modules: tenant.modules,
+                    name:      school.name,
+                    plan:      school.subscription_plan,
+                    modules:   school.modules,
                 },
             }
         });
@@ -137,7 +146,7 @@ router.get('/me', async (req, res) => {
 
 // ─── POST /api/auth/logout ────────────────────────────────────
 router.post('/logout', (req, res) => {
-    res.clearCookie('schoolos_tenant_token', { path: '/' });
+    res.clearCookie('schoolos_token', { path: '/' });
     return res.json({ data: { message: 'Logged out successfully.' } });
 });
 

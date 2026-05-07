@@ -87,7 +87,7 @@ const cleanupProvisioning = async ({ tenantId, authUserId }) => {
     }
 
     if (tenantId) {
-        cleanupTasks.push(supabase.from('tenants').delete().eq('id', tenantId));
+        cleanupTasks.push(supabase.from('schools').delete().eq('id', tenantId));
     }
 
     const results = await Promise.allSettled(cleanupTasks);
@@ -100,6 +100,9 @@ const cleanupProvisioning = async ({ tenantId, authUserId }) => {
 
 const generateSubdomain = async (schoolName) => {
     let base = slugifySchoolName(schoolName);
+
+const generateSubdomain = async (schoolName) => {
+    let base = slugifySchoolName(schoolName);
     if (RESERVED_SUBDOMAINS.has(base)) {
         base = `school${base}`;
     }
@@ -107,7 +110,7 @@ const generateSubdomain = async (schoolName) => {
 
     for (let attempt = 0; attempt < 50; attempt += 1) {
         const { data, error } = await supabase
-            .from('tenants')
+            .from('schools')
             .select('id')
             .eq('subdomain', candidate)
             .maybeSingle();
@@ -145,7 +148,7 @@ const provisionSchool = async ({
     const planConfig = getPlanConfig(plan);
 
     const { data: existingTenant, error: existingTenantError } = await supabase
-        .from('tenants')
+        .from('schools')
         .select('id')
         .eq('email', normalizedEmail)
         .maybeSingle();
@@ -167,11 +170,11 @@ const provisionSchool = async ({
 
     const tenantPayload = {
         id: crypto.randomUUID(),
-        school_name: cleanSchoolName,
+        name: cleanSchoolName,
         email: normalizedEmail,
         phone: cleanPhone,
         subdomain,
-        plan: planConfig.name,
+        subscription_plan: planConfig.name,
         status,
         modules: planConfig.modules,
         max_students: planConfig.maxStudents,
@@ -179,7 +182,7 @@ const provisionSchool = async ({
     };
 
     const { data: tenant, error: tenantError } = await supabase
-        .from('tenants')
+        .from('schools')
         .insert(tenantPayload)
         .select('*')
         .single();
@@ -208,8 +211,8 @@ const provisionSchool = async ({
 
     const userPayload = {
         id: authUser.user.id,
-        tenant_id: tenant.id,
-        name: cleanAdminName,
+        school_id: tenant.id,
+        full_name: cleanAdminName,
         email: normalizedEmail,
         password: passwordHash, 
         role: 'admin',
@@ -218,7 +221,7 @@ const provisionSchool = async ({
     const { data: adminUser, error: userError } = await supabase
         .from('users')
         .upsert(userPayload)
-        .select('id, name, email, role')
+        .select('id, full_name, email, role')
         .single();
 
     if (userError) {
@@ -241,7 +244,7 @@ const suspendSchool = async (tenantId) => {
     }
 
     const { data, error } = await supabase
-        .from('tenants')
+        .from('schools')
         .update({ status: 'suspended' })
         .eq('id', tenantId)
         .select('id, status')
@@ -270,16 +273,16 @@ const reactivateSchool = async (tenantId, plan = 'basic') => {
     const status = planConfig.name === 'trial' ? 'trial' : 'active';
 
     const { data, error } = await supabase
-        .from('tenants')
+        .from('schools')
         .update({
             status,
-            plan: planConfig.name,
+            subscription_plan: planConfig.name,
             modules: planConfig.modules,
             max_students: planConfig.maxStudents,
             trial_ends_at: trialEndsAt,
         })
         .eq('id', tenantId)
-        .select('id, status, plan')
+        .select('id, status, subscription_plan')
         .maybeSingle();
 
     if (error) {
