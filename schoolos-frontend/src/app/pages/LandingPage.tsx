@@ -979,7 +979,7 @@ export function LandingPage() {
                     style={{ color: MUTED, fontSize: "0.85rem" }}
                     className="hover:opacity-70 transition-opacity"
                   >
-                    {link.includes("@") ? `Support: ${link}` : link}
+                    {link}
                   </a>
                 ))}
               </div>

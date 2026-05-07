@@ -193,7 +193,7 @@ export function SmartFeeReminders() {
   }, [sendModalOpen, sending]);
 
   const copyPaymentLink = async () => {
-    const link = "https://pay.schoolos.app/ama-m-2t25";
+    const link = "https://pay.getschoolos.me/ama-m-2t25";
     try {
       await navigator.clipboard.writeText(link);
       pushToast("Link copied", "MoMo payment link copied to clipboard", "info");
@@ -533,7 +533,7 @@ export function SmartFeeReminders() {
                       <SettingRow label="Transport levy" value="GHS 120" />
                       <SettingRow label="Total due" value="GHS 600" highlight />
                     </div>
-                    <p className="mt-3 break-all text-xs text-[#00e5a0]">pay.schoolos.app/ama-m-2t25</p>
+                    <p className="mt-3 break-all text-xs text-[#00e5a0]">pay.getschoolos.me/ama-m-2t25</p>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <button type="button" onClick={copyPaymentLink} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-[#8b90a8] hover:bg-white/5">
@@ -603,7 +603,7 @@ export function SmartFeeReminders() {
 
                   This is a reminder that [Student name] has an outstanding balance of GHS [Amount] due by [Deadline].
 
-                  Pay instantly with MTN MoMo: pay.schoolos.app/[unique-link]
+                  Pay instantly with MTN MoMo: pay.getschoolos.me/[unique-link]
                 </div>
               </div>
 

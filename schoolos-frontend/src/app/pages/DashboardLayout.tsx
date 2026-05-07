@@ -35,7 +35,7 @@ const navItems = [
 
 const secondaryNav = [
   { icon: Settings, label: "Settings", path: "#" },
-  { icon: HelpCircle, label: "Help & Support", path: "#" },
+  { icon: HelpCircle, label: "Help & Support", path: "mailto:support@getschoolos.me" },
 ];
 
 export function DashboardLayout() {

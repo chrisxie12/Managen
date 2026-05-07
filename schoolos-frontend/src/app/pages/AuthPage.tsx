@@ -18,6 +18,9 @@ const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
+import { api } from "../services/api";
+import { toast } from "sonner";
+
 const benefits = [
   "No credit card required for trial",
   "Set up in under 10 minutes",
@@ -39,15 +42,40 @@ export function AuthPage() {
     school: "",
     email: "",
     password: "",
+    subdomain: "", // Added for login/signup
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    
+    try {
+      if (mode === "signup") {
+        const response = await api.post("/api/onboard/signup", {
+          schoolName: form.school,
+          email: form.email,
+          adminName: form.name,
+          adminPassword: form.password,
+          plan: "trial",
+        });
+        
+        toast.success("School created! Redirecting to dashboard...");
+        setTimeout(() => navigate("/dashboard"), 1500);
+      } else {
+        const response = await api.post("/api/auth/login", {
+          email: form.email,
+          password: form.password,
+          subdomain: form.subdomain,
+        });
+
+        toast.success("Welcome back!");
+        setTimeout(() => navigate("/dashboard"), 1000);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Authentication failed");
+    } finally {
       setLoading(false);
-      navigate("/dashboard");
-    }, 1400);
+    }
   };
 
   const setField = (field: string, value: string) =>
@@ -282,6 +310,43 @@ export function AuthPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {mode === "login" && (
+              <div>
+                <label
+                  style={{
+                    color: PLUM_LIGHT,
+                    fontSize: "0.85rem",
+                    fontWeight: 500,
+                    display: "block",
+                    marginBottom: "0.4rem",
+                  }}
+                >
+                  School Subdomain
+                </label>
+                <div className="relative">
+                  <Building2
+                    size={16}
+                    className="absolute left-4 top-1/2 -translate-y-1/2"
+                    color={MUTED}
+                  />
+                  <input
+                    type="text"
+                    placeholder="e.g. accra-ridge"
+                    value={form.subdomain}
+                    onChange={(e) => setField("subdomain", e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{
+                      background: "white",
+                      border: `1.5px solid rgba(56,25,50,0.12)`,
+                      color: PLUM,
+                    }}
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.schoolos.io</span>
+                </div>
+              </div>
+            )}
+
             {mode === "signup" && (
               <>
                 <div>
