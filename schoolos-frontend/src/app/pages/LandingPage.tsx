@@ -22,6 +22,7 @@ import {
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
+const PLUM_DEEP = "#24101f";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
@@ -918,92 +919,121 @@ export function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer
-        id="contact"
-        className="py-16 px-6"
-        style={{ borderTop: `1px solid rgba(56,25,50,0.08)` }}
-      >
-        <div className="max-w-[1280px] mx-auto grid md:grid-cols-4 gap-10">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center"
-                style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
-              >
-                <GraduationCap size={15} color={MILK} />
+      <footer id="contact" className="relative mt-24 overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg, ${PLUM_LIGHT} 0%, ${PLUM_DEEP} 70%, #1a0b15 100%)`,
+          }}
+        />
+        <div
+          className="absolute inset-x-0 top-0 h-10"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,243,230,0.22) 0%, rgba(255,243,230,0) 100%)",
+          }}
+        />
+        <div className="relative py-16 px-6">
+          <div className="max-w-[1280px] mx-auto grid md:grid-cols-[1.4fr,repeat(3,1fr)] gap-10">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${MILK}, rgba(255,243,230,0.6))`,
+                  }}
+                >
+                  <GraduationCap size={16} color={PLUM} />
+                </div>
+                <span
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    color: MILK,
+                    fontWeight: 700,
+                    fontSize: "1.05rem",
+                  }}
+                >
+                  SchoolOS
+                </span>
               </div>
-              <span
+              <p
                 style={{
-                  fontFamily: "'Playfair Display', serif",
-                  color: PLUM,
-                  fontWeight: 700,
-                }}
-              >
-                SchoolOS
-              </span>
-            </div>
-            <p style={{ color: MUTED, fontSize: "0.85rem", lineHeight: 1.7 }}>
-              Modern school management for Africa's finest institutions.
-            </p>
-          </div>
-          {[
-            {
-              title: "Product",
-              links: ["Features", "Pricing", "Changelog", "Roadmap"],
-            },
-            {
-              title: "Company",
-              links: ["About", "Blog", "Careers", "Press"],
-            },
-            {
-              title: "Contact",
-              links: ["support@getschoolos.me", "+233 55 000 1234", "Accra, Ghana"],
-            },
-          ].map((col) => (
-            <div key={col.title}>
-              <h4
-                style={{
-                  color: PLUM,
-                  fontWeight: 600,
-                  marginBottom: "1rem",
+                  color: "rgba(255,243,230,0.78)",
                   fontSize: "0.9rem",
+                  lineHeight: 1.7,
                 }}
               >
-                {col.title}
-              </h4>
-              <div className="flex flex-col gap-2">
-                {col.links.map((link) => (
+                Modern school management for Africa's finest institutions. Built
+                to keep every operation grounded, accountable, and easy to trust.
+              </p>
+            </div>
+            {[
+              {
+                title: "Product",
+                links: ["Features", "Pricing", "Changelog", "Roadmap"],
+              },
+              {
+                title: "Company",
+                links: ["About", "Blog", "Careers", "Press"],
+              },
+              {
+                title: "Contact",
+                links: ["support@getschoolos.me", "+233 55 000 1234", "Accra, Ghana"],
+              },
+            ].map((col) => (
+              <div key={col.title}>
+                <h4
+                  style={{
+                    color: MILK,
+                    fontWeight: 600,
+                    marginBottom: "1rem",
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {col.title}
+                </h4>
+                <div className="flex flex-col gap-2">
+                  {col.links.map((link) => (
+                    <a
+                      key={link}
+                      href={link.includes("@") ? `mailto:${link}` : "#"}
+                      style={{ color: "rgba(255,243,230,0.72)", fontSize: "0.85rem" }}
+                      className="hover:opacity-80 transition-opacity"
+                    >
+                      {link}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="max-w-[1280px] mx-auto mt-12">
+            <div
+              className="px-6 py-5 rounded-[28px] flex flex-col md:flex-row justify-between items-center gap-4"
+              style={{
+                background: "rgba(255,243,230,0.08)",
+                border: "1px solid rgba(255,243,230,0.12)",
+                boxShadow: "0 18px 40px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,243,230,0.2)",
+              }}
+            >
+              <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem" }}>
+                © 2026 SchoolOS. All rights reserved.
+              </p>
+              <div className="flex gap-6">
+                {["Privacy Policy", "Terms of Service"].map((link) => (
                   <a
                     key={link}
-                    href={link.includes("@") ? `mailto:${link}` : "#"}
-                    style={{ color: MUTED, fontSize: "0.85rem" }}
-                    className="hover:opacity-70 transition-opacity"
+                    href="#"
+                    style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem" }}
+                    className="hover:opacity-80"
                   >
                     {link}
                   </a>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-        <div
-          className="max-w-[1280px] mx-auto mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
-          style={{ borderTop: `1px solid rgba(56,25,50,0.07)` }}
-        >
-          <p style={{ color: MUTED, fontSize: "0.8rem" }}>
-            © 2026 SchoolOS. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Service"].map((link) => (
-              <a
-                key={link}
-                href="#"
-                style={{ color: MUTED, fontSize: "0.8rem" }}
-                className="hover:opacity-70"
-              >
-                {link}
-              </a>
-            ))}
           </div>
         </div>
       </footer>
