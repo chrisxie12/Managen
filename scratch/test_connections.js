@@ -21,8 +21,12 @@ async function testConnections() {
     // Test Redis
     console.log('Testing Redis...');
     try {
-        const pong = await redis.ping();
-        console.log('✅ Redis: Connected successfully -', pong);
+        if (!redis.isRedisConfigured()) {
+            console.warn('⚠️  Redis: REDIS_URL not configured. Skipping Redis test.');
+        } else {
+            const pong = await redis.ping();
+            console.log('✅ Redis: Connected successfully -', pong);
+        }
     } catch (err) {
         console.error('❌ Redis: Catch error -', err.message);
     }
