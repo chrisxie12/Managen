@@ -3,7 +3,12 @@
  * Centralized utility for making backend requests
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const normalizeBaseUrl = (baseUrl?: string) =>
+  baseUrl ? baseUrl.replace(/\/+$/, "") : "";
+
+const API_BASE_URL =
+  normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL) ||
+  (import.meta.env.DEV ? "http://localhost:5000" : "");
 
 export interface ApiResponse<T = any> {
   data?: T;
@@ -28,8 +33,9 @@ export const api = {
   get: async <T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...options,
+      credentials: options.credentials ?? "include",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
     });
@@ -38,10 +44,11 @@ export const api = {
 
   post: async <T>(endpoint: string, body: any, options: RequestInit = {}): Promise<ApiResponse<T>> => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       ...options,
+      credentials: options.credentials ?? "include",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       body: JSON.stringify(body),
