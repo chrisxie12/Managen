@@ -3,11 +3,11 @@
  * Centralized utility for making backend requests
  */
 
-const stripTrailingSlashes = (baseUrl?: string) =>
+const stripTrailingSlash = (baseUrl?: string) =>
   baseUrl ? baseUrl.replace(/\/+$/, "") : "";
 
 const API_BASE_URL =
-  stripTrailingSlashes(import.meta.env.VITE_API_BASE_URL) ||
+  stripTrailingSlash(import.meta.env.VITE_API_BASE_URL) ||
   (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin);
 
 export interface ApiResponse<T = any> {
