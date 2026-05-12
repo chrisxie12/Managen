@@ -178,6 +178,15 @@ router.get('/fees', protect, requireModule('fees'), allowRoles('admin'), async (
 router.post('/fees/reminders/send', protect, requireModule('fees'), allowRoles('admin'), validate(feeReminderSchema), async (req, res) => {
     try {
         const payload = req.body || {};
+        
+        // Check if Redis is available
+        const redis = require('../config/redis');
+        const redisAvailable = redis.isRedisConfigured();
+        
+        if (!redisAvailable) {
+            console.warn('⚠️  Redis not configured. Fee reminders will run synchronously.');
+        }
+
         const summary = await feeReminderService.sendDueFeeReminders({
             tenant: req.tenant,
             actorId: req.user && req.user.userId,

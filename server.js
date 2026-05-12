@@ -134,13 +134,23 @@ app.use((err, req, res, next) => {
 if (require.main === module) {
     const PORT = process.env.PORT || 5000;
     
-    // Initialize background jobs
-    const { scheduleTrialCheck } = require('./jobs/trialQueue');
-    scheduleTrialCheck();
+    // Initialize background jobs (gracefully handle Redis unavailability)
+    const initializeQueues = async () => {
+        try {
+            const { scheduleTrialCheck } = require('./jobs/trialQueue');
+            await scheduleTrialCheck();
+        } catch (err) {
+            console.warn('⚠️  Queue initialization error (non-fatal):', err.message);
+            console.warn('ℹ️  Server will continue running without background jobs.');
+        }
+    };
 
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
         console.log(`📋 Health check: http://localhost:${PORT}/health`);
+        
+        // Initialize queues after server starts
+        initializeQueues();
     });
 }
 
