@@ -3,12 +3,13 @@
  * Centralized utility for making backend requests
  */
 
-const removeTrailingSlash = (baseUrl?: string) =>
+const normalizeBaseUrl = (baseUrl?: string) =>
   baseUrl ? baseUrl.replace(/\/+$/, "") : "";
 
+// In production, default to same-origin API routes when VITE_API_BASE_URL is not set.
 const API_BASE_URL =
-  removeTrailingSlash(import.meta.env.VITE_API_BASE_URL) ||
-  (import.meta.env.DEV ? "http://localhost:5000" : window.location.origin);
+  normalizeBaseUrl(import.meta.env.VITE_API_BASE_URL) ||
+  (import.meta.env.DEV ? "http://localhost:5000" : "");
 
 export interface ApiResponse<T = any> {
   data?: T;
