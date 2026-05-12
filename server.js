@@ -13,6 +13,7 @@ const authRoutes       = require('./routes/auth');
 const superAdminRoutes = require('./routes/superAdmin');
 const schoolRoutes     = require('./routes/school');
 const billingRoutes    = require('./routes/billing');
+const cronRoutes       = require('./routes/cron');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -109,6 +110,7 @@ app.get('/health', (req, res) => {
 app.use('/api/onboard',    onboardRoutes);
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/billing',    billingRoutes);
+app.use('/api/cron',       cronRoutes);
 
 // ─── Tenant Middleware ────────────────────────────────────────
 const { tenantMiddleware } = require('./middleware/tenant');
