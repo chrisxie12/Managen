@@ -12,6 +12,7 @@ process.env.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS || 'http://localhost:3
 
 const db = {
     tenants: [],
+    schools: [],
     users: [],
     students: [],
     attendance: [],
@@ -166,15 +167,20 @@ class Query {
         const table = db[this.table] || [];
 
         if (this.mode === 'insert') {
-            const inserted = this.payload.map((item) => {
-                const row = clone(item);
-                if (!row.id) row.id = `${this.table}_${idSequence++}`;
-                if (!row.created_at) row.created_at = new Date().toISOString();
-                if (this.table === 'tenants' && !row.status) row.status = 'trial';
-                if (this.table === 'students' && row.is_active === undefined) row.is_active = true;
-                db[this.table].push(row);
-                return row;
-            });
+        const inserted = this.payload.map((item) => {
+            const row = clone(item);
+            if (!row.id) row.id = `${this.table}_${idSequence++}`;
+            if (!row.created_at) row.created_at = new Date().toISOString();
+            if ((this.table === 'tenants' || this.table === 'schools') && !row.status) row.status = 'trial';
+            if (this.table === 'schools') {
+                if (!row.plan && row.subscription_plan) row.plan = row.subscription_plan;
+                if (!row.school_name && row.name) row.school_name = row.name;
+                if (!row.slug && row.subdomain) row.slug = row.subdomain;
+            }
+            if (this.table === 'students' && row.is_active === undefined) row.is_active = true;
+            db[this.table].push(row);
+            return row;
+        });
             const projected = inserted.length === 1
                 ? projectRecord(inserted[0], this.selectColumns)
                 : inserted.map((row) => projectRecord(row, this.selectColumns));

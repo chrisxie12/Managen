@@ -160,12 +160,13 @@ router.get('/check-subdomain/:subdomain', async (req, res) => {
         }
 
         const { data, error } = await supabase
-            .from('tenants')
+            .from('schools')
             .select('id')
-            .eq('subdomain', subdomain)
+            .eq('slug', subdomain)
             .maybeSingle();
 
         if (error) {
+            console.error('Check subdomain error:', error);
             return res.status(500).json({ error: 'Error checking subdomain.' });
         }
 

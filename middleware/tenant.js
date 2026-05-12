@@ -57,10 +57,9 @@ const tenantMiddleware = async (req, res, next) => {
 
         if (!tenant) {
             const { data: dbTenant, error } = await supabase
-                .from('tenants')
+                .from('schools')
                 .select('*')
-                .eq('subdomain', subdomain)
-                .in('status', ['active', 'trial'])
+                .eq('slug', subdomain)
                 .maybeSingle();
 
             if (error) {

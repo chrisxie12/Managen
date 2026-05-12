@@ -20,8 +20,7 @@ class AuthService {
         const { data: school, error } = await supabase
             .from('schools')
             .select('*')
-            .eq('subdomain', subdomain)
-            .in('status', ['active', 'trial'])
+            .eq('slug', subdomain)
             .maybeSingle();
 
         if (error) {
@@ -35,7 +34,7 @@ class AuthService {
     async getUserByEmailAndSchool(email, schoolId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, full_name, email, role_id, is_active, password')
+            .select('id, full_name, email, role, role_id, is_active, password')
             .eq('email', email)
             .eq('school_id', schoolId)
             .maybeSingle();

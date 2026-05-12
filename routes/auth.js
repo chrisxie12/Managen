@@ -62,8 +62,10 @@ router.post('/login', validate(loginSchema), async (req, res) => {
                 kind:      'school',
                 userId:    user.id,
                 roleId:    user.role_id,
+                role:      user.role,
                 schoolId:  school.id,
-                subdomain: school.subdomain,
+                tenantId:  school.id,
+                subdomain: school.subdomain || school.slug,
                 permissions: permissions,
             },
             process.env.JWT_SECRET,
@@ -91,8 +93,8 @@ router.post('/login', validate(loginSchema), async (req, res) => {
                 },
                 school: {
                     name:      school.name,
-                    subdomain: school.subdomain,
-                    plan:      school.subscription_plan,
+                    subdomain: school.subdomain || school.slug,
+                    plan:      school.subscription_plan || school.plan,
                     modules:   school.modules,
                 },
             }
@@ -133,7 +135,7 @@ router.get('/me', async (req, res) => {
                 },
                 school: {
                     name:      school.name,
-                    plan:      school.subscription_plan,
+                    plan:      school.subscription_plan || school.plan,
                     modules:   school.modules,
                 },
             }

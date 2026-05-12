@@ -68,7 +68,9 @@ const toTenantResponse = (tenant) => ({
     ...tenant,
     id: tenant.id,
     tenantId: tenant.id,
-    schoolName: tenant.school_name,
+    schoolName: tenant.school_name || tenant.name,
+    plan: tenant.plan || tenant.subscription_plan,
+    subdomain: tenant.subdomain || tenant.slug,
     maxStudents: tenant.max_students,
     trialEndsAt: tenant.trial_ends_at,
 });
@@ -100,9 +102,6 @@ const cleanupProvisioning = async ({ tenantId, authUserId }) => {
 
 const generateSubdomain = async (schoolName) => {
     let base = slugifySchoolName(schoolName);
-
-const generateSubdomain = async (schoolName) => {
-    let base = slugifySchoolName(schoolName);
     if (RESERVED_SUBDOMAINS.has(base)) {
         base = `school${base}`;
     }
@@ -112,7 +111,7 @@ const generateSubdomain = async (schoolName) => {
         const { data, error } = await supabase
             .from('schools')
             .select('id')
-            .eq('subdomain', candidate)
+            .eq('slug', candidate)
             .maybeSingle();
 
         if (error) {
@@ -173,7 +172,8 @@ const provisionSchool = async ({
         name: cleanSchoolName,
         email: normalizedEmail,
         phone: cleanPhone,
-        subdomain,
+        slug: subdomain,
+        plan: planConfig.name,
         subscription_plan: planConfig.name,
         status,
         modules: planConfig.modules,

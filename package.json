@@ -4,6 +4,7 @@
   "main": "index.js",
   "packageManager": "pnpm@9.0.0",
   "scripts": {
+    "build": "node -e \"console.log('No build step required')\"",
     "start": "node server.js",
     "dev": "node server.js",
     "test": "node scripts/smoke-test.js && node --test scripts/api-tests.js",

@@ -18,7 +18,8 @@ const getTenantModules = (tenant) => {
 };
 
 const ensureMatchingTenant = (decoded, tenant) => {
-    if (tenant && decoded?.tenantId && decoded.tenantId !== tenant.id) {
+    const tokenTenantId = decoded?.tenantId || decoded?.schoolId || null;
+    if (tenant && tokenTenantId && tokenTenantId !== tenant.id) {
         const error = new Error('Token does not match the requested school.');
         error.statusCode = 403;
         throw error;
@@ -27,7 +28,7 @@ const ensureMatchingTenant = (decoded, tenant) => {
 
 const protect = (req, res, next) => {
     try {
-        const token = req.cookies?.schoolos_tenant_token;
+        const token = req.cookies?.schoolos_tenant_token || req.cookies?.schoolos_token;
         if (!token)
             return res.status(401).json({ error: 'No token provided.' });
         req.user = jwt.verify(token, process.env.JWT_SECRET);
@@ -58,9 +59,9 @@ router.get('/info', protect, (req, res) => {
         data: {
             school: {
                 id: req.tenant.id,
-                name: req.tenant.school_name,
-                subdomain: req.tenant.subdomain,
-                plan: req.tenant.plan,
+                name: req.tenant.school_name || req.tenant.name,
+                subdomain: req.tenant.subdomain || req.tenant.slug,
+                plan: req.tenant.plan || req.tenant.subscription_plan,
                 status: req.tenant.status,
                 modules: req.tenant.modules || [],
                 maxStudents: req.tenant.max_students,
