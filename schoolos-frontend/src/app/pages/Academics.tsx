@@ -1,18 +1,16 @@
 import { useState } from "react";
 import {
-  BookOpen,
   FileText,
   Send,
   Download,
   Plus,
-  ChevronDown,
   CheckCircle2,
-  Clock,
   Star,
-  TrendingUp,
-  TrendingDown,
   Award,
   BarChart2,
+  TrendingUp,
+  TrendingDown,
+  Clock,
 } from "lucide-react";
 import {
   BarChart,

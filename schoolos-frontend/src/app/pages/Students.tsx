@@ -6,7 +6,11 @@ import {
   Mail,
   MapPin,
   CheckCircle2,
-  MoreHorizontal,
+  ChevronRight,
+  Download,
+  X,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 
 const PLUM = "#381932";

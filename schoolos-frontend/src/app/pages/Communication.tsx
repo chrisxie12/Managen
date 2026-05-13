@@ -12,11 +12,8 @@ import {
   Bell,
   FileText,
   Smile,
-  Paperclip,
   MoreHorizontal,
   X,
-  ChevronRight,
-  TrendingUp,
 } from "lucide-react";
 
 const PLUM = "#381932";

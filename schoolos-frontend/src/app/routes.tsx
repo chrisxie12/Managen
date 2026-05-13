@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
@@ -36,9 +36,7 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: (
       <AuthGuard>
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
+        <DashboardLayout />
       </AuthGuard>
     ),
     children: [

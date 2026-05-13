@@ -12,9 +12,8 @@ import {
   X,
   Settings,
   HelpCircle,
-  CheckCircle2,
-  Circle,
-  ChevronRight,
+  BookOpen,
+  Search,
 } from "lucide-react";
 
 const PLUM = "#381932";
