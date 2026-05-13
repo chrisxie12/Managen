@@ -2,20 +2,19 @@ import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
   GraduationCap,
-  LayoutDashboard,
   Users,
-  BookOpen,
-  Wallet,
   BellRing,
   MessageSquare,
-  Settings,
+  Wallet,
   Bell,
-  Search,
   LogOut,
-  ChevronDown,
   Menu,
   X,
+  Settings,
   HelpCircle,
+  CheckCircle2,
+  Circle,
+  ChevronRight,
 } from "lucide-react";
 
 const PLUM = "#381932";
@@ -25,7 +24,7 @@ const SIDEBAR_BG = "#F9F1E7";
 const MUTED = "#7D6077";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
   { icon: Users, label: "Students", path: "/dashboard/students" },
   { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
   { icon: Wallet, label: "Finance", path: "/dashboard/finance" },

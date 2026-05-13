@@ -6,10 +6,8 @@ import {
   CheckCheck,
   Check,
   Clock,
-  AlertCircle,
   Plus,
   Search,
-  Filter,
   Users,
   Bell,
   FileText,
@@ -478,13 +476,12 @@ export function Communication() {
                   <p
                     style={{
                       color: PLUM,
-                      fontSize: "0.85rem",
                       lineHeight: 1.6,
                       whiteSpace: "pre-line",
                       fontFamily:
                         msg.from === "system" ? "'JetBrains Mono', monospace" : "inherit",
                       fontSize: msg.from === "system" ? "0.78rem" : "0.85rem",
-                    } as any}
+                    }}
                   >
                     {msg.text}
                   </p>

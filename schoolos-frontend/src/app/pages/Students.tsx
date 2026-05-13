@@ -2,17 +2,11 @@ import { useState } from "react";
 import {
   Search,
   Plus,
-  Filter,
-  ChevronRight,
   Phone,
   Mail,
   MapPin,
-  X,
   CheckCircle2,
-  Clock,
-  AlertCircle,
   MoreHorizontal,
-  Download,
 } from "lucide-react";
 
 const PLUM = "#381932";

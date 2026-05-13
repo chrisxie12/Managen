@@ -6,13 +6,25 @@ const isRedisConfigured = () => {
 };
 
 const redis = new Redis(process.env.REDIS_URL || 'redis://127.0.0.1:6379', {
-  lazyConnect: true,
   enableOfflineQueue: false,
   maxRetriesPerRequest: 0,
-  retryStrategy: () => null,
+  retryStrategy: (times) => {
+    if (times > 10) return null;
+    return Math.min(times * 200, 5000);
+  },
 });
 
-redis.on('error', () => {});
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err.message);
+});
+
+redis.on('connect', () => {
+  console.log('Redis connected');
+});
+
+redis.on('ready', () => {
+  console.log('Redis ready');
+});
 
 /**
  * Safely test Redis connectivity

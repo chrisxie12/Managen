@@ -25,21 +25,23 @@ const loginSchema = {
         email: z.string().email('Invalid email format.').transform(v => v.trim().toLowerCase()),
         password: z.string().min(1, 'Password is required.'),
         subdomain: z.string().optional().transform(v => v ? v.trim().toLowerCase() : ''),
+        slug: z.string().optional().transform(v => v ? v.trim().toLowerCase() : ''),
     })
 };
 
 // ─── POST /api/auth/login ─────────────────────────────────────
 router.post('/login', validate(loginSchema), async (req, res) => {
     try {
-        const { email, password, subdomain: bodySubdomain } = req.body;
-        
-        const subdomain = bodySubdomain || String(
+        const { email, password, subdomain: bodySubdomain, slug: bodySlug } = req.body;
+
+        const subdomain = bodySlug || bodySubdomain || String(
+            req.query?.slug ||
             req.query?.subdomain ||
             req.headers['x-tenant-subdomain'] || ''
         ).trim().toLowerCase();
 
         // Resolve school
-        const school = req.school || (subdomain ? await authService.loadSchoolBySubdomain(subdomain) : null);
+        const school = req.tenant || (subdomain ? await authService.loadSchoolBySubdomain(subdomain) : null);
         if (!school) return invalidLogin(res);
 
         // Load user
@@ -63,9 +65,10 @@ router.post('/login', validate(loginSchema), async (req, res) => {
                 userId:    user.id,
                 roleId:    user.role_id,
                 role:      user.role,
-                schoolId:  school.id,
                 tenantId:  school.id,
-                subdomain: school.subdomain || school.slug,
+                schoolId:  school.id,
+                subdomain: school.slug,
+                slug: school.slug,
                 permissions: permissions,
             },
             process.env.JWT_SECRET,
@@ -93,8 +96,9 @@ router.post('/login', validate(loginSchema), async (req, res) => {
                 },
                 school: {
                     name:      school.name,
-                    subdomain: school.subdomain || school.slug,
-                    plan:      school.subscription_plan || school.plan,
+                    slug:      school.slug,
+                    subdomain: school.slug,
+                    plan:      school.plan,
                     modules:   school.modules,
                 },
             }
@@ -117,10 +121,10 @@ router.get('/me', async (req, res) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const school = req.school || await authService.loadSchoolById(decoded.schoolId);
+        const school = req.tenant || await authService.loadSchoolById(decoded.schoolId);
         if (!school) return res.status(404).json({ error: 'School not found.' });
 
-        // ensureMatchingSchool(decoded, school); // Simplified for now
+        ensureMatchingTenant(decoded, school);
 
         const user = await authService.getUserById(decoded.userId);
         if (!user) return res.status(404).json({ error: 'User not found.' });
@@ -135,7 +139,9 @@ router.get('/me', async (req, res) => {
                 },
                 school: {
                     name:      school.name,
-                    plan:      school.subscription_plan || school.plan,
+                    slug:      school.slug,
+                    subdomain: school.slug,
+                    plan:      school.plan,
                     modules:   school.modules,
                 },
             }

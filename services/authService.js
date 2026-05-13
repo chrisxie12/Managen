@@ -21,6 +21,7 @@ class AuthService {
             .from('schools')
             .select('*')
             .eq('slug', subdomain)
+            .eq('is_active', true)
             .maybeSingle();
 
         if (error) {
@@ -34,7 +35,7 @@ class AuthService {
     async getUserByEmailAndSchool(email, schoolId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, full_name, email, role, role_id, is_active, password')
+            .select('id, full_name, email, role_id, role, is_active, password')
             .eq('email', email)
             .eq('school_id', schoolId)
             .maybeSingle();
@@ -50,7 +51,7 @@ class AuthService {
     async getUserById(userId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, full_name, email, role_id')
+            .select('id, full_name, email, role, role_id')
             .eq('id', userId)
             .maybeSingle();
 

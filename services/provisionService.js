@@ -68,11 +68,9 @@ const toTenantResponse = (tenant) => ({
     ...tenant,
     id: tenant.id,
     tenantId: tenant.id,
-    schoolName: tenant.school_name || tenant.name,
-    plan: tenant.plan || tenant.subscription_plan,
-    subdomain: tenant.subdomain || tenant.slug,
-    maxStudents: tenant.max_students,
-    trialEndsAt: tenant.trial_ends_at,
+    schoolName: tenant.name,
+    plan: tenant.plan,
+    isActive: tenant.is_active,
 });
 
 const normalizeError = (message, statusCode = 500) => {
@@ -160,25 +158,20 @@ const provisionSchool = async ({
         throw normalizeError('A school with this email already exists.', 409);
     }
 
-    const subdomain = await generateSubdomain(cleanSchoolName);
+    const slug = await generateSubdomain(cleanSchoolName);
     const passwordHash = await bcrypt.hash(String(adminPassword), 12);
     const trialEndsAt = planConfig.durationDays
         ? new Date(Date.now() + planConfig.durationDays * 24 * 60 * 60 * 1000).toISOString()
         : null;
-    const status = planConfig.name === 'trial' ? 'trial' : 'active';
 
     const tenantPayload = {
         id: crypto.randomUUID(),
         name: cleanSchoolName,
         email: normalizedEmail,
         phone: cleanPhone,
-        slug: subdomain,
+        slug,
         plan: planConfig.name,
-        subscription_plan: planConfig.name,
-        status,
-        modules: planConfig.modules,
-        max_students: planConfig.maxStudents,
-        trial_ends_at: trialEndsAt,
+        is_active: true,
     };
 
     const { data: tenant, error: tenantError } = await supabase
@@ -232,8 +225,8 @@ const provisionSchool = async ({
     return {
         tenant: toTenantResponse(tenant),
         adminUser,
-        subdomain,
-        loginUrl: buildTenantLoginUrl(subdomain),
+        slug,
+        loginUrl: buildTenantLoginUrl(slug),
         plan: planConfig,
     };
 };
@@ -245,9 +238,9 @@ const suspendSchool = async (tenantId) => {
 
     const { data, error } = await supabase
         .from('schools')
-        .update({ status: 'suspended' })
+        .update({ is_active: false })
         .eq('id', tenantId)
-        .select('id, status')
+        .select('id, is_active')
         .maybeSingle();
 
     if (error) {
@@ -266,23 +259,11 @@ const reactivateSchool = async (tenantId, plan = 'basic') => {
         throw normalizeError('tenantId is required.', 400);
     }
 
-    const planConfig = getPlanConfig(plan);
-    const trialEndsAt = planConfig.durationDays
-        ? new Date(Date.now() + planConfig.durationDays * 24 * 60 * 60 * 1000).toISOString()
-        : null;
-    const status = planConfig.name === 'trial' ? 'trial' : 'active';
-
     const { data, error } = await supabase
         .from('schools')
-        .update({
-            status,
-            subscription_plan: planConfig.name,
-            modules: planConfig.modules,
-            max_students: planConfig.maxStudents,
-            trial_ends_at: trialEndsAt,
-        })
+        .update({ is_active: true, plan })
         .eq('id', tenantId)
-        .select('id, status, subscription_plan')
+        .select('id, is_active, plan')
         .maybeSingle();
 
     if (error) {

@@ -32,7 +32,7 @@ const tenantMiddleware = async (req, res, next) => {
 
         const subdomainFromHost = extractSubdomain(host);
         const fallbackSubdomain = String(
-            req.headers['x-tenant-subdomain'] || req.query.subdomain || ''
+            req.headers['x-tenant-subdomain'] || req.query.subdomain || req.query.slug || ''
         ).trim().toLowerCase() || null;
 
         const subdomain = subdomainFromHost || fallbackSubdomain;
@@ -60,6 +60,7 @@ const tenantMiddleware = async (req, res, next) => {
                 .from('schools')
                 .select('*')
                 .eq('slug', subdomain)
+                .eq('is_active', true)
                 .maybeSingle();
 
             if (error) {

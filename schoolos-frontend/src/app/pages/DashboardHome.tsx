@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Users,
-  Wallet,
   Clock,
   TrendingUp,
   TrendingDown,
@@ -14,7 +13,6 @@ import {
   Circle,
   ChevronRight,
   Bell,
-  BarChart2,
 } from "lucide-react";
 import {
   AreaChart,
@@ -44,7 +42,7 @@ const revenueData = [
   { month: "Mar", amount: 94000 },
 ];
 
-const attendanceData = [
+const [] = [
   { day: "Mon", rate: 92 },
   { day: "Tue", rate: 95 },
   { day: "Wed", rate: 88 },

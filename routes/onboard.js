@@ -57,7 +57,8 @@ router.post('/signup', async (req, res) => {
             data: {
                 message:     'School created successfully!',
                 loginUrl:    result.loginUrl,
-                subdomain:   result.subdomain,
+                slug:        result.slug,
+                subdomain:   result.slug,
                 tenantId:    result.tenant.id,
                 plan:        result.tenant.plan,
                 trialEndsAt: result.tenant.trialEndsAt,

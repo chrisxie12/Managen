@@ -13,8 +13,6 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   CreditCard,
-  Users,
-  X,
 } from "lucide-react";
 import {
   BarChart,

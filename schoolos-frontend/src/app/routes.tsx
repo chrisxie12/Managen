@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
@@ -9,11 +9,20 @@ import { Finance } from "./pages/Finance";
 import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
 import SchoolOSFlow from "./components/SchoolOSFlow";
+import { AuthGuard } from "../components/AuthGuard";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: LandingPage,
+  },
+  {
+    path: "/login",
+    element: <Navigate to="/auth" replace />,
+  },
+  {
+    path: "/auth/login",
+    element: <Navigate to="/auth" replace />,
   },
   {
     path: "/architecture",
@@ -25,7 +34,13 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    Component: DashboardLayout,
+    element: (
+      <AuthGuard>
+        <DashboardLayout>
+          <Outlet />
+        </DashboardLayout>
+      </AuthGuard>
+    ),
     children: [
       { index: true, Component: DashboardHome },
       { path: "students", Component: Students },

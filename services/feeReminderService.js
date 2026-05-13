@@ -136,7 +136,7 @@ const sendReminderForFee = async ({ tenant, fee, actorId, dryRun = false }) => {
     const recipient = await resolveRecipient(tenant, fee);
     const paymentLink = buildPaymentLink(fee.id);
     const message = buildReminderMessage({
-        schoolName: tenant.school_name,
+        schoolName: tenant.name,
         parentName: recipient.parentName,
         studentName: recipient.studentName,
         amount: fee.amount,
@@ -144,7 +144,7 @@ const sendReminderForFee = async ({ tenant, fee, actorId, dryRun = false }) => {
         paymentLink,
     });
 
-    const subject = `${tenant.school_name || 'SchoolOS'} fee reminder`;
+    const subject = `${tenant.name || 'SchoolOS'} fee reminder`;
     const channels = parseChannelOrder();
     const attempts = [];
 

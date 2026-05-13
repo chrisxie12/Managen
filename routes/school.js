@@ -6,6 +6,7 @@ const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
+const { getPlanConfig } = require('../services/provisionService');
 const parseInteger = (value, fallback, min = 1, max = 1000) => {
     const parsed = Number.parseInt(value, 10);
     if (Number.isNaN(parsed)) return fallback;
@@ -13,8 +14,9 @@ const parseInteger = (value, fallback, min = 1, max = 1000) => {
 };
 
 const getTenantModules = (tenant) => {
-    if (!tenant || !Array.isArray(tenant.modules)) return [];
-    return tenant.modules.map((module) => String(module).toLowerCase());
+    if (!tenant) return [];
+    const plan = getPlanConfig(tenant.plan);
+    return plan.modules || [];
 };
 
 const ensureMatchingTenant = (decoded, tenant) => {
@@ -28,7 +30,7 @@ const ensureMatchingTenant = (decoded, tenant) => {
 
 const protect = (req, res, next) => {
     try {
-        const token = req.cookies?.schoolos_tenant_token || req.cookies?.schoolos_token;
+        const token = req.cookies?.schoolos_token;
         if (!token)
             return res.status(401).json({ error: 'No token provided.' });
         req.user = jwt.verify(token, process.env.JWT_SECRET);
@@ -59,13 +61,14 @@ router.get('/info', protect, (req, res) => {
         data: {
             school: {
                 id: req.tenant.id,
-                name: req.tenant.school_name || req.tenant.name,
-                subdomain: req.tenant.subdomain || req.tenant.slug,
-                plan: req.tenant.plan || req.tenant.subscription_plan,
-                status: req.tenant.status,
-                modules: req.tenant.modules || [],
-                maxStudents: req.tenant.max_students,
-                trialEndsAt: req.tenant.trial_ends_at,
+                name: req.tenant.name,
+                slug: req.tenant.slug,
+                subdomain: req.tenant.slug,
+                plan: req.tenant.plan,
+                status: req.tenant.is_active ? 'active' : 'suspended',
+                modules: getTenantModules(req.tenant),
+                maxStudents: getPlanConfig(req.tenant.plan).maxStudents,
+                trialEndsAt: null,
             }
         }
     });
@@ -125,9 +128,9 @@ router.post('/students', protect, allowRoles('admin'), validate(studentSchema), 
     try {
         const count = await schoolService.getStudentCount(req.tenant.id);
 
-        const maxStudents = req.tenant.max_students == null ? null : Number(req.tenant.max_students);
-        if (Number.isFinite(maxStudents) && count >= maxStudents)
-            return res.status(403).json({ error: `Student limit (${req.tenant.max_students}) reached. Upgrade your plan.` });
+        const maxStudents = getPlanConfig(req.tenant.plan).maxStudents;
+        if (maxStudents != null && count >= maxStudents)
+            return res.status(403).json({ error: `Student limit (${maxStudents}) reached. Upgrade your plan.` });
 
         const studentPayload = req.body;
 

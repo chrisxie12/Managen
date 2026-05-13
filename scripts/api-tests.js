@@ -11,6 +11,7 @@ process.env.STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_
 process.env.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000';
 
 const db = {
+    schools: [],
     tenants: [],
     schools: [],
     users: [],
@@ -164,7 +165,10 @@ class Query {
     }
 
     async _execute(mode) {
-        const table = db[this.table] || [];
+        if (!db[this.table]) {
+            db[this.table] = [];
+        }
+        const table = db[this.table];
 
         if (this.mode === 'insert') {
         const inserted = this.payload.map((item) => {
@@ -375,16 +379,47 @@ const loginSchool = async (subdomain) => request('/api/auth/login', {
     },
 });
 
+const flushTenantRedis = async () => {
+    try {
+        const redis = require('../config/redis');
+        for (let i = 0; i < 20; i += 1) {
+            if (redis.status === 'ready') break;
+            await new Promise((r) => setTimeout(r, 50));
+        }
+        if (redis.status !== 'ready') return;
+        const keys = await redis.keys('tenant:*');
+        if (keys && keys.length) await redis.del(...keys);
+    } catch {
+        // Redis optional in CI
+    }
+};
+
 test.before(async () => {
     server = app.listen(0);
     await new Promise((resolve) => server.once('listening', resolve));
     baseUrl = `http://127.0.0.1:${server.address().port}`;
+    await flushTenantRedis();
 });
 
-test.beforeEach(resetDb);
+test.beforeEach(async () => {
+    resetDb();
+    await flushTenantRedis();
+});
 
 test.after(async () => {
-    await new Promise((resolve) => server.close(resolve));
+    if (server) {
+        await new Promise((resolve, reject) => {
+            server.close((err) => (err ? reject(err) : resolve()));
+        });
+    }
+    try {
+        const redis = require('../config/redis');
+        if (redis && typeof redis.quit === 'function') {
+            await redis.quit();
+        }
+    } catch {
+        // allow tests to finish if Redis is down
+    }
 });
 
 test('health and plan endpoints respond', async () => {

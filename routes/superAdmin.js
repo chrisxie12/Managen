@@ -46,25 +46,22 @@ cleanupMemoryCacheTimer.unref?.();
 
 const mapTenant = (tenant) => ({
     id: tenant.id,
-    schoolName: tenant.school_name,
+    schoolName: tenant.name,
     email: tenant.email,
     phone: tenant.phone,
-    subdomain: tenant.subdomain,
+    slug: tenant.slug,
+    subdomain: tenant.slug,
     plan: tenant.plan,
-    status: tenant.status,
-    modules: tenant.modules || [],
-    maxStudents: tenant.max_students,
-    trialEndsAt: tenant.trial_ends_at,
+    status: tenant.is_active ? 'active' : 'suspended',
+    modules: PLAN_CATALOG[tenant.plan]?.modules || [],
+    maxStudents: PLAN_CATALOG[tenant.plan]?.maxStudents || null,
+    trialEndsAt: null,
     createdAt: tenant.created_at,
 });
 
 const mapPayment = (payment) => ({
     id: payment.id,
-    tenantId: payment.tenant_id,
-    schoolName: payment.school_name,
     amount: payment.amount,
-    status: payment.status,
-    stripeInvoiceId: payment.stripe_invoice_id,
     paidAt: payment.paid_at || payment.created_at,
 });
 
@@ -402,26 +399,24 @@ router.post('/logout', (req, res) => {
 // ─── GET /api/superadmin/dashboard ───────────────────────────
 router.get('/dashboard', superAdminAuth, async (req, res) => {
     try {
-        const [totalSchools, activeSchools, trialSchools, suspended] = await Promise.all([
-            supabase.from('tenants').select('id', { count: 'exact', head: true }),
-            supabase.from('tenants').select('id', { count: 'exact', head: true }).eq('status', 'active'),
-            supabase.from('tenants').select('id', { count: 'exact', head: true }).eq('status', 'trial'),
-            supabase.from('tenants').select('id', { count: 'exact', head: true }).eq('status', 'suspended'),
+        const [totalSchools, activeSchools, suspended] = await Promise.all([
+            supabase.from('schools').select('id', { count: 'exact', head: true }),
+            supabase.from('schools').select('id', { count: 'exact', head: true }).eq('is_active', true),
+            supabase.from('schools').select('id', { count: 'exact', head: true }).eq('is_active', false),
         ]);
 
-        for (const result of [totalSchools, activeSchools, trialSchools, suspended]) {
+        for (const result of [totalSchools, activeSchools, suspended]) {
             if (result.error) return res.status(400).json({ error: result.error.message });
         }
 
         const { data: paidPayments, error: paymentsError } = await supabase
             .from('payments')
-            .select('amount')
-            .eq('status', 'paid');
+            .select('amount');
 
         if (paymentsError) return res.status(400).json({ error: paymentsError.message });
 
         const { data: tenantPlans, error: plansError } = await supabase
-            .from('tenants')
+            .from('schools')
             .select('plan');
 
         if (plansError) return res.status(400).json({ error: plansError.message });
@@ -440,7 +435,7 @@ router.get('/dashboard', superAdminAuth, async (req, res) => {
                 stats: {
                     totalSchools: totalSchools.count || 0,
                     activeSchools: activeSchools.count || 0,
-                    trialSchools: trialSchools.count || 0,
+                    trialSchools: 0,
                     suspended: suspended.count || 0,
                     totalRevenue: sumPayments(paidPayments),
                 },
@@ -464,12 +459,13 @@ router.get('/schools', superAdminAuth, async (req, res) => {
         const pageSize = parseInteger(limit, 20, 1, 100);
 
         let query = supabase
-            .from('tenants')
-            .select('id, school_name, email, phone, subdomain, plan, status, modules, max_students, trial_ends_at, created_at', { count: 'exact' })
+            .from('schools')
+            .select('id, name, email, phone, slug, plan, is_active, created_at', { count: 'exact' })
             .order('created_at', { ascending: false })
             .range((currentPage - 1) * pageSize, currentPage * pageSize - 1);
 
-        if (filter.status) query = query.eq('status', filter.status);
+        if (filter.status === 'active' || filter.status === 'trial') query = query.eq('is_active', true);
+        if (filter.status === 'suspended') query = query.eq('is_active', false);
         if (filter.plan) query = query.eq('plan', filter.plan);
 
         const { data: schools, count, error } = await query;
@@ -493,8 +489,8 @@ router.get('/schools', superAdminAuth, async (req, res) => {
 router.get('/schools/:id', superAdminAuth, async (req, res) => {
     try {
         const { data: school, error: schoolError } = await supabase
-            .from('tenants')
-            .select('id, school_name, email, phone, subdomain, plan, status, modules, max_students, trial_ends_at, created_at')
+            .from('schools')
+            .select('id, name, email, phone, slug, plan, is_active, created_at')
             .eq('id', req.params.id)
             .maybeSingle();
 
@@ -503,8 +499,7 @@ router.get('/schools/:id', superAdminAuth, async (req, res) => {
 
         const { data: payments, error: paymentsError } = await supabase
             .from('payments')
-            .select('id, tenant_id, school_name, amount, status, stripe_invoice_id, paid_at, created_at')
-            .eq('tenant_id', req.params.id)
+            .select('id, amount, paid_at, created_at')
             .order('paid_at', { ascending: false, nullsFirst: false })
             .order('created_at', { ascending: false });
 
@@ -546,7 +541,7 @@ router.get('/payments', superAdminAuth, async (req, res) => {
     try {
         const { data: payments, error } = await supabase
             .from('payments')
-            .select('id, tenant_id, school_name, amount, status, stripe_invoice_id, paid_at, created_at')
+            .select('id, amount, paid_at, created_at')
             .order('paid_at', { ascending: false, nullsFirst: false })
             .order('created_at', { ascending: false })
             .limit(50);

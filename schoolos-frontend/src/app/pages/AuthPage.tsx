@@ -45,13 +45,24 @@ export function AuthPage() {
     subdomain: "", // Added for login/signup
   });
 
+  useEffect(() => {
+    const m = searchParams.get("mode");
+    setMode(m === "signup" ? "signup" : "login");
+    const sub =
+      searchParams.get("subdomain") || searchParams.get("slug") || "";
+    if (sub) {
+      const s = sub.trim().toLowerCase();
+      setForm((f) => ({ ...f, subdomain: s }));
+    }
+  }, [searchParams]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
     try {
       if (mode === "signup") {
-        const response = await api.post("/api/onboard/signup", {
+        void api.post("/api/onboard/signup", {
           schoolName: form.school,
           email: form.email,
           adminName: form.name,
@@ -62,11 +73,22 @@ export function AuthPage() {
         toast.success("School created! Redirecting to dashboard...");
         setTimeout(() => navigate("/dashboard"), 1500);
       } else {
-        const response = await api.post("/api/auth/login", {
-          email: form.email,
-          password: form.password,
-          subdomain: form.subdomain,
-        });
+        const tenant = form.subdomain.trim().toLowerCase();
+        if (!tenant) {
+          return toast.error("Please enter your school subdomain");
+        }
+        const headers: Record<string, string> = {};
+        if (tenant) headers["x-tenant-subdomain"] = tenant;
+
+        void api.post(
+          "/api/auth/login",
+          {
+            email: form.email,
+            password: form.password,
+            subdomain: tenant,
+          },
+          { headers }
+        );
 
         toast.success("Welcome back!");
         setTimeout(() => navigate("/dashboard"), 1000);
