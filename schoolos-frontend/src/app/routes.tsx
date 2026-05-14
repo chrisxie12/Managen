@@ -2,14 +2,19 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
-import { DashboardHome } from "./pages/DashboardHome";
 import { Students } from "./pages/Students";
 import { Academics } from "./pages/Academics";
 import { Finance } from "./pages/Finance";
 import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
+import { SuperAdminLayout } from "./pages/SuperAdminLayout";
+import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
+import { SuperAdminSchools } from "./pages/SuperAdminSchools";
+import { SuperAdminBilling } from "./pages/SuperAdminBilling";
+import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import SchoolOSFlow from "./components/SchoolOSFlow";
 import { AuthGuard } from "../components/AuthGuard";
+import { RoleDashboard } from "./components/RoleDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -40,12 +45,25 @@ export const router = createBrowserRouter([
       </AuthGuard>
     ),
     children: [
-      { index: true, Component: DashboardHome },
+      { index: true, Component: RoleDashboard },
       { path: "students", Component: Students },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
+    ],
+  },
+  {
+    path: "/superadmin",
+    element: (
+      <SuperAdminAuthGuard>
+        <SuperAdminLayout />
+      </SuperAdminAuthGuard>
+    ),
+    children: [
+      { index: true, Component: SuperAdminDashboard },
+      { path: "schools", Component: SuperAdminSchools },
+      { path: "billing", Component: SuperAdminBilling },
     ],
   },
 ]);
