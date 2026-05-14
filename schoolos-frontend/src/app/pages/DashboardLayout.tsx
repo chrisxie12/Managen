@@ -71,7 +71,20 @@ export function DashboardLayout() {
   const [notifCount] = useState(3);
 
   const role = user?.role || "school_admin";
-  const navItems = roleNavItems[role] || roleNavItems.school_admin;
+  const userPerms = user?.permissions || [];
+  const navItems = (roleNavItems[role] || roleNavItems.school_admin).filter((item) => {
+    if (userPerms.length === 0) return true;
+    const permMap: Record<string, string[]> = {
+      "/dashboard": ["dashboard:read"],
+      "/dashboard/students": ["students:read"],
+      "/dashboard/academics": ["grades:read"],
+      "/dashboard/finance": ["fees:read"],
+      "/dashboard/fee-reminders": ["fees:read"],
+      "/dashboard/communication": ["messages:read"],
+    };
+    const required = permMap[item.path];
+    return !required || required.some((p) => userPerms.includes(p));
+  });
   const roleLabel = roleLabels[role] || "Administrator";
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)

@@ -201,6 +201,12 @@ const provisionSchool = async ({
         throw normalizeError('Supabase Auth user was not created.', 502);
     }
 
+    const { data: adminRole } = await supabase
+        .from('roles')
+        .select('id')
+        .eq('name', 'school_admin')
+        .maybeSingle();
+
     const userPayload = {
         id: authUser.user.id,
         school_id: tenant.id,
@@ -208,12 +214,13 @@ const provisionSchool = async ({
         email: normalizedEmail,
         password: passwordHash, 
         role: 'admin',
+        role_id: adminRole?.id || null,
         is_active: true,
     };
     const { data: adminUser, error: userError } = await supabase
         .from('users')
         .upsert(userPayload)
-        .select('id, full_name, email, role')
+        .select('id, full_name, email, role, role_id')
         .single();
 
     if (userError) {

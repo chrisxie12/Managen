@@ -15,6 +15,7 @@ const superAdminRoutes = require('./routes/superAdmin');
 const schoolRoutes     = require('./routes/school');
 const billingRoutes    = require('./routes/billing');
 const cronRoutes       = require('./routes/cron');
+const approvalRoutes   = require('./routes/approvals');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -126,6 +127,7 @@ const { tenantMiddleware } = require('./middleware/tenant');
 app.use(tenantMiddleware);
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/school', schoolRoutes);
+app.use('/api/approvals', approvalRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {

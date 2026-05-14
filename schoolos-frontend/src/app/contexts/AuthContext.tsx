@@ -41,10 +41,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await api.get<{ user: User; school: School }>("/api/auth/me");
+      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
       if (res.data) {
-        setUser(res.data.user);
-        setSchool(res.data.school);
+        setUser({
+          id: res.data.user.id,
+          fullName: res.data.user.full_name || res.data.user.fullName,
+          email: res.data.user.email,
+          role: res.data.user.role,
+          roleId: res.data.user.role_id || res.data.user.roleId,
+          permissions: res.data.user.permissions || [],
+        });
+        setSchool({
+          name: res.data.school.name,
+          slug: res.data.school.slug,
+          subdomain: res.data.school.subdomain || res.data.school.slug,
+          plan: res.data.school.plan,
+          modules: res.data.school.modules || [],
+        });
       }
     } catch {
       setUser(null);

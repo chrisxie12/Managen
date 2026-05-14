@@ -6,6 +6,7 @@ const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
+const { requirePermission } = require('../middleware/permission');
 const { getPlanConfig } = require('../services/provisionService');
 const parseInteger = (value, fallback, min = 1, max = 1000) => {
     const parsed = Number.parseInt(value, 10);
@@ -85,7 +86,7 @@ router.get('/dashboard', protect, async (req, res) => {
 });
 
 // GET /api/school/students
-router.get('/students', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.get('/students', protect, requirePermission('students:read'), async (req, res) => {
     try {
         const page = parseInteger(req.query.page, 1, 1, 1000000);
         const limit = parseInteger(req.query.limit, 20, 1, 100);
@@ -124,7 +125,7 @@ const feeReminderSchema = {
 };
 
 // POST /api/school/students
-router.post('/students', protect, allowRoles('admin'), validate(studentSchema), async (req, res) => {
+router.post('/students', protect, requirePermission('students:manage'), validate(studentSchema), async (req, res) => {
     try {
         const count = await schoolService.getStudentCount(req.tenant.id);
 
@@ -146,7 +147,7 @@ router.post('/students', protect, allowRoles('admin'), validate(studentSchema), 
 });
 
 // POST /api/school/attendance
-router.post('/attendance', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.post('/attendance', protect, requirePermission('attendance:manage'), async (req, res) => {
     try {
         const data = await schoolService.submitAttendance(req.tenant.id, req.body.records);
         return res.status(201).json({ data: { message: 'Attendance recorded.', data } });
@@ -166,7 +167,7 @@ router.get('/attendance/stats', protect, async (req, res) => {
 });
 
 // GET /api/school/fees
-router.get('/fees', protect, requireModule('fees'), allowRoles('admin'), async (req, res) => {
+router.get('/fees', protect, requireModule('fees'), requirePermission('fees:read'), async (req, res) => {
     try {
         const fees = await schoolService.getFees(req.tenant.id, req.query.status);
         return res.json({ data: { fees } });
@@ -179,7 +180,7 @@ router.get('/fees', protect, requireModule('fees'), allowRoles('admin'), async (
 });
 
 // POST /api/school/fees/reminders/send
-router.post('/fees/reminders/send', protect, requireModule('fees'), allowRoles('admin'), validate(feeReminderSchema), async (req, res) => {
+router.post('/fees/reminders/send', protect, requireModule('fees'), requirePermission('fees:manage'), validate(feeReminderSchema), async (req, res) => {
     try {
         const payload = req.body || {};
         
@@ -234,7 +235,7 @@ const resultSchema = {
 };
 
 // GET /api/school/exams
-router.get('/exams', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.get('/exams', protect, requirePermission('grades:read'), async (req, res) => {
     try {
         const exams = await examService.getExams(req.tenant.id);
         return res.json({ data: { exams } });
@@ -247,7 +248,7 @@ router.get('/exams', protect, allowRoles('admin', 'teacher'), async (req, res) =
 });
 
 // POST /api/school/exams
-router.post('/exams', protect, allowRoles('admin', 'teacher'), validate(examSchema), async (req, res) => {
+router.post('/exams', protect, requirePermission('grades:manage'), validate(examSchema), async (req, res) => {
     try {
         const exam = await examService.createExam(req.tenant.id, req.body);
         return res.status(201).json({ data: { message: 'Exam created.', exam } });
@@ -260,7 +261,7 @@ router.post('/exams', protect, allowRoles('admin', 'teacher'), validate(examSche
 });
 
 // DELETE /api/school/exams/:id
-router.delete('/exams/:id', protect, allowRoles('admin'), async (req, res) => {
+router.delete('/exams/:id', protect, requirePermission('grades:manage'), async (req, res) => {
     try {
         await examService.deleteExam(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Exam removed.' } });
@@ -270,7 +271,7 @@ router.delete('/exams/:id', protect, allowRoles('admin'), async (req, res) => {
 });
 
 // GET /api/school/results
-router.get('/results', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.get('/results', protect, requirePermission('grades:read'), async (req, res) => {
     try {
         const { exam_id } = req.query;
         if (!exam_id) return res.status(400).json({ error: 'exam_id query param is required' });
@@ -286,7 +287,7 @@ router.get('/results', protect, allowRoles('admin', 'teacher'), async (req, res)
 });
 
 // POST /api/school/results
-router.post('/results', protect, allowRoles('admin', 'teacher'), validate(resultSchema), async (req, res) => {
+router.post('/results', protect, requirePermission('grades:manage'), validate(resultSchema), async (req, res) => {
     try {
         const result = await examService.submitResult(req.tenant.id, req.body);
         return res.status(201).json({ data: { message: 'Result saved.', result } });
@@ -322,7 +323,7 @@ router.get('/teachers', protect, async (req, res) => {
     }
 });
 
-router.post('/teachers', protect, allowRoles('admin'), async (req, res) => {
+router.post('/teachers', protect, requirePermission('teachers:manage'), async (req, res) => {
     try {
         const teacher = await schoolService.createTeacher(req.tenant.id, req.body);
         return res.status(201).json({ data: { teacher } });
@@ -331,7 +332,7 @@ router.post('/teachers', protect, allowRoles('admin'), async (req, res) => {
     }
 });
 
-router.put('/teachers/:id', protect, allowRoles('admin'), async (req, res) => {
+router.put('/teachers/:id', protect, requirePermission('teachers:manage'), async (req, res) => {
     try {
         const teacher = await schoolService.updateTeacher(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { teacher } });
@@ -340,7 +341,7 @@ router.put('/teachers/:id', protect, allowRoles('admin'), async (req, res) => {
     }
 });
 
-router.delete('/teachers/:id', protect, allowRoles('admin'), async (req, res) => {
+router.delete('/teachers/:id', protect, requirePermission('teachers:manage'), async (req, res) => {
     try {
         await schoolService.deleteTeacher(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Teacher removed.' } });
@@ -359,7 +360,7 @@ router.get('/classes', protect, async (req, res) => {
     }
 });
 
-router.post('/classes', protect, allowRoles('admin'), async (req, res) => {
+router.post('/classes', protect, requirePermission('classes:manage'), async (req, res) => {
     try {
         const cls = await schoolService.createClass(req.tenant.id, req.body);
         return res.status(201).json({ data: { class: cls } });
@@ -378,7 +379,7 @@ router.get('/library/books', protect, async (req, res) => {
     }
 });
 
-router.post('/library/books', protect, allowRoles('admin'), async (req, res) => {
+router.post('/library/books', protect, requirePermission('classes:manage'), async (req, res) => {
     try {
         const book = await schoolService.addBook(req.tenant.id, req.body);
         return res.status(201).json({ data: { book } });
@@ -387,7 +388,7 @@ router.post('/library/books', protect, allowRoles('admin'), async (req, res) => 
     }
 });
 
-router.post('/library/issue', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.post('/library/issue', protect, requirePermission('students:read'), async (req, res) => {
     try {
         const issue = await schoolService.issueBook(req.tenant.id, req.body);
         return res.status(201).json({ data: { issue } });
@@ -396,7 +397,7 @@ router.post('/library/issue', protect, allowRoles('admin', 'teacher'), async (re
     }
 });
 
-router.put('/library/return/:id', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.put('/library/return/:id', protect, requirePermission('students:read'), async (req, res) => {
     try {
         const issue = await schoolService.returnBook(req.tenant.id, req.params.id);
         return res.json({ data: { issue } });
@@ -415,7 +416,7 @@ router.get('/timetable', protect, async (req, res) => {
     }
 });
 
-router.post('/timetable', protect, allowRoles('admin', 'teacher'), async (req, res) => {
+router.post('/timetable', protect, requirePermission('timetable:manage'), async (req, res) => {
     try {
         const session = await schoolService.assignPeriod(req.tenant.id, req.body);
         return res.status(201).json({ data: { session } });
@@ -425,7 +426,7 @@ router.post('/timetable', protect, allowRoles('admin', 'teacher'), async (req, r
 });
 
 // ─── Payroll ─────────────────────────────────────────────────
-router.get('/payroll', protect, allowRoles('admin'), async (req, res) => {
+router.get('/payroll', protect, requirePermission('fees:read'), async (req, res) => {
     try {
         const payroll = await schoolService.getPayroll(req.tenant.id);
         return res.json({ data: { payroll } });
@@ -434,7 +435,7 @@ router.get('/payroll', protect, allowRoles('admin'), async (req, res) => {
     }
 });
 
-router.post('/payroll/run', protect, allowRoles('admin'), async (req, res) => {
+router.post('/payroll/run', protect, requirePermission('fees:manage'), async (req, res) => {
     try {
         const record = await schoolService.runPayroll(req.tenant.id, req.body);
         return res.status(201).json({ data: { record } });
@@ -444,7 +445,7 @@ router.post('/payroll/run', protect, allowRoles('admin'), async (req, res) => {
 });
 
 // ─── Communications ──────────────────────────────────────────
-router.post('/notifications/broadcast', protect, allowRoles('admin'), async (req, res) => {
+router.post('/notifications/broadcast', protect, requirePermission('announcements:manage'), async (req, res) => {
     try {
         const log = await schoolService.broadcastNotification(req.tenant.id, req.body);
         return res.status(201).json({ data: { log } });
@@ -463,3 +464,4 @@ router.get('/notifications/log', protect, async (req, res) => {
 });
 
 module.exports = router;
+module.exports.protect = protect;

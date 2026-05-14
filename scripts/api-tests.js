@@ -404,6 +404,62 @@ test.before(async () => {
 test.beforeEach(async () => {
     resetDb();
     await flushTenantRedis();
+
+    db.roles = [
+        { id: 'role_school_admin', name: 'school_admin', label: 'School Admin' },
+        { id: 'role_superadmin', name: 'superadmin', label: 'Super Admin' },
+        { id: 'role_headmaster', name: 'headmaster', label: 'Headmaster' },
+        { id: 'role_accountant', name: 'accountant', label: 'Accountant' },
+        { id: 'role_teacher', name: 'teacher', label: 'Teacher' },
+        { id: 'role_student', name: 'student', label: 'Student' },
+        { id: 'role_parent', name: 'parent', label: 'Parent' },
+    ];
+    db.permissions = [
+        { id: 'perm_dashboard_read', name: 'dashboard:read', module: 'dashboard' },
+        { id: 'perm_students_read', name: 'students:read', module: 'students' },
+        { id: 'perm_students_manage', name: 'students:manage', module: 'students' },
+        { id: 'perm_grades_read', name: 'grades:read', module: 'grades' },
+        { id: 'perm_grades_manage', name: 'grades:manage', module: 'grades' },
+        { id: 'perm_attendance_manage', name: 'attendance:manage', module: 'attendance' },
+        { id: 'perm_fees_read', name: 'fees:read', module: 'fees' },
+        { id: 'perm_fees_manage', name: 'fees:manage', module: 'fees' },
+        { id: 'perm_messages_read', name: 'messages:read', module: 'messages' },
+        { id: 'perm_announcements_read', name: 'announcements:read', module: 'announcements' },
+        { id: 'perm_announcements_manage', name: 'announcements:manage', module: 'announcements' },
+        { id: 'perm_reports_read', name: 'reports:read', module: 'reports' },
+        { id: 'perm_reports_export', name: 'reports:export', module: 'reports' },
+        { id: 'perm_settings', name: 'settings:school', module: 'settings' },
+        { id: 'perm_users_manage', name: 'users:manage', module: 'users' },
+        { id: 'perm_classes_read', name: 'classes:read', module: 'classes' },
+        { id: 'perm_classes_manage', name: 'classes:manage', module: 'classes' },
+        { id: 'perm_subjects_read', name: 'subjects:read', module: 'subjects' },
+        { id: 'perm_timetable_read', name: 'timetable:read', module: 'timetable' },
+        { id: 'perm_timetable_manage', name: 'timetable:manage', module: 'timetable' },
+        { id: 'perm_teachers_read', name: 'teachers:read', module: 'teachers' },
+        { id: 'perm_teachers_manage', name: 'teachers:manage', module: 'teachers' },
+        { id: 'perm_payments_read', name: 'payments:read', module: 'payments' },
+        { id: 'perm_invoices_read', name: 'invoices:read', module: 'invoices' },
+        { id: 'perm_grades_approve', name: 'grades:approve', module: 'grades' },
+    ];
+    db.role_permissions = [];
+    for (const role of db.roles) {
+        const allPerms = [...db.permissions];
+        if (role.name === 'school_admin') {
+            const names = ['dashboard:read', 'students:read', 'students:manage', 'grades:read', 'grades:manage',
+                'attendance:manage', 'fees:read', 'fees:manage', 'messages:read', 'announcements:manage',
+                'reports:read', 'reports:export', 'settings:school', 'users:manage', 'classes:manage',
+                'teachers:manage', 'timetable:manage'];
+            for (const p of allPerms.filter(p => names.includes(p.name))) {
+                db.role_permissions.push({ role_id: role.id, permission_id: p.id });
+            }
+        } else if (role.name === 'teacher') {
+            const names = ['dashboard:read', 'students:read', 'grades:read', 'grades:manage', 'attendance:manage',
+                'classes:read', 'subjects:read', 'timetable:read', 'messages:read', 'announcements:read'];
+            for (const p of allPerms.filter(p => names.includes(p.name))) {
+                db.role_permissions.push({ role_id: role.id, permission_id: p.id });
+            }
+        }
+    }
 });
 
 test.after(async () => {
