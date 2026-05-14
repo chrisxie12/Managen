@@ -1,21 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router';
+import { api } from '../app/services/api';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch('/api/auth/me', { credentials: 'include' })
-      .then(response => {
-        if (response.ok) {
-          setIsAuth(true);
-        } else {
-          setIsAuth(false);
-        }
-      })
-      .catch(() => {
-        setIsAuth(false);
-      });
+    api.get('/api/auth/me')
+      .then(() => setIsAuth(true))
+      .catch(() => setIsAuth(false));
   }, []);
 
   if (isAuth === null) {
