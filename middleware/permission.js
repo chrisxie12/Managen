@@ -5,29 +5,45 @@ const requirePermission = (...permissions) => (req, res, next) => {
 
     const userPerms = req.user.permissions || [];
 
-    // If no permissions are configured (e.g. legacy users, test env),
-    // fall back to role-based access for common permissions
+    // Fallback: map role names to permissions when user has no explicit permissions
     if (userPerms.length === 0 && req.user.role) {
         const rolePermissionMap = {
-            'students:read': ['admin', 'school_admin', 'teacher', 'headmaster'],
-            'students:manage': ['admin', 'school_admin'],
-            'attendance:manage': ['admin', 'school_admin', 'teacher'],
-            'grades:read': ['admin', 'school_admin', 'teacher', 'headmaster'],
-            'grades:manage': ['admin', 'school_admin', 'teacher'],
-            'fees:read': ['admin', 'school_admin', 'accountant', 'headmaster'],
-            'fees:manage': ['admin', 'school_admin', 'accountant'],
-            'teachers:manage': ['admin', 'school_admin'],
-            'classes:manage': ['admin', 'school_admin'],
-            'timetable:manage': ['admin', 'school_admin', 'teacher'],
-            'announcements:manage': ['admin', 'school_admin', 'headmaster'],
-            'messages:read': ['admin', 'school_admin', 'teacher', 'parent', 'student', 'headmaster'],
-            'reports:read': ['admin', 'school_admin', 'headmaster', 'accountant'],
-            'settings:manage': ['admin', 'school_admin'],
-            'users:manage': ['admin', 'school_admin'],
-            'dashboard:read': ['admin', 'school_admin', 'teacher', 'student', 'parent', 'headmaster', 'accountant'],
-            'payments:read': ['admin', 'school_admin', 'accountant', 'headmaster'],
-            'invoices:read': ['admin', 'school_admin', 'accountant', 'parent'],
-            'grades:approve': ['headmaster', 'admin', 'school_admin'],
+            'dashboard:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'teacher', 'student', 'parent'],
+            'students:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'teacher', 'parent'],
+            'students:manage': ['superadmin', 'school_admin', 'admin'],
+            'teachers:read': ['superadmin', 'school_admin', 'admin', 'headmaster'],
+            'teachers:manage': ['superadmin', 'school_admin', 'admin'],
+            'classes:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher'],
+            'classes:manage': ['superadmin', 'school_admin', 'admin'],
+            'subjects:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher'],
+            'subjects:manage': ['superadmin', 'school_admin', 'admin'],
+            'timetable:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student'],
+            'timetable:manage': ['superadmin', 'school_admin', 'admin'],
+            'attendance:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
+            'attendance:manage': ['superadmin', 'school_admin', 'admin', 'teacher'],
+            'grades:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
+            'grades:manage': ['superadmin', 'school_admin', 'admin', 'teacher'],
+            'grades:approve': ['superadmin', 'school_admin', 'admin', 'headmaster'],
+            'fees:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'parent'],
+            'fees:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
+            'fees:waive': ['superadmin', 'school_admin', 'admin'],
+            'payments:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant'],
+            'payments:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
+            'invoices:read': ['superadmin', 'school_admin', 'admin', 'accountant', 'parent'],
+            'invoices:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
+            'messages:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
+            'messages:manage': ['superadmin', 'school_admin', 'admin'],
+            'announcements:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
+            'announcements:manage': ['superadmin', 'school_admin', 'admin', 'headmaster'],
+            'reports:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant'],
+            'reports:export': ['superadmin', 'school_admin', 'admin', 'accountant'],
+            'settings:manage': ['superadmin', 'school_admin', 'admin'],
+            'users:manage': ['superadmin', 'school_admin', 'admin'],
+            'audit_logs:read': ['superadmin'],
+            'schools:manage': ['superadmin'],
+            'plans:manage': ['superadmin'],
+            'roles:manage': ['superadmin'],
+            'permissions:manage': ['superadmin'],
         };
 
         for (const perm of permissions) {
@@ -36,11 +52,8 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 return next();
             }
         }
-
-        // If the permission isn't in the map, fall through to the explicit check below
     }
 
-    // Explicit permission check (production flow)
     const hasAny = permissions.some((perm) => userPerms.includes(perm));
 
     if (!hasAny) {
