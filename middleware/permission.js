@@ -5,57 +5,99 @@ const requirePermission = (...permissions) => (req, res, next) => {
 
     const userPerms = req.user.permissions || [];
 
-    // Fallback: map role names to permissions when user has no explicit permissions
+    // Fallback: map role names to CRUD permissions when user has no explicit permissions
     if (userPerms.length === 0 && req.user.role) {
+        const role = req.user.role;
         const rolePermissionMap = {
-            'dashboard:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'teacher', 'student', 'parent'],
-            'students:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'teacher', 'parent'],
-            'students:manage': ['superadmin', 'school_admin', 'admin'],
-            'teachers:read': ['superadmin', 'school_admin', 'admin', 'headmaster'],
-            'teachers:manage': ['superadmin', 'school_admin', 'admin'],
-            'classes:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher'],
-            'classes:manage': ['superadmin', 'school_admin', 'admin'],
-            'subjects:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher'],
-            'subjects:manage': ['superadmin', 'school_admin', 'admin'],
-            'timetable:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student'],
-            'timetable:manage': ['superadmin', 'school_admin', 'admin'],
-            'attendance:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
-            'attendance:manage': ['superadmin', 'school_admin', 'admin', 'teacher'],
-            'grades:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
-            'grades:manage': ['superadmin', 'school_admin', 'admin', 'teacher'],
-            'grades:approve': ['superadmin', 'school_admin', 'admin', 'headmaster'],
-            'fees:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant', 'parent'],
-            'fees:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
-            'fees:waive': ['superadmin', 'school_admin', 'admin'],
-            'payments:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant'],
-            'payments:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
-            'invoices:read': ['superadmin', 'school_admin', 'admin', 'accountant', 'parent'],
-            'invoices:manage': ['superadmin', 'school_admin', 'admin', 'accountant'],
-            'messages:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
-            'messages:manage': ['superadmin', 'school_admin', 'admin'],
-            'announcements:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'teacher', 'student', 'parent'],
-            'announcements:manage': ['superadmin', 'school_admin', 'admin', 'headmaster'],
-            'reports:read': ['superadmin', 'school_admin', 'admin', 'headmaster', 'accountant'],
-            'reports:export': ['superadmin', 'school_admin', 'admin', 'accountant'],
-            'settings:manage': ['superadmin', 'school_admin', 'admin'],
-            'users:manage': ['superadmin', 'school_admin', 'admin'],
-            'audit_logs:read': ['superadmin'],
-            'schools:manage': ['superadmin'],
-            'plans:manage': ['superadmin'],
-            'roles:manage': ['superadmin'],
-            'permissions:manage': ['superadmin'],
+            superadmin: true, // superadmin has everything
+            admin: [
+                'dashboard.view',
+                'students.create', 'students.view', 'students.edit', 'students.delete',
+                'teachers.create', 'teachers.view', 'teachers.edit', 'teachers.delete',
+                'classes.create', 'classes.view', 'classes.edit', 'classes.delete',
+                'subjects.create', 'subjects.view', 'subjects.edit', 'subjects.delete',
+                'timetable.create', 'timetable.view', 'timetable.edit', 'timetable.delete',
+                'attendance.create', 'attendance.view', 'attendance.edit', 'attendance.delete',
+                'grades.create', 'grades.view', 'grades.edit', 'grades.delete',
+                'fees.create', 'fees.view', 'fees.edit', 'fees.delete',
+                'payments.create', 'payments.view', 'payments.edit', 'payments.delete',
+                'invoices.create', 'invoices.view', 'invoices.edit', 'invoices.delete',
+                'messages.create', 'messages.view', 'messages.edit', 'messages.delete',
+                'announcements.create', 'announcements.view', 'announcements.edit', 'announcements.delete',
+                'notifications.create', 'notifications.view', 'notifications.edit', 'notifications.delete',
+                'reports.create', 'reports.view', 'reports.edit', 'reports.delete',
+                'users.create', 'users.view', 'users.edit', 'users.delete',
+                'settings.view', 'settings.edit',
+            ],
+            school_admin: [
+                'dashboard.view',
+                'students.create', 'students.view', 'students.edit', 'students.delete',
+                'teachers.create', 'teachers.view', 'teachers.edit', 'teachers.delete',
+                'classes.create', 'classes.view', 'classes.edit', 'classes.delete',
+                'subjects.create', 'subjects.view', 'subjects.edit', 'subjects.delete',
+                'timetable.create', 'timetable.view', 'timetable.edit', 'timetable.delete',
+                'attendance.create', 'attendance.view', 'attendance.edit', 'attendance.delete',
+                'grades.create', 'grades.view', 'grades.edit', 'grades.delete',
+                'fees.create', 'fees.view', 'fees.edit', 'fees.delete',
+                'payments.create', 'payments.view', 'payments.edit', 'payments.delete',
+                'invoices.create', 'invoices.view', 'invoices.edit', 'invoices.delete',
+                'messages.create', 'messages.view', 'messages.edit', 'messages.delete',
+                'announcements.create', 'announcements.view', 'announcements.edit', 'announcements.delete',
+                'notifications.create', 'notifications.view', 'notifications.edit', 'notifications.delete',
+                'reports.create', 'reports.view', 'reports.edit', 'reports.delete',
+                'users.create', 'users.view', 'users.edit', 'users.delete',
+                'settings.view', 'settings.edit',
+            ],
+            headmaster: [
+                'dashboard.view',
+                'students.view', 'teachers.view', 'classes.view',
+                'subjects.view', 'timetable.view', 'attendance.view', 'grades.view',
+                'fees.view', 'payments.view',
+                'messages.view', 'announcements.view', 'notifications.view', 'reports.view',
+            ],
+            accountant: [
+                'dashboard.view', 'students.view',
+                'fees.create', 'fees.view', 'fees.edit', 'fees.delete',
+                'payments.create', 'payments.view', 'payments.edit', 'payments.delete',
+                'invoices.create', 'invoices.view', 'invoices.edit', 'invoices.delete',
+                'reports.create', 'reports.view',
+            ],
+            teacher: [
+                'dashboard.view',
+                'students.view', 'classes.view', 'subjects.view', 'timetable.view',
+                'attendance.create', 'attendance.view', 'attendance.edit',
+                'grades.create', 'grades.view', 'grades.edit',
+                'messages.create', 'messages.view',
+                'announcements.view', 'notifications.view',
+            ],
+            student: [
+                'dashboard.view',
+                'timetable.view', 'attendance.view', 'grades.view',
+                'announcements.view', 'messages.view',
+            ],
+            parent: [
+                'dashboard.view',
+                'students.view', 'attendance.view', 'grades.view',
+                'fees.view', 'invoices.view',
+                'announcements.view', 'messages.view',
+            ],
         };
 
+        // Gather all permissions for this role
+        const rolePerms = rolePermissionMap[role] || [];
+        if (rolePerms === true) {
+            // superadmin: skip check
+            return next();
+        }
+        // Check if any of the required permissions match this role's defaults
         for (const perm of permissions) {
-            const allowedRoles = rolePermissionMap[perm];
-            if (allowedRoles && allowedRoles.includes(req.user.role)) {
+            if (rolePerms.includes(perm)) {
                 return next();
             }
         }
     }
 
     const hasAny = permissions.some((perm) => userPerms.includes(perm));
-
     if (!hasAny) {
         return res.status(403).json({
             error: `Missing required permission: ${permissions.join(' or ')}`,

@@ -75,12 +75,12 @@ export function DashboardLayout() {
   const navItems = (roleNavItems[role] || roleNavItems.school_admin).filter((item) => {
     if (userPerms.length === 0) return true;
     const permMap: Record<string, string[]> = {
-      "/dashboard": ["dashboard:read"],
-      "/dashboard/students": ["students:read"],
-      "/dashboard/academics": ["grades:read"],
-      "/dashboard/finance": ["fees:read"],
-      "/dashboard/fee-reminders": ["fees:read"],
-      "/dashboard/communication": ["messages:read"],
+      "/dashboard": ["dashboard.view"],
+      "/dashboard/students": ["students.view"],
+      "/dashboard/academics": ["grades.view"],
+      "/dashboard/finance": ["fees.view"],
+      "/dashboard/fee-reminders": ["fees.view"],
+      "/dashboard/communication": ["messages.view"],
     };
     const required = permMap[item.path];
     return !required || required.some((p) => userPerms.includes(p));

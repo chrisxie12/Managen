@@ -415,47 +415,43 @@ test.beforeEach(async () => {
         { id: 'role_parent', name: 'parent', label: 'Parent' },
     ];
     db.permissions = [
-        { id: 'perm_dashboard_read', name: 'dashboard:read', module: 'dashboard' },
-        { id: 'perm_students_read', name: 'students:read', module: 'students' },
-        { id: 'perm_students_manage', name: 'students:manage', module: 'students' },
-        { id: 'perm_grades_read', name: 'grades:read', module: 'grades' },
-        { id: 'perm_grades_manage', name: 'grades:manage', module: 'grades' },
-        { id: 'perm_attendance_manage', name: 'attendance:manage', module: 'attendance' },
-        { id: 'perm_fees_read', name: 'fees:read', module: 'fees' },
-        { id: 'perm_fees_manage', name: 'fees:manage', module: 'fees' },
-        { id: 'perm_messages_read', name: 'messages:read', module: 'messages' },
-        { id: 'perm_announcements_read', name: 'announcements:read', module: 'announcements' },
-        { id: 'perm_announcements_manage', name: 'announcements:manage', module: 'announcements' },
-        { id: 'perm_reports_read', name: 'reports:read', module: 'reports' },
-        { id: 'perm_reports_export', name: 'reports:export', module: 'reports' },
-        { id: 'perm_settings', name: 'settings:school', module: 'settings' },
-        { id: 'perm_users_manage', name: 'users:manage', module: 'users' },
-        { id: 'perm_classes_read', name: 'classes:read', module: 'classes' },
-        { id: 'perm_classes_manage', name: 'classes:manage', module: 'classes' },
-        { id: 'perm_subjects_read', name: 'subjects:read', module: 'subjects' },
-        { id: 'perm_timetable_read', name: 'timetable:read', module: 'timetable' },
-        { id: 'perm_timetable_manage', name: 'timetable:manage', module: 'timetable' },
-        { id: 'perm_teachers_read', name: 'teachers:read', module: 'teachers' },
-        { id: 'perm_teachers_manage', name: 'teachers:manage', module: 'teachers' },
-        { id: 'perm_payments_read', name: 'payments:read', module: 'payments' },
-        { id: 'perm_invoices_read', name: 'invoices:read', module: 'invoices' },
-        { id: 'perm_grades_approve', name: 'grades:approve', module: 'grades' },
+        { id: 'perm_dashboard_view', name: 'dashboard.view', module: 'dashboard', action: 'view' },
+        { id: 'perm_students_view', name: 'students.view', module: 'students', action: 'view' },
+        { id: 'perm_students_create', name: 'students.create', module: 'students', action: 'create' },
+        { id: 'perm_students_edit', name: 'students.edit', module: 'students', action: 'edit' },
+        { id: 'perm_grades_view', name: 'grades.view', module: 'grades', action: 'view' },
+        { id: 'perm_grades_create', name: 'grades.create', module: 'grades', action: 'create' },
+        { id: 'perm_grades_edit', name: 'grades.edit', module: 'grades', action: 'edit' },
+        { id: 'perm_attendance_view', name: 'attendance.view', module: 'attendance', action: 'view' },
+        { id: 'perm_attendance_create', name: 'attendance.create', module: 'attendance', action: 'create' },
+        { id: 'perm_fees_view', name: 'fees.view', module: 'fees', action: 'view' },
+        { id: 'perm_fees_create', name: 'fees.create', module: 'fees', action: 'create' },
+        { id: 'perm_messages_view', name: 'messages.view', module: 'messages', action: 'view' },
+        { id: 'perm_announcements_view', name: 'announcements.view', module: 'announcements', action: 'view' },
+        { id: 'perm_settings_edit', name: 'settings.edit', module: 'settings', action: 'edit' },
+        { id: 'perm_users_create', name: 'users.create', module: 'users', action: 'create' },
+        { id: 'perm_users_view', name: 'users.view', module: 'users', action: 'view' },
+        { id: 'perm_classes_view', name: 'classes.view', module: 'classes', action: 'view' },
+        { id: 'perm_classes_create', name: 'classes.create', module: 'classes', action: 'create' },
+        { id: 'perm_teachers_view', name: 'teachers.view', module: 'teachers', action: 'view' },
+        { id: 'perm_teachers_create', name: 'teachers.create', module: 'teachers', action: 'create' },
+        { id: 'perm_payments_view', name: 'payments.view', module: 'payments', action: 'view' },
+        { id: 'perm_invoices_view', name: 'invoices.view', module: 'invoices', action: 'view' },
+        { id: 'perm_timetable_view', name: 'timetable.view', module: 'timetable', action: 'view' },
+        { id: 'perm_reports_view', name: 'reports.view', module: 'reports', action: 'view' },
+        { id: 'perm_notifications_view', name: 'notifications.view', module: 'notifications', action: 'view' },
+        { id: 'perm_subjects_view', name: 'subjects.view', module: 'subjects', action: 'view' },
     ];
     db.role_permissions = [];
     for (const role of db.roles) {
-        const allPerms = [...db.permissions];
         if (role.name === 'school_admin') {
-            const names = ['dashboard:read', 'students:read', 'students:manage', 'grades:read', 'grades:manage',
-                'attendance:manage', 'fees:read', 'fees:manage', 'messages:read', 'announcements:manage',
-                'reports:read', 'reports:export', 'settings:school', 'users:manage', 'classes:manage',
-                'teachers:manage', 'timetable:manage'];
-            for (const p of allPerms.filter(p => names.includes(p.name))) {
-                db.role_permissions.push({ role_id: role.id, permission_id: p.id });
-            }
-        } else if (role.name === 'teacher') {
-            const names = ['dashboard:read', 'students:read', 'grades:read', 'grades:manage', 'attendance:manage',
-                'classes:read', 'subjects:read', 'timetable:read', 'messages:read', 'announcements:read'];
-            for (const p of allPerms.filter(p => names.includes(p.name))) {
+            const names = ['dashboard.view', 'students.view', 'students.create', 'students.edit',
+                'grades.view', 'grades.create', 'grades.edit', 'attendance.view', 'attendance.create',
+                'fees.view', 'fees.create', 'messages.view', 'announcements.view', 'settings.edit',
+                'users.create', 'users.view', 'classes.view', 'classes.create', 'teachers.view',
+                'teachers.create', 'payments.view', 'invoices.view', 'timetable.view', 'reports.view',
+                'notifications.view', 'subjects.view'];
+            for (const p of db.permissions.filter(p => names.includes(p.name))) {
                 db.role_permissions.push({ role_id: role.id, permission_id: p.id });
             }
         }

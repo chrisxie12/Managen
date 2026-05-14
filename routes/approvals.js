@@ -5,7 +5,7 @@ const { protect } = require('./school');
 const { requirePermission } = require('../middleware/permission');
 
 // GET /api/school/approvals — list pending approvals
-router.get('/', protect, requirePermission('grades:approve', 'fees:waive', 'students:manage'), async (req, res) => {
+router.get('/', protect, requirePermission('settings.edit', 'grades.view', 'fees.edit'), async (req, res) => {
     try {
         const { data: approvals, error } = await supabase
             .from('approvals')
@@ -51,7 +51,7 @@ router.post('/', protect, async (req, res) => {
 });
 
 // PUT /api/school/approvals/:id/approve
-router.put('/:id/approve', protect, requirePermission('grades:approve', 'fees:waive', 'students:manage'), async (req, res) => {
+router.put('/:id/approve', protect, requirePermission('settings.edit', 'grades.view', 'fees.edit'), async (req, res) => {
     try {
         const { reason } = req.body;
         const { data, error } = await supabase
@@ -72,7 +72,7 @@ router.put('/:id/approve', protect, requirePermission('grades:approve', 'fees:wa
 });
 
 // PUT /api/school/approvals/:id/reject
-router.put('/:id/reject', protect, requirePermission('grades:approve', 'fees:waive', 'students:manage'), async (req, res) => {
+router.put('/:id/reject', protect, requirePermission('settings.edit', 'grades.view', 'fees.edit'), async (req, res) => {
     try {
         const { reason } = req.body;
         if (!reason) return res.status(400).json({ error: 'Reason is required for rejection.' });
