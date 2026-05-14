@@ -192,7 +192,6 @@ const provisionSchool = async ({
     });
 
     if (authError) {
-        console.error('Supabase Auth creation error:', authError);
         await cleanupProvisioning({ tenantId: tenant.id });
         throw authError;
     }

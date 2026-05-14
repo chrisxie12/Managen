@@ -35,7 +35,7 @@ class AuthService {
     async getUserByEmailAndSchool(email, schoolId) {
         const { data: user, error } = await supabase
             .from('users')
-            .select('id, full_name, email, role_id, role, is_active, password')
+            .select('id, full_name, email, role, role_id, is_active, password')
             .eq('email', email)
             .eq('school_id', schoolId)
             .maybeSingle();
@@ -64,25 +64,51 @@ class AuthService {
     }
 
     async getUserPermissions(userId) {
-        const { data, error } = await supabase
-            .from('users')
-            .select(`
-                roles (
+        try {
+            const { user, error: userError } = await supabase
+                .from('users')
+                .select('role_id')
+                .eq('id', userId)
+                .maybeSingle();
+
+            if (userError || !user?.role_id) {
+                return [];
+            }
+
+            const { role, error: roleError } = await supabase
+                .from('roles')
+                .select(`
                     name,
                     role_permissions (
                         permissions (
                             name
                         )
                     )
-                )
-            `)
-            .eq('id', userId)
-            .single();
+                `)
+                .eq('id', user.role_id)
+                .maybeSingle();
 
-        if (error || !data?.roles) return [];
+            if (roleError || !role) {
+                return [];
+            }
 
-        const permissions = data.roles.role_permissions.map(rp => rp.permissions.name);
-        return permissions;
+            let permissions = [];
+            try {
+                const rpArray = role.role_permissions || [];
+                permissions = rpArray
+                    .map(rp => {
+                        const perm = rp.permissions || {};
+                        return perm.name || null;
+                    })
+                    .filter(name => name !== null && name !== undefined);
+            } catch (extractError) {
+                permissions = [];
+            }
+
+            return permissions;
+        } catch (error) {
+            return [];
+        }
     }
 }
 

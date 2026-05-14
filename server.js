@@ -2,6 +2,7 @@ require('dotenv').config();
 const express  = require('express');
 const cors     = require('cors');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 const {
     handlePaystackWebhook,
@@ -84,6 +85,14 @@ app.use((err, req, res, next) => {
 
 app.use(cookieParser());
 
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: { error: 'Too many authentication attempts. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // ─── Status Routes ────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.json({
@@ -107,7 +116,7 @@ app.get('/health', (req, res) => {
 });
 
 // ─── Public Routes ────────────────────────────────────────────
-app.use('/api/onboard',    onboardRoutes);
+app.use('/api/onboard', onboardRoutes);
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/billing',    billingRoutes);
 app.use('/api/cron',       cronRoutes);
@@ -115,7 +124,7 @@ app.use('/api/cron',       cronRoutes);
 // ─── Tenant Middleware ────────────────────────────────────────
 const { tenantMiddleware } = require('./middleware/tenant');
 app.use(tenantMiddleware);
-app.use('/api/auth',   authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/school', schoolRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────

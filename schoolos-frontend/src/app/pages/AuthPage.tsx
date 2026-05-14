@@ -62,16 +62,27 @@ export function AuthPage() {
     
     try {
       if (mode === "signup") {
-        void api.post("/api/onboard/signup", {
+        const res = await api.post<{ slug?: string; subdomain?: string; message: string }>("/api/onboard/signup", {
           schoolName: form.school,
           email: form.email,
           adminName: form.name,
           adminPassword: form.password,
           plan: "trial",
         });
-        
-        toast.success("School created! Redirecting to dashboard...");
-        setTimeout(() => navigate("/dashboard"), 1500);
+
+        const slug = res.data?.subdomain || res.data?.slug;
+        if (slug) {
+          toast.success("School created! Redirecting to dashboard...");
+          await api.post(
+            "/api/auth/login",
+            { email: form.email, password: form.password, subdomain: slug }
+          );
+          navigate("/dashboard");
+        } else {
+          toast.success("School created! Please sign in.");
+          setMode("login");
+          setForm((f) => ({ ...f, subdomain: slug || "" }));
+        }
       } else {
         const tenant = form.subdomain.trim().toLowerCase();
         if (!tenant) {
@@ -80,7 +91,7 @@ export function AuthPage() {
         const headers: Record<string, string> = {};
         if (tenant) headers["x-tenant-subdomain"] = tenant;
 
-        void api.post(
+        await api.post(
           "/api/auth/login",
           {
             email: form.email,

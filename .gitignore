@@ -44,3 +44,7 @@ yarn-debug.log*
 yarn-error.log*
 logs/
 *.log
+server.log
+server.err.log
+server_stderr.log
+server_stdout.log

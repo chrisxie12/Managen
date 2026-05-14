@@ -1,4 +1,4 @@
-import {} from "react";
+
 import { useNavigate } from "react-router";
 import {
   Users,
@@ -41,14 +41,6 @@ const revenueData = [
   { month: "Jan", amount: 71000 },
   { month: "Feb", amount: 86000 },
   { month: "Mar", amount: 94000 },
-];
-
-const [] = [
-  { day: "Mon", rate: 92 },
-  { day: "Tue", rate: 95 },
-  { day: "Wed", rate: 88 },
-  { day: "Thu", rate: 96 },
-  { day: "Fri", rate: 91 },
 ];
 
 const pieData = [

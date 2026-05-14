@@ -2,10 +2,19 @@ const express  = require('express');
 const router   = express.Router();
 const supabase = require('../config/db');
 const axios    = require('axios');
+const rateLimit = require('express-rate-limit');
 const { provisionSchool, getPublicPlans } = require('../services/provisionService');
 
+const signupLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 5,
+    message: { error: 'Too many signup attempts. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // ─── POST /api/onboard/signup ─────────────────────────────────
-router.post('/signup', async (req, res) => {
+router.post('/signup', signupLimiter, async (req, res) => {
     try {
         const { schoolName, email, phone, adminName, adminPassword, plan } = req.body;
 
