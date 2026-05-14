@@ -21,13 +21,15 @@ class AuthService {
             .from('schools')
             .select('*')
             .eq('slug', subdomain)
-            .eq('is_active', true)
             .maybeSingle();
 
         if (error) {
             const err = new Error(error.message);
             err.statusCode = 400;
             throw err;
+        }
+        if (school && school.is_active === false) {
+            return null;
         }
         return school;
     }

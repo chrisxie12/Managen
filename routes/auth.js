@@ -48,7 +48,7 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         const user = await authService.getUserByEmailAndSchool(email, school.id);
 
         if (!user) return invalidLogin(res);
-        if (!user.is_active) return invalidLogin(res);
+        if (user.is_active === false) return invalidLogin(res);
         if (!user.password) return invalidLogin(res);
 
         // Verify password

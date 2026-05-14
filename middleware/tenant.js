@@ -60,7 +60,6 @@ const tenantMiddleware = async (req, res, next) => {
                 .from('schools')
                 .select('*')
                 .eq('slug', subdomain)
-                .eq('is_active', true)
                 .maybeSingle();
 
             if (error) {
@@ -68,7 +67,11 @@ const tenantMiddleware = async (req, res, next) => {
             }
 
             if (!dbTenant) {
-                return res.status(404).json({ error: 'School not found or account inactive.' });
+                return res.status(404).json({ error: 'School not found.' });
+            }
+
+            if (dbTenant.is_active === false) {
+                return res.status(403).json({ error: 'School account is inactive.' });
             }
 
             tenant = dbTenant;
