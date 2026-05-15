@@ -2,6 +2,11 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
+import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
+import { AccountantDashboard } from "./pages/AccountantDashboard";
+import { TeacherDashboard } from "./pages/TeacherDashboard";
+import { StudentDashboard } from "./pages/StudentDashboard";
+import { ParentDashboard } from "./pages/ParentDashboard";
 import { Students } from "./pages/Students";
 import { Academics } from "./pages/Academics";
 import { Finance } from "./pages/Finance";
@@ -14,7 +19,7 @@ import { SuperAdminBilling } from "./pages/SuperAdminBilling";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import SchoolOSFlow from "./components/SchoolOSFlow";
 import { AuthGuard } from "../components/AuthGuard";
-import { RoleDashboard } from "./components/RoleDashboard";
+import { RoleRouter } from "./components/RoleRouter";
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +50,12 @@ export const router = createBrowserRouter([
       </AuthGuard>
     ),
     children: [
-      { index: true, Component: RoleDashboard },
+      { index: true, Component: RoleRouter },
+      { path: "headmaster", Component: HeadmasterDashboard },
+      { path: "accountant", Component: AccountantDashboard },
+      { path: "teacher", Component: TeacherDashboard },
+      { path: "student", Component: StudentDashboard },
+      { path: "parent", Component: ParentDashboard },
       { path: "students", Component: Students },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },

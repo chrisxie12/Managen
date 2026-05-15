@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
-  Calendar, Award, TrendingUp,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
@@ -13,49 +12,18 @@ const MILK = "#FFF3E6";
 const SIDEBAR_BG = "#F9F1E7";
 const MUTED = "#7D6077";
 
-const roleNavItems: Record<string, { icon: any; label: string; path: string }[]> = {
-  school_admin: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: Users, label: "Students", path: "/dashboard/students" },
-    { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
-    { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
-    { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
-    { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
-  ],
-  headmaster: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: BookOpen, label: "Performance", path: "/dashboard/academics" },
-    { icon: TrendingUp, label: "Reports", path: "/dashboard/academics" },
-    { icon: MessageSquare, label: "Announcements", path: "/dashboard/communication" },
-  ],
-  accountant: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
-    { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
-  ],
-  teacher: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: Users, label: "My Classes", path: "/dashboard/students" },
-    { icon: BookOpen, label: "Grades", path: "/dashboard/academics" },
-    { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
-  ],
-  student: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: Calendar, label: "Timetable", path: "/dashboard/academics" },
-    { icon: Award, label: "My Grades", path: "/dashboard/academics" },
-    { icon: Bell, label: "Announcements", path: "/dashboard/communication" },
-  ],
-  parent: [
-    { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-    { icon: Users, label: "My Child", path: "/dashboard/students" },
-    { icon: Award, label: "Grades", path: "/dashboard/academics" },
-    { icon: Wallet, label: "Pay Fees", path: "/dashboard/finance" },
-    { icon: MessageSquare, label: "Messages", path: "/dashboard/communication" },
-  ],
-};
+const allNavItems = [
+  { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
+  { icon: Users, label: "Students", path: "/dashboard/students" },
+  { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
+  { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
+  { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
+  { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
+];
 
 const roleLabels: Record<string, string> = {
   school_admin: "Administrator",
+  admin: "Administrator",
   headmaster: "Headmaster",
   accountant: "Accountant",
   teacher: "Teacher",
@@ -70,15 +38,17 @@ export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifCount] = useState(3);
 
-  const role = user?.role || "school_admin";
-  const baseNav = roleNavItems[role] || roleNavItems.school_admin;
   const userPerms = user?.permissions || [];
+  const role = user?.role || "school_admin";
+
+  // Permission-driven nav filtering
   const navItems = userPerms.length === 0
-    ? baseNav
-    : baseNav.filter((item) => {
+    ? allNavItems
+    : allNavItems.filter((item) => {
         const required = pagePermissions[item.path];
         return !required || required.some((p) => userPerms.includes(p));
       });
+
   const roleLabel = roleLabels[role] || "Administrator";
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
