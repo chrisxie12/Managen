@@ -2,12 +2,16 @@
  * SchoolOS API Service
  * Centralized utility for making backend requests
  *
- * Dev: default '' + Vite proxy → cookies bind to localhost:5173 (same site as the SPA).
- * Prod: set VITE_API_BASE_URL to your API origin (e.g. https://api.getschoolos.me).
- *   OR add a Vercel rewrite: { "source": "/api/(.*)", "destination": "https://your-backend.com/api/$1" }
+ * Dev: Vite proxy (vite.config.ts) forwards /api/* → backend.
+ * Prod: VITE_API_BASE_URL must be set at build time (DigitalOcean env var).
  */
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error(
+    'Missing VITE_API_BASE_URL — set it in your DigitalOcean frontend static site env vars.'
+  );
+}
 
 export interface ApiResponse<T = any> {
   data?: T;
