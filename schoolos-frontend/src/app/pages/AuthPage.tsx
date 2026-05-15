@@ -1,16 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import {
-  GraduationCap,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  User,
-  Building2,
-  ArrowRight,
-  CheckCircle2,
-  ArrowLeft,
+  GraduationCap, Mail, Lock, Eye, EyeOff, User, Building2,
+  ArrowRight, CheckCircle2, ArrowLeft, ChevronDown,
 } from "lucide-react";
 
 const PLUM = "#381932";
@@ -42,8 +34,29 @@ export function AuthPage() {
     school: "",
     email: "",
     password: "",
-    subdomain: "", // Added for login/signup
+    subdomain: "",
+    role: "admin",
   });
+
+  const roleOptions = [
+    { value: "admin", label: "School Admin", icon: "🏫" },
+    { value: "teacher", label: "Teacher", icon: "📚" },
+    { value: "student", label: "Student", icon: "🧑‍🎓" },
+    { value: "parent", label: "Parent", icon: "👨‍👩‍👧" },
+    { value: "headmaster", label: "Headmaster", icon: "🎓" },
+    { value: "accountant", label: "Accountant", icon: "💰" },
+  ];
+
+  const roleEmailPlaceholders: Record<string, string> = {
+    admin: "admin@yourschool.edu.gh",
+    teacher: "teacher@yourschool.edu.gh",
+    student: "student@yourschool.edu.gh",
+    parent: "parent@example.com",
+    headmaster: "headmaster@yourschool.edu.gh",
+    accountant: "accountant@yourschool.edu.gh",
+  };
+
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
   useEffect(() => {
     const m = searchParams.get("mode");
@@ -358,40 +371,46 @@ export function AuthPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {mode === "login" && (
+              <>
               <div>
-                <label
-                  style={{
-                    color: PLUM_LIGHT,
-                    fontSize: "0.85rem",
-                    fontWeight: 500,
-                    display: "block",
-                    marginBottom: "0.4rem",
-                  }}
-                >
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                   School Subdomain
                 </label>
                 <div className="relative">
-                  <Building2
-                    size={16}
-                    className="absolute left-4 top-1/2 -translate-y-1/2"
-                    color={MUTED}
-                  />
-                  <input
-                    type="text"
-                    placeholder="e.g. accra-ridge"
-                    value={form.subdomain}
-                    onChange={(e) => setField("subdomain", e.target.value)}
-                    required
+                  <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
+                    onChange={(e) => setField("subdomain", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{
-                      background: "white",
-                      border: `1.5px solid rgba(56,25,50,0.12)`,
-                      color: PLUM,
-                    }}
-                  />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.schoolos.io</span>
                 </div>
               </div>
+
+              <div className="relative">
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  I am a
+                </label>
+                <button type="button" onClick={() => setShowRoleDropdown(!showRoleDropdown)}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm text-left"
+                  style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }}>
+                  <span style={{ fontSize: "1.1rem" }}>{roleOptions.find(r => r.value === form.role)?.icon}</span>
+                  <span className="flex-1" style={{ fontWeight: 500 }}>{roleOptions.find(r => r.value === form.role)?.label}</span>
+                  <ChevronDown size={16} color={MUTED} style={{ transform: showRoleDropdown ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                </button>
+                {showRoleDropdown && (
+                  <div className="absolute z-20 w-full mt-1 rounded-2xl overflow-hidden" style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", boxShadow: "0 8px 24px rgba(56,25,50,0.12)" }}>
+                    {roleOptions.map((r) => (
+                      <button key={r.value} type="button" onClick={() => { setField("role", r.value); setShowRoleDropdown(false); }}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:opacity-70"
+                        style={{ color: form.role === r.value ? PLUM : PLUM_LIGHT, background: form.role === r.value ? "rgba(56,25,50,0.04)" : "transparent", fontWeight: form.role === r.value ? 600 : 400 }}>
+                        <span style={{ fontSize: "1.1rem" }}>{r.icon}</span>
+                        {r.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              </>
             )}
 
             {mode === "signup" && (
@@ -485,7 +504,7 @@ export function AuthPage() {
                 />
                 <input
                   type="email"
-                  placeholder="admin@yourschool.edu.gh"
+                  placeholder={roleEmailPlaceholders[form.role] || "admin@yourschool.edu.gh"}
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   required
