@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import {
   GraduationCap, Mail, Lock, Eye, EyeOff, User, Building2,
   ArrowRight, CheckCircle2, ArrowLeft, ChevronDown,
+  BookOpen, Wallet, Users, ShieldCheck, HeartHandshake,
 } from "lucide-react";
 
 const PLUM = "#381932";
@@ -39,13 +40,20 @@ export function AuthPage() {
   });
 
   const roleOptions = [
-    { value: "admin", label: "School Admin", icon: "🏫" },
-    { value: "teacher", label: "Teacher", icon: "📚" },
-    { value: "student", label: "Student", icon: "🧑‍🎓" },
-    { value: "parent", label: "Parent", icon: "👨‍👩‍👧" },
-    { value: "headmaster", label: "Headmaster", icon: "🎓" },
-    { value: "accountant", label: "Accountant", icon: "💰" },
+    { value: "admin", label: "School Admin", desc: "Full school management", icon: ShieldCheck, color: "#7c3aed" },
+    { value: "teacher", label: "Teacher", desc: "Classes, grades & attendance", icon: BookOpen, color: "#d97706" },
+    { value: "student", label: "Student", desc: "Timetable, grades & portal", icon: GraduationCap, color: "#6366f1" },
+    { value: "parent", label: "Parent", desc: "Child progress & payments", icon: HeartHandshake, color: "#db2777" },
+    { value: "headmaster", label: "Headmaster", desc: "Academic oversight", icon: Users, color: "#0891b2" },
+    { value: "accountant", label: "Accountant", desc: "Finance & invoicing", icon: Wallet, color: "#059669" },
   ];
+
+  const RoleIcon = ({ value, size = 20 }: { value: string; size?: number }) => {
+    const opt = roleOptions.find(r => r.value === value);
+    if (!opt) return null;
+    const Icon = opt.icon;
+    return <Icon size={size} color={opt.color} />;
+  };
 
   const roleEmailPlaceholders: Record<string, string> = {
     admin: "admin@yourschool.edu.gh",
@@ -391,22 +399,53 @@ export function AuthPage() {
                   I am a
                 </label>
                 <button type="button" onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm text-left"
-                  style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }}>
-                  <span style={{ fontSize: "1.1rem" }}>{roleOptions.find(r => r.value === form.role)?.icon}</span>
-                  <span className="flex-1" style={{ fontWeight: 500 }}>{roleOptions.find(r => r.value === form.role)?.label}</span>
-                  <ChevronDown size={16} color={MUTED} style={{ transform: showRoleDropdown ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm text-left transition-all duration-200 active:scale-[0.98]"
+                  style={{ background: "white", border: `1.5px solid ${showRoleDropdown ? PLUM : "rgba(56,25,50,0.12)"}`, color: PLUM, boxShadow: showRoleDropdown ? `0 0 0 3px rgba(56,25,50,0.08)` : "none" }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${roleOptions.find(r => r.value === form.role)?.color}12` }}>
+                    <RoleIcon value={form.role} size={18} />
+                  </div>
+                  <div className="flex-1">
+                    <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{roleOptions.find(r => r.value === form.role)?.label}</div>
+                    <div style={{ color: MUTED, fontSize: "0.72rem" }}>{roleOptions.find(r => r.value === form.role)?.desc}</div>
+                  </div>
+                  <ChevronDown size={16} color={MUTED} style={{
+                    transform: showRoleDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }} />
                 </button>
                 {showRoleDropdown && (
-                  <div className="absolute z-20 w-full mt-1 rounded-2xl overflow-hidden" style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", boxShadow: "0 8px 24px rgba(56,25,50,0.12)" }}>
-                    {roleOptions.map((r) => (
-                      <button key={r.value} type="button" onClick={() => { setField("role", r.value); setShowRoleDropdown(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:opacity-70"
-                        style={{ color: form.role === r.value ? PLUM : PLUM_LIGHT, background: form.role === r.value ? "rgba(56,25,50,0.04)" : "transparent", fontWeight: form.role === r.value ? 600 : 400 }}>
-                        <span style={{ fontSize: "1.1rem" }}>{r.icon}</span>
-                        {r.label}
-                      </button>
-                    ))}
+                  <div className="absolute z-20 w-full mt-1.5 rounded-2xl overflow-hidden animate-slide-up"
+                    style={{
+                      background: "white",
+                      border: "1px solid rgba(56,25,50,0.1)",
+                      boxShadow: "0 12px 40px rgba(56,25,50,0.15)",
+                    }}>
+                    {roleOptions.map((r, i) => {
+                      const Icon = r.icon;
+                      const isSelected = form.role === r.value;
+                      return (
+                        <button key={r.value} type="button"
+                          onClick={() => { setField("role", r.value); setShowRoleDropdown(false); }}
+                          className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-all duration-150"
+                          style={{
+                            color: isSelected ? PLUM : PLUM_LIGHT,
+                            background: isSelected ? `${r.color}08` : "transparent",
+                            borderBottom: i < roleOptions.length - 1 ? "1px solid rgba(56,25,50,0.04)" : "none",
+                          }}>
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform duration-150"
+                            style={{ background: `${r.color}12`, transform: isSelected ? "scale(1.1)" : "scale(1)" }}>
+                            <Icon size={17} color={r.color} />
+                          </div>
+                          <div className="flex-1">
+                            <div style={{ fontWeight: isSelected ? 600 : 500, fontSize: "0.88rem" }}>{r.label}</div>
+                            <div style={{ color: MUTED, fontSize: "0.72rem" }}>{r.desc}</div>
+                          </div>
+                          {isSelected && (
+                            <div className="w-2 h-2 rounded-full" style={{ background: PLUM }} />
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
