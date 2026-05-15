@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
-import {
-  GraduationCap, Users, BellRing, MessageSquare, Wallet,
+import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
   Calendar, Award, TrendingUp,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { pagePermissions } from "../utils/permissions";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -71,20 +71,14 @@ export function DashboardLayout() {
   const [notifCount] = useState(3);
 
   const role = user?.role || "school_admin";
+  const baseNav = roleNavItems[role] || roleNavItems.school_admin;
   const userPerms = user?.permissions || [];
-  const navItems = (roleNavItems[role] || roleNavItems.school_admin).filter((item) => {
-    if (userPerms.length === 0) return true;
-    const permMap: Record<string, string[]> = {
-      "/dashboard": ["dashboard.view"],
-      "/dashboard/students": ["students.view"],
-      "/dashboard/academics": ["grades.view"],
-      "/dashboard/finance": ["fees.view"],
-      "/dashboard/fee-reminders": ["fees.view"],
-      "/dashboard/communication": ["messages.view"],
-    };
-    const required = permMap[item.path];
-    return !required || required.some((p) => userPerms.includes(p));
-  });
+  const navItems = userPerms.length === 0
+    ? baseNav
+    : baseNav.filter((item) => {
+        const required = pagePermissions[item.path];
+        return !required || required.some((p) => userPerms.includes(p));
+      });
   const roleLabel = roleLabels[role] || "Administrator";
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
