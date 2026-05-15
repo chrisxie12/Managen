@@ -63,7 +63,8 @@ const corsOptions = {
       /\.onrender\.com$/,
       /\.railway\.app$/,
       /\.schoolos\.io$/,
-      /\.getschoolos\.me$/
+      /\.getschoolos\.me$/,
+      /\.ondigitalocean\.app$/,
     ];
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes('*')) return callback(null, true);
