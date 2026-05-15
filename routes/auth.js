@@ -122,12 +122,12 @@ router.get('/me', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const school = req.tenant || await authService.loadSchoolById(decoded.schoolId);
-        if (!school) return res.status(404).json({ error: 'School not found.' });
+        if (!school) return res.status(401).json({ error: 'Invalid token: school not found.' });
 
         ensureMatchingTenant(decoded, school);
 
         const user = await authService.getUserById(decoded.userId);
-        if (!user) return res.status(404).json({ error: 'User not found.' });
+        if (!user) return res.status(401).json({ error: 'Invalid token: user not found.' });
 
         const permissions = await authService.getUserPermissions(user.id);
 
