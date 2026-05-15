@@ -105,14 +105,10 @@ export function AuthPage() {
           setForm((f) => ({ ...f, subdomain: slug || "" }));
         }
       } else if (mode === "superadmin") {
-        const res = await fetch("/api/superadmin/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email: form.email, password: form.password }),
+        await api.post("/api/superadmin/login", {
+          email: form.email,
+          password: form.password,
         });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Super admin login failed");
         toast.success("Welcome, Super Admin!");
         navigate("/superadmin");
       } else {

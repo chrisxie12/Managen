@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
+import { api } from "../app/services/api";
 
 export function SuperAdminAuthGuard({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<"loading" | "authenticated" | "unauthenticated">("loading");
 
   useEffect(() => {
-    fetch("/api/superadmin/dashboard", { credentials: "include" })
-      .then((res) => {
-        setStatus(res.ok ? "authenticated" : "unauthenticated");
-      })
+    api.get("/api/superadmin/dashboard")
+      .then(() => setStatus("authenticated"))
       .catch(() => setStatus("unauthenticated"));
   }, []);
 
