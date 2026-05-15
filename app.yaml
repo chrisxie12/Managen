@@ -1,0 +1,30 @@
+name: managen
+services:
+  - name: managen-backend
+    github:
+      branch: main
+      repo: chrisxie12/Managen
+    run_command: node server.js
+    build_command: npm install
+    source_dir: /
+    http_port: 8080
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+static_sites:
+  - name: managen-frontend
+    github:
+      branch: main
+      repo: chrisxie12/Managen
+    build_command: cd schoolos-frontend && npm install && npm run build
+    output_dir: /schoolos-frontend/dist
+    source_dir: /
+    error_document: index.html
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_BASE_URL
+        value: https://schoolos-backend-s9f7a.ondigitalocean.app
+        scope: BUILD_TIME
