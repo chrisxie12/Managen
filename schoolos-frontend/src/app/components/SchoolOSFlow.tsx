@@ -214,7 +214,7 @@ export default function SchoolOSFlow() {
           color: "#ff6b35",
           marginBottom: "12px",
           textTransform: "uppercase",
-        }}>SchoolOS Architecture</div>
+        }}>Managen Architecture</div>
         <h1 style={{
           fontSize: "clamp(24px, 4vw, 40px)",
           fontWeight: "900",
@@ -353,7 +353,7 @@ export default function SchoolOSFlow() {
             textAlign: "center",
           }}>
             <div style={{ fontSize: "13px", color: "#64748b", letterSpacing: "2px", marginBottom: "8px" }}>THE CENTRAL NERVOUS SYSTEM</div>
-            <div style={{ fontSize: "28px", fontWeight: "900", marginBottom: "8px" }}>SchoolOS Core Engine</div>
+            <div style={{ fontSize: "28px", fontWeight: "900", marginBottom: "8px" }}>Managen Core Engine</div>
             <div style={{ fontSize: "13px", color: "#475569" }}>All 7 roles connect through these 7 infrastructure layers</div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "14px" }}>
@@ -396,7 +396,7 @@ export default function SchoolOSFlow() {
           }}>
             <div style={{ fontSize: "13px", color: "#64748b", marginBottom: "4px" }}>HOW IT WORKS</div>
             <div style={{ fontSize: "14px", color: "#94a3b8", lineHeight: "1.7" }}>
-              Every action in SchoolOS is an <span style={{ color: "#ff6b35" }}>event</span>. That event fires through the 
+              Every action in Managen is an <span style={{ color: "#ff6b35" }}>event</span>. That event fires through the 
               <span style={{ color: "#7c3aed" }}> Event Bus</span>, which routes 
               <span style={{ color: "#0891b2" }}> real-time updates</span> to affected roles automatically. 
               No manual refresh. No data lag. One action, instant ripple effect.

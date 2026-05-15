@@ -152,8 +152,8 @@ const readAuthCookie = (req, name = 'schoolos_admin_token') => {
 
 const generateTOTPSecret = (email) => {
     return speakeasy.generateSecret({
-        name: `SchoolOS Super Admin (${email})`,
-        issuer: 'SchoolOS',
+        name: `Managen Super Admin (${email})`,
+        issuer: 'Managen',
     });
 };
 

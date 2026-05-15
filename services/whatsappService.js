@@ -26,12 +26,12 @@ async function sendWhatsApp({ to, body }) {
 }
 
 async function sendWelcome({ to, name, schoolName }) {
-    const body = `Welcome ${name || ''} to ${schoolName || 'SchoolOS'}! Login at your subdomain to get started.`;
+    const body = `Welcome ${name || ''} to ${schoolName || 'Managen'}! Login at your subdomain to get started.`;
     return wrapServiceCall(sendWhatsApp({ to, body }), 'sendWelcome whatsapp');
 }
 
 async function sendTrialReminder({ to, name, daysLeft, schoolName }) {
-    const body = `Hi ${name || ''}, your trial for ${schoolName || 'SchoolOS'} ends in ${daysLeft} day(s). Please add payment to avoid suspension.`;
+    const body = `Hi ${name || ''}, your trial for ${schoolName || 'Managen'} ends in ${daysLeft} day(s). Please add payment to avoid suspension.`;
     return wrapServiceCall(sendWhatsApp({ to, body }), 'sendTrialReminder whatsapp');
 }
 

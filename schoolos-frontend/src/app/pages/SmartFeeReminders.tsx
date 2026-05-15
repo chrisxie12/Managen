@@ -549,7 +549,7 @@ export function SmartFeeReminders() {
                   <div className="mb-3 flex items-center gap-3 border-b border-white/10 pb-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25d366] text-sm font-bold text-white">S</div>
                     <div>
-                      <p className="text-sm font-semibold">SchoolOS - Kwame Nkrumah JHS</p>
+                      <p className="text-sm font-semibold">Managen - Kwame Nkrumah JHS</p>
                       <p className="text-xs text-[#25d366]">Online</p>
                     </div>
                   </div>

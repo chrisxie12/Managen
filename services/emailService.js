@@ -3,7 +3,7 @@ const { attemptRequest, wrapServiceCall } = require('./notificationUtils');
 
 const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY;
 const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN;
-const MAILGUN_FROM = process.env.MAILGUN_FROM || `SchoolOS <no-reply@${MAILGUN_DOMAIN || 'example.com'}>`;
+const MAILGUN_FROM = process.env.MAILGUN_FROM || `Managen <no-reply@${MAILGUN_DOMAIN || 'example.com'}>`;
 
 async function sendMailgunMessage({ to, subject, text, html }) {
     if (!MAILGUN_API_KEY || !MAILGUN_DOMAIN) {
@@ -14,7 +14,7 @@ async function sendMailgunMessage({ to, subject, text, html }) {
     const params = new URLSearchParams();
     params.append('from', MAILGUN_FROM);
     params.append('to', to);
-    params.append('subject', subject || 'SchoolOS Notification');
+    params.append('subject', subject || 'Managen Notification');
     if (text) params.append('text', text);
     if (html) params.append('html', html);
 
@@ -29,31 +29,31 @@ async function sendMailgunMessage({ to, subject, text, html }) {
 }
 
 async function sendWelcome({ to, name, schoolName }) {
-    const subject = `Welcome to ${schoolName || 'SchoolOS'}`;
-    const text = `Hello ${name || ''},\n\nWelcome to ${schoolName || 'your new school on SchoolOS'}. Your account has been created.\n\nLogin at your subdomain to get started.`;
+    const subject = `Welcome to ${schoolName || 'Managen'}`;
+    const text = `Hello ${name || ''},\n\nWelcome to ${schoolName || 'your new school on Managen'}. Your account has been created.\n\nLogin at your subdomain to get started.`;
     return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendWelcome email');
 }
 
 async function sendTrialReminder({ to, name, daysLeft, schoolName }) {
-    const subject = `Your ${schoolName || 'SchoolOS'} trial ends in ${daysLeft} day(s)`;
-    const text = `Hi ${name || ''},\n\nYour trial for ${schoolName || 'SchoolOS'} ends in ${daysLeft} day(s). Please add a payment method to avoid suspension.`;
+    const subject = `Your ${schoolName || 'Managen'} trial ends in ${daysLeft} day(s)`;
+    const text = `Hi ${name || ''},\n\nYour trial for ${schoolName || 'Managen'} ends in ${daysLeft} day(s). Please add a payment method to avoid suspension.`;
     return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendTrialReminder email');
 }
 
 async function sendPaymentReceipt({ to, name, amount, currency = 'GHS', invoiceId, schoolName }) {
-    const subject = `Payment received — ${schoolName || 'SchoolOS'}`;
+    const subject = `Payment received — ${schoolName || 'Managen'}`;
     const text = `Hello ${name || ''},\n\nWe received your payment of ${amount} ${currency} for ${schoolName || ''}. Invoice: ${invoiceId}. Thank you.`;
     return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendPaymentReceipt email');
 }
 
 async function sendPaymentFailed({ to, name, amount, currency = 'GHS', invoiceId, schoolName }) {
-    const subject = `Payment failed — ${schoolName || 'SchoolOS'}`;
+    const subject = `Payment failed — ${schoolName || 'Managen'}`;
     const text = `Hello ${name || ''},\n\nWe were unable to process payment of ${amount} ${currency} for ${schoolName || ''}. Invoice: ${invoiceId}. Please update your payment method.`;
     return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendPaymentFailed email');
 }
 
 async function sendFeeReminder({ to, subject, message }) {
-    const resolvedSubject = subject || 'SchoolOS fee reminder';
+    const resolvedSubject = subject || 'Managen fee reminder';
     const resolvedMessage = message || 'You have an outstanding school fee payment.';
     return wrapServiceCall(sendMailgunMessage({ to, subject: resolvedSubject, text: resolvedMessage }), 'sendFeeReminder email');
 }

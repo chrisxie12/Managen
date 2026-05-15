@@ -72,7 +72,7 @@ export function DashboardLayout() {
           <GraduationCap size={17} color={MILK} />
         </div>
         <div>
-          <div style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>SchoolOS</div>
+          <div style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>Managen</div>
           <div style={{ color: MUTED, fontSize: "0.68rem" }}>{school?.name || "Dashboard"}</div>
         </div>
       </div>

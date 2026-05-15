@@ -1,5 +1,5 @@
 /**
- * SchoolOS API Service
+ * Managen API Service
  * Centralized utility for making backend requests
  *
  * Dev: Vite proxy (vite.config.ts) forwards /api/* → backend.

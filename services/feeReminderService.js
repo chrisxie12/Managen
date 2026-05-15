@@ -144,7 +144,7 @@ const sendReminderForFee = async ({ tenant, fee, actorId, dryRun = false }) => {
         paymentLink,
     });
 
-    const subject = `${tenant.name || 'SchoolOS'} fee reminder`;
+    const subject = `${tenant.name || 'Managen'} fee reminder`;
     const channels = parseChannelOrder();
     const attempts = [];
 

@@ -2,7 +2,7 @@ const axios = require('axios');
 const { attemptRequest, wrapServiceCall } = require('./notificationUtils');
 
 const ARKESEL_API_KEY = process.env.ARKESEL_API_KEY;
-const ARKESEL_SENDER_ID = process.env.SMS_SENDER_ID || process.env.ARKESEL_SENDER_ID || 'SchoolOS';
+const ARKESEL_SENDER_ID = process.env.SMS_SENDER_ID || process.env.ARKESEL_SENDER_ID || 'Managen';
 const ARKESEL_BASE_URL = process.env.ARKESEL_BASE_URL || 'https://sms.arkesel.com/api/v2/send';
 
 async function sendArkeselSms({ to, message }) {
@@ -23,12 +23,12 @@ async function sendArkeselSms({ to, message }) {
 }
 
 async function sendWelcome({ to, name, schoolName }) {
-    const message = `Welcome ${name || ''} to ${schoolName || 'SchoolOS'}. Login at your subdomain to get started.`;
+    const message = `Welcome ${name || ''} to ${schoolName || 'Managen'}. Login at your subdomain to get started.`;
     return wrapServiceCall(sendArkeselSms({ to, message }), 'sendWelcome sms', (res) => res.data?.request_id);
 }
 
 async function sendTrialReminder({ to, name, daysLeft, schoolName }) {
-    const message = `Hi ${name || ''}, your trial for ${schoolName || 'SchoolOS'} ends in ${daysLeft} day(s). Please add payment to avoid suspension.`;
+    const message = `Hi ${name || ''}, your trial for ${schoolName || 'Managen'} ends in ${daysLeft} day(s). Please add payment to avoid suspension.`;
     return wrapServiceCall(sendArkeselSms({ to, message }), 'sendTrialReminder sms', (res) => res.data?.request_id);
 }
 

@@ -19,7 +19,7 @@ const mockFetchSequence = (...responses) => {
   });
 };
 
-describe('SchoolOS auth flows', () => {
+describe('Managen auth flows', () => {
   beforeEach(() => {
     localStorage.clear();
     global.fetch = jest.fn();

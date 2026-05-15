@@ -121,7 +121,7 @@ const testimonials = [
   {
     name: "Mrs. Abena Asante",
     role: "Headmistress, Accra",
-    text: "SchoolOS replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it.",
+    text: "Managen replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it.",
     img: "https://images.unsplash.com/photo-1573496799436-5c34ef41818d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200",
     stars: 5,
   },
@@ -188,7 +188,7 @@ export function LandingPage() {
                 fontWeight: 700,
               }}
             >
-              SchoolOS
+              Managen
             </span>
           </div>
 
@@ -319,7 +319,7 @@ export function LandingPage() {
                 style={{ color: MUTED, fontSize: "1.1rem", lineHeight: 1.75 }}
                 className="mb-8 max-w-lg"
               >
-                SchoolOS is the all-in-one school management platform for Ghana
+                Managen is the all-in-one school management platform for Ghana
                 and Nigeria — from fee tracking to WhatsApp reports, WAEC
                 results to payroll. Everything automated.
               </p>
@@ -939,7 +939,7 @@ export function LandingPage() {
                   fontWeight: 700,
                 }}
               >
-                SchoolOS
+                Managen
               </span>
             </div>
             <p style={{ color: MUTED, fontSize: "0.85rem", lineHeight: 1.7 }}>
@@ -991,7 +991,7 @@ export function LandingPage() {
           style={{ borderTop: `1px solid rgba(56,25,50,0.07)` }}
         >
           <p style={{ color: MUTED, fontSize: "0.8rem" }}>
-            © 2026 SchoolOS. All rights reserved.
+            © 2026 Managen. All rights reserved.
           </p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Service"].map((link) => (

@@ -467,7 +467,7 @@ export function Communication() {
                       className="flex items-center gap-1 mb-2"
                       style={{ color: WHATSAPP, fontSize: "0.72rem", fontWeight: 600 }}
                     >
-                      <FileText size={11} /> SchoolOS Report
+                      <FileText size={11} /> Managen Report
                     </div>
                   )}
                   <p
