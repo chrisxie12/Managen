@@ -3,11 +3,11 @@
  * Centralized utility for making backend requests
  *
  * Dev: default '' + Vite proxy → cookies bind to localhost:5173 (same site as the SPA).
- * Prod: set VITE_API_BASE_URL to your API origin (e.g. https://api.example.com).
+ * Prod: set VITE_API_BASE_URL to your API origin (e.g. https://api.getschoolos.me).
+ *   OR add a Vercel rewrite: { "source": "/api/(.*)", "destination": "https://your-backend.com/api/$1" }
  */
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.DEV ? '' : 'http://localhost:5000');
+  import.meta.env.VITE_API_BASE_URL || '';
 
 export interface ApiResponse<T = any> {
   data?: T;
