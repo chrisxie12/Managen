@@ -140,9 +140,9 @@ const setSecureAuthCookie = (res, token, name = 'schoolos_admin_token') => {
     res.cookie(name, token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-        path: '/api/superadmin',
+        path: '/',
     });
 };
 
@@ -389,7 +389,7 @@ router.post('/login', async (req, res) => {
 // ─── POST /api/superadmin/logout ──────────────────────────────
 router.post('/logout', (req, res) => {
     try {
-        res.clearCookie('schoolos_admin_token', { path: '/api/superadmin' });
+        res.clearCookie('schoolos_admin_token', { path: '/' });
         return res.json({ data: { message: 'Logged out successfully.' } });
     } catch (err) {
         return res.status(500).json({ error: 'Logout failed.' });
