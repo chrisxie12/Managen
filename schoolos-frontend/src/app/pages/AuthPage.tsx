@@ -32,7 +32,7 @@ const benefits = [
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [mode, setMode] = useState<"login" | "signup">(
+  const [mode, setMode] = useState<"login" | "signup" | "superadmin">(
     searchParams.get("mode") === "signup" ? "signup" : "login"
   );
   const [showPassword, setShowPassword] = useState(false);
@@ -83,6 +83,17 @@ export function AuthPage() {
           setMode("login");
           setForm((f) => ({ ...f, subdomain: slug || "" }));
         }
+      } else if (mode === "superadmin") {
+        const res = await fetch("/api/superadmin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email: form.email, password: form.password }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "Super admin login failed");
+        toast.success("Welcome, Super Admin!");
+        navigate("/superadmin");
       } else {
         const tenant = form.subdomain.trim().toLowerCase();
         if (!tenant) {
@@ -303,7 +314,7 @@ export function AuthPage() {
               border: `1px solid rgba(56,25,50,0.08)`,
             }}
           >
-            {(["login", "signup"] as const).map((m) => (
+            {(["login", "signup", "superadmin"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
@@ -314,9 +325,10 @@ export function AuthPage() {
                   fontWeight: mode === m ? 600 : 400,
                   boxShadow:
                     mode === m ? "0 4px 14px rgba(56,25,50,0.25)" : "none",
+                  fontSize: m === "superadmin" ? "0.75rem" : "0.85rem",
                 }}
               >
-                {m === "login" ? "Sign In" : "Create Account"}
+                {m === "login" ? "Sign In" : m === "signup" ? "Create Account" : "Super Admin"}
               </button>
             ))}
           </div>
@@ -332,11 +344,13 @@ export function AuthPage() {
                 marginBottom: "0.4rem",
               }}
             >
-              {mode === "login" ? "Welcome back" : "Start your free trial"}
+              {mode === "login" ? "Welcome back" : mode === "superadmin" ? "Platform Admin" : "Start your free trial"}
             </h1>
             <p style={{ color: MUTED, fontSize: "0.9rem" }}>
               {mode === "login"
                 ? "Sign in to your school dashboard"
+                : mode === "superadmin"
+                ? "Sign in to the platform admin panel"
                 : "Set up your school in under 10 minutes"}
             </p>
           </div>
@@ -560,11 +574,11 @@ export function AuthPage() {
                   <span
                     className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"
                   />
-                  {mode === "login" ? "Signing in..." : "Creating account..."}
+                  {mode === "login" ? "Signing in..." : mode === "superadmin" ? "Signing in..." : "Creating account..."}
                 </span>
               ) : (
                 <>
-                  {mode === "login" ? "Sign In" : "Create Free Account"}
+                  {mode === "login" ? "Sign In" : mode === "superadmin" ? "Open Dashboard" : "Create Free Account"}
                   <ArrowRight size={16} />
                 </>
               )}
@@ -586,6 +600,14 @@ export function AuthPage() {
                   Sign up free
                 </button>
               </>
+            ) : mode === "superadmin" ? (
+              <button
+                onClick={() => setMode("login")}
+                style={{ color: PLUM, fontWeight: 600, fontSize: "0.85rem" }}
+                className="hover:opacity-70"
+              >
+                Back to school login
+              </button>
             ) : (
               <>
                 Already have an account?{" "}
