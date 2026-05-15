@@ -187,7 +187,7 @@ const centralHub = {
   ],
 };
 
-export default function SchoolOSFlow() {
+export default function ManagenFlow() {
   const [activeRole, setActiveRole] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("roles");
 
