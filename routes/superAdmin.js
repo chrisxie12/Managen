@@ -382,6 +382,7 @@ router.post('/login', async (req, res) => {
         setSecureAuthCookie(res, token, 'schoolos_admin_token');
         return res.json({ data: { message: 'Welcome, Super Admin!' } });
     } catch (err) {
+        console.error('Super admin login error:', err);
         return res.status(500).json({ error: 'Login failed.' });
     }
 });
