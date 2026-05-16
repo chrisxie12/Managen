@@ -25,8 +25,8 @@ const features = [
 
 const pricingPlans = [
   { name: "Free Trial", tagline: "Get started with no commitment", priceGHS: "Free", priceNGN: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
-  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 6,500", priceNGN: "₦450,000", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
-  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 13,000", priceNGN: "₦890,000", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
+  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 499", priceNGN: "₦59,000", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
+  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 999", priceNGN: "₦118,000", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
   { name: "Enterprise", tagline: "For school groups and districts", priceGHS: "Custom", priceNGN: "Custom", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
 ];
 
