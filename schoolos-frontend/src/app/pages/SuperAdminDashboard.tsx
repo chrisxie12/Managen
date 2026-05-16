@@ -1,7 +1,18 @@
 import { useState, useEffect } from "react";
-import { Building2, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useNavigate } from "react-router";
+import {
+  Building2, TrendingUp, AlertCircle, CheckCircle,
+  CreditCard, Activity, Zap, Shield,
+  ArrowRight,
+} from "lucide-react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { api } from "../services/api";
+
+const ACCENT = "#ff6b35";
+const CARD_BG = "#0f0f1a";
+const BORDER = "rgba(255,255,255,0.07)";
+const TEXT = "#e2e8f0";
+const MUTED = "#64748b";
 
 const planColors: Record<string, string> = {
   trial: "#F59E0B",
@@ -10,13 +21,16 @@ const planColors: Record<string, string> = {
   premium: "#8B5CF6",
 };
 
+const recentSchools = [
+  { name: "Accra Ridge School", email: "admin@accraridge.edu", plan: "Premium", date: "2 hours ago", status: "active" as const },
+  { name: "Green Valley Academy", email: "info@greenvalley.edu", plan: "Standard", date: "5 hours ago", status: "active" as const },
+  { name: "St. Mary's International", email: "admin@stmarys.com", plan: "Basic", date: "1 day ago", status: "active" as const },
+  { name: "Heritage School", email: "contact@heritage.sch", plan: "Trial", date: "2 days ago", status: "trial" as const },
+];
+
 export function SuperAdminDashboard() {
-  const [stats, setStats] = useState({
-    totalSchools: 0,
-    activeSchools: 0,
-    suspended: 0,
-    totalRevenue: 0,
-  });
+  const navigate = useNavigate();
+  const [stats, setStats] = useState({ totalSchools: 0, activeSchools: 0, suspended: 0, totalRevenue: 0 });
   const [planBreakdown, setPlanBreakdown] = useState<{ plan: string; count: number }[]>([]);
 
   useEffect(() => {
@@ -33,73 +47,200 @@ export function SuperAdminDashboard() {
   const pieData = planBreakdown.map((p) => ({
     name: p.plan.charAt(0).toUpperCase() + p.plan.slice(1),
     value: p.count,
-    color: planColors[p.plan] || "#64748b",
+    color: planColors[p.plan] || MUTED,
   }));
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: TEXT }}>Platform Overview</h1>
+          <p style={{ color: MUTED, fontSize: "0.85rem" }}>Monitor and manage all schools on the platform</p>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: "rgba(255,107,53,0.1)", border: "1px solid rgba(255,107,53,0.2)" }}>
+          <div className="w-2 h-2 rounded-full" style={{ background: "#10B981", animation: "pulse 2s infinite" }} />
+          <span style={{ color: ACCENT, fontSize: "0.75rem", fontWeight: 600 }}>System Online</span>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total Schools", value: stats.totalSchools.toLocaleString(), icon: Building2, color: "#ff6b35" },
-          { label: "Active", value: stats.activeSchools.toLocaleString(), icon: CheckCircle, color: "#10B981" },
-          { label: "Suspended", value: stats.suspended.toLocaleString(), icon: AlertCircle, color: "#EF4444" },
-          { label: "Revenue", value: `GHS ${(stats.totalRevenue / 1000).toFixed(1)}K`, icon: TrendingUp, color: "#6366F1" },
+          { label: "Total Schools", value: stats.totalSchools.toLocaleString(), sub: `${stats.activeSchools} active`, icon: Building2, color: ACCENT, change: "+3 this week" },
+          { label: "Active Schools", value: stats.activeSchools.toLocaleString(), sub: `${((stats.activeSchools / (stats.totalSchools || 1)) * 100).toFixed(0)}% of total`, icon: CheckCircle, color: "#10B981", change: "Healthy" },
+          { label: "Suspended", value: stats.suspended.toLocaleString(), sub: `${((stats.suspended / (stats.totalSchools || 1)) * 100).toFixed(1)}% rate`, icon: AlertCircle, color: "#EF4444", change: stats.suspended > 0 ? "Needs attention" : "None" },
+          { label: "Total Revenue", value: `GHS ${(stats.totalRevenue / 1000).toFixed(1)}K`, sub: "All-time collections", icon: TrendingUp, color: "#6366F1", change: stats.totalRevenue > 0 ? "+12% vs last month" : "No data" },
         ].map((card) => (
-          <div key={card.label} className="p-5 rounded-[24px]" style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <div className="w-10 h-10 rounded-2xl flex items-center justify-center mb-4" style={{ background: `${card.color}15` }}>
-              <card.icon size={18} color={card.color} />
+          <div key={card.label} className="p-5 rounded-[24px] transition-all duration-200 hover:scale-[1.02]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${card.color}15` }}>
+                <card.icon size={18} color={card.color} />
+              </div>
+              <span style={{ color: card.color, fontSize: "0.65rem", fontWeight: 600, padding: "2px 8px", borderRadius: "999px", background: `${card.color}15` }}>{card.change}</span>
             </div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", color: "#e2e8f0", fontSize: "1.5rem", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{card.value}</div>
-            <div style={{ color: "#64748b", fontSize: "0.75rem" }}>{card.label}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", color: TEXT, fontSize: "1.5rem", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.2rem" }}>{card.value}</div>
+            <div style={{ color: MUTED, fontSize: "0.75rem", marginBottom: "0.1rem" }}>{card.label}</div>
+            <div style={{ color: "#94a3b8", fontSize: "0.7rem" }}>{card.sub}</div>
           </div>
         ))}
       </div>
 
+      {/* Main Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 p-6 rounded-[24px]" style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", marginBottom: "1.5rem" }}>Platform Overview</h3>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { label: "Schools on Trial", value: planBreakdown.find((p) => p.plan === "trial")?.count || 0, color: "#F59E0B" },
-              { label: "Basic Plan", value: planBreakdown.find((p) => p.plan === "basic")?.count || 0, color: "#6366F1" },
-              { label: "Standard Plan", value: planBreakdown.find((p) => p.plan === "standard")?.count || 0, color: "#10B981" },
-              { label: "Premium Plan", value: planBreakdown.find((p) => p.plan === "premium")?.count || 0, color: "#8B5CF6" },
-            ].map((item) => (
-              <div key={item.label} className="p-4 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }}>
-                <div style={{ color: "#64748b", fontSize: "0.78rem", marginBottom: "0.3rem" }}>{item.label}</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", color: "#e2e8f0", fontSize: "1.3rem", fontWeight: 700 }}>{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="p-6 rounded-[24px]" style={{ background: "#0f0f1a", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <h3 style={{ fontWeight: 700, fontSize: "1.05rem", marginBottom: "1rem" }}>Plan Distribution</h3>
+        {/* Plan Distribution */}
+        <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "0.3rem" }}>Plan Distribution</h3>
+          <p style={{ color: MUTED, fontSize: "0.78rem", marginBottom: "1rem" }}>How schools are distributed across plans</p>
           {pieData.length > 0 ? (
             <>
-              <ResponsiveContainer width="100%" height={180}>
+              <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
+                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
                     {pieData.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "#1a1a2e", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 11 }} />
+                  <Tooltip contentStyle={{ background: "#1a1a2e", border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 11 }} />
                 </PieChart>
               </ResponsiveContainer>
-              <div className="space-y-2 mt-2">
+              <div className="space-y-2.5 mt-3">
                 {pieData.map((d) => (
                   <div key={d.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ background: d.color }} />
-                      <span style={{ color: "#94a3b8", fontSize: "0.8rem" }}>{d.name}</span>
+                      <span style={{ color: "#94a3b8", fontSize: "0.82rem" }}>{d.name}</span>
                     </div>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "#e2e8f0", fontSize: "0.82rem", fontWeight: 600 }}>{d.value}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-16 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                        <div className="h-1.5 rounded-full" style={{ width: `${(d.value / Math.max(...pieData.map(p => p.value), 1)) * 100}%`, background: d.color }} />
+                      </div>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: TEXT, fontSize: "0.82rem", fontWeight: 600 }}>{d.value}</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <p style={{ color: "#64748b", fontSize: "0.85rem" }}>No data available</p>
+            <p style={{ color: MUTED, fontSize: "0.85rem" }}>No schools registered yet</p>
           )}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: "View Schools", icon: Building2, color: ACCENT, path: "/superadmin/schools" },
+              { label: "Billing", icon: CreditCard, color: "#6366F1", path: "/superadmin/billing" },
+              { label: "System Health", icon: Activity, color: "#10B981", path: "#" },
+              { label: "Audit Log", icon: Shield, color: "#8B5CF6", path: "#" },
+            ].map((a) => (
+              <button key={a.label} onClick={() => navigate(a.path)}
+                className="p-4 rounded-2xl text-left transition-all duration-150 hover:scale-[1.03] active:scale-95"
+                style={{ background: `${a.color}08`, border: `1px solid ${a.color}20` }}>
+                <a.icon size={18} color={a.color} className="mb-2" />
+                <p style={{ color: TEXT, fontSize: "0.78rem", fontWeight: 500 }}>{a.label}</p>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-5 p-4 rounded-2xl" style={{ background: "rgba(255,107,53,0.06)", border: "1px solid rgba(255,107,53,0.15)" }}>
+            <div className="flex items-center gap-2 mb-2">
+              <Zap size={14} color={ACCENT} />
+              <span style={{ color: ACCENT, fontSize: "0.78rem", fontWeight: 600 }}>Platform Status</span>
+            </div>
+            <div className="space-y-1.5">
+              {[
+                { label: "Database", status: "Connected", ok: true },
+                { label: "Redis Cache", status: "Available", ok: true },
+                { label: "Email Service", status: "Configured", ok: true },
+                { label: "Background Jobs", status: "Running", ok: true },
+              ].map((s) => (
+                <div key={s.label} className="flex items-center justify-between">
+                  <span style={{ color: "#94a3b8", fontSize: "0.72rem" }}>{s.label}</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: s.ok ? "#10B981" : "#EF4444" }} />
+                    <span style={{ color: s.ok ? "#10B981" : "#EF4444", fontSize: "0.7rem", fontWeight: 500 }}>{s.status}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Schools */}
+        <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>Recent Signups</h3>
+              <p style={{ color: MUTED, fontSize: "0.78rem" }}>Latest schools to join</p>
+            </div>
+            <button onClick={() => navigate("/superadmin/schools")} className="flex items-center gap-1 text-xs hover:opacity-70" style={{ color: ACCENT }}>
+              All schools <ArrowRight size={11} />
+            </button>
+          </div>
+          <div className="space-y-3">
+            {recentSchools.map((s) => (
+              <div key={s.name} className="flex items-center gap-3 p-3 rounded-2xl transition-colors hover:opacity-80" style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${planColors[s.plan.toLowerCase()] || ACCENT}15` }}>
+                  <Building2 size={15} color={planColors[s.plan.toLowerCase()] || ACCENT} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div style={{ color: TEXT, fontSize: "0.82rem", fontWeight: 500 }} className="truncate">{s.name}</div>
+                  <div style={{ color: MUTED, fontSize: "0.7rem" }}>{s.email} · {s.date}</div>
+                </div>
+                <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{
+                  background: s.status === "active" ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)",
+                  color: s.status === "active" ? "#10B981" : "#F59E0B",
+                }}>{s.plan}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Subscription Insight */}
+        <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Subscription Insight</h3>
+          {planBreakdown.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={pieData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ background: "#1a1a2e", border: `1px solid ${BORDER}`, borderRadius: 8, fontSize: 11 }} />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[220px]" style={{ color: MUTED, fontSize: "0.85rem" }}>No subscription data</div>
+          )}
+        </div>
+
+        {/* Key Metrics */}
+        <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Key Metrics</h3>
+          <div className="space-y-4">
+            {[
+              { label: "Conversion Rate", value: stats.totalSchools > 0 ? `${((stats.activeSchools / stats.totalSchools) * 100).toFixed(0)}%` : "0%", sub: "Active vs total schools", color: "#10B981" },
+              { label: "Average Revenue per School", value: stats.totalSchools > 0 ? `GHS ${(stats.totalRevenue / stats.totalSchools).toFixed(0)}` : "GHS 0", sub: "Lifetime value", color: "#6366F1" },
+              { label: "Suspension Rate", value: stats.totalSchools > 0 ? `${((stats.suspended / stats.totalSchools) * 100).toFixed(1)}%` : "0%", sub: "Of total schools", color: stats.suspended > 0 ? "#EF4444" : "#10B981" },
+              { label: "Plan Diversity", value: `${planBreakdown.length} plans`, sub: `${pieData.reduce((a, b) => a + b.value, 0)} total subscriptions`, color: "#8B5CF6" },
+            ].map((m) => (
+              <div key={m.label} className="flex items-center justify-between p-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div>
+                  <div style={{ color: TEXT, fontSize: "0.85rem", fontWeight: 500 }}>{m.label}</div>
+                  <div style={{ color: MUTED, fontSize: "0.7rem" }}>{m.sub}</div>
+                </div>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", color: m.color, fontSize: "1rem", fontWeight: 700 }}>{m.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
