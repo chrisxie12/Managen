@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import {
-  Building2, Users, AlertCircle, DollarSign, BarChart3, Shield,
-  TrendingUp, Activity, Zap, Clock, CreditCard,
-  ExternalLink,
+  Building2, Users, AlertCircle, DollarSign, BarChart3,
+  TrendingUp, Activity, ExternalLink,
+  UserPlus, AlertTriangle,
 } from "lucide-react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis } from "recharts";
 import { api } from "../services/api";
 import {
   StatCard, AlertBanner, MetricCell, Badge, LoadingSkeleton, EmptyState, ErrorState,
@@ -13,19 +13,58 @@ import {
   CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED, ACCENT_C as ACCENT,
 } from "./superadmin/Components";
 
+type DashboardData = {
+  stats: {
+    totalSchools: number;
+    activeSchools: number;
+    suspended: number;
+    totalRevenue: number;
+    trends?: {
+      totalSchools: number;
+      activeSchools: number;
+      suspended: number;
+      totalRevenue: number;
+    };
+  };
+  planBreakdown: { plan: string; count: number }[];
+  recentActivity?: {
+    id: string;
+    type: "school_added" | "school_suspended" | "plan_upgraded" | "payment_received";
+    label: string;
+    timestamp: string;
+  }[];
+  mrrTrend?: { month: string; mrr: number }[];
+};
+
+const activityConfig: Record<string, { bg: string; icon: any; color: string }> = {
+  school_added: { bg: "rgba(16,185,129,0.15)", icon: UserPlus, color: "#10B981" },
+  school_suspended: { bg: "rgba(239,68,68,0.15)", icon: AlertTriangle, color: "#EF4444" },
+  plan_upgraded: { bg: "rgba(99,102,241,0.15)", icon: TrendingUp, color: "#6366F1" },
+  payment_received: { bg: "rgba(16,185,129,0.15)", icon: DollarSign, color: "#10B981" },
+};
+
+const relativeTime = (iso: string) => {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  const d = new Date(iso);
+  return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]} ${d.getDate()}`;
+};
+
 export function SuperAdminDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<{
-    stats: { totalSchools: number; activeSchools: number; suspended: number; totalRevenue: number };
-    planBreakdown: { plan: string; count: number }[];
-  } | null>(null);
+  const [data, setData] = useState<DashboardData | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true); setError(null);
     try {
-      const res = await api.get<{ stats: { totalSchools: number; activeSchools: number; suspended: number; totalRevenue: number }; planBreakdown: { plan: string; count: number }[] }>("/api/superadmin/dashboard");
+      const res = await api.get<DashboardData>("/api/superadmin/dashboard");
       if (res.data) setData(res.data);
     } catch (err: any) { setError(err.message || "Failed to load dashboard"); }
     finally { setLoading(false); }
@@ -37,7 +76,7 @@ export function SuperAdminDashboard() {
   if (error) return <ErrorState message={error} onRetry={fetchData} />;
   if (!data) return <EmptyState icon={BarChart3} title="No data available" desc="Dashboard data will appear once schools are registered." />;
 
-  const { stats, planBreakdown } = data;
+  const { stats, planBreakdown, recentActivity, mrrTrend } = data;
   const pieData = planBreakdown.map((p) => ({
     name: p.plan.charAt(0).toUpperCase() + p.plan.slice(1),
     value: p.count,
@@ -49,6 +88,8 @@ export function SuperAdminDashboard() {
   const hasRevenue = stats.totalRevenue > 0;
   const hasSchools = stats.totalSchools > 0;
   const hasAlerts = stats.suspended > 0;
+  const activityItems = (recentActivity || []).slice(0, 8);
+  const mrrData = mrrTrend || [];
 
   return (
     <div className="space-y-5" style={{ color: TEXT }}>
@@ -88,17 +129,17 @@ export function SuperAdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Building2} label="Total Schools" value={stats.totalSchools.toLocaleString()}
           sub={`${stats.activeSchools} active · ${stats.suspended} suspended`} color={ACCENT}
-          trend={hasSchools ? { dir: "up", text: `${activePct}% active` } : { dir: "neutral", text: "No data" }}
+          trend={stats.trends?.totalSchools ?? (hasSchools ? { dir: "up", text: `${activePct}% active` } : { dir: "neutral", text: "No data" })}
           badge={hasSchools ? { text: "Primary KPI", color: ACCENT } : undefined} />
         <StatCard icon={Users} label="Active Schools" value={stats.activeSchools.toLocaleString()}
           sub={`${activePct}% of total enrollment`} color="#10B981"
-          trend={stats.activeSchools > 0 ? { dir: "up", text: "Operational" } : { dir: "neutral", text: "Idle" }} />
+          trend={stats.trends?.activeSchools ?? (stats.activeSchools > 0 ? { dir: "up", text: "Operational" } : { dir: "neutral", text: "Idle" })} />
         <StatCard icon={AlertCircle} label="Suspended" value={stats.suspended.toLocaleString()}
           sub={`${suspendedPct}% suspension rate`} color={stats.suspended > 0 ? "#EF4444" : "#10B981"}
-          trend={stats.suspended > 0 ? { dir: "down", text: "Action needed" } : { dir: "up", text: "None" }} />
+          trend={stats.trends?.suspended ?? (stats.suspended > 0 ? { dir: "down", text: "Action needed" } : { dir: "up", text: "None" })} />
         <StatCard icon={DollarSign} label="Total Revenue" value={hasRevenue ? `GHS ${(stats.totalRevenue / 1000).toFixed(1)}K` : "GHS 0"}
           sub={hasRevenue ? "All-time platform revenue" : "Awaiting first payment"} color="#6366F1"
-          trend={hasRevenue ? { dir: "up", text: "Generating" } : { dir: "neutral", text: "No revenue" }} />
+          trend={stats.trends?.totalRevenue ?? (hasRevenue ? { dir: "up", text: "Generating" } : { dir: "neutral", text: "No revenue" })} />
       </div>
 
       {/* ── MIDDLE GRID ── */}
@@ -143,67 +184,64 @@ export function SuperAdminDashboard() {
           ) : <EmptyState icon={BarChart3} title="No plan data" desc="Plan distribution appears once schools subscribe." />}
         </div>
 
-        {/* Platform Health + Quick Actions */}
+        {/* Recent Activity */}
         <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
-          <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Platform Health</h3>
-          <div className="space-y-2 mb-6">
-            {[
-              { label: "PostgreSQL", status: "Configured", icon: BarChart3 },
-              { label: "Redis Cache", status: "Configured", icon: Zap },
-              { label: "Paystack/Flutterwave", status: "Configured", icon: CreditCard },
-              { label: "Background Jobs", status: "Configured", icon: Clock },
-              { label: "CDN / Static Assets", status: "Configured", icon: Activity },
-            ].map((s) => (
-              <div key={s.label} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.02)" }}>
-                <div className="flex items-center gap-2 min-w-0">
-                  <s.icon size={13} color="#64748b" />
-                  <span style={{ color: "#94a3b8", fontSize: "0.78rem" }} className="truncate">{s.label}</span>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span style={{ color: "#64748b", fontSize: "0.7rem", fontStyle: "italic" }}>Live health checks coming soon</span>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center gap-2 mb-1">
+            <Activity size={15} color={MUTED} />
+            <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>Recent Activity</h3>
           </div>
-          <h3 style={{ fontWeight: 700, fontSize: "0.9rem", color: TEXT, marginBottom: "0.6rem" }}>Quick Actions</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { label: "Schools", icon: Building2, color: ACCENT, path: "/superadmin/schools", hint: "S" },
-              { label: "Billing", icon: DollarSign, color: "#6366F1", path: "/superadmin/billing", hint: "B" },
-              { label: "Reports", icon: TrendingUp, color: "#10B981", path: "#", hint: "R" },
-              { label: "Settings", icon: Shield, color: "#8B5CF6", path: "#", hint: "G" },
-            ].map((a) => (
-              <button key={a.label} onClick={() => navigate(a.path)}
-                className="flex items-center gap-2 p-3 rounded-xl transition-all duration-150 hover:scale-[1.03] active:scale-95"
-                style={{ background: `${a.color}08`, border: `1px solid ${a.color}20` }}>
-                <a.icon size={15} color={a.color} />
-                <span style={{ color: TEXT, fontSize: "0.78rem", fontWeight: 500 }}>{a.label}</span>
-                <span className="ml-auto px-1.5 py-0.5 rounded text-xs" style={{ background: `${a.color}15`, color: a.color, fontSize: "0.6rem", fontFamily: "'JetBrains Mono', monospace" }}>{a.hint}</span>
-              </button>
-            ))}
-          </div>
+          <p style={{ color: MUTED, fontSize: "0.75rem", marginBottom: "1rem" }}>Latest platform events</p>
+          {activityItems.length > 0 ? (
+            <div className="overflow-y-auto max-h-[340px] space-y-0">
+              {activityItems.map((a, i) => {
+                const cfg = activityConfig[a.type] || activityConfig.school_added;
+                const Icon = cfg.icon;
+                return (
+                  <div key={a.id}>
+                    {i > 0 && <div style={{ height: 1, background: BORDER }} />}
+                    <div className="flex items-center gap-3 py-2.5">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: cfg.bg }}>
+                        <Icon size={14} color={cfg.color} />
+                      </div>
+                      <span className="flex-1 min-w-0 truncate" style={{ color: "#94a3b8", fontSize: "0.78rem" }}>{a.label}</span>
+                      <span style={{ color: MUTED, fontSize: "0.68rem", flexShrink: 0 }}>{relativeTime(a.timestamp)}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Activity size={28} color={MUTED} />
+              <p style={{ color: MUTED, fontSize: "0.85rem", marginTop: "0.5rem" }}>No recent activity</p>
+            </div>
+          )}
         </div>
 
-        {/* Subscription Insight Bar Chart */}
+        {/* MRR Trend */}
         <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
-          <div className="flex items-center justify-between mb-1">
-            <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>Subscription Insight</h3>
-            {pieData.length > 0 && <Badge text={`${planBreakdown.length} tiers`} color="#94a3b8" />}
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp size={15} color={MUTED} />
+            <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>MRR Trend</h3>
           </div>
-          <p style={{ color: MUTED, fontSize: "0.75rem", marginBottom: "1rem" }}>Plan breakdown by count</p>
-          {pieData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={pieData} layout="vertical" margin={{ left: 10, right: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} />
-                <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} width={60} />
+          <p style={{ color: MUTED, fontSize: "0.75rem", marginBottom: "1rem" }}>Monthly recurring revenue</p>
+          {mrrData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={240}>
+              <LineChart data={mrrData} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} width={80}
+                  tickFormatter={(v: number) => `GHS ${(v / 1000).toFixed(0)}k`} />
                 <Tooltip content={<ChartTooltip />} />
-                <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={22} name="Schools">
-                  {pieData.map((e, i) => (<Cell key={i} fill={e.color} />))}
-                </Bar>
-              </BarChart>
+                <Line dataKey="mrr" name="MRR" type="monotone" stroke="#6366F1" strokeWidth={2}
+                  dot={{ r: 3, fill: "#6366F1", strokeWidth: 0 }} />
+              </LineChart>
             </ResponsiveContainer>
-          ) : <EmptyState icon={BarChart3} title="No subscription data" desc="Insights will appear once schools subscribe." />}
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <DollarSign size={28} color={MUTED} />
+              <p style={{ color: MUTED, fontSize: "0.85rem", marginTop: "0.5rem" }}>No revenue data yet</p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -22,9 +22,10 @@ export function ChartTooltip({ active, payload, label }: any) {
 
 export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }: {
   icon: any; label: string; value: string; sub?: string; color: string;
-  trend?: { dir: "up" | "down" | "neutral"; text: string };
+  trend?: { dir: "up" | "down" | "neutral"; text: string } | number;
   badge?: { text: string; color: string };
 }) {
+  const numericDelta = typeof trend === "number" ? trend : null;
   return (
     <div className="p-5 rounded-[24px] transition-all duration-200 hover:scale-[1.02] hover:shadow-lg" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
       <div className="flex items-start justify-between mb-3">
@@ -33,7 +34,7 @@ export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }:
         </div>
         <div className="flex items-center gap-2">
           {badge && <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: `${badge.color}20`, color: badge.color }}>{badge.text}</span>}
-          {trend && (
+          {typeof trend === "object" && trend && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{
               background: trend.dir === "up" ? "rgba(16,185,129,0.15)" : trend.dir === "down" ? "rgba(239,68,68,0.15)" : "rgba(100,116,139,0.15)",
               color: trend.dir === "up" ? "#10B981" : trend.dir === "down" ? "#EF4444" : "#94a3b8",
@@ -47,6 +48,11 @@ export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }:
       <div style={{ fontFamily: "'JetBrains Mono', monospace", color: "#e2e8f0", fontSize: "1.6rem", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.15rem" }}>{value}</div>
       <div style={{ color: "#64748b", fontSize: "0.75rem", fontWeight: 500 }}>{label}</div>
       {sub && <div style={{ color: "#94a3b8", fontSize: "0.68rem", marginTop: "0.15rem" }}>{sub}</div>}
+      {numericDelta !== null && numericDelta !== 0 && (
+        <div style={{ color: numericDelta > 0 ? "#10B981" : "#EF4444", fontSize: "0.68rem", marginTop: "0.2rem", fontWeight: 500 }}>
+          {numericDelta > 0 ? "↑" : "↓"} {Math.abs(numericDelta).toFixed(1)}% vs last 30d
+        </div>
+      )}
     </div>
   );
 }
