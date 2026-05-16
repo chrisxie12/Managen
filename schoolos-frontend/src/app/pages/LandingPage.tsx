@@ -24,9 +24,10 @@ const features = [
 ];
 
 const pricingPlans = [
-  { name: "Starter", tagline: "For small schools just getting started", priceGHS: "GHS 180", priceNGN: "₦15,000", period: "/ month", features: ["Up to 200 students", "Fee tracking & invoicing", "Basic attendance", "WhatsApp reports (100/mo)", "Email support"], cta: "Start Free Trial", highlighted: false },
-  { name: "Growth", tagline: "The most popular plan for scaling institutions", priceGHS: "GHS 420", priceNGN: "₦35,000", period: "/ month", features: ["Up to 1,000 students", "Full fee & payroll module", "WAEC/BECE report cards", "Unlimited WhatsApp reports", "Paystack & Flutterwave integration", "Priority support"], cta: "Get Started", highlighted: true },
-  { name: "Enterprise", tagline: "For school groups and large institutions", priceGHS: "Custom", priceNGN: "Custom", period: "", features: ["Unlimited students", "Multi-branch management", "Custom branding & domain", "Dedicated account manager", "SLA & on-site training", "API access"], cta: "Contact Sales", highlighted: false },
+  { name: "Free Trial", tagline: "Get started with no commitment", priceGHS: "Free", priceNGN: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
+  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 6,500", priceNGN: "₦450,000", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
+  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 13,000", priceNGN: "₦890,000", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
+  { name: "Enterprise", tagline: "For school groups and districts", priceGHS: "Custom", priceNGN: "Custom", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
 ];
 
 const testimonials = [
@@ -272,7 +273,7 @@ export function LandingPage() {
               ))}
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {pricingPlans.map((plan, i) => (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: plan.highlighted ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "white",
