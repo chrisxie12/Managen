@@ -1,15 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Search, Building2, CheckCircle, XCircle, ChevronLeft, ChevronRight, Eye, AlertTriangle } from "lucide-react";
 import { api } from "../services/api";
-import { Badge, LoadingSkeleton, EmptyState, ErrorState, CARD_BG_C as CARD_BG, BORDER_C as BORDER } from "./superadmin/Components";
-
-const ACCENT = "#ff6b35";
-const TEXT = "#e2e8f0";
-const MUTED = "#64748b";
-
-const planColors: Record<string, string> = {
-  trial: "#F59E0B", basic: "#6366F1", standard: "#10B981", premium: "#8B5CF6",
-};
+import { Badge, LoadingSkeleton, EmptyState, ErrorState, planColors, CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED, ACCENT_C as ACCENT } from "./superadmin/Components";
 
 interface School {
   id: string; schoolName: string; email: string; phone: string; slug: string;
@@ -55,17 +47,19 @@ export function SuperAdminSchools() {
     setSelectedId(id);
     try {
       const res = await api.get<{ school: SchoolDetail }>(`/api/superadmin/schools/${id}`);
-      if (res.data) setDetail(res.data.school as SchoolDetail);
+      if (res.data) setDetail(res.data.school);
     } catch { setDetail(null); }
     finally { setDetailLoading(false); }
   };
 
   const handleAction = async (id: string, action: "suspend" | "reactivate") => {
     try {
-      await api.put(`/api/superadmin/schools/${id}/${action}`, { ...(action === "reactivate" ? { plan: "basic" } : {}) });
+      await api.put(`/api/superadmin/schools/${id}/${action}`, { ...(action === "reactivate" ? { plan: "growth" } : {}) });
       fetchSchools();
       if (selectedId === id) fetchDetail(id);
-    } catch {}
+    } catch (err: any) {
+      setError(err.message || `Failed to ${action} school`);
+    }
   };
 
   const filtered = schools.filter((s) =>
@@ -90,20 +84,23 @@ export function SuperAdminSchools() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl flex-1 min-w-[240px] max-w-md" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
           <Search size={15} color={MUTED} />
-          <input placeholder="Search by name, email, or slug..." value={search} onChange={(e) => setSearch(e.target.value)}
+          <input aria-label="Search schools by name, email, or slug" placeholder="Search by name, email, or slug..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: TEXT }} />
         </div>
-        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+        <select aria-label="Filter by status" value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
           className="px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: CARD_BG, border: `1px solid ${BORDER}`, color: TEXT }}>
           <option value="">All Status</option>
           <option value="active">Active</option>
           <option value="suspended">Suspended</option>
         </select>
-        <select value={planFilter} onChange={(e) => { setPlanFilter(e.target.value); setPage(1); }}
+        <select aria-label="Filter by plan" value={planFilter} onChange={(e) => { setPlanFilter(e.target.value); setPage(1); }}
           className="px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: CARD_BG, border: `1px solid ${BORDER}`, color: TEXT }}>
           <option value="">All Plans</option>
           {sortedPlans.map((p) => <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>)}
         </select>
+        {search && filtered.length === 0 && !loading && !error && (
+          <span style={{ color: MUTED, fontSize: "0.78rem" }}>No results on this page — try a different search or navigation.</span>
+        )}
       </div>
 
       {/* Table or empty/error */}
@@ -137,9 +134,9 @@ export function SuperAdminSchools() {
                   <td className="px-5 py-4"><Badge text={school.plan.charAt(0).toUpperCase() + school.plan.slice(1)} color={planColors[school.plan] || MUTED} /></td>
                   <td className="px-5 py-4">
                     {school.status === "active" ? (
-                      <div className="flex items-center gap-1.5" style={{ color: "#10B981", fontSize: "0.82rem" }}><CheckCircle size={13} /> Active</div>
+                      <div className="flex items-center gap-1.5" aria-label="Status: Active" style={{ color: "#10B981", fontSize: "0.82rem" }}><CheckCircle size={13} aria-hidden="true" /> Active</div>
                     ) : (
-                      <div className="flex items-center gap-1.5" style={{ color: "#EF4444", fontSize: "0.82rem" }}><XCircle size={13} /> Suspended</div>
+                      <div className="flex items-center gap-1.5" aria-label="Status: Suspended" style={{ color: "#EF4444", fontSize: "0.82rem" }}><XCircle size={13} aria-hidden="true" /> Suspended</div>
                     )}
                   </td>
                   <td className="px-5 py-4" style={{ color: MUTED, fontSize: "0.78rem" }}>{school.createdAt ? new Date(school.createdAt).toLocaleDateString() : "—"}</td>

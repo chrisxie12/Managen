@@ -9,28 +9,9 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis
 import { api } from "../services/api";
 import {
   StatCard, AlertBanner, MetricCell, Badge, LoadingSkeleton, EmptyState, ErrorState,
-  CARD_BG_C as CARD_BG, BORDER_C as BORDER,
+  ChartTooltip, planColors,
+  CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED, ACCENT_C as ACCENT,
 } from "./superadmin/Components";
-
-const ACCENT = "#ff6b35";
-const TEXT = "#e2e8f0";
-const MUTED = "#64748b";
-
-const planColors: Record<string, string> = {
-  trial: "#F59E0B", basic: "#6366F1", standard: "#10B981", premium: "#8B5CF6",
-};
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="p-3 rounded-xl" style={{ background: "#1a1a2e", border: `1px solid ${BORDER}`, boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
-      <p style={{ color: "#e2e8f0", fontSize: "0.78rem", fontWeight: 600, marginBottom: "0.25rem" }}>{payload[0]?.payload?.name || label}</p>
-      {payload.map((p: any, i: number) => (
-        <p key={i} style={{ color: p.color, fontSize: "0.72rem" }}>{p.name}: <span style={{ fontWeight: 600 }}>{p.value}</span></p>
-      ))}
-    </div>
-  );
-};
 
 export function SuperAdminDashboard() {
   const navigate = useNavigate();
@@ -136,7 +117,7 @@ export function SuperAdminDashboard() {
                   <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={2} dataKey="value">
                     {pieData.map((e, i) => (<Cell key={i} fill={e.color} />))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip content={<ChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="w-full space-y-2 mt-3">
@@ -167,23 +148,19 @@ export function SuperAdminDashboard() {
           <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Platform Health</h3>
           <div className="space-y-2 mb-6">
             {[
-              { label: "PostgreSQL", status: "Connected", ok: true, icon: BarChart3, latency: "12ms" },
-              { label: "Redis Cache", status: "Available", ok: true, icon: Zap, latency: "3ms" },
-              { label: "Paystack/Flutterwave", status: "Configured", ok: true, icon: CreditCard, latency: "—" },
-              { label: "Background Jobs", status: "Idle", ok: true, icon: Clock, latency: "—" },
-              { label: "CDN / Static Assets", status: "Active", ok: true, icon: Activity, latency: "45ms" },
+              { label: "PostgreSQL", status: "Configured", icon: BarChart3 },
+              { label: "Redis Cache", status: "Configured", icon: Zap },
+              { label: "Paystack/Flutterwave", status: "Configured", icon: CreditCard },
+              { label: "Background Jobs", status: "Configured", icon: Clock },
+              { label: "CDN / Static Assets", status: "Configured", icon: Activity },
             ].map((s) => (
               <div key={s.label} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.02)" }}>
                 <div className="flex items-center gap-2 min-w-0">
-                  <s.icon size={13} color={s.ok ? "#10B981" : "#EF4444"} />
+                  <s.icon size={13} color="#64748b" />
                   <span style={{ color: "#94a3b8", fontSize: "0.78rem" }} className="truncate">{s.label}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {s.latency !== "—" && <span style={{ color: "#64748b", fontSize: "0.65rem" }}>{s.latency}</span>}
-                  <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: s.ok ? "#10B981" : "#EF4444" }} />
-                    <span style={{ color: s.ok ? "#10B981" : "#EF4444", fontSize: "0.7rem", fontWeight: 500 }}>{s.status}</span>
-                  </div>
+                  <span style={{ color: "#64748b", fontSize: "0.7rem", fontStyle: "italic" }}>Live health checks coming soon</span>
                 </div>
               </div>
             ))}
@@ -220,7 +197,7 @@ export function SuperAdminDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} width={60} />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<ChartTooltip />} />
                 <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={22} name="Schools">
                   {pieData.map((e, i) => (<Cell key={i} fill={e.color} />))}
                 </Bar>

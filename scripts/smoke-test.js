@@ -21,14 +21,14 @@ const run = () => {
     assert.strictEqual(trialPlan.name, 'trial');
     assert.deepStrictEqual(trialPlan.modules, ['attendance', 'fees']);
 
-    const premiumPlan = getPlanConfig('premium');
-    assert.strictEqual(premiumPlan.maxStudents, null);
-    assert.deepStrictEqual(premiumPlan.modules, ['all']);
+    const enterprisePlan = getPlanConfig('enterprise');
+    assert.strictEqual(enterprisePlan.maxStudents, null);
+    assert.deepStrictEqual(enterprisePlan.modules, ['all']);
 
     const plans = getPublicPlans();
     assert.ok(Array.isArray(plans));
-    assert.ok(plans.some((plan) => plan.name === 'basic'));
-    assert.ok(plans.some((plan) => plan.name === 'premium'));
+    assert.ok(plans.some((plan) => plan.name === 'growth'));
+    assert.ok(plans.some((plan) => plan.name === 'enterprise'));
     assert.strictEqual(Object.keys(PLAN_CATALOG).length, 4);
 
     assert.strictEqual(

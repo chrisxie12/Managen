@@ -1,5 +1,24 @@
 const CARD_BG = "#0f0f1a";
 const BORDER = "rgba(255,255,255,0.07)";
+const TEXT = "#e2e8f0";
+const MUTED = "#64748b";
+const ACCENT = "#ff6b35";
+
+export const planColors: Record<string, string> = {
+  trial: "#F59E0B", growth: "#6366F1", pro: "#10B981", enterprise: "#8B5CF6",
+};
+
+export function ChartTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="p-3 rounded-xl" style={{ background: "#1a1a2e", border: `1px solid ${BORDER}`, boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
+      <p style={{ color: TEXT, fontSize: "0.78rem", fontWeight: 600, marginBottom: "0.25rem" }}>{label}</p>
+      {payload.map((p: any, i: number) => (
+        <p key={i} style={{ color: p.color, fontSize: "0.72rem" }}>{p.name}: <span style={{ fontWeight: 600 }}>{p.value}</span></p>
+      ))}
+    </div>
+  );
+}
 
 export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }: {
   icon: any; label: string; value: string; sub?: string; color: string;
@@ -122,3 +141,6 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 
 export const CARD_BG_C = CARD_BG;
 export const BORDER_C = BORDER;
+export const TEXT_C = TEXT;
+export const MUTED_C = MUTED;
+export const ACCENT_C = ACCENT;

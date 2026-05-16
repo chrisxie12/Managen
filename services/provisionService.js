@@ -5,32 +5,32 @@ const supabase = require('../config/db');
 const PLAN_CATALOG = {
     trial: {
         name: 'trial',
-        displayName: 'Trial',
+        displayName: 'Free Trial',
         price: 0,
         maxStudents: 50,
         modules: ['attendance', 'fees'],
-        durationDays: 14,
+        durationDays: 7,
     },
-    basic: {
-        name: 'basic',
-        displayName: 'Basic',
-        price: 49,
+    growth: {
+        name: 'growth',
+        displayName: 'Growth',
+        price: 499,
         maxStudents: 300,
         modules: ['attendance', 'fees', 'exams', 'admissions'],
         durationDays: null,
     },
-    standard: {
-        name: 'standard',
-        displayName: 'Standard',
-        price: 99,
+    pro: {
+        name: 'pro',
+        displayName: 'Pro',
+        price: 999,
         maxStudents: 800,
         modules: ['attendance', 'fees', 'exams', 'admissions', 'library', 'hostel', 'transport', 'payroll', 'chat'],
         durationDays: null,
     },
-    premium: {
-        name: 'premium',
-        displayName: 'Premium',
-        price: 199,
+    enterprise: {
+        name: 'enterprise',
+        displayName: 'Enterprise',
+        price: null,
         maxStudents: null,
         modules: ['all'],
         durationDays: null,
@@ -260,7 +260,7 @@ const suspendSchool = async (tenantId) => {
     return data;
 };
 
-const reactivateSchool = async (tenantId, plan = 'basic') => {
+const reactivateSchool = async (tenantId, plan = 'growth') => {
     if (!tenantId) {
         throw normalizeError('tenantId is required.', 400);
     }

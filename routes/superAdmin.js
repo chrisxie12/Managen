@@ -465,7 +465,7 @@ router.get('/schools', superAdminAuth, async (req, res) => {
             .order('created_at', { ascending: false })
             .range((currentPage - 1) * pageSize, currentPage * pageSize - 1);
 
-        if (filter.status === 'active' || filter.status === 'trial') query = query.eq('is_active', true);
+        if (filter.status === 'active') query = query.eq('is_active', true);
         if (filter.status === 'suspended') query = query.eq('is_active', false);
         if (filter.plan) query = query.eq('plan', filter.plan);
 

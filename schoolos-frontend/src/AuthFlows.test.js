@@ -164,9 +164,9 @@ describe('Managen auth flows', () => {
           },
           planBreakdown: [
             { plan: 'trial', count: 5 },
-            { plan: 'basic', count: 12 },
-            { plan: 'standard', count: 18 },
-            { plan: 'premium', count: 7 },
+            { plan: 'growth', count: 12 },
+            { plan: 'pro', count: 18 },
+            { plan: 'enterprise', count: 7 },
           ],
         },
       }

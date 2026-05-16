@@ -2,22 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { CreditCard, DollarSign, Download, TrendingUp, Calendar, ArrowUp, ArrowDown } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { api } from "../services/api";
-import { StatCard, AlertBanner, Badge, LoadingSkeleton, ErrorState, CARD_BG_C as CARD_BG, BORDER_C as BORDER } from "./superadmin/Components";
-
-const TEXT = "#e2e8f0";
-const MUTED = "#64748b";
-
-const ChartTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="p-3 rounded-xl" style={{ background: "#1a1a2e", border: `1px solid ${BORDER}`, boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
-      <p style={{ color: "#e2e8f0", fontSize: "0.78rem", fontWeight: 600, marginBottom: "0.25rem" }}>{label}</p>
-      {payload.map((p: any, i: number) => (
-        <p key={i} style={{ color: p.color, fontSize: "0.72rem" }}>{p.name}: <span style={{ fontWeight: 600 }}>{p.value}</span></p>
-      ))}
-    </div>
-  );
-};
+import { StatCard, AlertBanner, Badge, LoadingSkeleton, ErrorState, ChartTooltip, CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED } from "./superadmin/Components";
 
 export function SuperAdminBilling() {
   const [loading, setLoading] = useState(true);
@@ -66,9 +51,21 @@ export function SuperAdminBilling() {
   const hasMonthlyTrend = monthlyData.length >= 2;
   const latestMonthRev = monthlyData.length > 0 ? monthlyData[monthlyData.length - 1].amount : 0;
   const prevMonthRev = monthlyData.length >= 2 ? monthlyData[monthlyData.length - 2].amount : 0;
-  const trendDir = latestMonthRev >= prevMonthRev ? "up" : prevMonthRev > 0 ? "down" : "neutral";
+  const trendDir = latestMonthRev > prevMonthRev ? "up" : prevMonthRev > 0 && latestMonthRev < prevMonthRev ? "down" : "neutral";
   const trendPct = prevMonthRev > 0 ? Math.abs(((latestMonthRev - prevMonthRev) / prevMonthRev) * 100).toFixed(0) : "—";
   const recentPayments = payments.slice(0, 20);
+
+  const exportCSV = useCallback(() => {
+    if (!hasPayments) return;
+    const header = "Transaction ID,Amount (GHS),Date,Status\n";
+    const rows = payments.map(p =>
+      `${p.id},${Number(p.amount || 0).toFixed(2)},${p.paidAt ? new Date(p.paidAt).toISOString().split("T")[0] : "—"},Completed`
+    ).join("\n");
+    const blob = new Blob(["\uFEFF" + header + rows], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `payments-${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }, [payments, hasPayments]);
 
   if (loading) return <LoadingSkeleton />;
   if (error) return <ErrorState message={error} onRetry={fetchPayments} />;
@@ -113,7 +110,7 @@ export function SuperAdminBilling() {
               <Calendar size={15} color={MUTED} />
               <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>Revenue Trend</h3>
             </div>
-            {hasMonthlyTrend && (
+            {hasMonthlyTrend && trendDir !== "neutral" && (
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg" style={{ background: trendDir === "up" ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)" }}>
                 {trendDir === "up" ? <ArrowUp size={12} color="#10B981" /> : <ArrowDown size={12} color="#EF4444" />}
                 <span style={{ color: trendDir === "up" ? "#10B981" : "#EF4444", fontSize: "0.7rem", fontWeight: 600 }}>
@@ -124,8 +121,8 @@ export function SuperAdminBilling() {
           </div>
           <p style={{ color: MUTED, fontSize: "0.75rem", marginBottom: "1rem" }}>Monthly payment volume</p>
           {monthlyData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={monthlyData} margin={{ left: 0, right: 0, top: 8, bottom: 0 }}>
+              <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={monthlyData} margin={{ left: 8, right: 8, top: 8, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
                 <XAxis dataKey="month" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `GHS ${(v / 1000).toFixed(0)}k`} />
@@ -160,11 +157,11 @@ export function SuperAdminBilling() {
               ))}
               {monthlyData.length > 0 && (
                 <div className="p-3.5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)" }}>
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", color: trendDir === "up" ? "#10B981" : "#EF4444", fontSize: "1.1rem", fontWeight: 700 }}>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", color: trendDir === "up" ? "#10B981" : trendDir === "down" ? "#EF4444" : MUTED, fontSize: "1.1rem", fontWeight: 700 }}>
                     {trendPct !== "—" ? `${trendPct}%` : "—"}
                   </div>
                   <div style={{ color: MUTED, fontSize: "0.72rem", marginTop: "0.15rem" }}>
-                    {trendDir === "up" ? "Month-over-month growth" : "Month-over-month decline"}
+                    {trendDir === "up" ? "Month-over-month growth" : trendDir === "down" ? "Month-over-month decline" : "No change from previous month"}
                   </div>
                 </div>
               )}
@@ -191,8 +188,8 @@ export function SuperAdminBilling() {
             )}
           </div>
           {hasPayments && (
-            <button className="flex items-center gap-1 text-xs hover:opacity-70" style={{ color: MUTED }}>
-              <Download size={12} /> Export
+            <button onClick={exportCSV} className="flex items-center gap-1 text-xs hover:opacity-70" style={{ color: MUTED }} aria-label="Export payments as CSV">
+              <Download size={12} /> Export CSV
             </button>
           )}
         </div>
@@ -221,8 +218,8 @@ export function SuperAdminBilling() {
                       {p.paidAt ? new Date(p.paidAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—"}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium" style={{ background: "rgba(16,185,129,0.12)", color: "#10B981" }}>
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#10B981" }} />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium" aria-label="Status: Completed" style={{ background: "rgba(16,185,129,0.12)", color: "#10B981" }}>
+                        <span className="w-1.5 h-1.5 rounded-full" aria-hidden="true" style={{ background: "#10B981" }} />
                         Completed
                       </span>
                     </td>
