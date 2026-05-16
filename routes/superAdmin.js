@@ -431,6 +431,113 @@ router.get('/dashboard', superAdminAuth, async (req, res) => {
             }, {})
         );
 
+        // ── Trends ──
+        let trends = null;
+        try {
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+            const [prevTotal, prevActive, prevSuspended] = await Promise.all([
+                supabase.from('schools').select('id', { count: 'exact', head: true }).lte('created_at', thirtyDaysAgo),
+                supabase.from('schools').select('id', { count: 'exact', head: true }).eq('is_active', true).lte('created_at', thirtyDaysAgo),
+                supabase.from('schools').select('id', { count: 'exact', head: true }).eq('is_active', false).lte('created_at', thirtyDaysAgo),
+            ]);
+            const { data: prevPayments, error: prevPaymentsError } = await supabase
+                .from('payments')
+                .select('amount')
+                .lte('created_at', thirtyDaysAgo);
+
+            if (!prevTotal.error && !prevActive.error && !prevSuspended.error && !prevPaymentsError) {
+                const calcTrend = (current, previous) => {
+                    if (!previous || previous === 0) return 0;
+                    return Math.round(((current - previous) / previous) * 1000) / 10;
+                };
+                trends = {
+                    totalSchools: calcTrend(totalSchools.count || 0, prevTotal.count || 0),
+                    activeSchools: calcTrend(activeSchools.count || 0, prevActive.count || 0),
+                    suspended: calcTrend(suspended.count || 0, prevSuspended.count || 0),
+                    totalRevenue: calcTrend(sumPayments(paidPayments), sumPayments(prevPayments)),
+                };
+            }
+        } catch (e) {
+            trends = null;
+        }
+
+        // ── Recent Activity ──
+        let recentActivity = [];
+        try {
+            const planLabel = (plan) => ({
+                trial: 'Free Trial',
+                growth: 'Growth',
+                pro: 'Pro',
+                enterprise: 'Enterprise'
+            }[plan] || plan);
+
+            const [addedRes, suspendedRes, paymentsRes] = await Promise.all([
+                supabase.from('schools').select('id, name, plan').order('created_at', { ascending: false }).limit(5),
+                supabase.from('schools').select('id, name').eq('is_active', false).order('created_at', { ascending: false }).limit(5),
+                supabase.from('payments').select('id, amount, created_at, paid_at').order('created_at', { ascending: false }).limit(5),
+            ]);
+
+            const added = (addedRes.data || []).map(s => ({
+                id: 'school_added_' + s.id,
+                type: 'school_added',
+                label: `${s.name} joined on ${planLabel(s.plan)}`,
+                timestamp: s.created_at,
+            }));
+            const suspendedItems = (suspendedRes.data || []).map(s => ({
+                id: 'school_suspended_' + s.id,
+                type: 'school_suspended',
+                label: `${s.name} was suspended`,
+                timestamp: s.created_at,
+            }));
+            const paymentItems = (paymentsRes.data || []).map(p => ({
+                id: 'payment_received_' + p.id,
+                type: 'payment_received',
+                label: `Payment of GHS ${Number(p.amount).toLocaleString()} received`,
+                timestamp: p.paid_at || p.created_at,
+            }));
+
+            recentActivity = [...added, ...suspendedItems, ...paymentItems]
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 8);
+        } catch (e) {
+            recentActivity = [];
+        }
+
+        // ── MRR Trend ──
+        let mrrTrend = [];
+        try {
+            const PLAN_MRR = { trial: 0, growth: 499, pro: 999, enterprise: 0 };
+            const { data: allSchools } = await supabase
+                .from('schools')
+                .select('plan, created_at')
+                .eq('is_active', true);
+
+            const months = [];
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(1);
+                d.setMonth(d.getMonth() - i);
+                months.push({
+                    label: d.toLocaleString('en-US', { month: 'short' }),
+                    year: d.getFullYear(),
+                    month: d.getMonth(),
+                });
+            }
+
+            mrrTrend = months.map(({ label, year, month }) => {
+                const endOfMonth = new Date(year, month + 1, 0).toISOString();
+                const mrr = (allSchools || []).reduce((sum, school) => {
+                    if (school.created_at <= endOfMonth) {
+                        return sum + (PLAN_MRR[school.plan] || 0);
+                    }
+                    return sum;
+                }, 0);
+                return { month: label, mrr };
+            });
+        } catch (e) {
+            mrrTrend = [];
+        }
+
         return res.json({
             data: {
                 stats: {
@@ -439,8 +546,11 @@ router.get('/dashboard', superAdminAuth, async (req, res) => {
                     trialSchools: 0,
                     suspended: suspended.count || 0,
                     totalRevenue: sumPayments(paidPayments),
+                    trends,
                 },
                 planBreakdown,
+                recentActivity,
+                mrrTrend,
             }
         });
     } catch (err) {
