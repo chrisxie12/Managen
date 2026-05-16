@@ -386,7 +386,7 @@ export function AuthPage() {
                     onChange={(e) => setField("subdomain", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                     style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.schoolos.io</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.getschoolos.me</span>
                 </div>
               </div>
 

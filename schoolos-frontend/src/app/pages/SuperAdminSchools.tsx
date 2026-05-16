@@ -79,7 +79,7 @@ export function SuperAdminSchools() {
                     </div>
                     <div>
                       <div style={{ color: "#e2e8f0", fontSize: "0.88rem", fontWeight: 500 }}>{school.schoolName}</div>
-                      <div style={{ color: "#64748b", fontSize: "0.72rem" }}>{school.slug}.schoolos.io</div>
+                      <div style={{ color: "#64748b", fontSize: "0.72rem" }}>{school.slug}.managen.io</div>
                     </div>
                   </div>
                 </td>
