@@ -123,12 +123,11 @@ app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/billing',    billingRoutes);
 app.use('/api/cron',       cronRoutes);
 
-// ─── Tenant Middleware ────────────────────────────────────────
+// ─── Tenant Middleware (only for school-scoped routes) ─────────
 const { tenantMiddleware } = require('./middleware/tenant');
-app.use(tenantMiddleware);
 app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/school', schoolRoutes);
-app.use('/api/approvals', approvalRoutes);
+app.use('/api/school', tenantMiddleware, schoolRoutes);
+app.use('/api/approvals', tenantMiddleware, approvalRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
