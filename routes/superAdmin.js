@@ -472,8 +472,8 @@ router.get('/dashboard', superAdminAuth, async (req, res) => {
             }[plan] || plan);
 
             const [addedRes, suspendedRes, paymentsRes] = await Promise.all([
-                supabase.from('schools').select('id, name, plan').order('created_at', { ascending: false }).limit(5),
-                supabase.from('schools').select('id, name').eq('is_active', false).order('created_at', { ascending: false }).limit(5),
+                supabase.from('schools').select('id, name, plan, created_at').order('created_at', { ascending: false }).limit(5),
+                supabase.from('schools').select('id, name, created_at').eq('is_active', false).order('created_at', { ascending: false }).limit(5),
                 supabase.from('payments').select('id, amount, created_at, paid_at').order('created_at', { ascending: false }).limit(5),
             ]);
 

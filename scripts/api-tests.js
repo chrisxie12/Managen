@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const jwt = require('jsonwebtoken');
 
 process.env.SUPABASE_URL = process.env.SUPABASE_URL || 'https://example.supabase.co';
 process.env.SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || 'test-service-key';
@@ -59,6 +60,10 @@ const applyFilters = (records, filters) => records.filter((record) => filters.ev
         return Array.isArray(filter.values) && filter.values.includes(record[filter.field]);
     }
 
+    if (filter.type === 'lte') {
+        return record[filter.field] <= filter.value;
+    }
+
     return true;
 }));
 
@@ -102,6 +107,11 @@ class Query {
 
     eq(field, value) {
         this.filters.push({ type: 'eq', field, value });
+        return this;
+    }
+
+    lte(field, value) {
+        this.filters.push({ type: 'lte', field, value });
         return this;
     }
 
@@ -489,7 +499,7 @@ test('health and plan endpoints respond', async () => {
     assert.equal(plans.status, 200);
     assert.ok(Array.isArray(plans.body.data.plans));
     assert.ok(plans.body.data.plans.some((plan) => plan.name === 'trial'));
-    assert.ok(plans.body.data.plans.some((plan) => plan.name === 'premium'));
+    assert.ok(plans.body.data.plans.some((plan) => plan.name === 'enterprise'));
 });
 
 test('demo request endpoint stores a lead', async () => {
@@ -614,5 +624,207 @@ test('auth tokens cannot be replayed against another tenant', async () => {
 
     assert.equal(wrongTenantInfo.status, 403);
     assert.match(wrongTenantInfo.body.error, /Token does not match the requested school/i);
+});
+
+// ─── GET /api/superadmin/dashboard ────────────────────────────────────
+
+const makeSuperAdminToken = () => jwt.sign(
+    { kind: 'superadmin', scope: 'platform', role: 'superadmin', email: 'admin@test.com' },
+    process.env.JWT_SECRET
+);
+
+const seedDashboardData = () => {
+    db.schools = [
+        { id: 'sch1', name: 'Greenfield Academy', plan: 'growth', is_active: true, created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() },
+        { id: 'sch2', name: 'Sunrise School', plan: 'pro', is_active: true, created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() },
+        { id: 'sch3', name: 'Oakwood Academy', plan: 'trial', is_active: false, created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() },
+    ];
+    db.payments = [
+        { id: 'pay1', amount: 499, created_at: new Date().toISOString(), paid_at: new Date().toISOString() },
+        { id: 'pay2', amount: 999, created_at: new Date().toISOString(), paid_at: new Date().toISOString() },
+    ];
+};
+
+test('GET /api/superadmin/dashboard — no token returns 401', async () => {
+    const res = await request('/api/superadmin/dashboard');
+    assert.equal(res.status, 401);
+});
+
+test('GET /api/superadmin/dashboard — invalid token returns 401', async () => {
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: 'schoolos_admin_token=badtoken' },
+    });
+    assert.equal(res.status, 401);
+});
+
+test('GET /api/superadmin/dashboard — wrong role returns 403', async () => {
+    const token = jwt.sign(
+        { kind: 'user', scope: 'school', role: 'admin' },
+        process.env.JWT_SECRET
+    );
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    assert.equal(res.status, 403);
+});
+
+test('GET /api/superadmin/dashboard — response shape', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    assert.equal(res.status, 200);
+    assert.ok(res.body.data, 'body.data exists');
+    assert.ok(res.body.data.stats, 'body.data.stats exists');
+    assert.ok(Array.isArray(res.body.data.planBreakdown), 'planBreakdown is array');
+    assert.ok(Array.isArray(res.body.data.recentActivity), 'recentActivity is array');
+    assert.ok(Array.isArray(res.body.data.mrrTrend), 'mrrTrend is array');
+});
+
+test('GET /api/superadmin/dashboard — stats values are correct', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { stats } = res.body.data;
+    assert.equal(stats.totalSchools, 3);
+    assert.equal(stats.activeSchools, 2);
+    assert.equal(stats.suspended, 1);
+    assert.equal(stats.totalRevenue, 1498);
+    assert.equal(stats.trialSchools, 0);
+});
+
+test('GET /api/superadmin/dashboard — stats.trends shape', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { trends } = res.body.data.stats;
+    if (trends !== null) {
+        assert.ok(Object.prototype.hasOwnProperty.call(trends, 'totalSchools'));
+        assert.ok(Object.prototype.hasOwnProperty.call(trends, 'activeSchools'));
+        assert.ok(Object.prototype.hasOwnProperty.call(trends, 'suspended'));
+        assert.ok(Object.prototype.hasOwnProperty.call(trends, 'totalRevenue'));
+        assert.equal(typeof trends.totalSchools, 'number');
+        assert.equal(typeof trends.activeSchools, 'number');
+        assert.equal(typeof trends.suspended, 'number');
+        assert.equal(typeof trends.totalRevenue, 'number');
+    }
+});
+
+test('GET /api/superadmin/dashboard — planBreakdown is correct', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { planBreakdown } = res.body.data;
+    const growth = planBreakdown.find((p) => p.plan === 'growth');
+    const pro = planBreakdown.find((p) => p.plan === 'pro');
+    const trial = planBreakdown.find((p) => p.plan === 'trial');
+    assert.ok(growth, 'growth plan in breakdown');
+    assert.equal(growth.count, 1);
+    assert.ok(pro, 'pro plan in breakdown');
+    assert.equal(pro.count, 1);
+    assert.ok(trial, 'trial plan in breakdown');
+    assert.equal(trial.count, 1);
+});
+
+test('GET /api/superadmin/dashboard — recentActivity items have correct shape', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { recentActivity } = res.body.data;
+    assert.ok(recentActivity.length > 0, 'recentActivity has items');
+    const item = recentActivity[0];
+    assert.ok(Object.prototype.hasOwnProperty.call(item, 'id'));
+    assert.ok(Object.prototype.hasOwnProperty.call(item, 'type'));
+    assert.ok(Object.prototype.hasOwnProperty.call(item, 'label'));
+    assert.ok(Object.prototype.hasOwnProperty.call(item, 'timestamp'));
+    const validTypes = ['school_added', 'school_suspended', 'payment_received', 'plan_upgraded'];
+    assert.ok(validTypes.includes(item.type), `type is one of ${validTypes.join(', ')}`);
+    assert.doesNotThrow(() => new Date(item.timestamp).toISOString(), 'timestamp is valid ISO 8601');
+});
+
+test('GET /api/superadmin/dashboard — suspended school appears in recentActivity', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { recentActivity } = res.body.data;
+    const suspended = recentActivity.find((a) => a.type === 'school_suspended');
+    assert.ok(suspended, 'found a school_suspended item');
+    assert.ok(suspended.label.includes('Oakwood Academy'), 'label mentions Oakwood Academy');
+});
+
+test('GET /api/superadmin/dashboard — mrrTrend has 6 months', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { mrrTrend } = res.body.data;
+    assert.equal(mrrTrend.length, 6);
+    for (const item of mrrTrend) {
+        assert.equal(typeof item.month, 'string');
+        assert.equal(typeof item.mrr, 'number');
+    }
+});
+
+test('GET /api/superadmin/dashboard — mrrTrend values are correct', async () => {
+    resetDb();
+    seedDashboardData();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { mrrTrend } = res.body.data;
+    const last = mrrTrend[mrrTrend.length - 1];
+    assert.equal(last.mrr, 1498);
+    for (const item of mrrTrend) {
+        assert.ok(item.mrr >= 0, `mrr for ${item.month} is >= 0`);
+    }
+});
+
+test('GET /api/superadmin/dashboard — empty database', async () => {
+    resetDb();
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    assert.equal(res.status, 200);
+    assert.equal(res.body.data.stats.totalSchools, 0);
+    assert.equal(res.body.data.stats.totalRevenue, 0);
+    assert.ok(Array.isArray(res.body.data.recentActivity));
+    assert.ok(Array.isArray(res.body.data.mrrTrend));
+});
+
+test('GET /api/superadmin/dashboard — mrrTrend with only trial schools returns zeros', async () => {
+    resetDb();
+    db.schools = [
+        { id: 't1', name: 'Trial School 1', plan: 'trial', is_active: true, created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() },
+        { id: 't2', name: 'Trial School 2', plan: 'trial', is_active: true, created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString() },
+    ];
+    const token = makeSuperAdminToken();
+    const res = await request('/api/superadmin/dashboard', {
+        headers: { Cookie: `schoolos_admin_token=${token}` },
+    });
+    const { mrrTrend } = res.body.data;
+    for (const item of mrrTrend) {
+        assert.equal(item.mrr, 0, `mrr for ${item.month} is 0`);
+    }
 });
 
