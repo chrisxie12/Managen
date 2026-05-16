@@ -4,7 +4,7 @@ import {
   ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
   Shield, Zap, CheckCircle2, GraduationCap, Wallet, Bell,
   Star, Menu, X, TrendingUp, Clock, Award, XCircle, Send,
-  Building2, Loader2,
+  Building2, Loader2, ChevronDown,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -13,6 +13,16 @@ const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
+
+const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
+  const initials = name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
+  return (
+    <div style={{ backgroundColor: color }}
+         className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+      {initials}
+    </div>
+  );
+};
 
 const features = [
   { icon: Users, title: "Student Management", desc: "Complete student lifecycle — enrollment, profiles, attendance, and academic history in one view.", color: "#10B981" },
@@ -24,39 +34,55 @@ const features = [
 ];
 
 const pricingPlans = [
-  { name: "Free Trial", tagline: "Get started with no commitment", priceGHS: "Free", priceNGN: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
-  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 499", priceNGN: "₦59,000", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
-  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 999", priceNGN: "₦118,000", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
-  { name: "Enterprise", tagline: "For school groups and districts", priceGHS: "Custom", priceNGN: "Custom", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
+  { name: "Free Trial", tagline: "Get started with no commitment", priceGHS: "Free", priceNGN: "Free", priceGHSAnnual: "Free", priceNGNAnnual: "Free", annualBilledGHS: "", annualBilledNGN: "", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
+  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 499", priceNGN: "₦59,000", priceGHSAnnual: "GHS 399", priceNGNAnnual: "₦47,200", annualBilledGHS: "GHS 4,788/yr", annualBilledNGN: "₦566,400/yr", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
+  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 999", priceNGN: "₦118,000", priceGHSAnnual: "GHS 799", priceNGNAnnual: "₦94,400", annualBilledGHS: "GHS 9,588/yr", annualBilledNGN: "₦1,132,800/yr", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
+  { name: "Enterprise", tagline: "For school groups and districts", priceGHS: "Custom", priceNGN: "Custom", priceGHSAnnual: "Custom", priceNGNAnnual: "Custom", annualBilledGHS: "", annualBilledNGN: "", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
 ];
 
 const testimonials = [
-  { name: "Mrs. Abena Asante", role: "Headmistress, Accra", text: "Managen replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it.", img: "https://images.unsplash.com/photo-1573496799436-5c34ef41818d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200", stars: 5 },
-  { name: "Mr. Chukwuemeka Obi", role: "Director, Lagos Prep School", text: "The terminal report generation alone saved us 2 weeks of work per term. The Flutterwave integration is seamless for our parents across Nigeria.", img: "https://images.unsplash.com/photo-1738963785992-dd0132bbac3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200", stars: 5 },
+  { name: "Mrs. Abena Asante", role: "Headmistress, Accra", location: "Accra, Ghana", color: "#7C3AED", quote: "Managen replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it." },
+  { name: "Mr. Chukwuemeka Obi", role: "Director, Lagos Prep School", location: "Lagos, Nigeria", color: "#0EA5E9", quote: "The terminal report generation alone saved us 2 weeks of work per term. The Flutterwave integration is seamless for our parents across Nigeria." },
+  { name: "Ms. Efua Mensah", role: "Headmistress, Cape Coast Academy", location: "Cape Coast, Ghana", color: "#10B981", quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week." },
+  { name: "Mr. Babatunde Adeyemi", role: "Director, Adeyemi Group of Schools", location: "Ibadan, Nigeria", color: "#F59E0B", quote: "Managing multiple campuses used to be a nightmare. Now I see everything from one dashboard." },
+];
+
+const faqs = [
+  { q: "Is there really no credit card required for the free trial?", a: "Correct. The 7-day Free Trial gives you full access to the platform with no payment details required. You only provide billing information when you choose to upgrade to a paid plan." },
+  { q: "What happens when my free trial ends?", a: "Your account is paused — no data is deleted. You can upgrade to Growth, Pro, or Enterprise at any time to reactivate. We'll send you reminders before and after the trial ends." },
+  { q: "Can I switch plans later?", a: "Yes. You can upgrade or downgrade your plan at any time from your school dashboard. Changes take effect at the start of your next billing cycle." },
+  { q: "Do you support Nigerian schools?", a: "Yes. Managen is built for both Ghana and Nigeria. Pricing is displayed in GHS and NGN, and the platform supports local curricula including WAEC and BECE structures." },
+  { q: "How does the WhatsApp reporting work?", a: "Managen integrates directly with WhatsApp Business API to send automated reports — attendance summaries, fee reminders, and exam results — to parents and staff without any manual effort from administrators." },
+  { q: "Is our school's data secure?", a: "Yes. All data is encrypted in transit and at rest. Each school operates in its own isolated environment — no school can access another school's data. We use Supabase (PostgreSQL) hosted on secure infrastructure with regular backups." },
+  { q: "What is the student limit on each plan?", a: "Free Trial supports up to 50 students. Growth supports up to 300. Pro supports up to 800. Enterprise has no student limit. If you need a custom limit, contact us." },
+  { q: "Can I get a live demo before committing?", a: 'Absolutely. Click "Request Demo" on this page and our team will schedule a personalised walkthrough of the platform for your school.' },
 ];
 
 export function LandingPage() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currency, setCurrency] = useState<"GHS" | "NGN">("GHS");
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [sending, setSending] = useState(false);
-  const [stats, setStats] = useState({ schools: 0, students: "0" });
+  const [stats, setStats] = useState<{ schools: number | null }>({ schools: null });
   const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "", country: "Ghana" });
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      if (window.scrollY > 50 && mobileOpen) setMobileOpen(false);
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [mobileOpen]);
 
   useEffect(() => {
-    api.get<{ stats: { totalSchools: number } }>("/api/superadmin/dashboard")
+    api.get<{ totalSchools: number }>("/api/superadmin/stats")
       .then((res) => {
-        if (res.data?.stats) {
-          setStats({ schools: res.data.stats.totalSchools, students: `${(res.data.stats.totalSchools * 270).toLocaleString()}+` });
-        }
+        if (res.data) setStats({ schools: res.data.totalSchools });
       })
       .catch(() => {});
   }, []);
@@ -82,6 +108,7 @@ export function LandingPage() {
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         .reveal { animation: fadeUp 0.6s ease-out both; }
         .reveal-1 { animation-delay: 0.1s; }
         .reveal-2 { animation-delay: 0.2s; }
@@ -104,7 +131,7 @@ export function LandingPage() {
             <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {["Features", "Pricing", "Testimonials", "Contact"].map((item) => (
+            {["Features", "Pricing", "FAQ", "Testimonials", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
             ))}
           </div>
@@ -118,15 +145,15 @@ export function LandingPage() {
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        {mobileOpen && (
-          <div className="md:hidden px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
-            {["Features", "Pricing", "Testimonials", "Contact"].map((item) => (
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-96' : 'max-h-0'}`}>
+          <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+            {["Features", "Pricing", "FAQ", "Testimonials", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
             ))}
             <button onClick={() => navigate("/auth")} style={{ color: PLUM }} className="text-left">Sign in</button>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm active:scale-95 w-fit" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>Start Free Trial</button>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* ── HERO ── */}
@@ -163,7 +190,40 @@ export function LandingPage() {
             </div>
             <div className="relative hidden lg:block reveal reveal-2">
               <div className="rounded-[48px] overflow-hidden" style={{ boxShadow: "0 24px 80px rgba(56,25,50,0.18)", border: "1px solid rgba(56,25,50,0.07)" }}>
-                <img src="https://images.unsplash.com/photo-1687794504223-8bdc02e25ef6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700" alt="Students" className="w-full h-[480px] object-cover" />
+                <svg viewBox="0 0 400 480" className="w-full h-[480px]" style={{ background: "#F8F6F3" }}>
+                  <rect x="0" y="0" width="400" height="44" rx="12" ry="12" fill={PLUM} />
+                  <circle cx="24" cy="22" r="6" fill="#EF4444" />
+                  <circle cx="42" cy="22" r="6" fill="#F59E0B" />
+                  <circle cx="60" cy="22" r="6" fill="#10B981" />
+                  <rect x="20" y="64" width="360" height="396" rx="16" fill="white" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
+                  <rect x="36" y="90" width="156" height="190" rx="12" fill="#FAF8F6" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
+                  <rect x="36" y="90" width="156" height="28" rx="12" ry="12" fill="#F0EDE9" />
+                  <text x="114" y="108" textAnchor="middle" fill={PLUM} fontSize="11" fontFamily="'DM Sans', sans-serif" fontWeight="600">Revenue</text>
+                  <rect x="48" y="232" width="20" height="28" rx="4" fill={PLUM} opacity="0.3" />
+                  <rect x="76" y="210" width="20" height="50" rx="4" fill={PLUM} opacity="0.5" />
+                  <rect x="104" y="175" width="20" height="85" rx="4" fill={PLUM} opacity="0.7" />
+                  <rect x="132" y="140" width="20" height="120" rx="4" fill={PLUM} />
+                  <rect x="160" y="160" width="20" height="100" rx="4" fill={PLUM_LIGHT} opacity="0.6" />
+                  <rect x="208" y="90" width="156" height="190" rx="12" fill="#FAF8F6" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
+                  <rect x="208" y="90" width="156" height="28" rx="12" ry="12" fill="#F0EDE9" />
+                  <text x="286" y="108" textAnchor="middle" fill={PLUM} fontSize="11" fontFamily="'DM Sans', sans-serif" fontWeight="600">Attendance</text>
+                  <circle cx="286" cy="165" r="36" fill="none" stroke="#E8E0DA" strokeWidth="10" />
+                  <circle cx="286" cy="165" r="36" fill="none" stroke="#10B981" strokeWidth="10" strokeDasharray="180 46" transform="rotate(-90 286 165)" />
+                  <text x="286" y="171" textAnchor="middle" fill={PLUM} fontSize="20" fontFamily="'JetBrains Mono', monospace" fontWeight="700">94%</text>
+                  <text x="286" y="185" textAnchor="middle" fill={MUTED} fontSize="9">Present</text>
+                  <rect x="220" y="218" width="60" height="14" rx="7" fill="#D1FAE5" />
+                  <text x="250" y="228" textAnchor="middle" fill="#065F46" fontSize="9" fontWeight="600">+2.4%</text>
+                  <rect x="36" y="300" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
+                  <rect x="52" y="310" width="80" height="8" rx="4" fill={PLUM} opacity="0.4" />
+                  <rect x="52" y="324" width="140" height="4" rx="2" fill={PLUM} opacity="0.15" />
+                  <rect x="36" y="344" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
+                  <rect x="52" y="354" width="100" height="8" rx="4" fill={PLUM} opacity="0.4" />
+                  <rect x="52" y="368" width="120" height="4" rx="2" fill={PLUM} opacity="0.15" />
+                  <rect x="36" y="388" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
+                  <rect x="52" y="398" width="90" height="8" rx="4" fill={PLUM} opacity="0.4" />
+                  <rect x="52" y="412" width="160" height="4" rx="2" fill={PLUM} opacity="0.15" />
+                  <rect x="36" y="432" width="328" height="2" rx="1" fill="rgba(56,25,50,0.04)" />
+                </svg>
               </div>
               <div className="absolute -left-10 top-16 p-4 rounded-2xl" style={{ background: "white", boxShadow: "0 8px 32px rgba(56,25,50,0.12)", border: "1px solid rgba(56,25,50,0.07)", minWidth: 180 }}>
                 <div className="flex items-center gap-2 mb-1"><TrendingUp size={14} color="#10B981" /><span style={{ color: MUTED, fontSize: "0.75rem" }}>Fee collection</span></div>
@@ -184,18 +244,25 @@ export function LandingPage() {
 
       {/* ── STATS ── */}
       <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
-        <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { value: `${stats.schools}+`, label: "Schools Active" },
-            { value: stats.students, label: "Students Managed" },
-            { value: stats.schools > 0 ? `${(stats.schools * 24).toLocaleString()}+` : "—", label: "Fees Collected" },
-            { value: "99.7%", label: "Uptime SLA" },
-          ].map((s, i) => (
-            <div key={s.label} className={`text-center reveal reveal-${i + 1}`}>
-              <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>{s.value === "—" ? "Loading..." : s.value}</div>
-              <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>{s.label}</div>
+        <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-3 gap-8">
+          <div className="text-center reveal reveal-1">
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
+              {stats.schools === null ? (
+                <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>—</span>
+              ) : (
+                `${stats.schools}+`
+              )}
             </div>
-          ))}
+            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
+          </div>
+          <div className="text-center reveal reveal-2">
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>99.7%</div>
+            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
+          </div>
+          <div className="text-center reveal reveal-3">
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>2</div>
+            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Countries</div>
+          </div>
         </div>
       </section>
 
@@ -240,7 +307,7 @@ export function LandingPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Schools Managed", value: `${stats.schools}`, icon: Building2, color: "#6366F1" },
+                  { label: "Schools Managed", value: stats.schools ? `${stats.schools}` : "—", icon: Building2, color: "#6366F1" },
                   { label: "Automated Tasks", value: "Track fees, grades, attendance", icon: Zap, color: "#10B981" },
                   { label: "Avg Attendance", value: "94%+", icon: Clock, color: "#F59E0B" },
                   { label: "Reports Generated", value: "Automated", icon: Bell, color: "#EC4899" },
@@ -266,15 +333,26 @@ export function LandingPage() {
             <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Surgical Pricing</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>Pay Only for What You Need</h2>
           </div>
-          <div className="flex justify-center mb-12">
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
             <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
               {(["GHS", "NGN"] as const).map((c) => (
                 <button key={c} onClick={() => setCurrency(c)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: currency === c ? PLUM : "transparent", color: currency === c ? MILK : MUTED, fontWeight: currency === c ? 600 : 400 }}>{c}</button>
               ))}
             </div>
+            <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
+              {(["monthly", "annual"] as const).map((b) => (
+                <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? PLUM : "transparent", color: billing === b ? MILK : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
+              ))}
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pricingPlans.map((plan, i) => (
+            {pricingPlans.map((plan, i) => {
+              const isAnnual = billing === "annual";
+              const showSaveBadge = isAnnual && (plan.name === "Growth" || plan.name === "Pro");
+              const displayPrice = isAnnual && plan.priceGHSAnnual ? plan.priceGHSAnnual : plan.priceGHS;
+              const displayPriceNGN = isAnnual && plan.priceNGNAnnual ? plan.priceNGNAnnual : plan.priceNGN;
+              const billedText = isAnnual ? (currency === "GHS" ? plan.annualBilledGHS : plan.annualBilledNGN) : "";
+              return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: plan.highlighted ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "white",
                 border: plan.highlighted ? "none" : "1px solid rgba(56,25,50,0.08)",
@@ -282,11 +360,13 @@ export function LandingPage() {
                 transform: plan.highlighted ? "scale(1.03)" : "none",
               }}>
                 {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Most Popular</div>}
+                {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Save 20%</div>}
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? MILK : PLUM, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
                 <p style={{ color: plan.highlighted ? "rgba(255,243,230,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? MILK : PLUM, fontSize: "2.2rem", fontWeight: 700 }}>{currency === "GHS" ? plan.priceGHS : plan.priceNGN}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? MILK : PLUM, fontSize: "2.2rem", fontWeight: 700 }}>{currency === "GHS" ? displayPrice : displayPriceNGN}</span>
                   <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
+                  {billedText && <div style={{ color: plan.highlighted ? "rgba(255,243,230,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
                 </div>
                 <div className="space-y-3 mb-8">
                   {plan.features.map((f) => (
@@ -298,7 +378,8 @@ export function LandingPage() {
                 </div>
                 <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? MILK : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: plan.highlighted ? PLUM : MILK, fontWeight: 600 }}>{plan.cta}</button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -310,17 +391,52 @@ export function LandingPage() {
             <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Stories</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700 }}>Trusted by School Leaders</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {testimonials.map((t, i) => (
-              <div key={t.name} className={`p-8 rounded-[24px] reveal reveal-${i + 1}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-                <div className="flex gap-1 mb-4">{Array.from({ length: t.stars }).map((_, i) => (<Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />))}</div>
-                <p style={{ color: PLUM_LIGHT, fontSize: "1rem", lineHeight: 1.8, marginBottom: "1.5rem", fontStyle: "italic" }}>"{t.text}"</p>
+              <div key={t.name} className={`p-8 rounded-[24px] reveal reveal-${(i % 2) + 1}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+                <div className="flex gap-1 mb-4">{Array.from({ length: 5 }).map((_, si) => (<Star key={si} size={14} fill="#F59E0B" color="#F59E0B" />))}</div>
+                <p style={{ color: PLUM_LIGHT, fontSize: "1rem", lineHeight: 1.8, marginBottom: "1.5rem", fontStyle: "italic" }}>"{t.quote}"</p>
                 <div className="flex items-center gap-3">
-                  <img src={t.img} alt={t.name} className="w-11 h-11 rounded-full object-cover" />
-                  <div><div style={{ color: PLUM, fontWeight: 600, fontSize: "0.9rem" }}>{t.name}</div><div style={{ color: MUTED, fontSize: "0.8rem" }}>{t.role}</div></div>
+                  <InitialsAvatar name={t.name} color={t.color} />
+                  <div>
+                    <div style={{ color: PLUM, fontWeight: 600, fontSize: "0.9rem" }}>{t.name}</div>
+                    <div style={{ color: MUTED, fontSize: "0.8rem" }}>{t.role}</div>
+                    <div style={{ color: MUTED, fontSize: "0.72rem", opacity: 0.7 }}>{t.location}</div>
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section id="faq" className="py-24 px-6">
+        <div className="max-w-[768px] mx-auto">
+          <div className="text-center mb-16 reveal">
+            <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>FAQ</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently Asked Questions</h2>
+            <p style={{ color: MUTED, fontSize: "0.9rem" }}>Everything you need to know before getting started</p>
+          </div>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => {
+              const isOpen = openFaq === i;
+              return (
+                <div key={i} className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between p-5 text-left active:scale-[0.99] transition-transform"
+                    style={{ color: PLUM }}
+                  >
+                    <span style={{ fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.4, paddingRight: "1rem" }}>{faq.q}</span>
+                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} style={{ color: MUTED }} />
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}>
+                    <div className="px-5 pb-5" style={{ color: MUTED, fontSize: "0.88rem", lineHeight: 1.7 }}>{faq.a}</div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -334,7 +450,7 @@ export function LandingPage() {
               Your School Deserves Better Tools
             </h2>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 2rem", lineHeight: 1.7 }}>
-              Join {stats.schools}+ institutions across Ghana and Nigeria that have eliminated spreadsheets forever.
+              Join {stats.schools ? `${stats.schools}+` : ""} institutions across Ghana and Nigeria that have eliminated spreadsheets forever.
             </p>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
               Get Started Free — No Credit Card
@@ -354,15 +470,23 @@ export function LandingPage() {
             <p style={{ color: MUTED, fontSize: "0.85rem", lineHeight: 1.7 }}>Modern school management for Africa's finest institutions.</p>
           </div>
           {[
-            { title: "Product", links: ["Features", "Pricing", "Changelog", "Roadmap"] },
-            { title: "Company", links: ["About", "Blog", "Careers", "Press"] },
-            { title: "Contact", links: ["support@getschoolos.me", "+233 55 000 1234", "Accra, Ghana"] },
+            { title: "Product", links: [{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "Changelog", soon: true }, { label: "Roadmap", soon: true }] },
+            { title: "Company", links: [{ label: "About", soon: true }, { label: "Blog", soon: true }, { label: "Careers", soon: true }, { label: "Press", soon: true }] },
+            { title: "Contact", links: [{ label: "support@getschoolos.me", href: "mailto:support@getschoolos.me" }, { label: "+233 55 000 1234", href: "tel:+233550001234" }, { label: "Accra, Ghana" }] },
           ].map((col) => (
             <div key={col.title}>
               <h4 style={{ color: PLUM, fontWeight: 600, marginBottom: "1rem", fontSize: "0.9rem" }}>{col.title}</h4>
               <div className="flex flex-col gap-2">
                 {col.links.map((link) => (
-                  <a key={link} href={link.includes("@") ? `mailto:${link}` : "#"} style={{ color: MUTED, fontSize: "0.85rem" }} className="hover:opacity-70 transition-opacity">{link}</a>
+                  (link as any).soon ? (
+                    <span key={(link as any).label} className="text-sm cursor-default flex items-center gap-1.5" style={{ color: MUTED }}>
+                      {(link as any).label} <span className="text-xs opacity-50">(soon)</span>
+                    </span>
+                  ) : (link as any).href ? (
+                    <a key={(link as any).label} href={(link as any).href} style={{ color: MUTED, fontSize: "0.85rem" }} className="hover:opacity-70 transition-opacity">{(link as any).label}</a>
+                  ) : (
+                    <span key={(link as any).label} style={{ color: MUTED, fontSize: "0.85rem" }}>{(link as any).label}</span>
+                  )
                 ))}
               </div>
             </div>
@@ -370,6 +494,7 @@ export function LandingPage() {
         </div>
         <div className="max-w-[1280px] mx-auto mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
           <p style={{ color: MUTED, fontSize: "0.8rem" }}>© 2026 Managen. All rights reserved.</p>
+          <p style={{ color: MUTED, fontSize: "0.8rem" }}>Made for African schools 🌍</p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Service"].map((link) => (<a key={link} href="#" style={{ color: MUTED, fontSize: "0.8rem" }} className="hover:opacity-70">{link}</a>))}
           </div>

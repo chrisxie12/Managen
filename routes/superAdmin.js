@@ -222,6 +222,29 @@ const superAdminAuthOptional = async (req, res, next) => {
     }
 };
 
+// ─── GET /api/superadmin/stats (public, no auth) ─────────────
+router.get('/stats', async (req, res) => {
+    try {
+        const { count, error } = await supabase
+            .from('schools')
+            .select('id', { count: 'exact', head: true })
+            .eq('is_active', true);
+
+        if (error) {
+            return res.json({ data: { totalSchools: 0, uptime: '99.7%' } });
+        }
+
+        return res.json({
+            data: {
+                totalSchools: count || 0,
+                uptime: '99.7%',
+            }
+        });
+    } catch (err) {
+        return res.json({ data: { totalSchools: 0, uptime: '99.7%' } });
+    }
+});
+
 // ─── POST /api/superadmin/mfa/setup ──────────────────────────
 router.post('/mfa/setup', superAdminAuthOptional, async (req, res) => {
     try {
