@@ -21,13 +21,6 @@ const planColors: Record<string, string> = {
   premium: "#8B5CF6",
 };
 
-const recentSchools = [
-  { name: "Accra Ridge School", email: "admin@accraridge.edu", plan: "Premium", date: "2 hours ago", status: "active" as const },
-  { name: "Green Valley Academy", email: "info@greenvalley.edu", plan: "Standard", date: "5 hours ago", status: "active" as const },
-  { name: "St. Mary's International", email: "admin@stmarys.com", plan: "Basic", date: "1 day ago", status: "active" as const },
-  { name: "Heritage School", email: "contact@heritage.sch", plan: "Trial", date: "2 days ago", status: "trial" as const },
-];
-
 export function SuperAdminDashboard() {
   const navigate = useNavigate();
   const [stats, setStats] = useState({ totalSchools: 0, activeSchools: 0, suspended: 0, totalRevenue: 0 });
@@ -179,21 +172,17 @@ export function SuperAdminDashboard() {
             </button>
           </div>
           <div className="space-y-3">
-            {recentSchools.map((s) => (
-              <div key={s.name} className="flex items-center gap-3 p-3 rounded-2xl transition-colors hover:opacity-80" style={{ background: "rgba(255,255,255,0.02)" }}>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${planColors[s.plan.toLowerCase()] || ACCENT}15` }}>
-                  <Building2 size={15} color={planColors[s.plan.toLowerCase()] || ACCENT} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div style={{ color: TEXT, fontSize: "0.82rem", fontWeight: 500 }} className="truncate">{s.name}</div>
-                  <div style={{ color: MUTED, fontSize: "0.7rem" }}>{s.email} · {s.date}</div>
-                </div>
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{
-                  background: s.status === "active" ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)",
-                  color: s.status === "active" ? "#10B981" : "#F59E0B",
-                }}>{s.plan}</span>
+            {stats.totalSchools === 0 ? (
+              <p style={{ color: MUTED, fontSize: "0.85rem", textAlign: "center", padding: "2rem 0" }}>
+                Manage registered schools from the Schools page
+              </p>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <Building2 size={32} color={MUTED} />
+                <p style={{ color: MUTED, fontSize: "0.9rem", marginTop: "0.75rem" }}>No schools registered yet</p>
+                <p style={{ color: "#475569", fontSize: "0.78rem", marginTop: "0.25rem" }}>Signups will appear here once schools start registering</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
