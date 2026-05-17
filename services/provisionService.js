@@ -192,6 +192,26 @@ const provisionSchool = async ({
         .eq('name', 'school_admin')
         .maybeSingle();
 
+    let roleId = adminRole?.id || null;
+    if (!roleId) {
+        const { data: fallbackRole } = await supabase
+            .from('roles')
+            .select('id')
+            .limit(1)
+            .maybeSingle();
+        roleId = fallbackRole?.id || null;
+    }
+
+    if (!roleId) {
+        const newRoleId = crypto.randomUUID();
+        const { error: insertRoleError } = await supabase
+            .from('roles')
+            .insert({ id: newRoleId, name: 'school_admin', label: 'School Admin' });
+        if (!insertRoleError) {
+            roleId = newRoleId;
+        }
+    }
+
     const userId = crypto.randomUUID();
 
     const userPayload = {
@@ -200,7 +220,7 @@ const provisionSchool = async ({
         full_name: cleanAdminName,
         email: normalizedEmail,
         role: 'admin',
-        role_id: adminRole?.id || null,
+        role_id: roleId,
         is_active: true,
     };
 
