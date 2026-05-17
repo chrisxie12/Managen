@@ -49,8 +49,8 @@ export function SuperAdminSchools() {
     setDetailLoading(true);
     setSelectedId(id);
     try {
-      const res = await api.get<{ school: SchoolDetail }>(`/api/superadmin/schools/${id}`);
-      if (res.data) setDetail(res.data.school);
+      const res = await api.get<{ school: School; payments: { id: string; amount: number; paidAt: string }[] }>(`/api/superadmin/schools/${id}`);
+      if (res.data) setDetail({ ...res.data.school, payments: res.data.payments || [] });
     } catch { setDetail(null); }
     finally { setDetailLoading(false); }
   };
