@@ -4,7 +4,8 @@ import {
   ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
   Shield, Zap, CheckCircle2, GraduationCap, Wallet, Bell,
   Star, Menu, X, TrendingUp, Clock, Award, XCircle, Send,
-  Building2, Loader2, ChevronDown,
+  Building2, Loader2, ChevronDown, Mail, MapPin, Globe,
+  Linkedin, Twitter, Facebook, Youtube,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -460,43 +461,89 @@ export function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer id="contact" className="py-16 px-6" style={{ borderTop: "1px solid rgba(56,25,50,0.08)" }}>
-        <div className="max-w-[1280px] mx-auto grid md:grid-cols-4 gap-10">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}><GraduationCap size={15} color={MILK} /></div>
+      <footer id="contact" className="bg-gray-50 py-12 px-6">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 px-10 py-12">
+          {/* Row 1 — Logo + Tagline */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
+                <GraduationCap size={15} color="white" />
+              </div>
               <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700 }}>Managen</span>
             </div>
-            <p style={{ color: MUTED, fontSize: "0.85rem", lineHeight: 1.7 }}>Modern school management for Africa's finest institutions.</p>
+            <span className="text-gray-500 text-sm">School management that actually works.</span>
           </div>
-          {[
-            { title: "Product", links: [{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "Changelog", soon: true }, { label: "Roadmap", soon: true }] },
-            { title: "Company", links: [{ label: "About", soon: true }, { label: "Blog", soon: true }, { label: "Careers", soon: true }, { label: "Press", soon: true }] },
-            { title: "Contact", links: [{ label: "support@getschoolos.me", href: "mailto:support@getschoolos.me" }, { label: "+233 55 000 1234", href: "tel:+233550001234" }, { label: "Accra, Ghana" }] },
-          ].map((col) => (
-            <div key={col.title}>
-              <h4 style={{ color: PLUM, fontWeight: 600, marginBottom: "1rem", fontSize: "0.9rem" }}>{col.title}</h4>
-              <div className="flex flex-col gap-2">
-                {col.links.map((link) => (
-                  (link as any).soon ? (
-                    <span key={(link as any).label} className="text-sm cursor-default flex items-center gap-1.5" style={{ color: MUTED }}>
-                      {(link as any).label} <span className="text-xs opacity-50">(soon)</span>
-                    </span>
-                  ) : (link as any).href ? (
-                    <a key={(link as any).label} href={(link as any).href} style={{ color: MUTED, fontSize: "0.85rem" }} className="hover:opacity-70 transition-opacity">{(link as any).label}</a>
-                  ) : (
-                    <span key={(link as any).label} style={{ color: MUTED, fontSize: "0.85rem" }}>{(link as any).label}</span>
-                  )
+          <hr className="border-gray-100 mb-8" />
+
+          {/* Row 2 — 4 columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Column 1 — Company */}
+            <div>
+              <h4 className="font-semibold text-gray-900 text-sm mb-4">Company</h4>
+              <div className="flex flex-col gap-2.5">
+                {["About", "Blog", "Careers", "Press"].map((link) => (
+                  <span key={link} className="text-sm cursor-default opacity-50" style={{ color: MUTED }}>{link}</span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-        <div className="max-w-[1280px] mx-auto mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
-          <p style={{ color: MUTED, fontSize: "0.8rem" }}>© 2026 Managen. All rights reserved.</p>
-          <p style={{ color: MUTED, fontSize: "0.8rem" }}>Made for African schools 🌍</p>
-          <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Service"].map((link) => (<a key={link} href="#" style={{ color: MUTED, fontSize: "0.8rem" }} className="hover:opacity-70">{link}</a>))}
+
+            {/* Column 2 — Product */}
+            <div>
+              <h4 className="font-semibold text-gray-900 text-sm mb-4">Product</h4>
+              <div className="flex flex-col gap-2.5">
+                {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }, { label: "Testimonials", href: "#testimonials" }].map((link) => (
+                  <a key={link.label} href={link.href} className="text-sm hover:opacity-70 transition-opacity" style={{ color: MUTED }}>{link.label}</a>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 3 — Contact */}
+            <div>
+              <h4 className="font-semibold text-gray-900 text-sm mb-4">Contact</h4>
+              <div className="flex flex-col gap-3">
+                {[
+                  { icon: Mail, text: "hello@managen.africa" },
+                  { icon: MapPin, text: "Accra, Ghana & Lagos, Nigeria" },
+                  { icon: MessageSquare, text: "WhatsApp Support" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-center gap-2.5">
+                    <item.icon size={15} color={PLUM} className="flex-shrink-0" />
+                    <span className="text-sm text-gray-600">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 4 — Social + Region */}
+            <div>
+              <div className="inline-flex items-center gap-1.5 border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-500 mb-6">
+                <Globe size={13} />
+                Ghana / Nigeria
+              </div>
+              <div className="flex gap-2">
+                {[
+                  { icon: Linkedin, href: "#" },
+                  { icon: Twitter, href: "#" },
+                  { icon: Facebook, href: "#" },
+                  { icon: Youtube, href: "#" },
+                ].map((s) => (
+                  <a key={s.icon.name} href={s.href} className="rounded-full border border-gray-200 p-2 hover:bg-gray-50 transition-colors">
+                    <s.icon size={16} className="text-gray-500" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3 — Bottom bar */}
+          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+            <span className="text-xs text-gray-400">© 2025 Managen. All rights reserved.</span>
+            <span className="text-xs text-gray-400">Made for African schools 🌍</span>
+            <div className="flex gap-4 text-xs text-gray-400">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookies</a>
+            </div>
           </div>
         </div>
       </footer>
