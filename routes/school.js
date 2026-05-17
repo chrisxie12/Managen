@@ -468,11 +468,11 @@ router.get('/notifications/log', protect, async (req, res) => {
 
 // ─── Attendance Routes ────────────────────────────────────────
 
-// GET /api/school/attendance - list attendance records
+// GET /api/school/attendance - list attendance records (paginated)
 router.get('/attendance', protect, requirePermission('attendance.view'), async (req, res) => {
     try {
-        const records = await schoolService.getAttendanceRecords(req.tenant.id, req.query);
-        return res.json({ data: { records } });
+        const result = await schoolService.getAttendanceRecords(req.tenant.id, req.query);
+        return res.json({ data: result });
     } catch (err) {
         return res.status(500).json({ error: 'Error fetching attendance records.' });
     }
@@ -493,10 +493,54 @@ router.get('/attendance/stats/range', protect, async (req, res) => {
 // GET /api/school/attendance/student/:studentId - per-student history
 router.get('/attendance/student/:studentId', protect, async (req, res) => {
     try {
-        const records = await schoolService.getAttendanceRecords(req.tenant.id, { student_id: req.params.studentId });
-        return res.json({ data: { records } });
+        const result = await schoolService.getAttendanceRecords(req.tenant.id, { student_id: req.params.studentId, ...req.query });
+        return res.json({ data: result });
     } catch (err) {
         return res.status(500).json({ error: 'Error fetching student attendance.' });
+    }
+});
+
+// GET /api/school/attendance/trends - daily attendance trends for date range
+router.get('/attendance/trends', protect, async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        if (!start || !end) return res.status(400).json({ error: 'start and end query params required.' });
+        const trends = await schoolService.getAttendanceTrends(req.tenant.id, start, end);
+        return res.json({ data: { trends } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching attendance trends.' });
+    }
+});
+
+// GET /api/school/attendance/absentees/repeated - students with repeated absences
+router.get('/attendance/absentees/repeated', protect, async (req, res) => {
+    try {
+        const min = Math.max(2, Number.parseInt(req.query.min) || 3);
+        const results = await schoolService.getRepeatedAbsences(req.tenant.id, min);
+        return res.json({ data: { absentees: results } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching repeated absences.' });
+    }
+});
+
+// POST /api/school/attendance/staff - bulk staff attendance
+router.post('/attendance/staff', protect, requirePermission('attendance.create', 'attendance.edit'), async (req, res) => {
+    try {
+        const markedBy = req.user?.userId;
+        const data = await schoolService.submitStaffAttendance(req.tenant.id, req.body.records, markedBy);
+        return res.status(201).json({ data: { message: 'Staff attendance recorded.', data } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error recording staff attendance.' });
+    }
+});
+
+// GET /api/school/attendance/staff - list staff attendance records
+router.get('/attendance/staff', protect, requirePermission('attendance.view'), async (req, res) => {
+    try {
+        const result = await schoolService.getStaffAttendanceRecords(req.tenant.id, req.query);
+        return res.json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching staff attendance.' });
     }
 });
 

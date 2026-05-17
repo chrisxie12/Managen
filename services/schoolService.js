@@ -409,29 +409,142 @@ class SchoolService {
     // ─── Attendance Extended ───────────────────────────────────────
     async getAttendanceRecords(schoolId, filters = {}) {
         let query = supabase.from('attendance')
-            .select('*, student:students(name, class_name)')
+            .select('*, student:students(name, class_name)', { count: 'exact' })
             .eq('tenant_id', schoolId)
-            .order('date', { ascending: false })
-            .limit(200);
+            .order('date', { ascending: false });
 
         if (filters.date) query = query.eq('date', filters.date);
         if (filters.class_name) query = query.eq('class_name', filters.class_name);
         if (filters.student_id) query = query.eq('student_id', filters.student_id);
         if (filters.status) query = query.eq('status', filters.status);
 
-        const { data, error } = await query;
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
         if (error) throw error;
-        return data || [];
+        return { records: data || [], total: count || 0, page, limit };
     }
 
     async getAttendanceStats(schoolId, startDate, endDate) {
         const { data, error } = await supabase.from('attendance')
-            .select('date, status, count')
+            .select('date, status')
             .eq('tenant_id', schoolId)
             .gte('date', startDate)
             .lte('date', endDate);
         if (error) throw error;
         return data || [];
+    }
+
+    async getAttendanceTrends(schoolId, startDate, endDate) {
+        const { data, error } = await supabase.from('attendance')
+            .select('date, status')
+            .eq('tenant_id', schoolId)
+            .gte('date', startDate)
+            .lte('date', endDate);
+        if (error) throw error;
+        const daily = {};
+        (data || []).forEach(r => {
+            if (!daily[r.date]) daily[r.date] = { date: r.date, Present: 0, Absent: 0, Late: 0, Excused: 0, 'Half-day': 0, total: 0 };
+            daily[r.date][r.status] = (daily[r.date][r.status] || 0) + 1;
+            daily[r.date].total += 1;
+        });
+        return Object.values(daily).sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    async getRepeatedAbsences(schoolId, minConsecutive = 3) {
+        const { data, error } = await supabase.from('attendance')
+            .select('student_id, date, status, class_name, student:students(name, class_name, admission_no)')
+            .eq('tenant_id', schoolId)
+            .eq('status', 'Absent')
+            .order('student_id', { ascending: true })
+            .order('date', { ascending: true });
+        if (error) throw error;
+        if (!data || data.length === 0) return [];
+
+        const grouped = {};
+        (data || []).forEach(r => {
+            if (!grouped[r.student_id]) grouped[r.student_id] = { student: r.student, records: [] };
+            grouped[r.student_id].records.push(r);
+        });
+
+        const results = [];
+        for (const [studentId, info] of Object.entries(grouped)) {
+            let streak = 1;
+            let streakStart = info.records[0].date;
+            for (let i = 1; i < info.records.length; i++) {
+                const prev = new Date(info.records[i - 1].date);
+                const curr = new Date(info.records[i].date);
+                const diffDays = (curr - prev) / (1000 * 60 * 60 * 24);
+                if (diffDays === 1) {
+                    streak++;
+                } else {
+                    if (streak >= minConsecutive) {
+                        results.push({
+                            student_id: studentId,
+                            student: info.student,
+                            streak,
+                            start_date: streakStart,
+                            end_date: info.records[i - 1].date,
+                            records: info.records.slice(i - streak, i),
+                        });
+                    }
+                    streak = 1;
+                    streakStart = info.records[i].date;
+                }
+            }
+            if (streak >= minConsecutive) {
+                results.push({
+                    student_id: studentId,
+                    student: info.student,
+                    streak,
+                    start_date: streakStart,
+                    end_date: info.records[info.records.length - 1].date,
+                    records: info.records.slice(info.records.length - streak),
+                });
+            }
+        }
+        return results.sort((a, b) => b.streak - a.streak);
+    }
+
+    // ─── Staff Attendance ─────────────────────────────────────────
+    async submitStaffAttendance(tenantId, records, markedBy) {
+        const payload = records.map(r => ({
+            id: crypto.randomUUID(),
+            school_id: tenantId,
+            user_id: r.user_id,
+            date: r.date,
+            status: r.status,
+            check_in: r.check_in || null,
+            check_out: r.check_out || null,
+            notes: r.notes || null,
+            marked_by: markedBy || null,
+        }));
+        const { data, error } = await supabase.from('staff_attendance')
+            .insert(payload)
+            .select('*, user:users(name, email)');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async getStaffAttendanceRecords(tenantId, filters = {}) {
+        let query = supabase.from('staff_attendance')
+            .select('*, user:users(name, email)', { count: 'exact' })
+            .eq('school_id', tenantId)
+            .order('date', { ascending: false });
+
+        if (filters.date) query = query.eq('date', filters.date);
+        if (filters.user_id) query = query.eq('user_id', filters.user_id);
+        if (filters.status) query = query.eq('status', filters.status);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
+        if (error) throw error;
+        return { records: data || [], total: count || 0, page, limit };
     }
 
     async updateClass(tenantId, id, payload) {
