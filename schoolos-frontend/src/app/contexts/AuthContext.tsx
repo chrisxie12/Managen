@@ -42,6 +42,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [school, setSchool] = useState<School | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const setUserFromApi = (res: { user: Record<string, any>; school: Record<string, any> }) => {
+    setUser({
+      id: res.user.id,
+      fullName: res.user.full_name || res.user.fullName,
+      email: res.user.email,
+      role: res.user.role,
+      roleId: res.user.role_id || res.user.roleId,
+      permissions: res.user.permissions || [],
+    });
+    setSchool({
+      name: res.school.name,
+      slug: res.school.slug,
+      subdomain: res.school.subdomain || res.school.slug,
+      plan: res.school.plan,
+      modules: res.school.modules || [],
+    });
+  };
+
   const exchangeToken = useCallback(async () => {
     try {
       const clerkToken = await getToken();
@@ -53,21 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await api.post("/api/auth/clerk-exchange", { clerkToken });
       const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
       if (res.data) {
-        setUser({
-          id: res.data.user.id,
-          fullName: res.data.user.full_name || res.data.user.fullName,
-          email: res.data.user.email,
-          role: res.data.user.role,
-          roleId: res.data.user.role_id || res.data.user.roleId,
-          permissions: res.data.user.permissions || [],
-        });
-        setSchool({
-          name: res.data.school.name,
-          slug: res.data.school.slug,
-          subdomain: res.data.school.subdomain || res.data.school.slug,
-          plan: res.data.school.plan,
-          modules: res.data.school.modules || [],
-        });
+        setUserFromApi(res.data);
       }
     } catch {
       setUser(null);
@@ -77,16 +81,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [getToken]);
 
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!isSignedIn) {
+  const loadFromCookie = useCallback(async () => {
+    try {
+      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
+      if (res.data) {
+        setUserFromApi(res.data);
+      }
+    } catch {
       setUser(null);
       setSchool(null);
+    } finally {
       setLoading(false);
-      return;
     }
-    exchangeToken();
-  }, [isLoaded, isSignedIn, exchangeToken]);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (isSignedIn) {
+      exchangeToken();
+    } else {
+      loadFromCookie();
+    }
+  }, [isLoaded, isSignedIn, exchangeToken, loadFromCookie]);
 
   const logout = useCallback(async () => {
     await api.post("/api/auth/logout", {});
@@ -97,8 +113,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     setLoading(true);
-    await exchangeToken();
-  }, [exchangeToken]);
+    if (isSignedIn) {
+      await exchangeToken();
+    } else {
+      await loadFromCookie();
+    }
+  }, [isSignedIn, exchangeToken, loadFromCookie]);
 
   return (
     <AuthContext.Provider value={{ user, school, loading, refresh, logout }}>

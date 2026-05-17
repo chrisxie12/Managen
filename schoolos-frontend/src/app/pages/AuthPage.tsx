@@ -13,6 +13,7 @@ const MUTED = "#7D6077";
 import { useSignUp, useClerk } from "@clerk/react";
 import { api } from "../services/api";
 import { toast } from "sonner";
+import { useAuth } from "../contexts/AuthContext";
 
 const benefits = [
   "No credit card required for trial",
@@ -45,6 +46,7 @@ export function AuthPage() {
   const [verified, setVerified] = useState(false);
   const { signUp } = useSignUp();
   const clerk = useClerk();
+  const { refresh } = useAuth();
 
   useEffect(() => {
     const m = searchParams.get("mode");
@@ -147,8 +149,9 @@ export function AuthPage() {
           { headers }
         );
 
+        await refresh();
         toast.success("Welcome back!");
-        setTimeout(() => navigate("/dashboard"), 1000);
+        navigate("/dashboard");
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");

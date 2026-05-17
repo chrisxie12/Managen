@@ -8,7 +8,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!isLoaded || loading) return <div>Loading...</div>;
 
-  if (!isSignedIn) return <Navigate to="/auth" replace />;
+  if (!isSignedIn && !user) return <Navigate to="/auth" replace />;
 
   if (!user) return <div>Loading...</div>;
 
