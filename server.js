@@ -20,6 +20,7 @@ const reportRoutes     = require('./routes/reports');
 const auditRoutes      = require('./routes/audit');
 const communicationRoutes = require('./routes/communication');
 const healthRoutes        = require('./routes/health');
+const settingsRoutes      = require('./routes/settings');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -144,6 +145,7 @@ app.use('/api/school/reports', tenantMiddleware, reportRoutes);
 app.use('/api/school/audit-logs', tenantMiddleware, auditRoutes);
 app.use('/api/school/communications', tenantMiddleware, communicationRoutes);
 app.use('/api/school/health', tenantMiddleware, healthRoutes);
+app.use('/api/school/settings', tenantMiddleware, settingsRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
