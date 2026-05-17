@@ -24,7 +24,7 @@ import { SchoolSettings } from "./pages/Settings";
 import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
-import { SuperAdminBilling } from "./pages/SuperAdminBilling";
+import { SuperAdminOverview } from "./pages/SuperAdminOverview";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
@@ -90,6 +90,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, Component: SuperAdminDashboard },
+        { path: "overview", Component: SuperAdminOverview },
       { path: "schools", Component: SuperAdminSchools },
       { path: "billing", Component: SuperAdminBilling },
     ],
