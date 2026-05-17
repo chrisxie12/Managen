@@ -19,6 +19,7 @@ import { Assessments } from "./pages/Assessments";
 import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { Reports } from "./pages/Reports";
 import { AuditLogs } from "./pages/AuditLogs";
+import { SystemHealth } from "./pages/SystemHealth";
 import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
       { path: "audit-logs", Component: AuditLogs },
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
+      { path: "system-health", Component: SystemHealth },
       { path: "users", Component: AdminUsers },
       { path: "roles", Component: AdminRoles },
     ],

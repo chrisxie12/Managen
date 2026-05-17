@@ -56,7 +56,7 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 'subjects.view', 'timetable.view', 'attendance.view', 'grades.view',
                 'fees.view', 'payments.view',
                 'messages.view', 'announcements.view', 'notifications.view', 'reports.view',
-                'audit_logs.view',
+                'audit_logs.view', 'settings.view',
             ],
             accountant: [
                 'dashboard.view', 'students.view',

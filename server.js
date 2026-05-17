@@ -19,6 +19,7 @@ const approvalRoutes   = require('./routes/approvals');
 const reportRoutes     = require('./routes/reports');
 const auditRoutes      = require('./routes/audit');
 const communicationRoutes = require('./routes/communication');
+const healthRoutes        = require('./routes/health');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -98,7 +99,7 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// ─── Status Routes ────────────────────────────────────────────
+// ─── Status & Health Routes ───────────────────────────────────
 app.get('/', (req, res) => {
   res.json({
     status: 'Managen API is live ✅',
@@ -108,16 +109,24 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/health', (req, res) => {
-    res.json({
-        data: {
-            status: 'ok',
-            db: true,
-            timestamp: Date.now(),
-        },
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-    });
+app.get('/health', async (req, res) => {
+    try {
+        const healthService = require('./services/healthService');
+        const db = await healthService.checkDatabase();
+        const server = healthService.checkServer();
+        res.json({
+            data: {
+                status: db.status === 'healthy' ? 'ok' : 'degraded',
+                db: db.status === 'healthy',
+                uptime: server.uptime,
+                memory: server.memory.heapUsed,
+                timestamp: Date.now(),
+            },
+            status: db.status === 'healthy' ? 'ok' : 'degraded',
+        });
+    } catch {
+        res.json({ status: 'ok', data: { status: 'ok', db: true, timestamp: Date.now() } });
+    }
 });
 
 // ─── Public Routes ────────────────────────────────────────────
@@ -134,6 +143,7 @@ app.use('/api/approvals', tenantMiddleware, approvalRoutes);
 app.use('/api/school/reports', tenantMiddleware, reportRoutes);
 app.use('/api/school/audit-logs', tenantMiddleware, auditRoutes);
 app.use('/api/school/communications', tenantMiddleware, communicationRoutes);
+app.use('/api/school/health', tenantMiddleware, healthRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
-  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3,
+  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
@@ -25,6 +25,7 @@ const allNavItems = [
   { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
   { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
   { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
+  { icon: Activity, label: "System Health", path: "/dashboard/system-health" },
 ];
 
 const roleLabels: Record<string, string> = {
