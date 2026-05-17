@@ -1484,6 +1484,184 @@ class SchoolService {
             balance: Number(inv.total_amount) - Number(inv.paid_amount),
         })).filter(inv => inv.balance > 0);
     }
+
+    // ─── Monthly Revenue (MRR-style) ──────────────────────────
+    async getMonthlyRevenue(schoolId, months = 12) {
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - months);
+        const start = startDate.toISOString().split('T')[0];
+
+        const { data, error } = await supabase.from('payments')
+            .select('amount, payment_date, status')
+            .eq('school_id', schoolId)
+            .eq('status', 'completed')
+            .gte('payment_date', start)
+            .order('payment_date', { ascending: true });
+        if (error) throw error;
+
+        const monthMap = {};
+        for (let i = 0; i < months; i++) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            monthMap[key] = { month: key, label: d.toLocaleDateString('en', { month: 'short', year: 'numeric' }), amount: 0, count: 0 };
+        }
+
+        (data || []).forEach(p => {
+            const key = p.payment_date.substring(0, 7);
+            if (monthMap[key]) {
+                monthMap[key].amount += Number(p.amount);
+                monthMap[key].count += 1;
+            }
+        });
+
+        return Object.values(monthMap).sort((a, b) => a.month.localeCompare(b.month));
+    }
+
+    // ─── Failed Payments ──────────────────────────────────────
+    async getFailedPayments(schoolId, filters = {}) {
+        let query = supabase.from('payments')
+            .select('*, student:students(name, admission_no, class_name), invoice:invoices(invoice_number, total_amount)', { count: 'exact' })
+            .eq('school_id', schoolId)
+            .eq('status', 'failed')
+            .order('payment_date', { ascending: false });
+
+        if (filters.start_date) query = query.gte('payment_date', filters.start_date);
+        if (filters.end_date) query = query.lte('payment_date', filters.end_date);
+        if (filters.payment_method) query = query.eq('payment_method', filters.payment_method);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
+        if (error) throw error;
+        return { payments: data || [], total: count || 0, page, limit };
+    }
+
+    // ─── Fee Defaulters ───────────────────────────────────────
+    async getDefaulters(schoolId, thresholdDays = 30, minBalance = 0) {
+        const now = new Date().toISOString().split('T')[0];
+        const thresholdDate = new Date();
+        thresholdDate.setDate(thresholdDate.getDate() - thresholdDays);
+        const since = thresholdDate.toISOString().split('T')[0];
+
+        const { data, error } = await supabase.from('invoices')
+            .select('*, student:students(name, admission_no, class_name, parent_name, parent_phone), class:classes(name), term:academic_terms(name)')
+            .eq('school_id', schoolId)
+            .not('status', 'in', '("paid","cancelled")')
+            .lt('due_date', since)
+            .order('due_date', { ascending: true });
+        if (error) throw error;
+
+        const studentMap = {};
+        (data || []).forEach(inv => {
+            const balance = Number(inv.total_amount) - Number(inv.paid_amount);
+            if (balance <= 0) return;
+            const sid = inv.student_id;
+            if (!studentMap[sid]) {
+                studentMap[sid] = {
+                    student: inv.student,
+                    class: inv.class,
+                    totalBalance: 0,
+                    invoiceCount: 0,
+                    invoices: [],
+                    daysSinceFirstDue: 0,
+                };
+            }
+            studentMap[sid].totalBalance += balance;
+            studentMap[sid].invoiceCount += 1;
+            studentMap[sid].invoices.push({ id: inv.id, invoice_number: inv.invoice_number, due_date: inv.due_date, balance, term: inv.term?.name });
+        });
+
+        return Object.values(studentMap)
+            .filter(s => s.totalBalance >= minBalance)
+            .map(s => ({
+                ...s,
+                daysSinceFirstDue: Math.floor(
+                    (new Date(now).getTime() - new Date(s.invoices.reduce((earliest, inv) =>
+                        inv.due_date < earliest ? inv.due_date : earliest, s.invoices[0].due_date
+                    )).getTime()) / (1000 * 60 * 60 * 24)
+                ),
+            }))
+            .sort((a, b) => b.totalBalance - a.totalBalance);
+    }
+
+    // ─── Payment Status Breakdown ─────────────────────────────
+    async getPaymentStatusBreakdown(schoolId) {
+        const { data, error } = await supabase.from('payments')
+            .select('status, amount')
+            .eq('school_id', schoolId);
+        if (error) throw error;
+
+        const breakdown = {};
+        (data || []).forEach(p => {
+            if (!breakdown[p.status]) breakdown[p.status] = { status: p.status, amount: 0, count: 0 };
+            breakdown[p.status].amount += Number(p.amount);
+            breakdown[p.status].count += 1;
+        });
+
+        return Object.values(breakdown);
+    }
+
+    // ─── Finance Data Export ──────────────────────────────────
+    async exportFinanceData(schoolId, type, dateFrom, dateTo) {
+        if (type === 'invoices') {
+            let query = supabase.from('invoices')
+                .select('*, student:students(name, admission_no, class_name, parent_name, parent_phone), class:classes(name), term:academic_terms(name), items:invoice_items(description, amount, waived)')
+                .eq('school_id', schoolId)
+                .order('created_at', { ascending: false });
+
+            if (dateFrom) query = query.gte('issue_date', dateFrom);
+            if (dateTo) query = query.lte('issue_date', dateTo);
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            const rows = (data || []).map(inv => ({
+                'Invoice #': inv.invoice_number,
+                Student: inv.student?.name || '',
+                Class: inv.class?.name || '',
+                Term: inv.term?.name || '',
+                'Issue Date': inv.issue_date,
+                'Due Date': inv.due_date,
+                Status: inv.status,
+                'Total (GHS)': (inv.total_amount / 100).toFixed(2),
+                'Paid (GHS)': (inv.paid_amount / 100).toFixed(2),
+                'Balance (GHS)': ((inv.total_amount - inv.paid_amount) / 100).toFixed(2),
+                Items: (inv.items || []).map(i => `${i.description} (GHS ${(i.amount / 100).toFixed(2)})`).join('; '),
+            }));
+            return rows;
+        }
+
+        if (type === 'payments') {
+            let query = supabase.from('payments')
+                .select('*, student:students(name, admission_no, class_name), invoice:invoices(invoice_number)')
+                .eq('school_id', schoolId)
+                .order('payment_date', { ascending: false });
+
+            if (dateFrom) query = query.gte('payment_date', dateFrom);
+            if (dateTo) query = query.lte('payment_date', dateTo);
+
+            const { data, error } = await query;
+            if (error) throw error;
+
+            const rows = (data || []).map(p => ({
+                Date: p.payment_date,
+                Student: p.student?.name || '',
+                Invoice: p.invoice?.invoice_number || '',
+                'Amount (GHS)': (p.amount / 100).toFixed(2),
+                Method: p.payment_method,
+                Reference: p.reference || '',
+                'Transaction ID': p.transaction_id || '',
+                Status: p.status,
+                Notes: p.notes || '',
+            }));
+            return rows;
+        }
+
+        return [];
+    }
 }
 
 module.exports = new SchoolService();

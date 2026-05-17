@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Loader2, X, AlertCircle, Check, Plus, Wallet, TrendingUp,
   DollarSign, Receipt, CreditCard, FileText, Percent, Gift,
-  Ban, 
+  Download, Calendar, Users, XCircle, AlertTriangle,
 } from "lucide-react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from "recharts";
 import { api } from "../services/api";
@@ -40,8 +40,18 @@ type Student = { id: string; name: string; admission_no: string; class_name: str
 type ClassOption = { id: string; name: string };
 type TermOption = { id: string; name: string; is_current?: boolean };
 type FinanceSummary = { totalBilled: number; totalPaid: number; totalOutstanding: number; overdueAmount: number; totalCollected: number; invoiceCount: number; overdueCount: number; paymentCount: number };
-type RevenueData = { daily: { date: string; amount: number; count: number }[]; byMethod: { method: string; amount: number }[]; total: number };
-type OverdueAlert = Invoice & { daysOverdue: number; balance: number };
+
+type MonthlyRevenue = { month: string; label: string; amount: number; count: number };
+type PaymentBreakdown = { status: string; amount: number; count: number };
+type FailedPayment = Payment & { student?: { name: string; admission_no: string; class_name: string } | null; invoice?: { invoice_number: string; total_amount: number } | null };
+type Defaulter = {
+  student: { name: string; admission_no: string; class_name: string; parent_name?: string; parent_phone?: string } | null;
+  class: { name: string } | null;
+  totalBalance: number;
+  invoiceCount: number;
+  daysSinceFirstDue: number;
+  invoices: { id: string; invoice_number: string; due_date: string; balance: number; term?: string }[];
+};
 
 // ─── Helpers ────────────────────────────────────────────────────
 const formatCedi = (amount: number) =>
@@ -124,33 +134,68 @@ const ChartCard = ({ title, subtitle, children, action }: {
   </div>
 );
 
-// ─── Overview Tab ───────────────────────────────────────────────
+// ─── Overview Tab (Enterprise Dashboard) ────────────────────────
 function OverviewTab() {
   const [summary, setSummary] = useState<FinanceSummary | null>(null);
-  const [revenue, setRevenue] = useState<RevenueData | null>(null);
-  const [overdue, setOverdue] = useState<OverdueAlert[]>([]);
+  const [monthly, setMonthly] = useState<MonthlyRevenue[]>([]);
+  const [failedP, setFailedP] = useState<FailedPayment[]>([]);
+  const [defaulters, setDefaulters] = useState<Defaulter[]>([]);
+  const [paymentBreakdown, setPaymentBreakdown] = useState<PaymentBreakdown[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [monthsFilter, setMonthsFilter] = useState(12);
+  const [defThreshold, setDefThreshold] = useState(30);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [sumRes, revRes, overdueRes] = await Promise.all([
+      const [sumRes, monthlyRes, failedRes, defRes, breakdownRes] = await Promise.all([
         api.get<FinanceSummary>("/api/school/finance/summary"),
-        api.get<RevenueData>("/api/school/finance/revenue?days=30"),
-        api.get<{ overdueAlerts: OverdueAlert[] }>("/api/school/finance/overdue-alerts"),
+        api.get<{ monthly: MonthlyRevenue[] }>(`/api/school/finance/monthly?months=${monthsFilter}`),
+        api.get<{ payments: FailedPayment[]; total: number }>("/api/school/finance/failed-payments?limit=50"),
+        api.get<{ defaulters: Defaulter[] }>(`/api/school/finance/defaulters?threshold=${defThreshold}&min_balance=0`),
+        api.get<{ breakdown: PaymentBreakdown[] }>("/api/school/finance/payment-status-breakdown"),
       ]);
       setSummary(sumRes.data!);
-      setRevenue(revRes.data!);
-      setOverdue(overdueRes.data?.overdueAlerts || []);
+      setMonthly(monthlyRes.data?.monthly || []);
+      setFailedP(failedRes.data?.payments || []);
+      setDefaulters(defRes.data?.defaulters || []);
+      setPaymentBreakdown(breakdownRes.data?.breakdown || []);
     } catch {
-      setError("Failed to load overview");
+      setError("Failed to load finance overview");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [monthsFilter, defThreshold]);
 
   useEffect(() => { load(); }, [load]);
+
+  const currentMonthMRR = monthly.length > 0
+    ? monthly[monthly.length - 1].amount
+    : 0;
+  const prevMonthMRR = monthly.length > 1
+    ? monthly[monthly.length - 2].amount
+    : 0;
+  const mrrTrend = prevMonthMRR > 0
+    ? ((currentMonthMRR - prevMonthMRR) / prevMonthMRR * 100).toFixed(1)
+    : null;
+
+  const failedCount = failedP.length;
+  const defaulterCount = defaulters.length;
+
+  const handleExport = async (type: "invoices" | "payments") => {
+    try {
+      const token = document.cookie
+        .split("; ")
+        .find(r => r.startsWith("schoolos_token="))
+        ?.split("=")[1];
+      const base = import.meta.env.VITE_API_BASE_URL;
+      const url = `${base}/api/school/finance/export?type=${type}&token=${encodeURIComponent(token || "")}`;
+      window.open(url, "_blank");
+    } catch {
+      setError("Export failed");
+    }
+  };
 
   if (loading) return <LoadingSpinner height={400} />;
   if (!summary) return <EmptyState icon={Wallet} title="No financial data" desc="Start by setting up fee structures" />;
@@ -159,73 +204,210 @@ function OverviewTab() {
     <div className="space-y-6">
       {error && <AlertBanner type="error" message={error} onClose={() => setError("")} />}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard icon={DollarSign} label="Total Collected" value={formatCedi(summary.totalCollected)}
-          sub={`${summary.paymentCount} payment(s)`} color="#10B981" />
-        <MetricCard icon={Receipt} label="Total Billed" value={formatCedi(summary.totalBilled)}
-          sub={`${summary.invoiceCount} invoice(s)`} color="#6366F1" />
-        <MetricCard icon={AlertCircle} label="Outstanding" value={formatCedi(summary.totalOutstanding)}
-          sub={summary.overdueCount > 0 ? `${summary.overdueCount} overdue` : "All paid"} color={summary.overdueCount > 0 ? "#EF4444" : "#10B981"} />
-        <MetricCard icon={Ban} label="Overdue Amount" value={formatCedi(summary.overdueAmount)}
-          sub={`${summary.overdueCount} invoice(s) past due`} color="#EF4444" />
+      {/* ── Filter & Export Bar ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2" style={{ color: MUTED }}>
+            <Calendar size={14} />
+            <Select value={String(monthsFilter)} onValueChange={v => setMonthsFilter(Number(v))}>
+              <SelectTrigger className="w-[120px] h-9 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">3 months</SelectItem>
+                <SelectItem value="6">6 months</SelectItem>
+                <SelectItem value="12">12 months</SelectItem>
+                <SelectItem value="24">24 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2" style={{ color: MUTED }}>
+            <AlertTriangle size={14} />
+            <Select value={String(defThreshold)} onValueChange={v => setDefThreshold(Number(v))}>
+              <SelectTrigger className="w-[140px] h-9 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">Default &gt;15d</SelectItem>
+                <SelectItem value="30">Default &gt;30d</SelectItem>
+                <SelectItem value="60">Default &gt;60d</SelectItem>
+                <SelectItem value="90">Default &gt;90d</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => handleExport("invoices")}
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+            <Download size={13} className="mr-1" /> Invoices CSV
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => handleExport("payments")}
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+            <Download size={13} className="mr-1" /> Payments CSV
+          </Button>
+        </div>
       </div>
 
+      {/* ── Metric Cards (6) ── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <MetricCard icon={TrendingUp} label="Monthly Collection"
+          value={formatCedi(currentMonthMRR)}
+          sub={mrrTrend ? `${mrrTrend}% vs prev month` : "Current month"}
+          color="#6366F1" />
+        <MetricCard icon={DollarSign} label="Total Collected"
+          value={formatCedi(summary.totalCollected)}
+          sub={`${summary.paymentCount} payment(s)`}
+          color="#10B981" />
+        <MetricCard icon={Receipt} label="Total Billed"
+          value={formatCedi(summary.totalBilled)}
+          sub={`${summary.invoiceCount} invoice(s)`}
+          color="#3B82F6" />
+        <MetricCard icon={AlertCircle} label="Outstanding Balance"
+          value={formatCedi(summary.totalOutstanding)}
+          sub={summary.overdueCount > 0 ? `${summary.overdueCount} overdue` : "All paid"}
+          color={summary.overdueCount > 0 ? "#F59E0B" : "#10B981"} />
+        <MetricCard icon={XCircle} label="Failed Payments"
+          value={failedCount}
+          sub={failedCount === 0 ? "No failures" : "Requires attention"}
+          color={failedCount > 0 ? "#EF4444" : "#10B981"} />
+        <MetricCard icon={Users} label="Fee Defaulters"
+          value={defaulterCount}
+          sub={defaulterCount === 0 ? "All current" : `${defThreshold}d+ overdue`}
+          color={defaulterCount > 0 ? "#EF4444" : "#10B981"} />
+      </div>
+
+      {/* ── Charts Row ── */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <ChartCard title="Revenue Trend" subtitle={revenue ? `Last ${revenue.daily.length} days` : "No revenue data"}>
-          {!revenue || revenue.daily.length === 0 ? (
-            <EmptyState icon={TrendingUp} title="No revenue data" desc="Record payments to see trends" />
+        {/* Monthly Collection Trend */}
+        <ChartCard title="Collection Trend" subtitle={monthly.length > 0 ? `${monthsFilter}-month view` : "No data"}>
+          {monthly.length === 0 ? (
+            <EmptyState icon={TrendingUp} title="No monthly data" desc="Record payments to see trends" />
           ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={revenue.daily} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={monthly} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
-                <XAxis dataKey="date" tickFormatter={(d) => new Date(d).toLocaleDateString("en", { month: "short", day: "numeric" })}
-                  tick={{ fontSize: 10, fill: MUTED }} interval="preserveStartEnd" />
+                <XAxis dataKey="label" tick={{ fontSize: 9, fill: MUTED }} interval={Math.max(1, Math.floor(monthly.length / 6))} />
                 <YAxis tick={{ fontSize: 10, fill: MUTED }} tickFormatter={(v) => `GHS ${(v / 100).toFixed(0)}`} />
                 <Tooltip
                   contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
-                  formatter={(value: number) => [formatCedi(value), "Revenue"]} />
-                <Line type="monotone" dataKey="amount" stroke="#10B981" strokeWidth={2.5} dot={false}
-                  activeDot={{ r: 4, fill: "#10B981", stroke: "white", strokeWidth: 2 }} />
-              </LineChart>
+                  formatter={(value: number) => [formatCedi(value), "Collected"]}
+                  labelFormatter={(l) => `Month: ${l}`} />
+                <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
+                  {monthly.map((_, i) => (
+                    <Cell key={i} fill={i === monthly.length - 1 ? "#6366F1" : COLORS[i % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           )}
         </ChartCard>
 
-        <ChartCard title="Collection by Method" subtitle={revenue ? `${revenue.byMethod.length} method(s)` : "No data"}>
-          {!revenue || revenue.byMethod.length === 0 ? (
-            <EmptyState icon={CreditCard} title="No collection data" desc="Record payments to see breakdown" />
+        {/* Payment Status Breakdown */}
+        <ChartCard title="Payment Status Breakdown" subtitle={paymentBreakdown.length > 0 ? `${paymentBreakdown.length} status(es)` : "No data"}>
+          {paymentBreakdown.length === 0 ? (
+            <EmptyState icon={CreditCard} title="No payment data" desc="Record payments to see breakdown" />
           ) : (
-            <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
-                <Pie data={revenue.byMethod} dataKey="amount" nameKey="method" cx="50%" cy="50%" outerRadius={70}
-                  label={({ method, percent }) => `${method} (${(percent * 100).toFixed(0)}%)`}>
-                  {revenue.byMethod.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip formatter={(value: number) => [formatCedi(value), "Amount"]} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="space-y-4">
+              <ResponsiveContainer width="100%" height={180}>
+                <PieChart>
+                  <Pie data={paymentBreakdown} dataKey="amount" nameKey="status" cx="50%" cy="50%" outerRadius={70}
+                    label={({ status, percent }) => `${status} (${(percent * 100).toFixed(0)}%)`}>
+                    {paymentBreakdown.map((item, i) => {
+                      const colorMap: Record<string, string> = {
+                        completed: "#10B981",
+                        failed: "#EF4444",
+                        pending: "#F59E0B",
+                        refunded: "#8B5CF6",
+                      };
+                      return <Cell key={i} fill={colorMap[item.status] || COLORS[i % COLORS.length]} />;
+                    })}
+                  </Pie>
+                  <Tooltip formatter={(value: number, name: string) => [formatCedi(value), name]} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {paymentBreakdown.map(item => (
+                  <div key={item.status} className="flex items-center justify-between p-2 rounded-lg"
+                    style={{ background: "rgba(56,25,50,0.03)" }}>
+                    <span style={{ color: MUTED }}>{item.status}</span>
+                    <span className="font-medium" style={{ color: PLUM }}>{formatCedi(item.amount)} ({item.count})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </ChartCard>
       </div>
 
-      {/* Overdue Alerts */}
-      <ChartCard title="Overdue Alerts" subtitle={overdue.length > 0 ? `${overdue.length} overdue invoice(s)` : "No overdue invoices"}>
-        {overdue.length === 0 ? (
-          <EmptyState icon={Check} title="All caught up" desc="No overdue invoices" />
+      {/* ── Failed Payments Table ── */}
+      <ChartCard title="Failed Payments" subtitle={failedCount > 0 ? `${failedCount} failed transaction(s)` : "No failures"}
+        action={failedCount > 0 ? <StatusBadge status="failed" /> : <StatusBadge status="completed" />}>
+        {failedCount === 0 ? (
+          <EmptyState icon={Check} title="All payments successful" desc="No failed payment transactions" />
         ) : (
-          <div className="space-y-2 max-h-80 overflow-y-auto">
-            {overdue.slice(0, 20).map(inv => (
-              <div key={inv.id} className="p-3 rounded-xl text-sm" style={{ background: "#FEF2F2", border: "1px solid #FECACA" }}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium" style={{ color: "#991B1B" }}>{inv.student?.name || "Unknown"}</span>
-                  <span className="text-xs font-medium" style={{ color: "#EF4444" }}>{inv.daysOverdue}d overdue</span>
-                </div>
-                <p className="text-xs" style={{ color: "#B45309" }}>
-                  {inv.invoice_number} · {formatCedi(inv.balance)} balance · Due {new Date(inv.due_date).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
+          <div className="max-h-64 overflow-y-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Invoice</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Reference</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {failedP.map(p => (
+                  <TableRow key={p.id}>
+                    <TableCell style={{ color: MUTED, fontSize: 12 }}>{new Date(p.payment_date).toLocaleDateString()}</TableCell>
+                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{p.student?.name || "—"}</TableCell>
+                    <TableCell style={{ color: MUTED, fontSize: 12 }}>{p.invoice?.invoice_number || "—"}</TableCell>
+                    <TableCell style={{ fontSize: 13 }}>{formatCedi(p.amount)}</TableCell>
+                    <TableCell><Badge variant="outline" className="bg-red-50 text-red-700 text-xs">{p.payment_method}</Badge></TableCell>
+                    <TableCell style={{ color: MUTED, fontSize: 11 }}>{p.reference || "—"}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </ChartCard>
+
+      {/* ── Fee Defaulters Table ── */}
+      <ChartCard title="Fee Defaulters" subtitle={defaulterCount > 0 ? `${defaulterCount} student(s) overdue by ${defThreshold}+ days` : "All students current"}
+        action={defaulterCount > 0 ? <StatusBadge status="overdue" /> : <StatusBadge status="paid" />}>
+        {defaulterCount === 0 ? (
+          <EmptyState icon={Users} title="No defaulters" desc={`No students overdue by ${defThreshold}+ days`} />
+        ) : (
+          <div className="max-h-80 overflow-y-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Total Balance</TableHead>
+                  <TableHead>Invoices</TableHead>
+                  <TableHead>Days Overdue</TableHead>
+                  <TableHead>Oldest Due</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {defaulters.slice(0, 25).map(d => (
+                  <TableRow key={d.student?.admission_no || Math.random()}>
+                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{d.student?.name || "Unknown"}</TableCell>
+                    <TableCell style={{ color: MUTED, fontSize: 12 }}>{d.class?.name || "—"}</TableCell>
+                    <TableCell className="font-medium" style={{ color: "#EF4444" }}>{formatCedi(d.totalBalance)}</TableCell>
+                    <TableCell style={{ color: MUTED, fontSize: 12 }}>{d.invoiceCount}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={d.daysSinceFirstDue > 60 ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}>
+                        {d.daysSinceFirstDue}d
+                      </Badge>
+                    </TableCell>
+                    <TableCell style={{ color: MUTED, fontSize: 12 }}>
+                      {new Date(d.invoices[0]?.due_date || "").toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         )}
       </ChartCard>

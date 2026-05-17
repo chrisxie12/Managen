@@ -395,6 +395,77 @@ router.get('/finance/overdue-alerts', protect, requirePermission('fees.view'), a
     } catch (err) { return res.status(500).json({ error: 'Error fetching overdue alerts.' }); }
 });
 
+// Monthly Revenue (MRR-style)
+router.get('/finance/monthly', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const months = Math.min(36, Math.max(1, Number.parseInt(req.query.months) || 12));
+        const data = await schoolService.getMonthlyRevenue(req.tenant.id, months);
+        return res.json({ data: { monthly: data } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching monthly revenue.' }); }
+});
+
+// Failed Payments
+router.get('/finance/failed-payments', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const result = await schoolService.getFailedPayments(req.tenant.id, req.query);
+        return res.json({ data: result });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching failed payments.' }); }
+});
+
+// Fee Defaulters
+router.get('/finance/defaulters', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const threshold = Math.max(1, Number.parseInt(req.query.threshold) || 30);
+        const minBalance = Math.max(0, Number.parseInt(req.query.min_balance) || 0);
+        const defaulters = await schoolService.getDefaulters(req.tenant.id, threshold, minBalance);
+        return res.json({ data: { defaulters } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching defaulters.' }); }
+});
+
+// Payment Status Breakdown
+router.get('/finance/payment-status-breakdown', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const breakdown = await schoolService.getPaymentStatusBreakdown(req.tenant.id);
+        return res.json({ data: { breakdown } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching payment breakdown.' }); }
+});
+
+// Finance Data Export
+router.get('/finance/export', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const { type, date_from, date_to } = req.query;
+        if (!type || !['invoices', 'payments'].includes(type)) {
+            return res.status(400).json({ error: 'type must be "invoices" or "payments"' });
+        }
+        const rows = await schoolService.exportFinanceData(req.tenant.id, type, date_from, date_to);
+        const filename = `${type}_${new Date().toISOString().split('T')[0]}.csv`;
+
+        if (rows.length === 0) {
+            const headers = type === 'invoices'
+                ? 'Invoice #,Student,Class,Term,Issue Date,Due Date,Status,Total (GHS),Paid (GHS),Balance (GHS),Items\n'
+                : 'Date,Student,Invoice,Amount (GHS),Method,Reference,Transaction ID,Status,Notes\n';
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+            return res.send(headers);
+        }
+
+        const headers = Object.keys(rows[0]);
+        const csvLines = rows.map(row =>
+            headers.map(h => {
+                const val = String(row[h] ?? '');
+                return val.includes(',') || val.includes('"') || val.includes('\n')
+                    ? `"${val.replace(/"/g, '""')}"`
+                    : val;
+            }).join(',')
+        );
+        const csv = [headers.join(','), ...csvLines].join('\n');
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        return res.send(csv);
+    } catch (err) { return res.status(500).json({ error: 'Error exporting finance data.' }); }
+});
+
 // ─── Analytics Routes ───────────────────────────────────────────
 
 // GET /api/school/analytics/attendance-trend
