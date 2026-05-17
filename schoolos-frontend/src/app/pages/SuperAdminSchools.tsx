@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Search, Building2, CheckCircle, XCircle, ChevronLeft, ChevronRight, Eye, AlertTriangle } from "lucide-react";
+import { Search, Building2, CheckCircle, XCircle, ChevronLeft, ChevronRight, Eye, AlertTriangle, Trash2, Key, Copy, RefreshCw } from "lucide-react";
 import { api } from "../services/api";
 import { Badge, LoadingSkeleton, EmptyState, ErrorState, planColors, CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED, ACCENT_C as ACCENT } from "./superadmin/Components";
 
@@ -25,6 +25,9 @@ export function SuperAdminSchools() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<SchoolDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [credentials, setCredentials] = useState<{ adminEmail: string; adminName: string | null; tempPassword: string | null } | null>(null);
+  const [credentialsLoading, setCredentialsLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchSchools = useCallback(async () => {
     setLoading(true);
@@ -50,6 +53,47 @@ export function SuperAdminSchools() {
       if (res.data) setDetail(res.data.school);
     } catch { setDetail(null); }
     finally { setDetailLoading(false); }
+  };
+
+  const fetchCredentials = async (id: string, generate = false) => {
+    setCredentialsLoading(true);
+    try {
+      const params = generate ? "?generate=true" : "";
+      const res = await api.get<{ schoolName: string; adminEmail: string; adminName: string | null; tempPassword: string | null }>(`/api/superadmin/schools/${id}/credentials${params}`);
+      if (res.data) setCredentials(res.data);
+    } catch {
+      setCredentials(null);
+    } finally {
+      setCredentialsLoading(false);
+    }
+  };
+
+  const handleViewCredentials = (id: string) => {
+    if (credentials && !credentials.tempPassword) {
+      setCredentials(null);
+    } else {
+      fetchCredentials(id);
+    }
+  };
+
+  const handleGeneratePassword = (id: string) => {
+    fetchCredentials(id, true);
+  };
+
+  const handleDeleteSchool = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to delete "${name}"?\n\nThis will permanently remove the school, all users, and all payment records. This action cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/api/superadmin/schools/${id}`);
+      setSelectedId(null);
+      setDetail(null);
+      setCredentials(null);
+      fetchSchools();
+    } catch (err: any) {
+      setError(err.message || "Failed to delete school");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const handleAction = async (id: string, action: "suspend" | "reactivate") => {
@@ -183,11 +227,17 @@ export function SuperAdminSchools() {
                   <p style={{ color: MUTED, fontSize: "0.82rem" }}>{detail.email} · {detail.slug}.getschoolos.me</p>
                 </div>
                 <div className="flex gap-2">
+                  <button onClick={() => handleViewCredentials(detail.id)} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(255,107,53,0.15)", color: ACCENT }}>
+                    <Key size={12} /> Credentials
+                  </button>
                   {detail.status === "active" ? (
                     <button onClick={() => handleAction(detail.id, "suspend")} className="px-4 py-2 rounded-full text-xs" style={{ background: "rgba(239,68,68,0.15)", color: "#EF4444" }}>Suspend</button>
                   ) : (
-                    <button onClick={() => handleAction(detail.id, "reactivate")} className="px-4 py-2 rounded-full text-xs" style={{ background: "rgba(16,185,129,0.15)", color: "#10B981" }}>Reactivate</button>
+                    <button onClick={() => handleAction(detail.id, "reactivate")} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(16,185,129,0.15)", color: "#10B981" }}>Reactivate</button>
                   )}
+                  <button onClick={() => handleDeleteSchool(detail.id, detail.schoolName)} disabled={deleting} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(239,68,68,0.15)", color: "#EF4444", opacity: deleting ? 0.5 : 1 }}>
+                    {deleting ? "Deleting..." : <><Trash2 size={12} /> Delete</>}
+                  </button>
                 </div>
               </div>
               <div className="grid lg:grid-cols-2 gap-6">
@@ -205,6 +255,42 @@ export function SuperAdminSchools() {
                       <span style={{ color: (f as any).color || TEXT, fontSize: "0.82rem", fontWeight: 500 }}>{f.value}</span>
                     </div>
                   ))}
+                  {credentials && (
+                    <div className="p-3 rounded-xl" style={{ background: "rgba(255,107,53,0.08)", border: `1px solid rgba(255,107,53,0.2)` }}>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 style={{ fontWeight: 600, fontSize: "0.85rem", color: ACCENT }}>Admin Credentials</h4>
+                        <button onClick={() => handleGeneratePassword(detail.id)} disabled={credentialsLoading} className="text-xs flex items-center gap-1 px-2 py-1 rounded-lg" style={{ color: ACCENT, background: "rgba(255,107,53,0.12)" }}>
+                          <RefreshCw size={11} /> {credentials.tempPassword ? "Regenerate" : "Generate Password"}
+                        </button>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span style={{ color: MUTED, fontSize: "0.78rem" }}>Email</span>
+                          <span style={{ color: TEXT, fontSize: "0.82rem" }}>{credentials.adminEmail}</span>
+                        </div>
+                        {credentials.adminName && (
+                          <div className="flex items-center justify-between">
+                            <span style={{ color: MUTED, fontSize: "0.78rem" }}>Admin</span>
+                            <span style={{ color: TEXT, fontSize: "0.82rem" }}>{credentials.adminName}</span>
+                          </div>
+                        )}
+                        {credentials.tempPassword && (
+                          <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,107,53,0.15)" }}>
+                            <span style={{ color: "#10B981", fontSize: "0.78rem", fontWeight: 600 }}>Temporary Password</span>
+                            <div className="flex items-center gap-2">
+                              <span style={{ fontFamily: "'JetBrains Mono', monospace", color: TEXT, fontSize: "0.82rem", fontWeight: 600, letterSpacing: "1px" }}>{credentials.tempPassword}</span>
+                              <button onClick={() => { navigator.clipboard.writeText(credentials.tempPassword!); }} className="p-1 rounded" style={{ color: MUTED }}>
+                                <Copy size={12} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <p style={{ color: MUTED, fontSize: "0.7rem", marginTop: "0.5rem" }}>
+                        Share credentials securely with the school admin. They can change their password after signing in.
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h4 style={{ fontWeight: 600, fontSize: "0.9rem", color: TEXT, marginBottom: "0.75rem" }}>Payments ({detail.payments?.length || 0})</h4>

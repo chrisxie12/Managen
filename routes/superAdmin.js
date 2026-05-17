@@ -670,6 +670,95 @@ router.put('/schools/:id/reactivate', superAdminAuth, async (req, res) => {
     }
 });
 
+// ─── GET /api/superadmin/schools/:id/credentials ─────────────
+router.get('/schools/:id/credentials', superAdminAuth, async (req, res) => {
+    try {
+        const { generate } = req.query;
+
+        const { data: school, error: schoolError } = await supabase
+            .from('schools')
+            .select('id, name, email')
+            .eq('id', req.params.id)
+            .maybeSingle();
+
+        if (schoolError) return res.status(400).json({ error: schoolError.message });
+        if (!school) return res.status(404).json({ error: 'School not found.' });
+
+        const { data: adminUser, error: userError } = await supabase
+            .from('users')
+            .select('id, full_name, email')
+            .eq('school_id', req.params.id)
+            .eq('role', 'admin')
+            .maybeSingle();
+
+        if (userError) return res.status(400).json({ error: userError.message });
+
+        const result = {
+            schoolName: school.name,
+            adminEmail: adminUser?.email || school.email,
+            adminName: adminUser?.full_name || null,
+            tempPassword: null,
+        };
+
+        if (generate === 'true' && adminUser) {
+            const tempPassword = crypto.randomBytes(4).toString('hex').toUpperCase();
+            const passwordHash = await bcrypt.hash(tempPassword, 12);
+
+            const { error: updateError } = await supabase
+                .from('users')
+                .update({ password: passwordHash })
+                .eq('id', adminUser.id);
+
+            if (updateError) return res.status(400).json({ error: updateError.message });
+
+            result.tempPassword = tempPassword;
+        }
+
+        return res.json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching school credentials.' });
+    }
+});
+
+// ─── DELETE /api/superadmin/schools/:id ───────────────────────
+router.delete('/schools/:id', superAdminAuth, async (req, res) => {
+    try {
+        const { data: school, error: schoolError } = await supabase
+            .from('schools')
+            .select('id, name')
+            .eq('id', req.params.id)
+            .maybeSingle();
+
+        if (schoolError) return res.status(400).json({ error: schoolError.message });
+        if (!school) return res.status(404).json({ error: 'School not found.' });
+
+        const { error: paymentsError } = await supabase
+            .from('payments')
+            .delete()
+            .eq('school_id', req.params.id);
+
+        if (paymentsError) return res.status(400).json({ error: paymentsError.message });
+
+        const { error: usersError } = await supabase
+            .from('users')
+            .delete()
+            .eq('school_id', req.params.id);
+
+        if (usersError) return res.status(400).json({ error: usersError.message });
+
+        const { error: deleteError } = await supabase
+            .from('schools')
+            .delete()
+            .eq('id', req.params.id);
+
+        if (deleteError) return res.status(400).json({ error: deleteError.message });
+
+        return res.json({ data: { message: `School "${school.name}" deleted successfully.` } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting school.' });
+    }
+});
+
 // ─── GET /api/superadmin/payments ────────────────────────────
 router.get('/payments', superAdminAuth, async (req, res) => {
     try {

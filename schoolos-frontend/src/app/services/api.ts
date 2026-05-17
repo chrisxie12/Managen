@@ -87,4 +87,18 @@ export const api = {
     });
     return handleResponse<T>(response);
   },
+
+  delete: async <T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...defaultFetchInit,
+      ...options,
+      method: 'DELETE',
+      credentials: options.credentials ?? defaultFetchInit.credentials,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+    return handleResponse<T>(response);
+  },
 };
