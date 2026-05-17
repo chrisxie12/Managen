@@ -152,4 +152,5 @@ export const pagePermissions: Record<string, string[]> = {
   "/dashboard/communication": [Permissions.Messages.view],
   "/dashboard/users": [Permissions.Users.view],
   "/dashboard/roles": [Permissions.Roles.view],
+  "/dashboard/attendance": [Permissions.Attendance.view],
 };

@@ -466,6 +466,252 @@ router.get('/notifications/log', protect, async (req, res) => {
     }
 });
 
+// ─── Attendance Routes ────────────────────────────────────────
+
+// GET /api/school/attendance - list attendance records
+router.get('/attendance', protect, requirePermission('attendance.view'), async (req, res) => {
+    try {
+        const records = await schoolService.getAttendanceRecords(req.tenant.id, req.query);
+        return res.json({ data: { records } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching attendance records.' });
+    }
+});
+
+// GET /api/school/attendance/stats/range - attendance stats for date range
+router.get('/attendance/stats/range', protect, async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        if (!start || !end) return res.status(400).json({ error: 'start and end query params required.' });
+        const stats = await schoolService.getAttendanceStats(req.tenant.id, start, end);
+        return res.json({ data: { stats } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching attendance stats.' });
+    }
+});
+
+// GET /api/school/attendance/student/:studentId - per-student history
+router.get('/attendance/student/:studentId', protect, async (req, res) => {
+    try {
+        const records = await schoolService.getAttendanceRecords(req.tenant.id, { student_id: req.params.studentId });
+        return res.json({ data: { records } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching student attendance.' });
+    }
+});
+
+// ─── Subjects ─────────────────────────────────────────────────
+router.get('/subjects', protect, requirePermission('subjects.view'), async (req, res) => {
+    try {
+        const subjects = await schoolService.getSubjects(req.tenant.id);
+        return res.json({ data: { subjects } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching subjects.' });
+    }
+});
+
+const subjectSchema = {
+    body: z.object({
+        name: z.string().min(1, 'Name is required'),
+        code: z.string().optional(),
+        is_core: z.boolean().optional(),
+    })
+};
+router.post('/subjects', protect, requirePermission('subjects.create', 'subjects.edit'), validate(subjectSchema), async (req, res) => {
+    try {
+        const subject = await schoolService.createSubject(req.tenant.id, req.body);
+        return res.status(201).json({ data: { subject } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating subject.' });
+    }
+});
+
+router.put('/subjects/:id', protect, requirePermission('subjects.edit'), validate(subjectSchema), async (req, res) => {
+    try {
+        const subject = await schoolService.updateSubject(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { subject } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating subject.' });
+    }
+});
+
+router.delete('/subjects/:id', protect, requirePermission('subjects.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteSubject(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Subject deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting subject.' });
+    }
+});
+
+// ─── Academic Terms ───────────────────────────────────────────
+router.get('/terms', protect, async (req, res) => {
+    try {
+        const terms = await schoolService.getTerms(req.tenant.id);
+        return res.json({ data: { terms } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching terms.' });
+    }
+});
+
+const termSchema = {
+    body: z.object({
+        name: z.string().min(1, 'Name is required'),
+        start_date: z.string().min(1),
+        end_date: z.string().min(1),
+        is_current: z.boolean().optional(),
+    })
+};
+router.post('/terms', protect, requirePermission('settings.edit'), validate(termSchema), async (req, res) => {
+    try {
+        if (req.body.is_current) {
+            await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', req.tenant.id);
+        }
+        const term = await schoolService.createTerm(req.tenant.id, req.body);
+        return res.status(201).json({ data: { term } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating term.' });
+    }
+});
+
+router.put('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        if (req.body.is_current) {
+            await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', req.tenant.id);
+        }
+        const term = await schoolService.updateTerm(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { term } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating term.' });
+    }
+});
+
+router.delete('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.deleteTerm(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Term deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting term.' });
+    }
+});
+
+// ─── Interventions ────────────────────────────────────────────
+router.get('/interventions', protect, async (req, res) => {
+    try {
+        const interventions = await schoolService.getInterventions(req.tenant.id, req.query.student_id);
+        return res.json({ data: { interventions } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching interventions.' });
+    }
+});
+
+const interventionSchema = {
+    body: z.object({
+        student_id: z.string().uuid(),
+        type: z.enum(['attendance', 'performance', 'behavior']),
+        severity: z.enum(['low', 'medium', 'high', 'critical']),
+        notes: z.string().optional(),
+        assigned_to: z.string().uuid().optional(),
+    })
+};
+router.post('/interventions', protect, requirePermission('students.edit'), validate(interventionSchema), async (req, res) => {
+    try {
+        const intervention = await schoolService.createIntervention(req.tenant.id, {
+            ...req.body,
+            created_by: req.user.userId,
+            status: 'open',
+        });
+        return res.status(201).json({ data: { intervention } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating intervention.' });
+    }
+});
+
+router.put('/interventions/:id', protect, requirePermission('students.edit'), async (req, res) => {
+    try {
+        const payload = { ...req.body };
+        if (payload.status === 'resolved') payload.resolved_at = new Date().toISOString();
+        const intervention = await schoolService.updateIntervention(req.tenant.id, req.params.id, payload);
+        return res.json({ data: { intervention } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating intervention.' });
+    }
+});
+
+// ─── Class Update/Delete ──────────────────────────────────────
+router.put('/classes/:id', protect, requirePermission('classes.edit'), async (req, res) => {
+    try {
+        const cls = await schoolService.updateClass(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { class: cls } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating class.' });
+    }
+});
+
+router.delete('/classes/:id', protect, requirePermission('classes.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteClass(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Class deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting class.' });
+    }
+});
+
+// ─── Timetable Update/Delete ──────────────────────────────────
+router.put('/timetable/:id', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const entry = await schoolService.updateTimetableEntry(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { entry } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating timetable entry.' });
+    }
+});
+
+router.delete('/timetable/:id', protect, requirePermission('timetable.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteTimetableEntry(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Timetable entry deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting timetable entry.' });
+    }
+});
+
+// ─── Exam Update ──────────────────────────────────────────────
+const updateExamSchema = {
+    body: z.object({
+        name: z.string().min(1).optional(),
+        subject: z.string().min(1).optional(),
+        class_name: z.string().min(1).optional(),
+        date: z.string().min(1).optional(),
+        total_marks: z.number().positive().optional(),
+    })
+};
+router.put('/exams/:id', protect, requirePermission('grades.edit'), validate(updateExamSchema), async (req, res) => {
+    try {
+        const { data: exam, error } = await supabase.from('exams')
+            .update(req.body)
+            .eq('id', req.params.id)
+            .eq('tenant_id', req.tenant.id)
+            .select()
+            .single();
+        if (error) return res.status(500).json({ error: 'Error updating exam.' });
+        return res.json({ data: { exam } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating exam.' });
+    }
+});
+
+// ─── Single Student ───────────────────────────────────────────
+router.get('/students/:id', protect, async (req, res) => {
+    try {
+        const student = await schoolService.getStudent(req.tenant.id, req.params.id);
+        if (!student) return res.status(404).json({ error: 'Student not found.' });
+        return res.json({ data: { student } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching student.' });
+    }
+});
+
 module.exports = router;
 module.exports.protect = protect;
 

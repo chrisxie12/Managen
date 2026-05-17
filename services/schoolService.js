@@ -295,6 +295,194 @@ class SchoolService {
         if (error) throw error;
         return data;
     }
+
+    // ─── Subjects ──────────────────────────────────────────────────
+    async getSubjects(schoolId) {
+        const { data, error } = await supabase.from('subjects')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('name');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createSubject(schoolId, payload) {
+        const { data, error } = await supabase.from('subjects')
+            .insert({ id: crypto.randomUUID(), ...payload, school_id: schoolId })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateSubject(schoolId, id, payload) {
+        const { data, error } = await supabase.from('subjects')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteSubject(schoolId, id) {
+        const { error } = await supabase.from('subjects')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Terms ─────────────────────────────────────────────────
+    async getTerms(schoolId) {
+        const { data, error } = await supabase.from('academic_terms')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('start_date', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createTerm(schoolId, payload) {
+        const { data, error } = await supabase.from('academic_terms')
+            .insert({ id: crypto.randomUUID(), ...payload, school_id: schoolId })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateTerm(schoolId, id, payload) {
+        const { data, error } = await supabase.from('academic_terms')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteTerm(schoolId, id) {
+        const { error } = await supabase.from('academic_terms')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Interventions ─────────────────────────────────────────────
+    async getInterventions(schoolId, studentId) {
+        let query = supabase.from('interventions')
+            .select('*, student:students(name, class_name), assigned:users!assigned_to(full_name), creator:users!created_by(full_name)')
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false });
+        if (studentId) query = query.eq('student_id', studentId);
+        const { data, error } = await query;
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createIntervention(schoolId, payload) {
+        const { data, error } = await supabase.from('interventions')
+            .insert({ id: crypto.randomUUID(), ...payload, school_id: schoolId })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateIntervention(schoolId, id, payload) {
+        const { data, error } = await supabase.from('interventions')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    // ─── Attendance Extended ───────────────────────────────────────
+    async getAttendanceRecords(schoolId, filters = {}) {
+        let query = supabase.from('attendance')
+            .select('*, student:students(name, class_name)')
+            .eq('tenant_id', schoolId)
+            .order('date', { ascending: false })
+            .limit(200);
+
+        if (filters.date) query = query.eq('date', filters.date);
+        if (filters.class_name) query = query.eq('class_name', filters.class_name);
+        if (filters.student_id) query = query.eq('student_id', filters.student_id);
+        if (filters.status) query = query.eq('status', filters.status);
+
+        const { data, error } = await query;
+        if (error) throw error;
+        return data || [];
+    }
+
+    async getAttendanceStats(schoolId, startDate, endDate) {
+        const { data, error } = await supabase.from('attendance')
+            .select('date, status, count')
+            .eq('tenant_id', schoolId)
+            .gte('date', startDate)
+            .lte('date', endDate);
+        if (error) throw error;
+        return data || [];
+    }
+
+    async updateClass(tenantId, id, payload) {
+        const { data, error } = await supabase.from('classes')
+            .update(payload)
+            .eq('id', id)
+            .eq('tenant_id', tenantId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteClass(tenantId, id) {
+        const { error } = await supabase.from('classes')
+            .delete()
+            .eq('id', id)
+            .eq('tenant_id', tenantId);
+        if (error) throw error;
+        return true;
+    }
+
+    async updateTimetableEntry(tenantId, id, payload) {
+        const { data, error } = await supabase.from('timetable')
+            .update(payload)
+            .eq('id', id)
+            .eq('tenant_id', tenantId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteTimetableEntry(tenantId, id) {
+        const { error } = await supabase.from('timetable')
+            .delete()
+            .eq('id', id)
+            .eq('tenant_id', tenantId);
+        if (error) throw error;
+        return true;
+    }
+
+    async getStudent(tenantId, id) {
+        const { data, error } = await supabase.from('students')
+            .select('*')
+            .eq('id', id)
+            .eq('tenant_id', tenantId)
+            .single();
+        if (error) throw error;
+        return data;
+    }
 }
 
 module.exports = new SchoolService();
