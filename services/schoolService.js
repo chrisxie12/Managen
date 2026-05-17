@@ -1048,6 +1048,442 @@ class SchoolService {
             bottom: list.slice(-limit).reverse(),
         };
     }
+
+    // ─── Fee Structures ─────────────────────────────────────────
+    async getFeeStructures(schoolId) {
+        const { data, error } = await supabase.from('fee_structures')
+            .select('*, class:classes(name), term:academic_terms(name)')
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createFeeStructure(schoolId, payload) {
+        const { data, error } = await supabase.from('fee_structures')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateFeeStructure(schoolId, id, payload) {
+        const { data, error } = await supabase.from('fee_structures')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteFeeStructure(schoolId, id) {
+        const { error } = await supabase.from('fee_structures')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Invoices ───────────────────────────────────────────────
+    async getInvoices(schoolId, filters = {}) {
+        let query = supabase.from('invoices')
+            .select('*, student:students(name, admission_no, class_name), class:classes(name), term:academic_terms(name)', { count: 'exact' })
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false });
+
+        if (filters.status) query = query.eq('status', filters.status);
+        if (filters.student_id) query = query.eq('student_id', filters.student_id);
+        if (filters.term_id) query = query.eq('term_id', filters.term_id);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
+        if (error) throw error;
+        return { invoices: data || [], total: count || 0, page, limit };
+    }
+
+    async getInvoice(schoolId, id) {
+        const { data, error } = await supabase.from('invoices')
+            .select('*, student:students(name, admission_no, class_name, parent_name, parent_phone, parent_email), class:classes(name), term:academic_terms(name), session:academic_sessions(name), items:invoice_items(*, fee_structure:fee_structures(name, category))')
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async generateInvoice(schoolId, payload) {
+        const { student_id, class_id, term_id, session_id, due_date, notes } = payload;
+
+        const { data: student } = await supabase.from('students')
+            .select('name, class_name')
+            .eq('id', student_id)
+            .eq('tenant_id', schoolId)
+            .single();
+
+        const { count } = await supabase.from('invoices')
+            .select('id', { count: 'exact', head: true })
+            .eq('school_id', schoolId);
+        const seq = String((count || 0) + 1).padStart(5, '0');
+        const year = new Date().getFullYear();
+        const invoiceNumber = `INV-${year}-${seq}`;
+
+        let feeQuery = supabase.from('fee_structures')
+            .select('id, name, category, amount, is_optional, class_id, term_id')
+            .eq('school_id', schoolId)
+            .eq('is_active', true);
+
+        const { data: feeStructures, error: fsErr } = await feeQuery;
+        if (fsErr) throw fsErr;
+
+        const applicable = (feeStructures || []).filter(f =>
+            (!f.class_id || f.class_id === class_id) &&
+            (!f.term_id || f.term_id === term_id)
+        );
+
+        if (applicable.length === 0) {
+            const err = new Error('No active fee structures found for this class and term.');
+            err.statusCode = 400;
+            throw err;
+        }
+
+        const totalAmount = applicable.reduce((sum, f) => sum + Number(f.amount), 0);
+
+        const { data: invoice, error: invErr } = await supabase.from('invoices')
+            .insert({
+                id: crypto.randomUUID(),
+                school_id: schoolId,
+                student_id,
+                class_id,
+                term_id,
+                session_id: session_id || null,
+                invoice_number: invoiceNumber,
+                issue_date: new Date().toISOString().split('T')[0],
+                due_date,
+                status: 'issued',
+                total_amount: totalAmount,
+                paid_amount: 0,
+                notes: notes || null,
+            })
+            .select()
+            .single();
+        if (invErr) throw invErr;
+
+        const items = applicable.map(f => ({
+            id: crypto.randomUUID(),
+            invoice_id: invoice.id,
+            fee_structure_id: f.id,
+            description: f.name,
+            amount: Number(f.amount),
+            discount_percent: 0,
+            discount_amount: 0,
+            waived: false,
+        }));
+        const { error: itemsErr } = await supabase.from('invoice_items')
+            .insert(items);
+        if (itemsErr) throw itemsErr;
+
+        return this.getInvoice(schoolId, invoice.id);
+    }
+
+    async updateInvoiceStatus(schoolId, id, status) {
+        const { data, error } = await supabase.from('invoices')
+            .update({ status })
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    // ─── Payments ───────────────────────────────────────────────
+    async getPayments(schoolId, filters = {}) {
+        let query = supabase.from('payments')
+            .select('*, student:students(name, admission_no), invoice:invoices(invoice_number), receiver:users!received_by(name)', { count: 'exact' })
+            .eq('school_id', schoolId)
+            .order('payment_date', { ascending: false });
+
+        if (filters.invoice_id) query = query.eq('invoice_id', filters.invoice_id);
+        if (filters.student_id) query = query.eq('student_id', filters.student_id);
+        if (filters.status) query = query.eq('status', filters.status);
+        if (filters.payment_method) query = query.eq('payment_method', filters.payment_method);
+        if (filters.start_date) query = query.gte('payment_date', filters.start_date);
+        if (filters.end_date) query = query.lte('payment_date', filters.end_date);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
+        if (error) throw error;
+        return { payments: data || [], total: count || 0, page, limit };
+    }
+
+    async recordPayment(schoolId, payload, userId) {
+        const { invoice_id, amount, payment_method, reference, transaction_id, payment_date, notes } = payload;
+
+        const { data: invoice, error: invErr } = await supabase.from('invoices')
+            .select('id, student_id, total_amount, paid_amount, status')
+            .eq('id', invoice_id)
+            .eq('school_id', schoolId)
+            .single();
+        if (invErr) {
+            const err = new Error('Invoice not found.');
+            err.statusCode = 404;
+            throw err;
+        }
+
+        const newPaid = Number(invoice.paid_amount) + Number(amount);
+        const newStatus = newPaid >= Number(invoice.total_amount) ? 'paid' : 'issued';
+
+        const { data: payment, error: payErr } = await supabase.from('payments')
+            .insert({
+                id: crypto.randomUUID(),
+                school_id: schoolId,
+                invoice_id,
+                student_id: invoice.student_id,
+                amount: Number(amount),
+                payment_method,
+                reference: reference || null,
+                transaction_id: transaction_id || null,
+                payment_date: payment_date || new Date().toISOString().split('T')[0],
+                status: 'completed',
+                notes: notes || null,
+                received_by: userId || null,
+            })
+            .select()
+            .single();
+        if (payErr) throw payErr;
+
+        const { error: updErr } = await supabase.from('invoices')
+            .update({ paid_amount: newPaid, status: newStatus })
+            .eq('id', invoice_id)
+            .eq('school_id', schoolId);
+        if (updErr) throw updErr;
+
+        return payment;
+    }
+
+    async getPaymentsByInvoice(schoolId, invoiceId) {
+        const { data, error } = await supabase.from('payments')
+            .select('*, student:students(name, admission_no), receiver:users!received_by(name)')
+            .eq('school_id', schoolId)
+            .eq('invoice_id', invoiceId)
+            .order('payment_date', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    }
+
+    // ─── Waivers ────────────────────────────────────────────────
+    async getWaivers(schoolId, filters = {}) {
+        let query = supabase.from('waivers')
+            .select('*, student:students(name, admission_no, class_name), fee_structure:fee_structures(name), invoice:invoices(invoice_number), approver:users!approved_by(name)')
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false });
+
+        if (filters.status) query = query.eq('status', filters.status);
+        if (filters.student_id) query = query.eq('student_id', filters.student_id);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(200, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, count, error } = await query;
+        if (error) throw error;
+        return { waivers: data || [], total: count || 0, page, limit };
+    }
+
+    async createWaiver(schoolId, payload) {
+        const { data, error } = await supabase.from('waivers')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async approveWaiver(schoolId, id, userId) {
+        const { data, error } = await supabase.from('waivers')
+            .update({ status: 'approved', approved_by: userId })
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async rejectWaiver(schoolId, id, userId) {
+        const { data, error } = await supabase.from('waivers')
+            .update({ status: 'rejected', approved_by: userId })
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    // ─── Discounts ──────────────────────────────────────────────
+    async getDiscounts(schoolId) {
+        const { data, error } = await supabase.from('discounts')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createDiscount(schoolId, payload) {
+        const { data, error } = await supabase.from('discounts')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateDiscount(schoolId, id, payload) {
+        const { data, error } = await supabase.from('discounts')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteDiscount(schoolId, id) {
+        const { error } = await supabase.from('discounts')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Finance Analytics ──────────────────────────────────────
+    async getFinanceSummary(schoolId) {
+        const now = new Date().toISOString().split('T')[0];
+
+        const [invRes, payRes] = await Promise.all([
+            supabase.from('invoices')
+                .select('status, total_amount, paid_amount, due_date')
+                .eq('school_id', schoolId),
+            supabase.from('payments')
+                .select('amount, status, payment_method')
+                .eq('school_id', schoolId),
+        ]);
+
+        const invoices = invRes.data || [];
+        const payments = payRes.data || [];
+
+        const totalBilled = invoices.reduce((s, i) => s + Number(i.total_amount), 0);
+        const totalPaid = invoices.reduce((s, i) => s + Number(i.paid_amount), 0);
+        const totalOutstanding = totalBilled - totalPaid;
+        const overdueInvoices = invoices.filter(i =>
+            i.status !== 'paid' && i.status !== 'cancelled' &&
+            new Date(i.due_date) < new Date(now)
+        );
+        const overdueAmount = overdueInvoices.reduce((s, i) => s + (Number(i.total_amount) - Number(i.paid_amount)), 0);
+        const completedPayments = payments.filter(p => p.status === 'completed');
+        const totalCollected = completedPayments.reduce((s, p) => s + Number(p.amount), 0);
+
+        return {
+            totalBilled,
+            totalPaid,
+            totalOutstanding,
+            overdueAmount,
+            totalCollected,
+            invoiceCount: invoices.length,
+            overdueCount: overdueInvoices.length,
+            paymentCount: completedPayments.length,
+        };
+    }
+
+    async getRevenueAnalytics(schoolId, startDate, endDate) {
+        const { data, error } = await supabase.from('payments')
+            .select('amount, payment_date, payment_method, status')
+            .eq('school_id', schoolId)
+            .eq('status', 'completed')
+            .gte('payment_date', startDate)
+            .lte('payment_date', endDate)
+            .order('payment_date', { ascending: true });
+        if (error) throw error;
+
+        const dailyMap = {};
+        const methodMap = {};
+        (data || []).forEach(p => {
+            const date = p.payment_date;
+            if (!dailyMap[date]) dailyMap[date] = { date, amount: 0, count: 0 };
+            dailyMap[date].amount += Number(p.amount);
+            dailyMap[date].count += 1;
+
+            const method = p.payment_method || 'other';
+            if (!methodMap[method]) methodMap[method] = 0;
+            methodMap[method] += Number(p.amount);
+        });
+
+        return {
+            daily: Object.values(dailyMap).sort((a, b) => a.date.localeCompare(b.date)),
+            byMethod: Object.entries(methodMap).map(([method, amount]) => ({ method, amount })),
+            total: data ? data.reduce((s, p) => s + Number(p.amount), 0) : 0,
+        };
+    }
+
+    async getOutstandingBalances(schoolId) {
+        const { data, error } = await supabase.from('invoices')
+            .select('student:students(name, admission_no, class_name), total_amount, paid_amount, due_date, status')
+            .eq('school_id', schoolId)
+            .not('status', 'in', '("paid","cancelled")')
+            .order('due_date', { ascending: true });
+        if (error) throw error;
+
+        const studentMap = {};
+        (data || []).forEach(inv => {
+            const sid = inv.student?.admission_no || 'unknown';
+            if (!studentMap[sid]) {
+                studentMap[sid] = {
+                    student: inv.student,
+                    totalBilled: 0,
+                    totalPaid: 0,
+                    balance: 0,
+                    invoiceCount: 0,
+                };
+            }
+            studentMap[sid].totalBilled += Number(inv.total_amount);
+            studentMap[sid].totalPaid += Number(inv.paid_amount);
+            studentMap[sid].balance += Number(inv.total_amount) - Number(inv.paid_amount);
+            studentMap[sid].invoiceCount += 1;
+        });
+
+        return Object.values(studentMap).sort((a, b) => b.balance - a.balance);
+    }
+
+    async getOverdueAlerts(schoolId) {
+        const now = new Date().toISOString().split('T')[0];
+        const { data, error } = await supabase.from('invoices')
+            .select('*, student:students(name, admission_no, class_name, parent_name, parent_phone), class:classes(name), term:academic_terms(name)')
+            .eq('school_id', schoolId)
+            .not('status', 'in', '("paid","cancelled")')
+            .lt('due_date', now)
+            .order('due_date', { ascending: true });
+        if (error) throw error;
+
+        return (data || []).map(inv => ({
+            ...inv,
+            daysOverdue: Math.floor((new Date(now).getTime() - new Date(inv.due_date).getTime()) / (1000 * 60 * 60 * 24)),
+            balance: Number(inv.total_amount) - Number(inv.paid_amount),
+        })).filter(inv => inv.balance > 0);
+    }
 }
 
 module.exports = new SchoolService();

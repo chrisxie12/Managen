@@ -216,6 +216,185 @@ router.post('/fees/reminders/send', protect, requireModule('fees'), requirePermi
     }
 });
 
+// ─── Finance Routes ──────────────────────────────────────────────
+
+// Fee Structures
+router.get('/fee-structures', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const fees = await schoolService.getFeeStructures(req.tenant.id);
+        return res.json({ data: { feeStructures: fees } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching fee structures.' }); }
+});
+
+router.post('/fee-structures', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const fee = await schoolService.createFeeStructure(req.tenant.id, req.body);
+        return res.status(201).json({ data: { feeStructure: fee } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating fee structure.' }); }
+});
+
+router.put('/fee-structures/:id', protect, requirePermission('fees.edit'), async (req, res) => {
+    try {
+        const fee = await schoolService.updateFeeStructure(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { feeStructure: fee } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating fee structure.' }); }
+});
+
+router.delete('/fee-structures/:id', protect, requirePermission('fees.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteFeeStructure(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Fee structure deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting fee structure.' }); }
+});
+
+// Invoices
+router.get('/invoices', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const result = await schoolService.getInvoices(req.tenant.id, req.query);
+        return res.json({ data: result });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching invoices.' }); }
+});
+
+router.post('/invoices/generate', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const invoice = await schoolService.generateInvoice(req.tenant.id, req.body);
+        return res.status(201).json({ data: { invoice } });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error generating invoice.' });
+    }
+});
+
+router.get('/invoices/:id', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const invoice = await schoolService.getInvoice(req.tenant.id, req.params.id);
+        if (!invoice) return res.status(404).json({ error: 'Invoice not found.' });
+        return res.json({ data: { invoice } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching invoice.' }); }
+});
+
+router.put('/invoices/:id/status', protect, requirePermission('fees.edit'), async (req, res) => {
+    try {
+        const invoice = await schoolService.updateInvoiceStatus(req.tenant.id, req.params.id, req.body.status);
+        return res.json({ data: { invoice } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating invoice status.' }); }
+});
+
+// Payments
+router.get('/payments', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const result = await schoolService.getPayments(req.tenant.id, req.query);
+        return res.json({ data: result });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching payments.' }); }
+});
+
+router.post('/payments', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const payment = await schoolService.recordPayment(req.tenant.id, req.body, req.user?.userId);
+        return res.status(201).json({ data: { payment } });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error recording payment.' });
+    }
+});
+
+router.get('/payments/invoice/:invoiceId', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const payments = await schoolService.getPaymentsByInvoice(req.tenant.id, req.params.invoiceId);
+        return res.json({ data: { payments } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching payments.' }); }
+});
+
+// Waivers
+router.get('/waivers', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const result = await schoolService.getWaivers(req.tenant.id, req.query);
+        return res.json({ data: result });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching waivers.' }); }
+});
+
+router.post('/waivers', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const waiver = await schoolService.createWaiver(req.tenant.id, req.body);
+        return res.status(201).json({ data: { waiver } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating waiver.' }); }
+});
+
+router.put('/waivers/:id/approve', protect, requirePermission('fees.edit'), async (req, res) => {
+    try {
+        const waiver = await schoolService.approveWaiver(req.tenant.id, req.params.id, req.user?.userId);
+        return res.json({ data: { waiver } });
+    } catch (err) { return res.status(500).json({ error: 'Error approving waiver.' }); }
+});
+
+router.put('/waivers/:id/reject', protect, requirePermission('fees.edit'), async (req, res) => {
+    try {
+        const waiver = await schoolService.rejectWaiver(req.tenant.id, req.params.id, req.user?.userId);
+        return res.json({ data: { waiver } });
+    } catch (err) { return res.status(500).json({ error: 'Error rejecting waiver.' }); }
+});
+
+// Discounts
+router.get('/discounts', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const discounts = await schoolService.getDiscounts(req.tenant.id);
+        return res.json({ data: { discounts } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching discounts.' }); }
+});
+
+router.post('/discounts', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const discount = await schoolService.createDiscount(req.tenant.id, req.body);
+        return res.status(201).json({ data: { discount } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating discount.' }); }
+});
+
+router.put('/discounts/:id', protect, requirePermission('fees.edit'), async (req, res) => {
+    try {
+        const discount = await schoolService.updateDiscount(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { discount } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating discount.' }); }
+});
+
+router.delete('/discounts/:id', protect, requirePermission('fees.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteDiscount(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Discount deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting discount.' }); }
+});
+
+// Finance Analytics
+router.get('/finance/summary', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const summary = await schoolService.getFinanceSummary(req.tenant.id);
+        return res.json({ data: summary });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching finance summary.' }); }
+});
+
+router.get('/finance/revenue', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const { start, end } = req.query;
+        const endDate = end || new Date().toISOString().split('T')[0];
+        const startDate = start || new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
+        const analytics = await schoolService.getRevenueAnalytics(req.tenant.id, startDate, endDate);
+        return res.json({ data: analytics });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching revenue analytics.' }); }
+});
+
+router.get('/finance/outstanding', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const balances = await schoolService.getOutstandingBalances(req.tenant.id);
+        return res.json({ data: { outstanding: balances } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching outstanding balances.' }); }
+});
+
+router.get('/finance/overdue-alerts', protect, requirePermission('fees.view'), async (req, res) => {
+    try {
+        const alerts = await schoolService.getOverdueAlerts(req.tenant.id);
+        return res.json({ data: { overdueAlerts: alerts } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching overdue alerts.' }); }
+});
+
 // ─── Analytics Routes ───────────────────────────────────────────
 
 // GET /api/school/analytics/attendance-trend
