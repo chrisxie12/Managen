@@ -1,16 +1,16 @@
-import { Navigate } from 'react-router';
-import { useAuth } from '../app/contexts/AuthContext';
+import { Navigate } from "react-router";
+import { useUser } from "@clerk/react";
+import { useAuth } from "../app/contexts/AuthContext";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { loading, user } = useAuth();
+  const { isLoaded, isSignedIn } = useUser();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (!isLoaded || loading) return <div>Loading...</div>;
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
+  if (!isSignedIn) return <Navigate to="/auth" replace />;
+
+  if (!user) return <div>Loading...</div>;
 
   return <>{children}</>;
 }

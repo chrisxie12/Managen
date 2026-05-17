@@ -3,10 +3,14 @@ const router   = express.Router();
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
 const crypto   = require('crypto');
+const supabase = require('../config/db');
 const authService = require('../services/authService');
 const { sendPasswordReset, sendEmailVerification } = require('../services/emailService');
+const { createClerkClient } = require('@clerk/backend');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
+
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 // ─── Helpers ──────────────────────────────────────────────────
 
@@ -193,6 +197,140 @@ router.post('/verify-email', async (req, res) => {
     } catch (err) {
         console.error('Verify email error:', err);
         return res.status(500).json({ error: 'Failed to verify email.' });
+    }
+});
+
+// ─── POST /api/auth/clerk-exchange ──────────────────────────
+router.post('/clerk-exchange', async (req, res) => {
+    try {
+        const { clerkToken } = req.body;
+        if (!clerkToken) {
+            return res.status(400).json({ error: 'No token provided' });
+        }
+
+        if (!process.env.CLERK_SECRET_KEY) {
+            return res.status(500).json({ error: 'Clerk not configured' });
+        }
+
+        const payload = await clerkClient.verifyToken(clerkToken);
+        if (!payload?.sub) {
+            return res.status(401).json({ error: 'Invalid Clerk token' });
+        }
+
+        let { data: userByClerk } = await supabase
+            .from('users')
+            .select('id, full_name, email, role, role_id, is_active, school_id')
+            .eq('clerk_user_id', payload.sub)
+            .maybeSingle();
+
+        let user = userByClerk;
+        if (!user) {
+            const email = payload.email || payload.email_address;
+            const { data: userByEmail } = await supabase
+                .from('users')
+                .select('id, full_name, email, role, role_id, is_active, school_id')
+                .eq('email', email)
+                .maybeSingle();
+
+            if (userByEmail) {
+                user = userByEmail;
+                await supabase
+                    .from('users')
+                    .update({ clerk_user_id: payload.sub })
+                    .eq('id', user.id);
+            }
+        }
+
+        if (!user) {
+            return res.status(404).json({ error: 'No school account found for this email. Please sign up first.' });
+        }
+
+        if (!user.is_active) {
+            return res.status(403).json({ error: 'Account is inactive. Contact support.' });
+        }
+
+        const { data: school } = await supabase
+            .from('schools')
+            .select('id, name, slug, plan, is_active')
+            .eq('id', user.school_id)
+            .single();
+
+        if (!school || !school.is_active) {
+            return res.status(403).json({ error: 'School account is inactive or not found.' });
+        }
+
+        const permissions = await authService.getUserPermissions(user.id);
+
+        const token = jwt.sign(
+            {
+                kind:        'school',
+                userId:      user.id,
+                roleId:      user.role_id,
+                role:        user.role,
+                tenantId:    school.id,
+                schoolId:    school.id,
+                subdomain:   school.slug,
+                slug:        school.slug,
+                permissions: permissions,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+        );
+
+        res.cookie('schoolos_token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: '/',
+        });
+
+        return res.json({ data: { message: 'Session established' } });
+    } catch (err) {
+        console.error('clerk-exchange error:', err);
+        return res.status(500).json({ error: 'Authentication failed' });
+    }
+});
+
+// ─── POST /api/auth/clerk-sync ─────────────────────────────
+router.post('/clerk-sync', async (req, res) => {
+    try {
+        const { clerkToken, email, subdomain } = req.body;
+        if (!clerkToken || !email) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        if (!process.env.CLERK_SECRET_KEY) {
+            return res.status(500).json({ error: 'Clerk not configured' });
+        }
+
+        const payload = await clerkClient.verifyToken(clerkToken);
+        if (!payload?.sub) {
+            return res.status(401).json({ error: 'Invalid Clerk token' });
+        }
+
+        const { data: school } = await supabase
+            .from('schools')
+            .select('id')
+            .eq('slug', subdomain)
+            .single();
+
+        if (!school) {
+            return res.status(404).json({ error: 'School not found' });
+        }
+
+        const { error } = await supabase
+            .from('users')
+            .update({ clerk_user_id: payload.sub })
+            .eq('email', email)
+            .eq('school_id', school.id);
+
+        if (error) throw error;
+
+        return res.json({ data: { message: 'Account linked successfully' } });
+    } catch (err) {
+        console.error('clerk-sync error:', err);
+        return res.status(500).json({ error: 'Sync failed' });
     }
 });
 

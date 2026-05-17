@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import {
   GraduationCap, Mail, Lock, Eye, EyeOff, User, Building2,
-  ArrowRight, CheckCircle2, ArrowLeft, ChevronDown,
-  BookOpen, Wallet, Users, ShieldCheck, HeartHandshake,
+  ArrowRight, CheckCircle2, ArrowLeft,
 } from "lucide-react";
 
 const PLUM = "#381932";
@@ -11,6 +10,7 @@ const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
+import { SignIn, useSignUp, useClerk } from "@clerk/react";
 import { api } from "../services/api";
 import { toast } from "sonner";
 
@@ -36,38 +36,15 @@ export function AuthPage() {
     email: "",
     password: "",
     subdomain: "",
-    role: "admin",
   });
 
-  const roleOptions = [
-    { value: "admin", label: "School Admin", desc: "Full school management", icon: ShieldCheck, color: "#7c3aed" },
-    { value: "teacher", label: "Teacher", desc: "Classes, grades & attendance", icon: BookOpen, color: "#d97706" },
-    { value: "student", label: "Student", desc: "Timetable, grades & portal", icon: GraduationCap, color: "#6366f1" },
-    { value: "parent", label: "Parent", desc: "Child progress & payments", icon: HeartHandshake, color: "#db2777" },
-    { value: "headmaster", label: "Headmaster", desc: "Academic oversight", icon: Users, color: "#0891b2" },
-    { value: "accountant", label: "Accountant", desc: "Finance & invoicing", icon: Wallet, color: "#059669" },
-  ];
+  const emailPlaceholder = "admin@yourschool.edu.gh";
 
-  const RoleIcon = ({ value, size = 20 }: { value: string; size?: number }) => {
-    const opt = roleOptions.find(r => r.value === value);
-    if (!opt) return null;
-    const Icon = opt.icon;
-    return <Icon size={size} color={opt.color} />;
-  };
-
-  const roleEmailPlaceholders: Record<string, string> = {
-    admin: "admin@yourschool.edu.gh",
-    teacher: "teacher@yourschool.edu.gh",
-    student: "student@yourschool.edu.gh",
-    parent: "parent@example.com",
-    headmaster: "headmaster@yourschool.edu.gh",
-    accountant: "accountant@yourschool.edu.gh",
-  };
-
-  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const resetToken = searchParams.get("token") || "";
   const [verified, setVerified] = useState(false);
+  const { signUp } = useSignUp();
+  const clerk = useClerk();
 
   useEffect(() => {
     const m = searchParams.get("mode");
@@ -92,7 +69,7 @@ export function AuthPage() {
     
     try {
       if (mode === "signup") {
-        const res = await api.post<{ slug?: string; subdomain?: string; message: string }>("/api/onboard/signup", {
+        const res = await api.post<{ slug?: string; subdomain?: string; message: string; tenantId?: string }>("/api/onboard/signup", {
           schoolName: form.school,
           email: form.email,
           adminName: form.name,
@@ -100,19 +77,31 @@ export function AuthPage() {
           plan: "trial",
         });
 
-        const slug = res.data?.subdomain || res.data?.slug;
-        if (slug) {
-          toast.success("School created! Redirecting to dashboard...");
-          await api.post(
-            "/api/auth/login",
-            { email: form.email, password: form.password, subdomain: slug }
-          );
-          navigate("/dashboard");
-        } else {
-          toast.success("School created! Please sign in.");
-          setMode("login");
-          setForm((f) => ({ ...f, subdomain: slug || "" }));
+        if (!res.data) throw new Error("Signup failed");
+
+        const result = await signUp.create({
+          emailAddress: form.email,
+          password: form.password,
+          firstName: form.name.split(" ")[0] || form.name,
+          lastName: form.name.split(" ").slice(1).join(" ") || undefined,
+        }) as any;
+
+        if (result?.createdSessionId) {
+          await clerk.setActive({ session: result.createdSessionId });
         }
+
+        const token = await clerk.session?.getToken();
+        if (token) {
+          await api.post("/api/auth/clerk-sync", {
+            clerkToken: token,
+            email: form.email,
+            subdomain: res.data!.slug,
+          });
+        }
+
+        toast.success("Account created! Please sign in.");
+        setMode("login");
+        setForm((f) => ({ ...f, subdomain: res.data!.slug || "" }));
       } else if (mode === "superadmin") {
         await api.post("/api/superadmin/login", {
           email: form.email,
@@ -490,77 +479,20 @@ export function AuthPage() {
             )}
 
             {mode === "login" && (
-              <>
-              <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
-                  School Subdomain
-                </label>
-                <div className="relative">
-                  <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
-                  <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
-                    onChange={(e) => setField("subdomain", e.target.value)} required
-                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.getschoolos.me</span>
-                </div>
+              <div className="flex justify-center py-8">
+                <SignIn
+                  appearance={{
+                    elements: {
+                      rootBox: "w-full",
+                      card: "shadow-none border-0 p-0",
+                      headerTitle: "hidden",
+                      headerSubtitle: "hidden",
+                    },
+                  }}
+                  {...{} as any}
+                  signUpUrl="/auth?mode=signup"
+                />
               </div>
-
-              <div className="relative">
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
-                  I am a
-                </label>
-                <button type="button" onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm text-left transition-all duration-200 active:scale-[0.98]"
-                  style={{ background: "white", border: `1.5px solid ${showRoleDropdown ? PLUM : "rgba(56,25,50,0.12)"}`, color: PLUM, boxShadow: showRoleDropdown ? `0 0 0 3px rgba(56,25,50,0.08)` : "none" }}>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${roleOptions.find(r => r.value === form.role)?.color}12` }}>
-                    <RoleIcon value={form.role} size={18} />
-                  </div>
-                  <div className="flex-1">
-                    <div style={{ fontWeight: 600, fontSize: "0.9rem" }}>{roleOptions.find(r => r.value === form.role)?.label}</div>
-                    <div style={{ color: MUTED, fontSize: "0.72rem" }}>{roleOptions.find(r => r.value === form.role)?.desc}</div>
-                  </div>
-                  <ChevronDown size={16} color={MUTED} style={{
-                    transform: showRoleDropdown ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                  }} />
-                </button>
-                {showRoleDropdown && (
-                  <div className="absolute z-20 w-full mt-1.5 rounded-2xl overflow-hidden animate-slide-up"
-                    style={{
-                      background: "white",
-                      border: "1px solid rgba(56,25,50,0.1)",
-                      boxShadow: "0 12px 40px rgba(56,25,50,0.15)",
-                    }}>
-                    {roleOptions.map((r, i) => {
-                      const Icon = r.icon;
-                      const isSelected = form.role === r.value;
-                      return (
-                        <button key={r.value} type="button"
-                          onClick={() => { setField("role", r.value); setShowRoleDropdown(false); }}
-                          className="w-full flex items-center gap-3 px-4 py-3.5 text-sm text-left transition-all duration-150"
-                          style={{
-                            color: isSelected ? PLUM : PLUM_LIGHT,
-                            background: isSelected ? `${r.color}08` : "transparent",
-                            borderBottom: i < roleOptions.length - 1 ? "1px solid rgba(56,25,50,0.04)" : "none",
-                          }}>
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform duration-150"
-                            style={{ background: `${r.color}12`, transform: isSelected ? "scale(1.1)" : "scale(1)" }}>
-                            <Icon size={17} color={r.color} />
-                          </div>
-                          <div className="flex-1">
-                            <div style={{ fontWeight: isSelected ? 600 : 500, fontSize: "0.88rem" }}>{r.label}</div>
-                            <div style={{ color: MUTED, fontSize: "0.72rem" }}>{r.desc}</div>
-                          </div>
-                          {isSelected && (
-                            <div className="w-2 h-2 rounded-full" style={{ background: PLUM }} />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-              </>
             )}
 
             {mode === "signup" && (
@@ -634,6 +566,7 @@ export function AuthPage() {
               </>
             )}
 
+            {mode !== "login" && (<>
             <div>
               <label
                 style={{
@@ -654,7 +587,7 @@ export function AuthPage() {
                 />
                 <input
                   type="email"
-                  placeholder={roleEmailPlaceholders[form.role] || "admin@yourschool.edu.gh"}
+                  placeholder={emailPlaceholder}
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   required
@@ -711,21 +644,10 @@ export function AuthPage() {
                   )}
                 </button>
               </div>
-              {mode === "login" && (
-                <div className="text-right mt-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setMode("forgot")}
-                    style={{ color: PLUM_LIGHT, fontSize: "0.8rem" }}
-                    className="hover:opacity-70"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-              )}
             </div>
+            </>)}
 
-            {mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
+            {mode !== "login" && mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
             <button
               type="submit"
               disabled={loading}
@@ -745,11 +667,11 @@ export function AuthPage() {
                   <span
                     className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"
                   />
-                  {mode === "login" ? "Signing in..." : mode === "superadmin" ? "Signing in..." : mode === "signup" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Resetting..."}
+                  {mode === "superadmin" ? "Signing in..." : mode === "signup" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Resetting..."}
                 </span>
               ) : (
                 <>
-                  {mode === "login" ? "Sign In" : mode === "superadmin" ? "Open Dashboard" : mode === "signup" ? "Create Free Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"}
+                  {mode === "superadmin" ? "Open Dashboard" : mode === "signup" ? "Create Free Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"}
                   <ArrowRight size={16} />
                 </>
               )}

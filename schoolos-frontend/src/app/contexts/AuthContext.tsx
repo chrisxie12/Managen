@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { useAuth as useClerkAuth, useUser } from "@clerk/react";
 import { api } from "../services/api";
 
 export interface User {
@@ -35,12 +36,21 @@ const AuthContext = createContext<AuthState>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { getToken, signOut } = useClerkAuth();
+  const { isLoaded, isSignedIn } = useUser();
   const [user, setUser] = useState<User | null>(null);
   const [school, setSchool] = useState<School | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const refresh = useCallback(async () => {
+  const exchangeToken = useCallback(async () => {
     try {
+      const clerkToken = await getToken();
+      if (!clerkToken) {
+        setUser(null);
+        setSchool(null);
+        return;
+      }
+      await api.post("/api/auth/clerk-exchange", { clerkToken });
       const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
       if (res.data) {
         setUser({
@@ -65,15 +75,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getToken]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setUser(null);
+      setSchool(null);
+      setLoading(false);
+      return;
+    }
+    exchangeToken();
+  }, [isLoaded, isSignedIn, exchangeToken]);
 
   const logout = useCallback(async () => {
     await api.post("/api/auth/logout", {});
+    await signOut();
     setUser(null);
     setSchool(null);
-  }, []);
+  }, [signOut]);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    await exchangeToken();
+  }, [exchangeToken]);
 
   return (
     <AuthContext.Provider value={{ user, school, loading, refresh, logout }}>
