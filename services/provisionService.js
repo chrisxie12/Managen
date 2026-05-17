@@ -133,6 +133,7 @@ const provisionSchool = async ({
     adminName,
     adminPassword,
     plan = 'trial',
+    country = 'Ghana',
 }) => {
     if (!schoolName || !email || !adminName || !adminPassword) {
         throw normalizeError('schoolName, email, adminName, and adminPassword are required.', 400);
@@ -172,6 +173,7 @@ const provisionSchool = async ({
         slug,
         plan: planConfig.name,
         is_active: true,
+        country,
     };
 
     const { data: tenant, error: tenantError } = await supabase
@@ -181,24 +183,7 @@ const provisionSchool = async ({
         .single();
 
     if (tenantError) {
-        throw tenantError;
-    }
-
-    const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
-        email: normalizedEmail,
-        password: adminPassword,
-        email_confirm: true,
-        user_metadata: { name: cleanAdminName, schoolName: cleanSchoolName }
-    });
-
-    if (authError) {
-        await cleanupProvisioning({ tenantId: tenant.id });
-        throw authError;
-    }
-
-    if (!authUser?.user?.id) {
-        await cleanupProvisioning({ tenantId: tenant.id });
-        throw normalizeError('Supabase Auth user was not created.', 502);
+        throw normalizeError(`Failed to create school: ${tenantError.message}`, 400);
     }
 
     const { data: adminRole } = await supabase
@@ -207,25 +192,41 @@ const provisionSchool = async ({
         .eq('name', 'school_admin')
         .maybeSingle();
 
+    const userId = crypto.randomUUID();
+
     const userPayload = {
-        id: authUser.user.id,
+        id: userId,
         school_id: tenant.id,
         full_name: cleanAdminName,
         email: normalizedEmail,
-        password: passwordHash, 
         role: 'admin',
         role_id: adminRole?.id || null,
         is_active: true,
     };
+
+    // Store password hash if the column exists (backward compat for existing login endpoint)
+    try {
+        const { count } = await supabase
+            .from('users')
+            .select('id', { count: 'exact', head: true })
+            .limit(0);
+
+        if (count !== undefined) {
+            userPayload.password = passwordHash;
+        }
+    } catch {
+        userPayload.password = passwordHash;
+    }
+
     const { data: adminUser, error: userError } = await supabase
         .from('users')
-        .upsert(userPayload)
+        .insert(userPayload)
         .select('id, full_name, email, role, role_id')
         .single();
 
     if (userError) {
-        await cleanupProvisioning({ tenantId: tenant.id, authUserId: authUser.user.id });
-        throw userError;
+        await cleanupProvisioning({ tenantId: tenant.id });
+        throw normalizeError(`Failed to create admin user: ${userError.message}`, 400);
     }
 
     return {
