@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import {
   ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
   Shield, Zap, CheckCircle2, GraduationCap, Wallet, Bell,
-  Star, Menu, X, TrendingUp, Clock, Award, XCircle, Send,
+  Menu, X, TrendingUp, Clock, Award, XCircle, Send,
   Building2, Loader2, ChevronDown, Mail, MapPin, Globe,
   Linkedin, Twitter, Facebook, Youtube, Phone,
 } from "lucide-react";
@@ -14,16 +14,6 @@ const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
-
-const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
-  const initials = name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
-  return (
-    <div style={{ backgroundColor: color }}
-         className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-      {initials}
-    </div>
-  );
-};
 
 const features = [
   { icon: Users, title: "Student Management", desc: "Complete student lifecycle — enrollment, profiles, attendance, and academic history in one view.", color: "#10B981" },
@@ -39,11 +29,6 @@ const pricingPlans = [
   { name: "Growth", tagline: "For growing schools and mid-size institutions", price: "GHS 499", priceAnnual: "GHS 399", annualBilled: "GHS 4,788/yr", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
   { name: "Pro", tagline: "For large institutions and college prep", price: "GHS 999", priceAnnual: "GHS 799", annualBilled: "GHS 9,588/yr", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
   { name: "Enterprise", tagline: "For school groups and districts", price: "Custom", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
-];
-
-const testimonials = [
-  { name: "Mrs. Abena Asante", role: "Headmistress, Accra", location: "Accra, Ghana", color: "#7C3AED", quote: "Managen replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it." },
-  { name: "Ms. Efua Mensah", role: "Headmistress, Cape Coast Academy", location: "Cape Coast, Ghana", color: "#10B981", quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week." },
 ];
 
 const faqs = [
@@ -129,7 +114,7 @@ export function LandingPage() {
             <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {["Features", "Pricing", "FAQ", "Testimonials", "Contact"].map((item) => (
+            {["Features", "Pricing", "FAQ", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
             ))}
           </div>
@@ -145,7 +130,7 @@ export function LandingPage() {
         </div>
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-96' : 'max-h-0'}`}>
           <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
-            {["Features", "Pricing", "FAQ", "Testimonials", "Contact"].map((item) => (
+            {["Features", "Pricing", "FAQ", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
             ))}
             <button onClick={() => navigate("/auth")} style={{ color: PLUM }} className="text-left">Sign in</button>
@@ -376,32 +361,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section id="testimonials" className="py-24 px-6">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="text-center mb-16 reveal">
-            <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Stories</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700 }}>Trusted by School Leaders</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {testimonials.map((t, i) => (
-              <div key={t.name} className={`p-8 rounded-[24px] reveal reveal-${(i % 2) + 1}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-                <div className="flex gap-1 mb-4">{Array.from({ length: 5 }).map((_, si) => (<Star key={si} size={14} fill="#F59E0B" color="#F59E0B" />))}</div>
-                <p style={{ color: PLUM_LIGHT, fontSize: "1rem", lineHeight: 1.8, marginBottom: "1.5rem", fontStyle: "italic" }}>"{t.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <InitialsAvatar name={t.name} color={t.color} />
-                  <div>
-                    <div style={{ color: PLUM, fontWeight: 600, fontSize: "0.9rem" }}>{t.name}</div>
-                    <div style={{ color: MUTED, fontSize: "0.8rem" }}>{t.role}</div>
-                    <div style={{ color: MUTED, fontSize: "0.72rem", opacity: 0.7 }}>{t.location}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── FAQ ── */}
       <section id="faq" className="py-24 px-6">
         <div className="max-w-[768px] mx-auto">
@@ -482,7 +441,7 @@ export function LandingPage() {
             <div>
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Product</h4>
               <div className="flex flex-col gap-2.5">
-                {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }, { label: "Testimonials", href: "#testimonials" }].map((link) => (
+                  {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }].map((link) => (
                   <a key={link.label} href={link.href} className="text-sm hover:opacity-70 transition-opacity" style={{ color: MUTED }}>{link.label}</a>
                 ))}
               </div>

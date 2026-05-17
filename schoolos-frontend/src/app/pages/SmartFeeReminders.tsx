@@ -5,7 +5,6 @@ import {
   Check,
   CheckCircle2,
   Clock,
-  Copy,
   CreditCard,
   Mail,
   MessageCircle,
@@ -51,62 +50,11 @@ type Toast = {
   tone: "success" | "warning" | "info";
 };
 
-const students: Student[] = [
-  { id: 1, name: "Ama Mensah Boateng", className: "7A", parent: "Mrs. Abena Boateng", parentEmail: "abena.boateng@example.com", parentPhone: "+233241234001", balance: 600, days: 18, risk: "high", whatsapp: true, sms: true, email: true },
-  { id: 2, name: "Kweku Asante", className: "8B", parent: "Mr. Frank Asante", parentEmail: "frank.asante@example.com", parentPhone: "+233241234002", balance: 480, days: 31, risk: "high", whatsapp: false, sms: true, email: true },
-  { id: 3, name: "Adjoa Tetteh", className: "6C", parent: "Mrs. Grace Tetteh", parentEmail: "grace.tetteh@example.com", parentPhone: "+233241234003", balance: 250, days: 7, risk: "med", whatsapp: true, sms: false, email: true },
-  { id: 4, name: "Kofi Darko", className: "9A", parent: "Dr. Emmanuel Darko", parentEmail: "emmanuel.darko@example.com", parentPhone: "+233241234004", balance: 720, days: 22, risk: "high", whatsapp: true, sms: true, email: false },
-  { id: 5, name: "Abena Owusu", className: "7B", parent: "Mr. Seth Owusu", parentEmail: "seth.owusu@example.com", parentPhone: "+233241234005", balance: 180, days: 3, risk: "low", whatsapp: true, sms: true, email: true },
-  { id: 6, name: "Yaw Boateng Jnr", className: "8A", parent: "Mrs. Patricia Boateng", parentEmail: "patricia.boateng@example.com", parentPhone: "+233241234006", balance: 600, days: 15, risk: "high", whatsapp: false, sms: false, email: true },
-  { id: 7, name: "Efua Mensah", className: "6B", parent: "Mr. James Mensah", parentEmail: "james.mensah@example.com", parentPhone: "+233241234007", balance: 120, days: 2, risk: "low", whatsapp: true, sms: true, email: false },
-  { id: 8, name: "Nana Acheampong", className: "9B", parent: "Mrs. Rita Acheampong", parentEmail: "rita.acheampong@example.com", parentPhone: "+233241234008", balance: 840, days: 40, risk: "high", whatsapp: true, sms: true, email: true },
-  { id: 9, name: "Akua Frimpong", className: "7C", parent: "Mr. Daniel Frimpong", parentEmail: "daniel.frimpong@example.com", parentPhone: "+233241234009", balance: 350, days: 9, risk: "med", whatsapp: false, sms: true, email: true },
-  { id: 10, name: "Kofi Amponsah", className: "8C", parent: "Mrs. Janet Amponsah", parentEmail: "janet.amponsah@example.com", parentPhone: "+233241234010", balance: 480, days: 12, risk: "med", whatsapp: true, sms: true, email: false },
-];
+const students: Student[] = [];
 
-const initialActivities: Activity[] = [
-  { id: 1, time: "2m ago", color: "#25d366", text: "WhatsApp delivered to Mrs. Abena Boateng - Ama Mensah - GHS 600" },
-  { id: 2, time: "4m ago", color: "#ffcc00", text: "MoMo payment received - Kwame Darko - GHS 480" },
-  { id: 3, time: "12m ago", color: "#f59e0b", text: "SMS fallback sent to Mr. Joseph Ankrah after WhatsApp was undelivered" },
-  { id: 4, time: "18m ago", color: "#6366f1", text: "Email sent to Dr. Emmanuel Darko with full fee breakdown attached" },
-  { id: 5, time: "1h ago", color: "#ffcc00", text: "Partial MoMo payment - Mrs. Grace Tetteh - GHS 125 of GHS 250" },
-  { id: 6, time: "2h ago", color: "#ef4444", text: "Portal access suspended for Kweku Asante - day 31 overdue" },
-];
+const initialActivities: Activity[] = [];
 
 const formatGhs = (value: number) => `GHS ${value.toLocaleString()}`;
-const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-const paymentApiBaseUrl = import.meta.env.VITE_PAYMENT_API_BASE_URL;
-const paystackScriptUrl = "https://js.paystack.co/v2/inline.js";
-
-let paystackScriptPromise: Promise<void> | null = null;
-
-function loadPaystackInline() {
-  if (window.PaystackPop) return Promise.resolve();
-  if (paystackScriptPromise) return paystackScriptPromise;
-
-  paystackScriptPromise = new Promise((resolve, reject) => {
-    const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${paystackScriptUrl}"]`);
-    if (existingScript) {
-      existingScript.addEventListener("load", () => resolve(), { once: true });
-      existingScript.addEventListener("error", () => reject(new Error("Paystack checkout could not load.")), { once: true });
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = paystackScriptUrl;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Paystack checkout could not load."));
-    document.head.appendChild(script);
-  });
-
-  return paystackScriptPromise;
-}
-
-function splitName(name: string) {
-  const [firstName = name, ...rest] = name.split(" ");
-  return { firstName, lastName: rest.join(" ") };
-}
 
 const riskMeta: Record<Risk, { label: string; color: string; bg: string }> = {
   high: { label: "High", color: "#ef4444", bg: "rgba(239,68,68,0.12)" },
@@ -192,16 +140,6 @@ export function SmartFeeReminders() {
     };
   }, [sendModalOpen, sending]);
 
-  const copyPaymentLink = async () => {
-    const link = "https://pay.getschoolos.me/ama-m-2t25";
-    try {
-      await navigator.clipboard.writeText(link);
-      pushToast("Link copied", "MoMo payment link copied to clipboard", "info");
-    } catch {
-      pushToast("Copy unavailable", link, "warning");
-    }
-  };
-
   const pushToast = (title: string, subtitle: string, tone: Toast["tone"] = "success") => {
     const id = Date.now();
     setToasts((current) => [...current, { id, title, subtitle, tone }]);
@@ -240,76 +178,6 @@ export function SmartFeeReminders() {
   const sendOne = (student: Student) => {
     pushToast("Reminder sent", `${student.name} - ${formatGhs(student.balance)}`);
     addActivity(`WhatsApp reminder sent to ${student.parent} - ${student.name} - ${formatGhs(student.balance)}`, "#25d366");
-  };
-
-  const openPaystackCheckout = async (student: Student) => {
-    if (!paystackPublicKey) {
-      pushToast("Add your Paystack public key", "Set VITE_PAYSTACK_PUBLIC_KEY in .env.local, then restart Vite.", "warning");
-      return;
-    }
-
-    try {
-      await loadPaystackInline();
-    } catch (error) {
-      pushToast("Paystack could not load", error instanceof Error ? error.message : "Check your network and try again.", "warning");
-      return;
-    }
-
-    const { firstName, lastName } = splitName(student.name);
-    const reference = `schoolos-fee-${student.id}-${Date.now()}`;
-    const paystack = new window.PaystackPop!();
-
-    paystack.newTransaction({
-      key: paystackPublicKey,
-      email: student.parentEmail,
-      amount: student.balance * 100,
-      currency: "GHS",
-      channels: ["mobile_money", "card", "bank_transfer"],
-      firstName,
-      lastName,
-      phone: student.parentPhone,
-      reference,
-      metadata: {
-        studentId: student.id,
-        studentName: student.name,
-        className: student.className,
-        parentName: student.parent,
-        source: "smart_fee_reminders",
-      },
-      onSuccess: async (transaction) => {
-        const paymentReference = transaction.reference || transaction.trxref || reference;
-        pushToast("Payment received", `Verifying ${paymentReference} with Paystack...`, "info");
-
-        if (!paymentApiBaseUrl) {
-          pushToast("Payment needs backend verification", "Set VITE_PAYMENT_API_BASE_URL to verify before marking paid.", "warning");
-          addActivity(`Paystack returned reference ${paymentReference} for ${student.name}; backend verification is not configured.`, "#f59e0b");
-          return;
-        }
-
-        try {
-          const response = await fetch(`${paymentApiBaseUrl}/api/paystack/verify/${encodeURIComponent(paymentReference)}`);
-          const verification = await response.json();
-
-          if (!response.ok || !verification.ok) {
-            pushToast("Verification pending", verification.error || verification.message || "Paystack did not confirm this transaction yet.", "warning");
-            addActivity(`Payment reference ${paymentReference} for ${student.name} needs review before marking paid.`, "#f59e0b");
-            return;
-          }
-
-          pushToast("Payment verified", `${student.name} - ${formatGhs(student.balance)} - ${paymentReference}`);
-          addActivity(`Verified Paystack payment for ${student.name} - ${formatGhs(student.balance)} - ${paymentReference}`, "#ffcc00");
-        } catch (error) {
-          pushToast("Verification failed", error instanceof Error ? error.message : "Could not reach the payment verification API.", "warning");
-          addActivity(`Could not verify Paystack reference ${paymentReference} for ${student.name}.`, "#f59e0b");
-        }
-      },
-      onCancel: () => {
-        pushToast("Payment cancelled", `${student.parent} closed checkout before paying.`, "info");
-      },
-      onError: (error) => {
-        pushToast("Payment failed to start", error.message || "Paystack returned an error.", "warning");
-      },
-    });
   };
 
   const bulkAction = (channel: Channel) => {
@@ -368,7 +236,7 @@ export function SmartFeeReminders() {
       <div className="space-y-5 p-4 sm:p-6">
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               <StatCard label="Total fees due" value={formatGhs(totalDue)} sub={`${students.length} students in reminder queue`} tone="#00e5a0" icon={Wallet} />
-              <StatCard label="Collected via MoMo" value="GHS 31,450" sub="65% of term target" tone="#ffcc00" icon={CreditCard} />
+              <StatCard label="Collected via MoMo" value="GHS 0" sub="No data yet" tone="#ffcc00" icon={CreditCard} />
               <StatCard label="Outstanding balance" value={formatGhs(totalDue)} sub={`${students.length} students pending`} tone="#f59e0b" icon={Bell} />
               <StatCard label="High-risk defaulters" value={String(highRiskCount)} sub={`${overdueCount} overdue 14+ days`} tone="#ef4444" icon={ShieldAlert} />
             </div>
@@ -525,23 +393,7 @@ export function SmartFeeReminders() {
                     </div>
                   </div>
                   <div className="rounded-lg bg-[#1c2030] p-4 text-sm">
-                    <p className="text-xs text-[#555a72]">Payment link generated for</p>
-                    <p className="mt-1 font-semibold">Ama Mensah Boateng</p>
-                    <p className="text-xs text-[#555a72]">Class 7A - Parent: Mrs. Abena Boateng</p>
-                    <div className="mt-3 space-y-2 border-t border-white/10 pt-3">
-                      <SettingRow label="Term 2 school fees" value="GHS 480" />
-                      <SettingRow label="Transport levy" value="GHS 120" />
-                      <SettingRow label="Total due" value="GHS 600" highlight />
-                    </div>
-                    <p className="mt-3 break-all text-xs text-[#00e5a0]">pay.getschoolos.me/ama-m-2t25</p>
-                  </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <button type="button" onClick={copyPaymentLink} className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs text-[#8b90a8] hover:bg-white/5">
-                      <Copy size={13} /> Copy link
-                    </button>
-                    <button type="button" onClick={() => openPaystackCheckout(students[0])} className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#00e5a0] px-3 py-2 text-xs font-bold text-black">
-                      <CreditCard size={13} /> Test Paystack
-                    </button>
+                    <p className="text-xs text-[#555a72] text-center py-6">Select a student above to preview their payment link.</p>
                   </div>
                 </section>
 
@@ -549,18 +401,13 @@ export function SmartFeeReminders() {
                   <div className="mb-3 flex items-center gap-3 border-b border-white/10 pb-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25d366] text-sm font-bold text-white">S</div>
                     <div>
-                      <p className="text-sm font-semibold">Managen - Kwame Nkrumah JHS</p>
-                      <p className="text-xs text-[#25d366]">Online</p>
+                      <p className="text-sm font-semibold">WhatsApp preview</p>
+                      <p className="text-xs text-[#25d366]">Select a student to preview</p>
                     </div>
                   </div>
-                  <div className="rounded-xl rounded-tl-none bg-[#1f2d23] p-3 text-sm leading-6 text-[#e8f5e9]">
-                    <p>Dear Mrs. Boateng,</p>
-                    <p className="mt-3">Ama Mensah Boateng has an outstanding fee balance of <strong className="text-[#4ade80]">GHS 600</strong> due by <strong>31 May 2026</strong>.</p>
-                    <button type="button" onClick={() => openPaystackCheckout(students[0])} className="mt-3 w-full rounded-lg bg-[#25d366] px-3 py-2 text-xs font-bold text-black">
-                      Pay GHS 600 with MoMo
-                    </button>
+                  <div className="rounded-xl rounded-tl-none bg-[#1f2d23] p-3 text-sm leading-6 text-[#8b90a8]">
+                    <p className="py-4 text-center">No student selected.</p>
                   </div>
-                  <p className="mt-2 text-right text-xs text-[#555a72]">6:00 PM - Delivered</p>
                 </section>
               </aside>
             </div>
