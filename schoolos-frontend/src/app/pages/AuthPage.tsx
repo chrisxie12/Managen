@@ -10,7 +10,7 @@ const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
-import { SignIn, useSignUp, useClerk } from "@clerk/react";
+import { useSignUp, useClerk } from "@clerk/react";
 import { api } from "../services/api";
 import { toast } from "sonner";
 
@@ -479,19 +479,54 @@ export function AuthPage() {
             )}
 
             {mode === "login" && (
-              <div className="flex justify-center py-8">
-                <SignIn
-                  appearance={{
-                    elements: {
-                      rootBox: "w-full",
-                      card: "shadow-none border-0 p-0",
-                      headerTitle: "hidden",
-                      headerSubtitle: "hidden",
-                    },
-                  }}
-                  {...{} as any}
-                />
+              <>
+              <div>
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  School Subdomain
+                </label>
+                <div className="relative">
+                  <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
+                    onChange={(e) => setField("subdomain", e.target.value)} required
+                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.getschoolos.me</span>
+                </div>
               </div>
+
+              <div>
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  Your Email
+                </label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
+                    onChange={(e) => setField("email", e.target.value)} required
+                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type={showPassword ? "text" : "password"} placeholder="••••••••••" value={form.password}
+                    onChange={(e) => setField("password", e.target.value)} required
+                    className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
+                  </button>
+                </div>
+                <div className="text-right mt-1.5">
+                  <button type="button" onClick={() => setMode("forgot")} style={{ color: PLUM_LIGHT, fontSize: "0.8rem" }} className="hover:opacity-70">Forgot password?</button>
+                </div>
+              </div>
+              </>
             )}
 
             {mode === "signup" && (
@@ -648,7 +683,7 @@ export function AuthPage() {
 
             <div id="clerk-captcha"></div>
 
-            {mode !== "login" && mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
+            {mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
             <button
               type="submit"
               disabled={loading}
@@ -668,11 +703,11 @@ export function AuthPage() {
                   <span
                     className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"
                   />
-                  {mode === "superadmin" ? "Signing in..." : mode === "signup" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Resetting..."}
+                  {mode === "login" ? "Signing in..." : mode === "superadmin" ? "Signing in..." : mode === "signup" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Resetting..."}
                 </span>
               ) : (
                 <>
-                  {mode === "superadmin" ? "Open Dashboard" : mode === "signup" ? "Create Free Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"}
+                  {mode === "login" ? "Sign In" : mode === "superadmin" ? "Open Dashboard" : mode === "signup" ? "Create Free Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"}
                   <ArrowRight size={16} />
                 </>
               )}
