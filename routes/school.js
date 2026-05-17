@@ -1,6 +1,9 @@
 const express  = require('express');
 const router   = express.Router();
 const jwt      = require('jsonwebtoken');
+const crypto   = require('crypto');
+const bcrypt   = require('bcryptjs');
+const supabase = require('../config/db');
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
@@ -465,3 +468,345 @@ router.get('/notifications/log', protect, async (req, res) => {
 
 module.exports = router;
 module.exports.protect = protect;
+
+// ─── Role & Permission Management ──────────────────────────────
+
+// GET /api/school/roles - list all roles (system + school-specific)
+router.get('/roles', protect, requirePermission('roles.view'), async (req, res) => {
+    try {
+        const { data: systemRoles, error: sysErr } = await supabase
+            .from('roles')
+            .select('*')
+            .is('school_id', null)
+            .order('label');
+        if (sysErr) return res.status(500).json({ error: 'Error fetching roles.' });
+
+        const { data: schoolRoles, error: schErr } = await supabase
+            .from('roles')
+            .select('*')
+            .eq('school_id', req.tenant.id)
+            .order('label');
+        if (schErr) return res.status(500).json({ error: 'Error fetching custom roles.' });
+
+        return res.json({ data: { roles: [...systemRoles, ...schoolRoles] } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching roles.' });
+    }
+});
+
+// GET /api/school/permissions - list all permissions grouped by module
+router.get('/permissions', protect, requirePermission('permissions.view'), async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('permissions')
+            .select('*')
+            .order('module')
+            .order('name');
+        if (error) return res.status(500).json({ error: 'Error fetching permissions.' });
+
+        const grouped = (data || []).reduce((acc, p) => {
+            if (!acc[p.module]) acc[p.module] = [];
+            acc[p.module].push(p);
+            return acc;
+        }, {});
+
+        return res.json({ data: { permissions: data || [], grouped } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching permissions.' });
+    }
+});
+
+// POST /api/school/roles - create a custom role
+const createRoleSchema = {
+    body: z.object({
+        name: z.string().min(1).max(50).regex(/^[a-z_]+$/, 'Use lowercase letters and underscores only'),
+        label: z.string().min(1).max(100),
+        description: z.string().optional(),
+        permission_ids: z.array(z.string().uuid()).optional(),
+    })
+};
+router.post('/roles', protect, requirePermission('roles.create', 'roles.edit'), validate(createRoleSchema), async (req, res) => {
+    try {
+        const { name, label, description, permission_ids } = req.body;
+
+        const { data: existing } = await supabase.from('roles')
+            .select('id')
+            .or(`name.eq.${name},and(name.eq.${name},school_id.eq.${req.tenant.id})`)
+            .maybeSingle();
+        if (existing) return res.status(409).json({ error: 'A role with this name already exists.' });
+
+        const { data: role, error: roleErr } = await supabase.from('roles')
+            .insert({ id: crypto.randomUUID(), name, label, description, school_id: req.tenant.id, is_system: false })
+            .select()
+            .single();
+        if (roleErr) return res.status(500).json({ error: 'Error creating role.' });
+
+        if (permission_ids && permission_ids.length > 0) {
+            const mappings = permission_ids.map(pid => ({
+                role_id: role.id,
+                permission_id: pid,
+                school_id: req.tenant.id
+            }));
+            const { error: mapErr } = await supabase.from('role_permissions').insert(mappings);
+            if (mapErr) console.error('Error mapping permissions:', mapErr);
+        }
+
+        return res.status(201).json({ data: { role } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating role.' });
+    }
+});
+
+// PUT /api/school/roles/:id
+const updateRoleSchema = {
+    body: z.object({
+        label: z.string().min(1).max(100).optional(),
+        description: z.string().optional(),
+    })
+};
+router.put('/roles/:id', protect, requirePermission('roles.edit'), validate(updateRoleSchema), async (req, res) => {
+    try {
+        const { data: role, error: checkErr } = await supabase.from('roles')
+            .select('*').eq('id', req.params.id).maybeSingle();
+        if (checkErr || !role) return res.status(404).json({ error: 'Role not found.' });
+        if (role.is_system) return res.status(403).json({ error: 'Cannot edit system roles.' });
+        if (role.school_id !== req.tenant.id) return res.status(403).json({ error: 'Access denied.' });
+
+        const { data, error } = await supabase.from('roles')
+            .update(req.body)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+        if (error) return res.status(500).json({ error: 'Error updating role.' });
+        return res.json({ data: { role: data } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating role.' });
+    }
+});
+
+// DELETE /api/school/roles/:id
+router.delete('/roles/:id', protect, requirePermission('roles.delete'), async (req, res) => {
+    try {
+        const { data: role, error: checkErr } = await supabase.from('roles')
+            .select('*').eq('id', req.params.id).maybeSingle();
+        if (checkErr || !role) return res.status(404).json({ error: 'Role not found.' });
+        if (role.is_system) return res.status(403).json({ error: 'Cannot delete system roles.' });
+        if (role.school_id !== req.tenant.id) return res.status(403).json({ error: 'Access denied.' });
+
+        const { error } = await supabase.from('roles').delete().eq('id', req.params.id);
+        if (error) return res.status(500).json({ error: 'Error deleting role.' });
+        return res.json({ data: { message: 'Role deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting role.' });
+    }
+});
+
+// PUT /api/school/roles/:id/permissions - update role-permission mappings
+router.put('/roles/:id/permissions', protect, requirePermission('roles.edit', 'permissions.edit'), async (req, res) => {
+    try {
+        const { permission_ids } = req.body;
+        if (!Array.isArray(permission_ids)) return res.status(400).json({ error: 'permission_ids array is required.' });
+
+        const { data: role, error: checkErr } = await supabase.from('roles')
+            .select('*').eq('id', req.params.id).maybeSingle();
+        if (checkErr || !role) return res.status(404).json({ error: 'Role not found.' });
+        if (role.school_id && role.school_id !== req.tenant.id) return res.status(403).json({ error: 'Access denied.' });
+
+        // Delete existing mappings
+        await supabase.from('role_permissions').delete()
+            .eq('role_id', req.params.id)
+            .is('school_id', role.school_id ? req.tenant.id : null);
+
+        // Insert new mappings
+        if (permission_ids.length > 0) {
+            const mappings = permission_ids.map(pid => ({
+                role_id: req.params.id,
+                permission_id: pid,
+                school_id: role.school_id ? req.tenant.id : null
+            }));
+            const { error: insErr } = await supabase.from('role_permissions').insert(mappings);
+            if (insErr) return res.status(500).json({ error: 'Error updating permissions.' });
+        }
+
+        return res.json({ data: { message: 'Permissions updated.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating permissions.' });
+    }
+});
+
+// ─── User Management ──────────────────────────────────────────
+
+// GET /api/school/users - list users for this school
+router.get('/users', protect, requirePermission('users.view'), async (req, res) => {
+    try {
+        const page = parseInteger(req.query.page, 1, 1, 1000000);
+        const limit = parseInteger(req.query.limit, 20, 1, 100);
+        const { role, search, status } = req.query;
+
+        let query = supabase
+            .from('users')
+            .select('id, full_name, email, phone, role, is_active, suspended_at, invited_at, created_at, last_login, role_id', { count: 'exact' })
+            .eq('tenant_id', req.tenant.id)
+            .order('created_at', { ascending: false })
+            .range((page - 1) * limit, page * limit - 1);
+
+        if (role) query = query.eq('role', role);
+        if (status === 'active') query = query.eq('is_active', true);
+        if (status === 'suspended') query = query.eq('is_active', false);
+        if (search) {
+            query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`);
+        }
+
+        const { data, count, error } = await query;
+        if (error) return res.status(500).json({ error: 'Error fetching users.' });
+
+        // Attach role names
+        const userIds = (data || []).map(u => u.role_id).filter(Boolean);
+        let roleMap = {};
+        if (userIds.length > 0) {
+            const { data: roles } = await supabase.from('roles').select('id, name, label').in('id', userIds);
+            roleMap = (roles || []).reduce((acc, r) => ({ ...acc, [r.id]: r }), {});
+        }
+
+        const users = (data || []).map(u => ({
+            ...u,
+            role_name: roleMap[u.role_id]?.label || u.role,
+            role_identifier: roleMap[u.role_id]?.name || u.role,
+        }));
+
+        return res.json({ data: { users, total: count || 0, page, limit } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching users.' });
+    }
+});
+
+// POST /api/school/users/invite - invite a new user
+const inviteUserSchema = {
+    body: z.object({
+        full_name: z.string().min(1, 'Name is required'),
+        email: z.string().email('Valid email is required'),
+        phone: z.string().optional(),
+        role_id: z.string().uuid('Valid role is required'),
+        role: z.string().optional(), // fallback role name if no role_id
+    })
+};
+router.post('/users/invite', protect, requirePermission('users.create'), validate(inviteUserSchema), async (req, res) => {
+    try {
+        const { full_name, email, phone, role_id, role } = req.body;
+
+        const { data: existing } = await supabase.from('users')
+            .select('id').eq('email', email).eq('tenant_id', req.tenant.id).maybeSingle();
+        if (existing) return res.status(409).json({ error: 'A user with this email already exists.' });
+
+        // Resolve role name
+        let roleName = role;
+        if (role_id) {
+            const { data: roleData } = await supabase.from('roles').select('name').eq('id', role_id).single();
+            if (roleData) roleName = roleData.name;
+        }
+
+        const tempPassword = crypto.randomBytes(12).toString('hex');
+        const hashedPassword = await bcrypt.hash(tempPassword, 12);
+
+        const { data: user, error } = await supabase.from('users')
+            .insert({
+                id: crypto.randomUUID(),
+                full_name,
+                email,
+                phone: phone || null,
+                role: roleName || 'staff',
+                role_id: role_id || null,
+                tenant_id: req.tenant.id,
+                password: hashedPassword,
+                is_active: false,
+                invited_at: new Date().toISOString(),
+            })
+            .select('id, full_name, email, phone, role, is_active, invited_at')
+            .single();
+
+        if (error) return res.status(500).json({ error: 'Error creating user.' });
+
+        return res.status(201).json({
+            data: {
+                user,
+                tempPassword,
+                message: 'User invited. Share the temporary password with them.',
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error inviting user.' });
+    }
+});
+
+// PUT /api/school/users/:id - update user
+const updateUserSchema = {
+    body: z.object({
+        full_name: z.string().min(1).optional(),
+        email: z.string().email().optional(),
+        phone: z.string().optional(),
+        role_id: z.string().uuid().optional(),
+        role: z.string().optional(),
+    }).partial()
+};
+router.put('/users/:id', protect, requirePermission('users.edit'), validate(updateUserSchema), async (req, res) => {
+    try {
+        const { full_name, email, phone, role_id, role } = req.body;
+
+        let roleName = role;
+        if (role_id) {
+            const { data: roleData } = await supabase.from('roles').select('name').eq('id', role_id).single();
+            if (roleData) roleName = roleData.name;
+        }
+
+        const updateData = {};
+        if (full_name !== undefined) updateData.full_name = full_name;
+        if (email !== undefined) updateData.email = email;
+        if (phone !== undefined) updateData.phone = phone;
+        if (role_id !== undefined) updateData.role_id = role_id;
+        if (roleName !== undefined) updateData.role = roleName;
+
+        const { data, error } = await supabase.from('users')
+            .update(updateData)
+            .eq('id', req.params.id)
+            .eq('tenant_id', req.tenant.id)
+            .select('id, full_name, email, phone, role, is_active, role_id')
+            .single();
+
+        if (error) return res.status(500).json({ error: 'Error updating user.' });
+        return res.json({ data: { user: data } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating user.' });
+    }
+});
+
+// PUT /api/school/users/:id/suspend
+router.put('/users/:id/suspend', protect, requirePermission('users.edit'), async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('users')
+            .update({ is_active: false, suspended_at: new Date().toISOString() })
+            .eq('id', req.params.id)
+            .eq('tenant_id', req.tenant.id)
+            .select('id, full_name, email, is_active, suspended_at')
+            .single();
+        if (error) return res.status(500).json({ error: 'Error suspending user.' });
+        return res.json({ data: { user: data } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error suspending user.' });
+    }
+});
+
+// PUT /api/school/users/:id/activate
+router.put('/users/:id/activate', protect, requirePermission('users.edit'), async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('users')
+            .update({ is_active: true, suspended_at: null })
+            .eq('id', req.params.id)
+            .eq('tenant_id', req.tenant.id)
+            .select('id, full_name, email, is_active')
+            .single();
+        if (error) return res.status(500).json({ error: 'Error activating user.' });
+        return res.json({ data: { user: data } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error activating user.' });
+    }
+});

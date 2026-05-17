@@ -12,6 +12,8 @@ import { Academics } from "./pages/Academics";
 import { Finance } from "./pages/Finance";
 import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
+import { AdminRoles } from "./pages/AdminRoles";
+import { AdminUsers } from "./pages/AdminUsers";
 import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
@@ -61,6 +63,8 @@ export const router = createBrowserRouter([
       { path: "finance", Component: Finance },
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
+      { path: "users", Component: AdminUsers },
+      { path: "roles", Component: AdminRoles },
     ],
   },
   {

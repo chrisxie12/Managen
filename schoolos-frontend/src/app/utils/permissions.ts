@@ -94,6 +94,18 @@ export const Permissions = {
     edit: "users.edit" as const,
     delete: "users.delete" as const,
   },
+  Roles: {
+    view: "roles.view" as const,
+    create: "roles.create" as const,
+    edit: "roles.edit" as const,
+    delete: "roles.delete" as const,
+  },
+  Permissions: {
+    view: "permissions.view" as const,
+    create: "permissions.create" as const,
+    edit: "permissions.edit" as const,
+    delete: "permissions.delete" as const,
+  },
   Settings: {
     view: "settings.view" as const,
     edit: "settings.edit" as const,
@@ -138,4 +150,6 @@ export const pagePermissions: Record<string, string[]> = {
   "/dashboard/finance": [Permissions.Fees.view],
   "/dashboard/fee-reminders": [Permissions.Fees.view],
   "/dashboard/communication": [Permissions.Messages.view],
+  "/dashboard/users": [Permissions.Users.view],
+  "/dashboard/roles": [Permissions.Roles.view],
 };
