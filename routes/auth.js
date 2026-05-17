@@ -212,7 +212,7 @@ router.post('/clerk-exchange', async (req, res) => {
             return res.status(500).json({ error: 'Clerk not configured' });
         }
 
-        const payload = await clerkClient.verifyToken(clerkToken);
+        const payload = await clerkClient.verifyToken(clerkToken, { secretKey: process.env.CLERK_SECRET_KEY });
         if (!payload?.sub) {
             return res.status(401).json({ error: 'Invalid Clerk token' });
         }
@@ -304,7 +304,7 @@ router.post('/clerk-sync', async (req, res) => {
             return res.status(500).json({ error: 'Clerk not configured' });
         }
 
-        const payload = await clerkClient.verifyToken(clerkToken);
+        const payload = await clerkClient.verifyToken(clerkToken, { secretKey: process.env.CLERK_SECRET_KEY });
         if (!payload?.sub) {
             return res.status(401).json({ error: 'Invalid Clerk token' });
         }
