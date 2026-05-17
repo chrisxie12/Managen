@@ -49,11 +49,16 @@ async function sendFeeReminder({ to, message }) {
     return wrapServiceCall(sendWhatsApp({ to, body: message }), 'sendFeeReminder whatsapp');
 }
 
+async function send({ to, body }) {
+    return wrapServiceCall(sendWhatsApp({ to, body }), 'whatsapp');
+}
+
 module.exports = {
     sendWelcome,
     sendTrialReminder,
     sendPaymentReceipt,
     sendPaymentFailed,
     sendFeeReminder,
+    send,
 };
 

@@ -46,11 +46,16 @@ async function sendFeeReminder({ to, message }) {
     return wrapServiceCall(sendArkeselSms({ to, message }), 'sendFeeReminder sms', (res) => res.data?.request_id);
 }
 
+async function send({ to, message }) {
+    return wrapServiceCall(sendArkeselSms({ to, message }), 'sms', (res) => res.data?.request_id);
+}
+
 module.exports = {
     sendWelcome,
     sendTrialReminder,
     sendPaymentReceipt,
     sendPaymentFailed,
     sendFeeReminder,
+    send,
 };
 

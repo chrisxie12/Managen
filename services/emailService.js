@@ -70,6 +70,10 @@ async function sendFeeReminder({ to, subject, message }) {
     return wrapServiceCall(sendMailgunMessage({ to, subject: resolvedSubject, text: resolvedMessage }), 'sendFeeReminder email');
 }
 
+async function send({ to, subject, text, html }) {
+    return wrapServiceCall(sendMailgunMessage({ to, subject, text, html }), 'email');
+}
+
 module.exports = {
     sendWelcome,
     sendTrialReminder,
@@ -78,5 +82,6 @@ module.exports = {
     sendPasswordReset,
     sendEmailVerification,
     sendFeeReminder,
+    send,
 };
 
