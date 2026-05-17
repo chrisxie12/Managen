@@ -35,24 +35,22 @@ const features = [
 ];
 
 const pricingPlans = [
-  { name: "Free Trial", tagline: "Get started with no commitment", priceGHS: "Free", priceNGN: "Free", priceGHSAnnual: "Free", priceNGNAnnual: "Free", annualBilledGHS: "", annualBilledNGN: "", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
-  { name: "Growth", tagline: "For growing schools and mid-size institutions", priceGHS: "GHS 499", priceNGN: "₦59,000", priceGHSAnnual: "GHS 399", priceNGNAnnual: "₦47,200", annualBilledGHS: "GHS 4,788/yr", annualBilledNGN: "₦566,400/yr", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
-  { name: "Pro", tagline: "For large institutions and college prep", priceGHS: "GHS 999", priceNGN: "₦118,000", priceGHSAnnual: "GHS 799", priceNGNAnnual: "₦94,400", annualBilledGHS: "GHS 9,588/yr", annualBilledNGN: "₦1,132,800/yr", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
-  { name: "Enterprise", tagline: "For school groups and districts", priceGHS: "Custom", priceNGN: "Custom", priceGHSAnnual: "Custom", priceNGNAnnual: "Custom", annualBilledGHS: "", annualBilledNGN: "", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
+  { name: "Free Trial", tagline: "Get started with no commitment", price: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
+  { name: "Growth", tagline: "For growing schools and mid-size institutions", price: "GHS 499", priceAnnual: "GHS 399", annualBilled: "GHS 4,788/yr", period: "/ month", features: ["Up to 300 students", "Fee tracking & invoicing", "Exams & admissions", "WhatsApp reports", "Priority support"], cta: "Get Started", highlighted: true },
+  { name: "Pro", tagline: "For large institutions and college prep", price: "GHS 999", priceAnnual: "GHS 799", annualBilled: "GHS 9,588/yr", period: "/ month", features: ["Up to 800 students", "Library, hostel & transport modules", "Payroll management", "Unlimited WhatsApp reports", "All integrations"], cta: "Get Started", highlighted: false },
+  { name: "Enterprise", tagline: "For school groups and districts", price: "Custom", period: "", features: ["Unlimited students", "All modules included", "Custom branding & domain", "Dedicated account manager", "API access"], cta: "Contact Sales", highlighted: false },
 ];
 
 const testimonials = [
   { name: "Mrs. Abena Asante", role: "Headmistress, Accra", location: "Accra, Ghana", color: "#7C3AED", quote: "Managen replaced three different apps we were using. Now everything — from fee collection to WhatsApp reports — is in one place. Our parents love it." },
-  { name: "Mr. Chukwuemeka Obi", role: "Director, Lagos Prep School", location: "Lagos, Nigeria", color: "#0EA5E9", quote: "The terminal report generation alone saved us 2 weeks of work per term. The Flutterwave integration is seamless for our parents across Nigeria." },
   { name: "Ms. Efua Mensah", role: "Headmistress, Cape Coast Academy", location: "Cape Coast, Ghana", color: "#10B981", quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week." },
-  { name: "Mr. Babatunde Adeyemi", role: "Director, Adeyemi Group of Schools", location: "Ibadan, Nigeria", color: "#F59E0B", quote: "Managing multiple campuses used to be a nightmare. Now I see everything from one dashboard." },
 ];
 
 const faqs = [
   { q: "Is there really no credit card required for the free trial?", a: "Correct. The 7-day Free Trial gives you full access to the platform with no payment details required. You only provide billing information when you choose to upgrade to a paid plan." },
   { q: "What happens when my free trial ends?", a: "Your account is paused — no data is deleted. You can upgrade to Growth, Pro, or Enterprise at any time to reactivate. We'll send you reminders before and after the trial ends." },
   { q: "Can I switch plans later?", a: "Yes. You can upgrade or downgrade your plan at any time from your school dashboard. Changes take effect at the start of your next billing cycle." },
-  { q: "Do you support Nigerian schools?", a: "Yes. Managen is built for both Ghana and Nigeria. Pricing is displayed in GHS and NGN, and the platform supports local curricula including WAEC and BECE structures." },
+  { q: "Does Managen support the Ghanaian curriculum?", a: "Yes. Managen is built for Ghanaian schools and fully supports the local curriculum including WAEC and BECE structures. Pricing is displayed in GHS." },
   { q: "How does the WhatsApp reporting work?", a: "Managen integrates directly with WhatsApp Business API to send automated reports — attendance summaries, fee reminders, and exam results — to parents and staff without any manual effort from administrators." },
   { q: "Is our school's data secure?", a: "Yes. All data is encrypted in transit and at rest. Each school operates in its own isolated environment — no school can access another school's data. We use Supabase (PostgreSQL) hosted on secure infrastructure with regular backups." },
   { q: "What is the student limit on each plan?", a: "Free Trial supports up to 50 students. Growth supports up to 300. Pro supports up to 800. Enterprise has no student limit. If you need a custom limit, contact us." },
@@ -62,7 +60,6 @@ const faqs = [
 export function LandingPage() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [currency, setCurrency] = useState<"GHS" | "NGN">("GHS");
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
@@ -172,7 +169,7 @@ export function LandingPage() {
                 </span>
               </h1>
               <p style={{ color: MUTED, fontSize: "1.1rem", lineHeight: 1.75 }} className="mb-8 max-w-lg">
-                Managen is the all-in-one school management platform for Ghana and Nigeria — from fee tracking to WhatsApp reports, WAEC results to payroll. Everything automated.
+                Managen is the all-in-one school management platform for Ghana — from fee tracking to WhatsApp reports, WAEC results to payroll. Everything automated.
               </p>
               <div className="flex flex-wrap gap-4">
                 <button onClick={() => navigate("/auth?mode=signup")} className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, fontSize: "1rem", boxShadow: "0 8px 28px rgba(56,25,50,0.28)" }}>
@@ -261,8 +258,8 @@ export function LandingPage() {
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
           </div>
           <div className="text-center reveal reveal-3">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>2</div>
-            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Countries</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>1</div>
+            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Country</div>
           </div>
         </div>
       </section>
@@ -334,12 +331,7 @@ export function LandingPage() {
             <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Surgical Pricing</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>Pay Only for What You Need</h2>
           </div>
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
-              {(["GHS", "NGN"] as const).map((c) => (
-                <button key={c} onClick={() => setCurrency(c)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: currency === c ? PLUM : "transparent", color: currency === c ? MILK : MUTED, fontWeight: currency === c ? 600 : 400 }}>{c}</button>
-              ))}
-            </div>
+          <div className="flex justify-center mb-12">
             <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
               {(["monthly", "annual"] as const).map((b) => (
                 <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? PLUM : "transparent", color: billing === b ? MILK : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
@@ -350,9 +342,8 @@ export function LandingPage() {
             {pricingPlans.map((plan, i) => {
               const isAnnual = billing === "annual";
               const showSaveBadge = isAnnual && (plan.name === "Growth" || plan.name === "Pro");
-              const displayPrice = isAnnual && plan.priceGHSAnnual ? plan.priceGHSAnnual : plan.priceGHS;
-              const displayPriceNGN = isAnnual && plan.priceNGNAnnual ? plan.priceNGNAnnual : plan.priceNGN;
-              const billedText = isAnnual ? (currency === "GHS" ? plan.annualBilledGHS : plan.annualBilledNGN) : "";
+              const displayPrice = isAnnual && (plan as any).priceAnnual ? (plan as any).priceAnnual : plan.price;
+              const billedText = isAnnual ? (plan as any).annualBilled || "" : "";
               return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: plan.highlighted ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "white",
@@ -365,7 +356,7 @@ export function LandingPage() {
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? MILK : PLUM, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
                 <p style={{ color: plan.highlighted ? "rgba(255,243,230,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? MILK : PLUM, fontSize: "2.2rem", fontWeight: 700 }}>{currency === "GHS" ? displayPrice : displayPriceNGN}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? MILK : PLUM, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
                   <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
                   {billedText && <div style={{ color: plan.highlighted ? "rgba(255,243,230,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
                 </div>
@@ -451,7 +442,7 @@ export function LandingPage() {
               Your School Deserves Better Tools
             </h2>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 2rem", lineHeight: 1.7 }}>
-              Join {stats.schools ? `${stats.schools}+` : ""} institutions across Ghana and Nigeria that have eliminated spreadsheets forever.
+              Join {stats.schools ? `${stats.schools}+` : ""} schools across Ghana that have eliminated spreadsheets forever.
             </p>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
               Get Started Free — No Credit Card
@@ -504,7 +495,7 @@ export function LandingPage() {
                 {[
                   { icon: Mail, text: "support@schoolos.me" },
                   { icon: Phone, text: "+233 53 278 5149" },
-                  { icon: MapPin, text: "Accra, Ghana & Lagos, Nigeria" },
+                  { icon: MapPin, text: "Accra, Ghana" },
                   { icon: MessageSquare, text: "WhatsApp Support" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-2.5">
@@ -519,7 +510,7 @@ export function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-1.5 border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-500 mb-6">
                 <Globe size={13} />
-                Ghana / Nigeria
+                Ghana
               </div>
               <div className="flex gap-2">
                 {[
@@ -583,7 +574,6 @@ export function LandingPage() {
                 <select value={demoForm.country} onChange={(e) => setDemoForm({ ...demoForm, country: e.target.value })}
                   className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
                   <option value="Ghana">Ghana</option>
-                  <option value="Nigeria">Nigeria</option>
                   <option value="Other">Other</option>
                 </select>
               </div>

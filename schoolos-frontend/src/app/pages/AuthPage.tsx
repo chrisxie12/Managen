@@ -19,7 +19,7 @@ const benefits = [
   "Set up in under 10 minutes",
   "WAEC & BECE report templates built-in",
   "Free WhatsApp integration",
-  "GHS & NGN billing support",
+  "GHS billing support",
 ];
 
 export function AuthPage() {
@@ -210,7 +210,7 @@ export function AuthPage() {
                 marginBottom: "2rem",
               }}
             >
-              Join 340+ schools across Ghana and Nigeria managing fees,
+              Join 340+ schools across Ghana managing fees,
               academics, and parent communication — all in one place.
             </p>
 
