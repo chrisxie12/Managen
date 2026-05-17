@@ -25,7 +25,7 @@ const benefits = [
 export function AuthPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [mode, setMode] = useState<"login" | "signup" | "superadmin">(
+  const [mode, setMode] = useState<"login" | "signup" | "superadmin" | "forgot" | "reset-password" | "verify-email">(
     searchParams.get("mode") === "signup" ? "signup" : "login"
   );
   const [showPassword, setShowPassword] = useState(false);
@@ -65,10 +65,19 @@ export function AuthPage() {
   };
 
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const resetToken = searchParams.get("token") || "";
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     const m = searchParams.get("mode");
-    setMode(m === "signup" ? "signup" : "login");
+    if (m === "reset-password" && searchParams.get("token")) {
+      setMode("reset-password");
+    } else if (m === "verify-email" && searchParams.get("token")) {
+      setMode("verify-email");
+    } else {
+      setMode(m === "signup" ? "signup" : "login");
+    }
     const sub =
       searchParams.get("subdomain") || searchParams.get("slug") || "";
     if (sub) {
@@ -111,6 +120,26 @@ export function AuthPage() {
         });
         toast.success("Welcome, Super Admin!");
         navigate("/superadmin");
+      } else if (mode === "forgot") {
+        await api.post("/api/auth/forgot-password", {
+          email: form.email,
+          subdomain: form.subdomain || undefined,
+        });
+        setResetSent(true);
+        toast.success("Check your email for the reset link.");
+      } else if (mode === "reset-password") {
+        await api.post("/api/auth/reset-password", {
+          token: resetToken,
+          password: form.password,
+        });
+        toast.success("Password reset! Please sign in.");
+        setMode("login");
+      } else if (mode === "verify-email") {
+        await api.post("/api/auth/verify-email", {
+          token: resetToken,
+        });
+        setVerified(true);
+        toast.success("Email verified successfully!");
       } else {
         const tenant = form.subdomain.trim().toLowerCase();
         if (!tenant) {
@@ -324,6 +353,7 @@ export function AuthPage() {
           </div>
 
           {/* Toggle tabs */}
+          {["login", "signup", "superadmin"].includes(mode) && (
           <div
             className="flex p-1 rounded-full mb-8"
             style={{
@@ -349,6 +379,7 @@ export function AuthPage() {
               </button>
             ))}
           </div>
+          )}
 
           {/* Title */}
           <div className="mb-8">
@@ -361,19 +392,103 @@ export function AuthPage() {
                 marginBottom: "0.4rem",
               }}
             >
-              {mode === "login" ? "Welcome back" : mode === "superadmin" ? "Platform Admin" : "Start your free trial"}
+              {mode === "login" ? "Welcome back" : mode === "superadmin" ? "Platform Admin" : mode === "signup" ? "Start your free trial" : mode === "forgot" ? "Reset your password" : mode === "reset-password" ? "Choose a new password" : "Verify your email"}
             </h1>
             <p style={{ color: MUTED, fontSize: "0.9rem" }}>
               {mode === "login"
                 ? "Sign in to your school dashboard"
                 : mode === "superadmin"
                 ? "Sign in to the platform admin panel"
-                : "Set up your school in under 10 minutes"}
+                : mode === "signup"
+                ? "Set up your school in under 10 minutes"
+                : mode === "forgot"
+                ? "Enter your email to receive a reset link"
+                : mode === "reset-password"
+                ? "Enter your new password below"
+                : "Confirm your email address"}
             </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {mode === "forgot" && !resetSent && (
+              <div>
+                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
+                    onChange={(e) => setField("email", e.target.value)} required
+                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                </div>
+                <div className="mt-4">
+                  <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                    School Subdomain <span style={{ color: MUTED, fontWeight: 400 }}>(optional)</span>
+                  </label>
+                  <div className="relative">
+                    <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                    <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
+                      onChange={(e) => setField("subdomain", e.target.value)}
+                      className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                      style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {mode === "forgot" && resetSent && (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
+                  <Mail size={28} color="#10B981" />
+                </div>
+                <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Check your email</p>
+                <p style={{ color: MUTED, fontSize: "0.85rem" }}>We sent a reset link to <strong>{form.email}</strong></p>
+                <button type="button" onClick={() => { setResetSent(false); setMode("login"); }}
+                  className="mt-6 px-5 py-2.5 rounded-full text-sm"
+                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  Back to sign in
+                </button>
+              </div>
+            )}
+
+            {mode === "reset-password" && (
+              <div>
+                <div className="relative">
+                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
+                  <input type={showPassword ? "text" : "password"} placeholder="New password (min 6 chars)"
+                    value={form.password} onChange={(e) => setField("password", e.target.value)} required minLength={6}
+                    className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {mode === "verify-email" && !verified && (
+              <div className="text-center py-8">
+                <p style={{ color: MUTED, fontSize: "0.9rem" }}>Verifying your email...</p>
+              </div>
+            )}
+
+            {mode === "verify-email" && verified && (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
+                  <CheckCircle2 size={28} color="#10B981" />
+                </div>
+                <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Email verified!</p>
+                <button type="button" onClick={() => navigate("/auth")}
+                  className="mt-6 px-5 py-2.5 rounded-full text-sm"
+                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  Sign in to your account
+                </button>
+              </div>
+            )}
+
             {mode === "login" && (
               <>
               <div>
@@ -598,17 +713,19 @@ export function AuthPage() {
               </div>
               {mode === "login" && (
                 <div className="text-right mt-1.5">
-                  <a
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={() => setMode("forgot")}
                     style={{ color: PLUM_LIGHT, fontSize: "0.8rem" }}
                     className="hover:opacity-70"
                   >
                     Forgot password?
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
 
+            {mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
             <button
               type="submit"
               disabled={loading}
@@ -628,17 +745,19 @@ export function AuthPage() {
                   <span
                     className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"
                   />
-                  {mode === "login" ? "Signing in..." : mode === "superadmin" ? "Signing in..." : "Creating account..."}
+                  {mode === "login" ? "Signing in..." : mode === "superadmin" ? "Signing in..." : mode === "signup" ? "Creating account..." : mode === "forgot" ? "Sending..." : "Resetting..."}
                 </span>
               ) : (
                 <>
-                  {mode === "login" ? "Sign In" : mode === "superadmin" ? "Open Dashboard" : "Create Free Account"}
+                  {mode === "login" ? "Sign In" : mode === "superadmin" ? "Open Dashboard" : mode === "signup" ? "Create Free Account" : mode === "forgot" ? "Send Reset Link" : "Reset Password"}
                   <ArrowRight size={16} />
                 </>
               )}
             </button>
+            )}
           </form>
 
+          {["login", "signup", "superadmin"].includes(mode) && (
           <p
             className="text-center mt-6"
             style={{ color: MUTED, fontSize: "0.85rem" }}
@@ -675,6 +794,14 @@ export function AuthPage() {
               </>
             )}
           </p>
+          )}
+          {mode === "forgot" && !resetSent && (
+            <p className="text-center mt-6" style={{ color: MUTED, fontSize: "0.85rem" }}>
+              <button onClick={() => setMode("login")} style={{ color: PLUM, fontWeight: 600 }} className="hover:opacity-70">
+                Back to sign in
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </div>

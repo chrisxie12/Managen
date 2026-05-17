@@ -2,7 +2,9 @@ const express  = require('express');
 const router   = express.Router();
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
+const crypto   = require('crypto');
 const authService = require('../services/authService');
+const { sendPasswordReset, sendEmailVerification } = require('../services/emailService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
 
@@ -108,6 +110,89 @@ router.post('/login', validate(loginSchema), async (req, res) => {
         return res.status(err.statusCode || 500).json({
             error: err.statusCode && err.statusCode < 500 ? err.message : 'Login failed.',
         });
+    }
+});
+
+// ─── POST /api/auth/forgot-password ──────────────────────────
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const email = String(req.body?.email || '').trim().toLowerCase();
+        const subdomain = String(req.body?.subdomain || '').trim().toLowerCase();
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required.' });
+        }
+
+        const school = subdomain ? await authService.loadSchoolBySubdomain(subdomain) : null;
+        const user = school
+            ? await authService.getUserByEmailAndSchool(email, school.id)
+            : await authService.getUserByEmail(email);
+
+        if (!user) {
+            return res.json({ data: { message: 'If an account exists, a reset link has been sent.' } });
+        }
+
+        const token = crypto.randomBytes(32).toString('hex');
+        await authService.setPasswordResetToken(user.id, token);
+
+        const frontendUrl = process.env.TENANT_BASE_URL || 'http://localhost:3000';
+        const resetLink = `${frontendUrl}/auth?mode=reset-password&token=${token}`;
+
+        if (process.env.MAILGUN_API_KEY && process.env.MAILGUN_DOMAIN) {
+            await sendPasswordReset({ to: email, name: user.full_name, resetLink });
+        }
+
+        return res.json({ data: { message: 'If an account exists, a reset link has been sent.' } });
+    } catch (err) {
+        console.error('Forgot password error:', err);
+        return res.json({ data: { message: 'If an account exists, a reset link has been sent.' } });
+    }
+});
+
+// ─── POST /api/auth/reset-password ───────────────────────────
+router.post('/reset-password', async (req, res) => {
+    try {
+        const token = String(req.body?.token || '').trim();
+        const newPassword = String(req.body?.password || '');
+
+        if (!token || !newPassword || newPassword.length < 6) {
+            return res.status(400).json({ error: 'Valid token and password (min 6 chars) are required.' });
+        }
+
+        const user = await authService.getUserByResetToken(token);
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid or expired reset token.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await authService.updatePassword(user.id, hashedPassword);
+
+        return res.json({ data: { message: 'Password reset successfully. You can now sign in.' } });
+    } catch (err) {
+        console.error('Reset password error:', err);
+        return res.status(500).json({ error: 'Failed to reset password.' });
+    }
+});
+
+// ─── POST /api/auth/verify-email ─────────────────────────────
+router.post('/verify-email', async (req, res) => {
+    try {
+        const token = String(req.body?.token || '').trim();
+        if (!token) {
+            return res.status(400).json({ error: 'Verification token is required.' });
+        }
+
+        const user = await authService.getUserByResetToken(token);
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid or expired verification token.' });
+        }
+
+        await authService.verifyUserEmail(user.id);
+
+        return res.json({ data: { message: 'Email verified successfully.' } });
+    } catch (err) {
+        console.error('Verify email error:', err);
+        return res.status(500).json({ error: 'Failed to verify email.' });
     }
 });
 

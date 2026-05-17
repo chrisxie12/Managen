@@ -65,6 +65,73 @@ class AuthService {
         return user;
     }
 
+    async getUserByEmail(email) {
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('id, full_name, email, school_id')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (error) {
+            const err = new Error(error.message);
+            err.statusCode = 400;
+            throw err;
+        }
+        return user;
+    }
+
+    async getUserByResetToken(token) {
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('id, full_name, email')
+            .eq('password_reset_token', token)
+            .gt('password_reset_expires', new Date().toISOString())
+            .maybeSingle();
+
+        if (error) return null;
+        return user;
+    }
+
+    async setPasswordResetToken(userId, token) {
+        const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+        const { error } = await supabase
+            .from('users')
+            .update({ password_reset_token: token, password_reset_expires: expires })
+            .eq('id', userId);
+
+        if (error) {
+            const err = new Error(error.message);
+            err.statusCode = 400;
+            throw err;
+        }
+    }
+
+    async updatePassword(userId, hashedPassword) {
+        const { error } = await supabase
+            .from('users')
+            .update({ password: hashedPassword, password_reset_token: null, password_reset_expires: null })
+            .eq('id', userId);
+
+        if (error) {
+            const err = new Error(error.message);
+            err.statusCode = 400;
+            throw err;
+        }
+    }
+
+    async verifyUserEmail(userId) {
+        const { error } = await supabase
+            .from('users')
+            .update({ email_verified: true })
+            .eq('id', userId);
+
+        if (error) {
+            const err = new Error(error.message);
+            err.statusCode = 400;
+            throw err;
+        }
+    }
+
     async getUserPermissions(userId) {
         try {
             const { user, error: userError } = await supabase

@@ -52,6 +52,18 @@ async function sendPaymentFailed({ to, name, amount, currency = 'GHS', invoiceId
     return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendPaymentFailed email');
 }
 
+async function sendPasswordReset({ to, name, resetLink }) {
+    const subject = 'Reset your Managen password';
+    const text = `Hello ${name || ''},\n\nYou requested a password reset. Click the link below to reset your password:\n\n${resetLink}\n\nThis link expires in 1 hour.\n\nIf you did not request this, please ignore this email.`;
+    return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendPasswordReset email');
+}
+
+async function sendEmailVerification({ to, name, verifyLink }) {
+    const subject = 'Verify your Managen email address';
+    const text = `Hello ${name || ''},\n\nWelcome to Managen! Click the link below to verify your email address:\n\n${verifyLink}\n\nThis link expires in 24 hours.`;
+    return wrapServiceCall(sendMailgunMessage({ to, subject, text }), 'sendEmailVerification email');
+}
+
 async function sendFeeReminder({ to, subject, message }) {
     const resolvedSubject = subject || 'Managen fee reminder';
     const resolvedMessage = message || 'You have an outstanding school fee payment.';
@@ -63,6 +75,8 @@ module.exports = {
     sendTrialReminder,
     sendPaymentReceipt,
     sendPaymentFailed,
+    sendPasswordReset,
+    sendEmailVerification,
     sendFeeReminder,
 };
 
