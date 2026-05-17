@@ -490,7 +490,6 @@ export function AuthPage() {
                     },
                   }}
                   {...{} as any}
-                  signUpUrl="/auth?mode=signup"
                 />
               </div>
             )}
