@@ -202,7 +202,7 @@ class HealthService {
       const failed = total - sent;
       const rate = total > 0 ? Math.round((sent / total) * 100) : 0;
 
-      const byChannel: Record<string, { sent: number; failed: number; total: number }> = {};
+      const byChannel = {};
       (data || []).forEach(r => {
         if (!byChannel[r.channel]) byChannel[r.channel] = { sent: 0, failed: 0, total: 0 };
         byChannel[r.channel].total += 1;

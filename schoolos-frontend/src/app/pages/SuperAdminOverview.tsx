@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import { api } from "../utils/api";
 import { Card, Header, QuickLink, QuickLinksCard, StatusRow, PlatformStatus, TenantHealthSummary, SyncStatus, EventTable, JobTable, AlertList } from "./superadmin/Components";
 
 /**
- * System Admin Overview – internal support dashboard.
+ * System Admin Overview - internal support dashboard.
  * Visible only to users with the "admin:system:view" permission (superadmin).
  * Data is fetched from real admin endpoints; no mock data is used.
  */
-export default function SuperAdminOverview() {
+export function SuperAdminOverview() {
   const navigate = useNavigate();
   const [platform, setPlatform] = useState<{ healthy: boolean; uptime: string; version: string } | null>(null);
   const [tenant, setTenant] = useState<{ total: number; healthy: number; degraded: number } | null>(null);

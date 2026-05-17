@@ -17,6 +17,9 @@
   "engines": {
     "node": "22.x"
   },
+  "overrides": {
+    "esbuild": "0.19.12"
+  },
   "dependencies": {
     "@clerk/backend": "^3.4.9",
     "@supabase/supabase-js": "^2.105.1",

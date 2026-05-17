@@ -1,3 +1,4 @@
+import React from "react";
 const CARD_BG = "#0f0f1a";
 const BORDER = "rgba(255,255,255,0.07)";
 const TEXT = "#e2e8f0";
@@ -150,3 +151,140 @@ export const BORDER_C = BORDER;
 export const TEXT_C = TEXT;
 export const MUTED_C = MUTED;
 export const ACCENT_C = ACCENT;
+
+export function Card({ title, children, className = "" }: { title?: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`p-6 rounded-[24px] ${className}`} style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+      {title && <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>{title}</h3>}
+      {children}
+    </div>
+  );
+}
+
+export function Header({ title }: { title: string }) {
+  return <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT }}>{title}</h3>;
+}
+
+export function StatusRow({ children }: { children: React.ReactNode }) {
+  return <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{children}</div>;
+}
+
+interface PlatformData {
+  healthy: boolean;
+  uptime: string;
+  version: string;
+}
+interface TenantHealthData {
+  total: number;
+  healthy: number;
+  degraded: number;
+}
+interface SyncData {
+  lastRun: string;
+  lagSeconds: number;
+  errors: string[];
+}
+export function PlatformStatus({ data }: any) {
+  const platformData = data as PlatformData;
+  if (!platformData) return <div className="text-gray-500">Loading...</div>;
+  return (
+    <div className="p-4 rounded-xl" style={{ background: platformData.healthy ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)", border: `1px solid ${platformData.healthy ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}` }}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p style={{ color: MUTED, fontSize: "0.75rem" }}>Platform Status</p>
+          <p style={{ color: platformData.healthy ? "#10B981" : "#EF4444", fontSize: "1rem", fontWeight: 600 }}>
+            {platformData.healthy ? "Healthy" : "Issues Detected"}
+          </p>
+          <p style={{ color: TEXT, fontSize: "0.8rem" }}>Up: {platformData.uptime}</p>
+        </div>
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${platformData.healthy ? "bg-green-500/20" : "bg-red-500/20"}`}>
+          <span>{platformData.healthy ? "✓" : "✕"}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function TenantHealthSummary({ data }: any) {
+  const tenantHealth = data as TenantHealthData;
+  if (!tenantHealth) return <div className="text-gray-500">Loading...</div>;
+  return (
+    <div className="p-4 rounded-xl" style={{ background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)" }}>
+      <p style={{ color: MUTED, fontSize: "0.75rem" }}>Tenant Health</p>
+      <div style={{ display: "flex", justifyContent: "space-around", marginTop: "1rem" }}>
+        <div className="text-center">
+          <p style={{ color: TEXT, fontSize: "1.2rem", fontWeight: 700 }}>{tenantHealth.total}</p>
+          <p style={{ color: MUTED, fontSize: "0.7rem" }}>Total</p>
+        </div>
+        <div className="text-center">
+          <p style={{ color: "#10B981", fontSize: "1.2rem", fontWeight: 700 }}>{tenantHealth.healthy}</p>
+          <p style={{ color: MUTED, fontSize: "0.7rem" }}>Healthy</p>
+        </div>
+        <div className="text-center">
+          <p style={{ color: "#F59E0B", fontSize: "1.2rem", fontWeight: 700 }}>{tenantHealth.degraded}</p>
+          <p style={{ color: MUTED, fontSize: "0.7rem" }}>Degraded</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function SyncStatus({ data }: any) {
+  const syncData = data as SyncData;
+  if (!syncData) return <div className="text-gray-500">Loading...</div>;
+  const isHealthy = syncData.lagSeconds < 60 && syncData.errors.length === 0;
+  return (
+    <div className="p-4 rounded-xl" style={{ background: isHealthy ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)", border: `1px solid ${isHealthy ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)"}` }}>
+      <p style={{ color: MUTED, fontSize: "0.75rem" }}>Sync Status</p>
+      <div style={{ marginTop: "0.25rem" }}>
+        <p style={{ color: TEXT, fontSize: "0.9rem" }}>Last: {syncData.lastRun}</p>
+        <p style={{ color: TEXT, fontSize: "0.85rem" }}>Latency: {syncData.lagSeconds}s</p>
+{syncData.errors.length > 0 && syncData.errors.slice(0, 2).map((err, i) => (
+           <p key={i} style={{ color: "#EF4444", fontSize: "0.75rem" }}>Error: {err}</p>
+         ))}
+       </div>
+     </div>
+   );
+ }
+ 
+ export function QuickLink({ icon: Icon, label, href }: { icon: any; label: string; href: string }) {
+  return (
+    <a href={href} style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: TEXT, fontSize: "0.85rem" }}>
+      <Icon size={16} color={ACCENT} />
+      <span>{label}</span>
+    </a>
+  );
+}
+
+export function QuickLinksCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="p-6 rounded-[24px]" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+      <h3 style={{ fontWeight: 700, fontSize: "1rem", color: TEXT, marginBottom: "1rem" }}>Quick Links</h3>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+export function AlertList({ endpoint }: { endpoint: string }) {
+  return (
+    <div className="p-4 rounded-xl space-y-2" style={{ background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.1)" }}>
+      <p style={{ color: "#F59E0B", fontSize: "0.75rem", marginBottom: "0.5rem" }}>No active security alerts</p>
+    </div>
+  );
+}
+
+export function EventTable({ endpoint }: { endpoint: string }) {
+  return (
+    <div className="space-y-2">
+      <p style={{ color: TEXT, fontSize: "0.85rem" }}>Recent critical events loaded from {endpoint}</p>
+    </div>
+  );
+}
+
+export function JobTable({ endpoint }: { endpoint: string }) {
+  return (
+    <div className="space-y-2">
+      <p style={{ color: TEXT, fontSize: "0.85rem" }}>Failed jobs loaded from {endpoint}</p>
+    </div>
+  );
+}

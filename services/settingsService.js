@@ -61,7 +61,7 @@ class SettingsService {
   async getSettingsMap(schoolId) {
     const { data, error } = await supabase.from('school_settings').select('key, value').eq('school_id', schoolId);
     if (error) throw error;
-    const map: Record<string, any> = {};
+    const map = {};
     (data || []).forEach(s => { map[s.key] = s.value; });
     return map;
   }
@@ -143,7 +143,7 @@ class SettingsService {
     if (is_current) {
       await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', schoolId).eq('is_current', true);
     }
-    const payload: Record<string, any> = {};
+    const payload = {};
     if (name !== undefined) payload.name = name;
     if (start_date !== undefined) payload.start_date = start_date;
     if (end_date !== undefined) payload.end_date = end_date;
@@ -185,7 +185,7 @@ class SettingsService {
     if (is_current) {
       await supabase.from('academic_sessions').update({ is_current: false }).eq('school_id', schoolId).eq('is_current', true);
     }
-    const payload: Record<string, any> = {};
+    const payload = {};
     if (name !== undefined) payload.name = name;
     if (start_date !== undefined) payload.start_date = start_date;
     if (end_date !== undefined) payload.end_date = end_date;
@@ -219,7 +219,7 @@ class SettingsService {
         return acc;
       }, {});
       for (const scale of scales) {
-        (scale as any).rules = rulesByScale[scale.id] || [];
+        scale.rules = rulesByScale[scale.id] || [];
       }
     }
     return scales;
