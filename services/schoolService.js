@@ -596,6 +596,221 @@ class SchoolService {
         if (error) throw error;
         return data;
     }
+
+    // ─── Streams ─────────────────────────────────────────────────
+    async getStreams(schoolId) {
+        const { data, error } = await supabase.from('streams')
+            .select('*, class:classes(name)')
+            .eq('school_id', schoolId)
+            .order('name');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createStream(schoolId, payload) {
+        const { data, error } = await supabase.from('streams')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select('*, class:classes(name)')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateStream(schoolId, id, payload) {
+        const { data, error } = await supabase.from('streams')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select('*, class:classes(name)')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteStream(schoolId, id) {
+        const { error } = await supabase.from('streams')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Academic Sessions ──────────────────────────────────────
+    async getSessions(schoolId) {
+        const { data, error } = await supabase.from('academic_sessions')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('start_date', { ascending: false });
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createSession(schoolId, payload) {
+        const { data, error } = await supabase.from('academic_sessions')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async updateSession(schoolId, id, payload) {
+        const { data, error } = await supabase.from('academic_sessions')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteSession(schoolId, id) {
+        const { error } = await supabase.from('academic_sessions')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Class-Subject Association ───────────────────────────────
+    async getClassSubjects(schoolId) {
+        const { data, error } = await supabase.from('class_subjects')
+            .select('*, class:classes(name), subject:subjects(name, code)')
+            .eq('school_id', schoolId)
+            .order('created_at');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async addClassSubject(schoolId, payload) {
+        const { data, error } = await supabase.from('class_subjects')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select('*, class:classes(name), subject:subjects(name, code)')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async removeClassSubject(schoolId, id) {
+        const { error } = await supabase.from('class_subjects')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Subject-Teacher Assignment ──────────────────────────────
+    async getSubjectTeachers(schoolId) {
+        const { data, error } = await supabase.from('subject_teachers')
+            .select('*, subject:subjects(name, code), teacher:users(name, email), class:classes(name)')
+            .eq('school_id', schoolId)
+            .order('created_at');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async assignSubjectTeacher(schoolId, payload) {
+        const { data, error } = await supabase.from('subject_teachers')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select('*, subject:subjects(name, code), teacher:users(name, email), class:classes(name)')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async removeSubjectTeacher(schoolId, id) {
+        const { error } = await supabase.from('subject_teachers')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Class-Teacher Assignment ────────────────────────────────
+    async getClassTeachers(schoolId) {
+        const { data, error } = await supabase.from('class_teachers')
+            .select('*, class:classes(name), teacher:users(name, email)')
+            .eq('school_id', schoolId)
+            .order('created_at');
+        if (error) throw error;
+        return data || [];
+    }
+
+    async assignClassTeacher(schoolId, payload) {
+        const { data, error } = await supabase.from('class_teachers')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select('*, class:classes(name), teacher:users(name, email)')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async removeClassTeacher(schoolId, id) {
+        const { error } = await supabase.from('class_teachers')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Timetable Conflict Detection ────────────────────────────
+    async checkTimetableConflicts(schoolId, entry) {
+        let query = supabase.from('timetable')
+            .select('id, day, period, subject, teacher, class_name, room')
+            .eq('tenant_id', schoolId)
+            .eq('day', entry.day)
+            .eq('period', entry.period);
+
+        const { data, error } = await query;
+        if (error) throw error;
+        const conflicts = (data || []).filter(t => {
+            if (entry.id && t.id === entry.id) return false;
+            const sameTeacher = t.teacher && entry.teacher && t.teacher.toLowerCase() === entry.teacher.toLowerCase();
+            const sameClass = t.class_name && entry.class_name && t.class_name.toLowerCase() === entry.class_name.toLowerCase();
+            const sameRoom = t.room && entry.room && t.room.toLowerCase() === entry.room.toLowerCase();
+            return sameTeacher || sameClass || sameRoom;
+        });
+        return conflicts;
+    }
+
+    // ─── Teacher Workload Summary ────────────────────────────────
+    async getTeacherWorkload(schoolId) {
+        const [teachers, subjectTeachers, timetableEntries] = await Promise.all([
+            supabase.from('users').select('id, name, email').eq('tenant_id', schoolId).eq('role', 'teacher'),
+            supabase.from('subject_teachers').select('*, subject:subjects(name), class:classes(name)').eq('school_id', schoolId),
+            supabase.from('timetable').select('teacher, day, period, class_name, subject').eq('tenant_id', schoolId),
+        ]);
+
+        const workload = {};
+        const tData = teachers.data || [];
+        const stData = subjectTeachers.data || [];
+        const ttData = timetableEntries.data || [];
+
+        tData.forEach(t => {
+            const assignments = stData.filter(st => st.teacher_id === t.id);
+            const classes = new Set(assignments.map(a => a.class?.name).filter(Boolean));
+            const subjects = new Set(assignments.map(a => a.subject?.name).filter(Boolean));
+            const ttCount = ttData.filter(tt => tt.teacher && tt.teacher.toLowerCase() === t.name.toLowerCase()).length;
+
+            workload[t.id] = {
+                teacher: { id: t.id, name: t.name, email: t.email },
+                subjectCount: subjects.size,
+                classCount: classes.size,
+                subjects: Array.from(subjects),
+                classes: Array.from(classes),
+                timetableEntries: ttCount,
+                totalAssignments: assignments.length,
+            };
+        });
+
+        return Object.values(workload).sort((a, b) => b.totalAssignments - a.totalAssignments);
+    }
 }
 
 module.exports = new SchoolService();

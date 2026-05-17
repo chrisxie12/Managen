@@ -720,6 +720,184 @@ router.delete('/timetable/:id', protect, requirePermission('timetable.delete'), 
     }
 });
 
+// GET /api/school/timetable/conflicts - detect timetable conflicts
+router.get('/timetable/conflicts', protect, async (req, res) => {
+    try {
+        const conflicts = await schoolService.checkTimetableConflicts(req.tenant.id, req.query);
+        return res.json({ data: { conflicts } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error checking timetable conflicts.' });
+    }
+});
+
+// GET /api/school/teachers/workload - teacher workload summary
+router.get('/teachers/workload', protect, async (req, res) => {
+    try {
+        const workload = await schoolService.getTeacherWorkload(req.tenant.id);
+        return res.json({ data: { workload } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching teacher workload.' });
+    }
+});
+
+// ─── Streams ──────────────────────────────────────────────────
+router.get('/streams', protect, async (req, res) => {
+    try {
+        const streams = await schoolService.getStreams(req.tenant.id);
+        return res.json({ data: { streams } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching streams.' });
+    }
+});
+
+router.post('/streams', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const stream = await schoolService.createStream(req.tenant.id, req.body);
+        return res.status(201).json({ data: { stream } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating stream.' });
+    }
+});
+
+router.put('/streams/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const stream = await schoolService.updateStream(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { stream } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating stream.' });
+    }
+});
+
+router.delete('/streams/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.deleteStream(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Stream deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting stream.' });
+    }
+});
+
+// ─── Academic Sessions ─────────────────────────────────────────
+router.get('/sessions', protect, async (req, res) => {
+    try {
+        const sessions = await schoolService.getSessions(req.tenant.id);
+        return res.json({ data: { sessions } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching sessions.' });
+    }
+});
+
+router.post('/sessions', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const session = await schoolService.createSession(req.tenant.id, req.body);
+        return res.status(201).json({ data: { session } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating session.' });
+    }
+});
+
+router.put('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const session = await schoolService.updateSession(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { session } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating session.' });
+    }
+});
+
+router.delete('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.deleteSession(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Session deleted.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting session.' });
+    }
+});
+
+// ─── Class-Subject Association ─────────────────────────────────
+router.get('/class-subjects', protect, async (req, res) => {
+    try {
+        const associations = await schoolService.getClassSubjects(req.tenant.id);
+        return res.json({ data: { associations } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching class-subject associations.' });
+    }
+});
+
+router.post('/class-subjects', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const association = await schoolService.addClassSubject(req.tenant.id, req.body);
+        return res.status(201).json({ data: { association } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error adding class-subject association.' });
+    }
+});
+
+router.delete('/class-subjects/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.removeClassSubject(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Association removed.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error removing class-subject association.' });
+    }
+});
+
+// ─── Subject-Teacher Assignment ────────────────────────────────
+router.get('/subject-teachers', protect, async (req, res) => {
+    try {
+        const assignments = await schoolService.getSubjectTeachers(req.tenant.id);
+        return res.json({ data: { assignments } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching subject-teacher assignments.' });
+    }
+});
+
+router.post('/subject-teachers', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const assignment = await schoolService.assignSubjectTeacher(req.tenant.id, req.body);
+        return res.status(201).json({ data: { assignment } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error assigning subject teacher.' });
+    }
+});
+
+router.delete('/subject-teachers/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.removeSubjectTeacher(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Assignment removed.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error removing subject-teacher assignment.' });
+    }
+});
+
+// ─── Class-Teacher Assignment ──────────────────────────────────
+router.get('/class-teachers', protect, async (req, res) => {
+    try {
+        const assignments = await schoolService.getClassTeachers(req.tenant.id);
+        return res.json({ data: { assignments } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching class-teacher assignments.' });
+    }
+});
+
+router.post('/class-teachers', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const assignment = await schoolService.assignClassTeacher(req.tenant.id, req.body);
+        return res.status(201).json({ data: { assignment } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error assigning class teacher.' });
+    }
+});
+
+router.delete('/class-teachers/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await schoolService.removeClassTeacher(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Assignment removed.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error removing class-teacher assignment.' });
+    }
+});
+
 // ─── Exam Update ──────────────────────────────────────────────
 const updateExamSchema = {
     body: z.object({
