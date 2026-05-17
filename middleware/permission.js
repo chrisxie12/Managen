@@ -26,6 +26,7 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 'announcements.create', 'announcements.view', 'announcements.edit', 'announcements.delete',
                 'notifications.create', 'notifications.view', 'notifications.edit', 'notifications.delete',
                 'reports.create', 'reports.view', 'reports.edit', 'reports.delete',
+                'audit_logs.view',
                 'users.create', 'users.view', 'users.edit', 'users.delete',
                 'settings.view', 'settings.edit',
             ],
@@ -45,6 +46,7 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 'announcements.create', 'announcements.view', 'announcements.edit', 'announcements.delete',
                 'notifications.create', 'notifications.view', 'notifications.edit', 'notifications.delete',
                 'reports.create', 'reports.view', 'reports.edit', 'reports.delete',
+                'audit_logs.view',
                 'users.create', 'users.view', 'users.edit', 'users.delete',
                 'settings.view', 'settings.edit',
             ],
@@ -54,6 +56,7 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 'subjects.view', 'timetable.view', 'attendance.view', 'grades.view',
                 'fees.view', 'payments.view',
                 'messages.view', 'announcements.view', 'notifications.view', 'reports.view',
+                'audit_logs.view',
             ],
             accountant: [
                 'dashboard.view', 'students.view',
