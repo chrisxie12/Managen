@@ -5,7 +5,7 @@ import {
   Shield, Zap, CheckCircle2, GraduationCap, Wallet, Bell,
   Star, Menu, X, TrendingUp, Clock, Award, XCircle, Send,
   Building2, Loader2, ChevronDown, Mail, MapPin, Globe,
-  Linkedin, Twitter, Facebook, Youtube,
+  Linkedin, Twitter, Facebook, Youtube, Phone,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -502,7 +502,8 @@ export function LandingPage() {
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Contact</h4>
               <div className="flex flex-col gap-3">
                 {[
-                  { icon: Mail, text: "hello@managen.africa" },
+                  { icon: Mail, text: "support@schoolos.me" },
+                  { icon: Phone, text: "+233 53 278 5149" },
                   { icon: MapPin, text: "Accra, Ghana & Lagos, Nigeria" },
                   { icon: MessageSquare, text: "WhatsApp Support" },
                 ].map((item) => (
