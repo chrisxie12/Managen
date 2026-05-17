@@ -811,6 +811,243 @@ class SchoolService {
 
         return Object.values(workload).sort((a, b) => b.totalAssignments - a.totalAssignments);
     }
+
+    // ─── Analytics ────────────────────────────────────────────────
+
+    async getAttendanceTrend(schoolId, days = 30) {
+        const start = new Date(Date.now() - days * 86400000).toISOString().split('T')[0];
+        const { data, error } = await supabase.from('attendance')
+            .select('date, status')
+            .eq('tenant_id', schoolId)
+            .gte('date', start);
+        if (error) throw error;
+        const daily = {};
+        (data || []).forEach(r => {
+            if (!daily[r.date]) daily[r.date] = { date: r.date, present: 0, total: 0 };
+            daily[r.date].total += 1;
+            if (r.status === 'Present') daily[r.date].present += 1;
+        });
+        return Object.values(daily).sort((a, b) => a.date.localeCompare(b.date)).map(d => ({
+            ...d,
+            rate: d.total > 0 ? Number(((d.present / d.total) * 100).toFixed(1)) : 0,
+        }));
+    }
+
+    async getPerformanceTrend(schoolId, termId) {
+        const { data: assessments, error: aErr } = await supabase.from('assessments')
+            .select('id, name, date, max_score')
+            .eq('school_id', schoolId)
+            .eq('term_id', termId);
+        if (aErr) throw aErr;
+        if (!assessments || assessments.length === 0) return [];
+
+        const ids = assessments.map(a => a.id);
+        const { data: scores, error: sErr } = await supabase.from('assessment_scores')
+            .select('assessment_id, score')
+            .in('assessment_id', ids)
+            .eq('school_id', schoolId);
+        if (sErr) throw sErr;
+
+        const scoreMap = {};
+        (scores || []).forEach(s => {
+            if (!scoreMap[s.assessment_id]) scoreMap[s.assessment_id] = [];
+            scoreMap[s.assessment_id].push(Number(s.score));
+        });
+
+        return assessments.map(a => {
+            const s = scoreMap[a.id] || [];
+            const avg = s.length > 0 ? s.reduce((sum, v) => sum + v, 0) / s.length : 0;
+            return {
+                assessment_id: a.id,
+                name: a.name,
+                date: a.date,
+                max_score: a.max_score,
+                average: Number(avg.toFixed(1)),
+                studentCount: s.length,
+                rate: a.max_score > 0 ? Number(((avg / a.max_score) * 100).toFixed(1)) : 0,
+            };
+        }).sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    async getSubjectComparison(schoolId, termId) {
+        const { data: assessments, error: aErr } = await supabase.from('assessments')
+            .select('id, subject_id, max_score, subject:subjects(name)')
+            .eq('school_id', schoolId)
+            .eq('term_id', termId);
+        if (aErr) throw aErr;
+        if (!assessments || assessments.length === 0) return [];
+
+        const ids = assessments.map(a => a.id);
+        const { data: scores, error: sErr } = await supabase.from('assessment_scores')
+            .select('assessment_id, score')
+            .in('assessment_id', ids)
+            .eq('school_id', schoolId);
+        if (sErr) throw sErr;
+
+        const scoreMap = {};
+        (scores || []).forEach(s => {
+            if (!scoreMap[s.assessment_id]) scoreMap[s.assessment_id] = [];
+            scoreMap[s.assessment_id].push(Number(s.score));
+        });
+
+        const subjectAgg = {};
+        assessments.forEach(a => {
+            const subjId = a.subject_id;
+            if (!subjectAgg[subjId]) subjectAgg[subjId] = { subject_id: subjId, subject_name: a.subject?.name || 'Unknown', totalScore: 0, totalMax: 0, count: 0 };
+            const s = scoreMap[a.id] || [];
+            if (s.length > 0) {
+                const avg = s.reduce((sum, v) => sum + v, 0) / s.length;
+                subjectAgg[subjId].totalScore += avg;
+                subjectAgg[subjId].totalMax += a.max_score;
+                subjectAgg[subjId].count += 1;
+            }
+        });
+
+        return Object.values(subjectAgg).map(s => ({
+            ...s,
+            average: s.count > 0 ? Number((s.totalScore / s.count).toFixed(1)) : 0,
+            rate: s.totalMax > 0 ? Number(((s.totalScore / s.totalMax) * 100).toFixed(1)) : 0,
+        })).sort((a, b) => b.rate - a.rate);
+    }
+
+    async getClassComparison(schoolId, termId) {
+        const { data: assessments, error: aErr } = await supabase.from('assessments')
+            .select('id, class_id, max_score')
+            .eq('school_id', schoolId)
+            .eq('term_id', termId);
+        if (aErr) throw aErr;
+        if (!assessments || assessments.length === 0) return [];
+
+        const ids = assessments.map(a => a.id);
+        const { data: scores, error: sErr } = await supabase.from('assessment_scores')
+            .select('assessment_id, student_id, score')
+            .in('assessment_id', ids)
+            .eq('school_id', schoolId);
+        if (sErr) throw sErr;
+
+        const classIds = [...new Set(assessments.map(a => a.class_id))];
+        const { data: classes } = await supabase.from('classes').select('id, name').in('id', classIds);
+        const classMap = (classes || []).reduce((acc, c) => ({ ...acc, [c.id]: c.name }), {});
+
+        const assMap = {};
+        assessments.forEach(a => {
+            if (!assMap[a.class_id]) assMap[a.class_id] = { totalScore: 0, totalMax: 0, studentSet: new Set() };
+            assMap[a.class_id].totalMax += a.max_score;
+        });
+        (scores || []).forEach(s => {
+            const a = assessments.find(ass => ass.id === s.assessment_id);
+            if (a && assMap[a.class_id]) {
+                assMap[a.class_id].totalScore += Number(s.score);
+                assMap[a.class_id].studentSet.add(s.student_id);
+            }
+        });
+
+        return Object.entries(assMap).map(([classId, d]) => ({
+            class_id: classId,
+            class_name: classMap[classId] || 'Unknown',
+            average: d.studentSet.size > 0 ? Number((d.totalScore / (d.studentSet.size * Object.keys(assMap[classId]).length || 1)).toFixed(1)) : 0,
+            rate: d.totalMax > 0 ? Number(((d.totalScore / (d.studentSet.size * d.totalMax || 1)) * 100).toFixed(1)) : 0,
+            studentCount: d.studentSet.size,
+        })).sort((a, b) => b.rate - a.rate);
+    }
+
+    async getRiskAlerts(schoolId) {
+        const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
+
+        const [attData, assData, intData] = await Promise.all([
+            supabase.from('attendance')
+                .select('student_id, status, student:students(name, class_name, admission_no)')
+                .eq('tenant_id', schoolId)
+                .gte('date', thirtyDaysAgo),
+            supabase.from('assessment_scores')
+                .select('student_id, score, assessment:assessments(max_score, class_id)', { count: 'exact' })
+                .eq('school_id', schoolId),
+            supabase.from('interventions')
+                .select('*, student:students(name, class_name), assigned:users!assigned_to(full_name)')
+                .eq('school_id', schoolId)
+                .neq('status', 'resolved')
+                .order('created_at', { ascending: false }),
+        ]);
+
+        const alerts = [];
+
+        // Attendance risk: students with <80% attendance
+        const attMap = {};
+        (attData.data || []).forEach(r => {
+            if (!attMap[r.student_id]) attMap[r.student_id] = { student: r.student, total: 0, present: 0 };
+            attMap[r.student_id].total += 1;
+            if (r.status === 'Present') attMap[r.student_id].present += 1;
+        });
+        Object.entries(attMap).forEach(([sid, d]) => {
+            const rate = d.total > 0 ? (d.present / d.total) * 100 : 0;
+            if (rate < 80) {
+                alerts.push({
+                    type: 'attendance',
+                    severity: rate < 60 ? 'high' : 'medium',
+                    student_id: sid,
+                    student: d.student,
+                    metric: Number(rate.toFixed(1)),
+                    message: `${rate.toFixed(1)}% attendance rate (${d.present}/${d.total} days)`,
+                });
+            }
+        });
+
+        // Performance risk: students with low average scores
+        const perfMap = {};
+        (assData.data || []).forEach(r => {
+            const maxScore = r.assessment?.max_score || 1;
+            if (!perfMap[r.student_id]) perfMap[r.student_id] = { totalPct: 0, count: 0 };
+            perfMap[r.student_id].totalPct += (Number(r.score) / maxScore) * 100;
+            perfMap[r.student_id].count += 1;
+        });
+        Object.entries(perfMap).forEach(([sid, d]) => {
+            const avg = d.count > 0 ? d.totalPct / d.count : 0;
+            if (avg < 50) {
+                const existing = alerts.find(a => a.student_id === sid);
+                alerts.push({
+                    type: 'performance',
+                    severity: avg < 30 ? 'high' : 'medium',
+                    student_id: sid,
+                    student: existing?.student || null,
+                    metric: Number(avg.toFixed(1)),
+                    message: `Average score ${avg.toFixed(1)}% across ${d.count} assessment(s)`,
+                });
+            }
+        });
+
+        return {
+            alerts,
+            openInterventions: (intData.data || []).map(i => ({
+                id: i.id,
+                type: i.type,
+                severity: i.severity,
+                status: i.status,
+                notes: i.notes,
+                student: i.student,
+                assigned: i.assigned,
+                created_at: i.created_at,
+            })),
+        };
+    }
+
+    async getTopBottomPerformers(schoolId, termId, classId, limit = 5) {
+        let query = supabase.from('report_cards')
+            .select('*, student:students(name, admission_no), class:classes(name)')
+            .eq('school_id', schoolId)
+            .eq('term_id', termId)
+            .not('status', 'eq', 'draft');
+        if (classId) query = query.eq('class_id', classId);
+        query = query.order('average', { ascending: false });
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const list = data || [];
+        return {
+            top: list.slice(0, limit),
+            bottom: list.slice(-limit).reverse(),
+        };
+    }
 }
 
 module.exports = new SchoolService();

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
-  Shield, UserPlus, CalendarCheck, ClipboardCheck,
+  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
@@ -19,6 +19,7 @@ const allNavItems = [
   { icon: UserPlus, label: "Users", path: "/dashboard/users" },
   { icon: Users, label: "Students", path: "/dashboard/students" },
   { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
+  { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
   { icon: ClipboardCheck, label: "Assessments", path: "/dashboard/assessments" },
   { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
   { icon: Wallet, label: "Finance", path: "/dashboard/finance" },

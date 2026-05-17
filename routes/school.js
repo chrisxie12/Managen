@@ -216,6 +216,64 @@ router.post('/fees/reminders/send', protect, requireModule('fees'), requirePermi
     }
 });
 
+// ─── Analytics Routes ───────────────────────────────────────────
+
+// GET /api/school/analytics/attendance-trend
+router.get('/analytics/attendance-trend', protect, async (req, res) => {
+    try {
+        const data = await schoolService.getAttendanceTrend(req.tenant.id, Number(req.query.days) || 30);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching attendance trend.' }); }
+});
+
+// GET /api/school/analytics/performance-trend
+router.get('/analytics/performance-trend', protect, async (req, res) => {
+    try {
+        const { term_id } = req.query;
+        if (!term_id) return res.status(400).json({ error: 'term_id required.' });
+        const data = await schoolService.getPerformanceTrend(req.tenant.id, term_id);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching performance trend.' }); }
+});
+
+// GET /api/school/analytics/subject-comparison
+router.get('/analytics/subject-comparison', protect, async (req, res) => {
+    try {
+        const { term_id } = req.query;
+        if (!term_id) return res.status(400).json({ error: 'term_id required.' });
+        const data = await schoolService.getSubjectComparison(req.tenant.id, term_id);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching subject comparison.' }); }
+});
+
+// GET /api/school/analytics/class-comparison
+router.get('/analytics/class-comparison', protect, async (req, res) => {
+    try {
+        const { term_id } = req.query;
+        if (!term_id) return res.status(400).json({ error: 'term_id required.' });
+        const data = await schoolService.getClassComparison(req.tenant.id, term_id);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching class comparison.' }); }
+});
+
+// GET /api/school/analytics/risk-alerts
+router.get('/analytics/risk-alerts', protect, async (req, res) => {
+    try {
+        const data = await schoolService.getRiskAlerts(req.tenant.id);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching risk alerts.' }); }
+});
+
+// GET /api/school/analytics/top-bottom
+router.get('/analytics/top-bottom', protect, async (req, res) => {
+    try {
+        const { term_id, class_id, limit } = req.query;
+        if (!term_id) return res.status(400).json({ error: 'term_id required.' });
+        const data = await schoolService.getTopBottomPerformers(req.tenant.id, term_id, class_id, Number(limit) || 5);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching performers.' }); }
+});
+
 // ─── Exams & Results Routes ─────────────────────────────────────
 
 const examSchema = {

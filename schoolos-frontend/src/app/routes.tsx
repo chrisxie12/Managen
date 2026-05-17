@@ -16,6 +16,7 @@ import { AdminRoles } from "./pages/AdminRoles";
 import { AdminUsers } from "./pages/AdminUsers";
 import { Attendance } from "./pages/Attendance";
 import { Assessments } from "./pages/Assessments";
+import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
       { path: "students", Component: Students },
       { path: "attendance", Component: Attendance },
       { path: "assessments", Component: Assessments },
+      { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },
       { path: "fee-reminders", Component: SmartFeeReminders },
