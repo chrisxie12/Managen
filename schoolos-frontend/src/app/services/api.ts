@@ -5,13 +5,7 @@
  * Dev: Vite proxy (vite.config.ts) forwards /api/* → backend.
  * Prod: VITE_API_BASE_URL must be set at build time (DigitalOcean env var).
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-if (!API_BASE_URL) {
-  throw new Error(
-    'Missing VITE_API_BASE_URL — set it in your DigitalOcean frontend static site env vars.'
-  );
-}
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export interface ApiResponse<T = any> {
   data?: T;

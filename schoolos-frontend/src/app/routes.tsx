@@ -25,6 +25,7 @@ import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
 import { SuperAdminOverview } from "./pages/SuperAdminOverview";
+import { SuperAdminBilling } from "./pages/SuperAdminBilling";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
