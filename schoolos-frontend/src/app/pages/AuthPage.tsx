@@ -647,6 +647,8 @@ export function AuthPage() {
             </div>
             </>)}
 
+            <div id="clerk-captcha"></div>
+
             {mode !== "login" && mode !== "verify-email" && !(mode === "forgot" && resetSent) && (
             <button
               type="submit"
