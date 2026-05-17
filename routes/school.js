@@ -316,6 +316,154 @@ router.get('/results/student/:studentId', protect, async (req, res) => {
     }
 });
 
+// ─── Assessment Types ────────────────────────────────────────
+router.get('/assessment-types', protect, async (req, res) => {
+    try {
+        const types = await examService.getAssessmentTypes(req.tenant.id);
+        return res.json({ data: { types } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching assessment types.' }); }
+});
+router.post('/assessment-types', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const type = await examService.createAssessmentType(req.tenant.id, req.body);
+        return res.status(201).json({ data: { type } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating assessment type.' }); }
+});
+router.put('/assessment-types/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const type = await examService.updateAssessmentType(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { type } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating assessment type.' }); }
+});
+router.delete('/assessment-types/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await examService.deleteAssessmentType(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Assessment type deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting assessment type.' }); }
+});
+
+// ─── Grading Scales ──────────────────────────────────────────
+router.get('/grading-scales', protect, async (req, res) => {
+    try {
+        const scales = await examService.getGradingScales(req.tenant.id);
+        return res.json({ data: { scales } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching grading scales.' }); }
+});
+router.post('/grading-scales', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const scale = await examService.createGradingScale(req.tenant.id, req.body);
+        return res.status(201).json({ data: { scale } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating grading scale.' }); }
+});
+router.delete('/grading-scales/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await examService.deleteGradingScale(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Grading scale deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting grading scale.' }); }
+});
+
+// ─── Grade Rules ─────────────────────────────────────────────
+router.get('/grade-rules', protect, async (req, res) => {
+    try {
+        const { scale_id } = req.query;
+        if (!scale_id) return res.status(400).json({ error: 'scale_id query param required.' });
+        const rules = await examService.getGradeRules(scale_id);
+        return res.json({ data: { rules } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching grade rules.' }); }
+});
+router.post('/grade-rules', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const { scale_id } = req.query;
+        if (!scale_id) return res.status(400).json({ error: 'scale_id query param required.' });
+        const rule = await examService.setGradeRule(scale_id, req.body);
+        return res.status(201).json({ data: { rule } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating grade rule.' }); }
+});
+router.delete('/grade-rules/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        await examService.deleteGradeRule(req.params.id);
+        return res.json({ data: { message: 'Grade rule deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting grade rule.' }); }
+});
+
+// ─── Assessments ─────────────────────────────────────────────
+router.get('/assessments', protect, async (req, res) => {
+    try {
+        const assessments = await examService.getAssessments(req.tenant.id, req.query);
+        return res.json({ data: { assessments } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching assessments.' }); }
+});
+router.post('/assessments', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+    try {
+        const assessment = await examService.createAssessment(req.tenant.id, req.body, req.user?.userId);
+        return res.status(201).json({ data: { assessment } });
+    } catch (err) { return res.status(500).json({ error: 'Error creating assessment.' }); }
+});
+router.put('/assessments/:id', protect, requirePermission('grades.edit'), async (req, res) => {
+    try {
+        const assessment = await examService.updateAssessment(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { assessment } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating assessment.' }); }
+});
+router.delete('/assessments/:id', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+    try {
+        await examService.deleteAssessment(req.tenant.id, req.params.id);
+        return res.json({ data: { message: 'Assessment deleted.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deleting assessment.' }); }
+});
+
+// ─── Assessment Scores ───────────────────────────────────────
+router.get('/assessment-scores', protect, async (req, res) => {
+    try {
+        const { assessment_id } = req.query;
+        if (!assessment_id) return res.status(400).json({ error: 'assessment_id query param required.' });
+        const scores = await examService.getAssessmentScores(req.tenant.id, assessment_id);
+        return res.json({ data: { scores } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching scores.' }); }
+});
+router.post('/assessment-scores/bulk', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+    try {
+        const scores = await examService.bulkSubmitScores(req.tenant.id, req.body.scores);
+        return res.status(201).json({ data: { scores, message: `${scores.length} scores saved.` } });
+    } catch (err) { return res.status(500).json({ error: 'Error saving scores.' }); }
+});
+
+// ─── Term Grade Calculation ───────────────────────────────────
+router.get('/assessments/calculate-grades', protect, requirePermission('grades.view'), async (req, res) => {
+    try {
+        const { class_id, term_id, session_id, scale_id } = req.query;
+        if (!class_id || !term_id) return res.status(400).json({ error: 'class_id and term_id required.' });
+        const result = await examService.calculateTermGrades(req.tenant.id, class_id, term_id, session_id, scale_id);
+        return res.json({ data: result });
+    } catch (err) { return res.status(500).json({ error: 'Error calculating grades.' }); }
+});
+
+// ─── Report Cards ────────────────────────────────────────────
+router.get('/report-cards', protect, async (req, res) => {
+    try {
+        const cards = await examService.getReportCards(req.tenant.id, req.query);
+        return res.json({ data: { reportCards: cards } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching report cards.' }); }
+});
+router.post('/report-cards/generate', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+    try {
+        const card = await examService.generateReportCard(req.tenant.id, req.body, req.user?.userId);
+        return res.status(201).json({ data: { reportCard: card, message: 'Report card generated.' } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating report card.' }); }
+});
+router.put('/report-cards/:id/publish', protect, requirePermission('grades.edit'), async (req, res) => {
+    try {
+        const card = await examService.publishReportCard(req.tenant.id, req.params.id, req.user?.userId);
+        return res.json({ data: { reportCard: card, message: 'Report card published.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error publishing report card.' }); }
+});
+router.put('/report-cards/:id/approve', protect, requirePermission('settings.edit', 'grades.edit'), async (req, res) => {
+    try {
+        const card = await examService.approveReportCard(req.tenant.id, req.params.id, req.user?.userId);
+        return res.json({ data: { reportCard: card, message: 'Report card approved.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error approving report card.' }); }
+});
+
 // ─── Teachers ────────────────────────────────────────────────
 router.get('/teachers', protect, async (req, res) => {
     try {
