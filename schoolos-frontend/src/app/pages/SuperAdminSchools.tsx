@@ -151,8 +151,8 @@ export function SuperAdminSchools() {
       {loading ? <LoadingSkeleton /> : error ? <ErrorState message={error} onRetry={fetchSchools} /> : filtered.length === 0 ? (
         <EmptyState icon={Building2} title={search || statusFilter || planFilter ? "No schools match your filters" : "No schools registered yet"} desc={search || statusFilter || planFilter ? "Try adjusting your search or filters." : "Schools will appear here once they register on the platform."} />
       ) : (
-        <div className="rounded-[24px] overflow-hidden" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
-          <table className="w-full">
+        <div className="rounded-[24px] overflow-x-auto" style={{ background: CARD_BG, border: `1px solid ${BORDER}` }}>
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
                 {["School", "Email", "Plan", "Status", "Created", ""].map((h) => (
@@ -226,7 +226,7 @@ export function SuperAdminSchools() {
                   <h3 style={{ fontWeight: 700, fontSize: "1.1rem", color: TEXT }}>{detail.schoolName}</h3>
                   <p style={{ color: MUTED, fontSize: "0.82rem" }}>{detail.email} · {detail.slug}.getschoolos.me</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <button onClick={() => handleViewCredentials(detail.id)} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(255,107,53,0.15)", color: ACCENT }}>
                     <Key size={12} /> Credentials
                   </button>

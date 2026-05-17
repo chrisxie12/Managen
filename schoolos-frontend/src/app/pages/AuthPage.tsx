@@ -491,9 +491,9 @@ export function AuthPage() {
                   <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
                     onChange={(e) => setField("subdomain", e.target.value)} required
-                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
+                    className="w-full pl-10 pr-28 py-3.5 rounded-2xl outline-none text-sm text-ellipsis"
                     style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold" style={{ color: MUTED }}>.getschoolos.me</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold whitespace-nowrap" style={{ color: MUTED }}>.getschoolos.me</span>
                 </div>
               </div>
 

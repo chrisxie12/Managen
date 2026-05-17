@@ -126,7 +126,7 @@ export function SuperAdminDashboard() {
       )}
 
       {/* ── EXECUTIVE KPI ROW ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Building2} label="Total Schools" value={stats.totalSchools.toLocaleString()}
           sub={`${stats.activeSchools} active · ${stats.suspended} suspended`} color={ACCENT}
           trend={stats.trends?.totalSchools ?? (hasSchools ? { dir: "up", text: `${activePct}% active` } : { dir: "neutral", text: "No data" })}
@@ -254,7 +254,7 @@ export function SuperAdminDashboard() {
           </div>
         </div>
         {hasSchools ? (
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             <MetricCell label="Health Score" value={`${healthScore}%`} sub="Active vs total" color={healthScore >= 80 ? "#10B981" : healthScore >= 50 ? "#F59E0B" : "#EF4444"} />
             <MetricCell label="Avg Revenue/School" value={hasRevenue ? `GHS ${(stats.totalRevenue / stats.totalSchools).toFixed(0)}` : "GHS 0"} sub="Lifetime value" color="#6366F1" />
             <MetricCell label="Suspension Rate" value={`${suspendedPct}%`} sub="Of total schools" color={stats.suspended > 0 ? "#EF4444" : "#10B981"} />

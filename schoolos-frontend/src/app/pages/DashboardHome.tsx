@@ -130,9 +130,9 @@ export function DashboardHome() {
   const hasData = totalStudents > 0 || fees.length > 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       {/* ── Metric Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           {
             label: "Total Students",
@@ -485,7 +485,7 @@ export function DashboardHome() {
             >
               Quick Actions
             </h3>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {quickActions.map((action) => (
                 <button
                   key={action.label}

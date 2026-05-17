@@ -89,7 +89,7 @@ export function SuperAdminBilling() {
       )}
 
       {/* KPI Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={DollarSign} label="Total Revenue" value={`GHS ${(totalRevenue / 1000).toFixed(1)}K`}
           sub={`${paymentCount} payment${paymentCount !== 1 ? "s" : ""} all-time`} color="#10B981"
           trend={hasPayments ? { dir: "up", text: "Lifetime" } : { dir: "neutral", text: "No revenue" }} />
