@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import {
   ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
@@ -54,6 +54,11 @@ export function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [openFeature, setOpenFeature] = useState<number | null>(null);
   const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [countSchools, setCountSchools] = useState(0);
+  const [countUptime, setCountUptime] = useState(0);
+  const [countCountry, setCountCountry] = useState(0);
+  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -98,6 +103,53 @@ export function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!statsRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const animateCount = (
+    setter: React.Dispatch<React.SetStateAction<number>>,
+    target: number,
+    duration: number
+  ) => {
+    if (target <= 5) {
+      setter(target);
+      return;
+    }
+    const start = performance.now();
+    const raf = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setter(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+  };
+
+  useEffect(() => {
+    if (!statsVisible) return;
+    animateCount(setCountCountry, 1, 800);
+    animateCount(setCountUptime, 997, 2000);
+  }, [statsVisible]);
+
+  useEffect(() => {
+    if (statsVisible && stats.schools !== null && countSchools === 0) {
+      animateCount(setCountSchools, stats.schools, 1500);
+    }
+  }, [statsVisible, stats.schools]);
+
   const submitDemo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!demoForm.name || !demoForm.email || !demoForm.schoolName) return toast.error("Please fill in all fields");
@@ -138,7 +190,7 @@ export function LandingPage() {
   ];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: dark ? undefined : MILK }} className="min-h-screen dark:bg-gray-950">
+    <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#FFF3E6] text-[#381932]'}`}>
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -152,16 +204,41 @@ export function LandingPage() {
         .reveal-6 { animation-delay: 0.6s; }
         .modal-overlay { animation: fadeIn 0.2s ease-out; }
         .modal-content { animation: fadeUp 0.3s ease-out; }
+        @keyframes gradientShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .hero-gradient {
+          background: linear-gradient(
+            135deg,
+            #FFF3E6,
+            #f9e8f5,
+            #FFF3E6,
+            #f0e8ff,
+            #FFF3E6
+          );
+          background-size: 400% 400%;
+          animation: gradientShift 12s ease infinite;
+        }
+        .dark .bg-white { background: #1f2937 !important; }
+        .dark .bg-gray-50 { background: #111827 !important; }
+        .dark [style*="color: #381932"] { color: #e5e7eb !important; }
+        .dark [style*="color: #512b4a"] { color: #d1d5db !important; }
+        .dark [style*="color: #7D6077"] { color: #9ca3af !important; }
+        .dark .text-gray-500 { color: #d1d5db !important; }
+        .dark .text-gray-600 { color: #e5e7eb !important; }
+        .dark .border-gray-100 { border-color: #374151 !important; }
+        .dark .border-gray-200 { border-color: #4B5563 !important; }
       `}</style>
 
       {/* NAV */}
-      <nav
-        className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+      <nav className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
         style={{
-          background: scrolled ? "white" : "rgba(255,243,230,0.5)",
+          background: dark ? (scrolled ? "rgba(17,24,39,0.95)" : "rgba(17,24,39,0.5)") : (scrolled ? "white" : "rgba(255,243,230,0.5)"),
           backdropFilter: "blur(20px)",
-          borderBottom: scrolled ? "1px solid rgba(56,25,50,0.08)" : "1px solid transparent",
-          boxShadow: scrolled ? "0 4px 24px rgba(56,25,50,0.06)" : "none",
+          borderBottom: dark ? (scrolled ? "1px solid rgba(55,65,81,0.5)" : "1px solid transparent") : (scrolled ? "1px solid rgba(56,25,50,0.08)" : "1px solid transparent"),
+          boxShadow: scrolled ? (dark ? "0 4px 24px rgba(0,0,0,0.3)" : "0 4px 24px rgba(56,25,50,0.06)") : "none",
         }}
       >
         <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
@@ -201,7 +278,7 @@ export function LandingPage() {
       </nav>
 
       {/* HERO */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-32 pb-20 px-6 hero-gradient">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -309,24 +386,28 @@ export function LandingPage() {
       </section>
 
       {/* STATS */}
-      <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
+      <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }} ref={statsRef}>
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 gap-8">
           <div className="text-center reveal reveal-1">
             <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
               {stats.schools === null ? (
                 <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
               ) : (
-                `${stats.schools}+`
+                `${countSchools}+`
               )}
             </div>
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
           </div>
           <div className="text-center reveal reveal-2">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>99.7%</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
           </div>
           <div className="text-center reveal reveal-3">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>1</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
+              <div style={{ opacity: statsVisible ? 1 : 0, transition: "opacity 0.8s ease" }}>
+                {countCountry}
+              </div>
+            </div>
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Country Supported</div>
           </div>
         </div>
