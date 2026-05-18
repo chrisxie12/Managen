@@ -80,35 +80,115 @@ router.get('/info', protect, (req, res) => {
     }
 });
 
-// ─── Setup / Onboarding ──────────────────────────────────────
-router.get('/setup/status', protect, async (req, res) => {
+// ─── Onboarding ──────────────────────────────────────────────
+router.get('/onboarding/status', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         if (!schoolId) return res.status(400).json({ error: 'School not found.' });
         const { data, error } = await supabase
             .from('schools')
-            .select('setup_completed, setup_step')
+            .select('onboarding_completed, metadata')
             .eq('id', schoolId)
             .single();
-        if (error) return res.status(500).json({ error: 'Error fetching setup status.' });
-        return res.json({ data: { setup_completed: data.setup_completed, setup_step: data.setup_step } });
+        if (error) return res.status(500).json({ error: 'Error fetching onboarding status.' });
+        const step = data.metadata?.onboarding_step ?? 0;
+        return res.json({ data: { onboarding_completed: data.onboarding_completed, current_step: step, metadata: data.metadata } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching setup status.' });
+        return res.status(500).json({ error: 'Error fetching onboarding status.' });
     }
 });
 
-router.post('/setup/finish', protect, async (req, res) => {
+router.post('/onboarding/survey', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         if (!schoolId) return res.status(400).json({ error: 'School not found.' });
-        const { error } = await supabase
-            .from('schools')
-            .update({ setup_completed: true, setup_step: null })
-            .eq('id', schoolId);
-        if (error) return res.status(500).json({ error: 'Error completing setup.' });
+        const { survey } = req.body;
+        const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
+        const metadata = { ...(existing?.metadata || {}), survey, onboarding_step: 1 };
+        const { error } = await supabase.from('schools').update({ metadata }).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: 'Error saving survey.' });
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error completing setup.' });
+        return res.status(500).json({ error: 'Error saving survey.' });
+    }
+});
+
+router.post('/onboarding/school', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
+        const { name, motto, type, email, phone, address, city, region, country,
+                academic_year, current_term, term_start_date, term_end_date,
+                grading_system, primary_color, year_established } = req.body;
+        const updateData = {};
+        if (name !== undefined) updateData.name = name;
+        if (motto !== undefined) updateData.motto = motto;
+        if (type !== undefined) updateData.type = type;
+        if (email !== undefined) updateData.email = email;
+        if (phone !== undefined) updateData.phone = phone;
+        if (address !== undefined) updateData.address = address;
+        if (city !== undefined) updateData.city = city;
+        if (region !== undefined) updateData.region = region;
+        if (country !== undefined) updateData.country = country;
+        if (academic_year !== undefined) updateData.academic_year = academic_year;
+        if (current_term !== undefined) updateData.current_term = current_term;
+        if (term_start_date !== undefined) updateData.term_start_date = term_start_date;
+        if (term_end_date !== undefined) updateData.term_end_date = term_end_date;
+        if (grading_system !== undefined) updateData.grading_system = grading_system;
+        if (primary_color !== undefined) updateData.primary_color = primary_color;
+        if (year_established !== undefined) updateData.year_established = year_established;
+        const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
+        const metadata = { ...(existing?.metadata || {}), onboarding_step: 2 };
+        updateData.metadata = metadata;
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: 'Error saving school data.' });
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving school data.' });
+    }
+});
+
+router.post('/onboarding/logo', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
+        const { logo } = req.body;
+        if (!logo) return res.status(400).json({ error: 'Logo data is required.' });
+        const { error } = await supabase.from('schools').update({ logo_url: logo }).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: 'Error saving logo.' });
+        return res.json({ data: { logo_url: logo } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving logo.' });
+    }
+});
+
+router.post('/onboarding/complete', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
+        const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
+        const metadata = { ...(existing?.metadata || {}), onboarding_step: 4, checklist: { profile_complete: true, first_class_added: false, first_teacher_added: false, first_student_added: false, fee_structure_setup: false, first_announcement_sent: false } };
+        const { error } = await supabase.from('schools').update({ onboarding_completed: true, metadata }).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: 'Error completing onboarding.' });
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error completing onboarding.' });
+    }
+});
+
+router.get('/onboarding/resume', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
+        const { data, error } = await supabase
+            .from('schools')
+            .select('metadata')
+            .eq('id', schoolId)
+            .single();
+        if (error) return res.status(500).json({ error: 'Error fetching resume data.' });
+        return res.json({ data: { metadata: data.metadata || {} } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching resume data.' });
     }
 });
 
