@@ -8,6 +8,7 @@ const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
 const gradebookService = require('../services/gradebookService');
+const notifService = require('../services/notificationService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
 const { requirePermission } = require('../middleware/permission');
@@ -95,6 +96,93 @@ router.get('/notifications', protect, async (req, res) => {
         return res.json({ data: { notifications } });
     } catch (err) { return res.status(500).json({ error: 'Error fetching notifications.' }); }
 });
+});
+
+// ─── In-App Notifications (Realtime-enabled) ──────────────────
+
+// GET /api/school/in-app-notifications
+// Returns in-app notifications for the current user
+router.get('/in-app-notifications', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const { limit, offset, unreadOnly } = req.query;
+        const result = await notifService.getUserNotifications(userId, req.tenant.id, {
+            limit: Number.parseInt(limit) || 50,
+            offset: Number.parseInt(offset) || 0,
+            unreadOnly: unreadOnly === 'true',
+        });
+        return res.json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching notifications.' });
+    }
+});
+
+// GET /api/school/in-app-notifications/unread-count
+router.get('/in-app-notifications/unread-count', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const count = await notifService.getUnreadCount(userId, req.tenant.id);
+        return res.json({ data: { count } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching unread count.' });
+    }
+});
+
+// PUT /api/school/in-app-notifications/:id/read
+router.put('/in-app-notifications/:id/read', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const result = await notifService.markAsRead(req.params.id, userId);
+        return res.json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error marking notification as read.' });
+    }
+});
+
+// PUT /api/school/in-app-notifications/read-all
+router.put('/in-app-notifications/read-all', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        await notifService.markAllAsRead(userId, req.tenant.id);
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error marking all as read.' });
+    }
+});
+
+// GET /api/school/realtime-token
+// Returns a Supabase-compatible JWT for Realtime subscriptions
+router.get('/realtime-token', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const jwt = require('jsonwebtoken');
+        const supabaseJwtSecret = process.env.SUPABASE_JWT_SECRET || process.env.SUPABASE_ANON_KEY;
+        const supabaseUrl = process.env.SUPABASE_URL;
+
+        if (!supabaseJwtSecret || !supabaseUrl) {
+            return res.status(503).json({ error: 'Realtime is not configured.' });
+        }
+
+        const token = jwt.sign(
+            {
+                sub: userId,
+                role: 'authenticated',
+                aud: 'authenticated',
+                iat: Math.floor(Date.now() / 1000),
+                exp: Math.floor(Date.now() / 1000) + 3600,
+            },
+            supabaseJwtSecret
+        );
+
+        res.json({
+            data: {
+                token,
+                supabaseUrl,
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error generating realtime token.' });
+    }
 });
 
 // GET /api/school/dashboard

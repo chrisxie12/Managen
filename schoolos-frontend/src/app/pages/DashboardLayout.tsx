@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Settings, HelpCircle, BookOpen, Search,
@@ -7,6 +6,7 @@ import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
+import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -53,7 +53,7 @@ export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school, logout } = useAuth();
-  const [notifCount] = useState(3);
+  const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
 
   const userPerms = user?.permissions || [];
   const role = user?.role || "school_admin";
@@ -101,7 +101,7 @@ export function DashboardLayout() {
         {navItems.map((item) => {
           const active = isActive(item.path);
           return (
-            <button key={item.path} onClick={() => { navigate(item.path); setSidebarOpen(false); }}
+            <button key={item.path} onClick={() => { navigate(item.path); }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left transition-all active:scale-95"
               style={{ background: active ? PLUM : "transparent", color: active ? MILK : PLUM_LIGHT }}>
               <item.icon size={17} />
@@ -166,12 +166,13 @@ export function DashboardLayout() {
               <input placeholder="Search..." className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
             </div>
 
-            <button className="relative w-9 h-9 rounded-xl flex items-center justify-center"
+            <button onClick={() => navigate("/dashboard/notifications")}
+              className="relative w-9 h-9 rounded-xl flex items-center justify-center"
               style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
               <Bell size={16} color={PLUM_LIGHT} />
-              {notifCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs"
-                  style={{ background: "#EF4444", color: "white", fontSize: "0.6rem" }}>{notifCount}</span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-xl flex items-center justify-center text-xs font-bold"
+                  style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
               )}
             </button>
 

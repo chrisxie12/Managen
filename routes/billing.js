@@ -7,6 +7,7 @@ const supabase = require('../config/db');
 const schoolService = require('../services/schoolService');
 const { getPublicPlans } = require('../services/provisionService');
 const { initializePayment } = require('../services/billingService');
+const { createNotification } = require('../services/notificationService');
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 
@@ -204,6 +205,21 @@ router.get('/verify-payment', async (req, res) => {
                 .update({ paid_amount: newPaid, status: newStatus })
                 .eq('id', invoiceId);
             if (invUpdErr) console.error('Invoice update error:', invUpdErr);
+        }
+
+        // Notify student of payment
+        try {
+            await createNotification({
+                userId: payment.student_id,
+                schoolId: payment.school_id,
+                title: 'Payment Received',
+                message: `A payment of GH₵${payment.amount.toLocaleString()} has been received and applied to your invoice.`,
+                type: 'fee',
+                referenceId: invoiceId,
+                referenceType: 'invoices',
+            });
+        } catch (err) {
+            console.error('Failed to send payment notification:', err.message);
         }
 
         res.json({
