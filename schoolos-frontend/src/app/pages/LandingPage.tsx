@@ -52,7 +52,7 @@ export function LandingPage() {
   const [stats, setStats] = useState<{ schools: number | null }>({ schools: null });
   const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "", country: "Ghana" });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [openFeature, setOpenFeature] = useState<number | null>(null);
+
   const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
   const statsRef = useRef<HTMLDivElement>(null);
   const [countSchools, setCountSchools] = useState(0);
@@ -432,8 +432,8 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* FEATURES ACCORDION */}
-      <section id="features" className="py-24 px-6 bg-gray-50">
+      {/* FEATURES GRID */}
+      <section id="features" className="py-24 px-6" style={{ background: MILK }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
             <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
@@ -444,92 +444,25 @@ export function LandingPage() {
               Built for how African schools actually work -- not adapted from software made elsewhere.
             </p>
           </div>
-          <div className="lg:grid lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-0" data-reveal>
-              {featureItems.map((item, i) => (
-                <div key={item.title} className="border-b border-gray-100">
-                  <button
-                    onClick={() => setOpenFeature(openFeature === i ? null : i)}
-                    className="w-full flex items-center justify-between py-5 px-2 text-left active:scale-[0.99] transition-transform"
-                    style={{ color: PLUM }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${item.bgColor}`}>
-                        <item.icon size={20} className={item.iconColor === "text-custom" ? "" : item.iconColor} style={item.iconColor === "text-custom" ? { color: PLUM } : {}} />
-                      </div>
-                      <span className="font-semibold text-sm" style={{ color: PLUM }}>{item.title}</span>
-                    </div>
-                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${openFeature === i ? "rotate-180" : ""}`} style={{ color: MUTED }} />
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-300 ${openFeature === i ? "max-h-96" : "max-h-0"}`}>
-                    <div className="px-2 pb-5 space-y-3">
-                      <p className="text-sm" style={{ color: MUTED, lineHeight: 1.7 }}>{item.desc}</p>
-                      <div className="space-y-1.5">
-                        {item.subFeatures.map((sf) => (
-                          <div key={sf} className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
-                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: PLUM }} />
-                            {sf}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal>
+            {featureItems.map((item, i) => (
+              <div key={i} className="rounded-2xl bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 p-6 lg:p-7 flex flex-col" data-reveal>
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${item.bgColor}`}>
+                  <item.icon size={24} className={item.iconColor === "text-custom" ? "" : item.iconColor} style={item.iconColor === "text-custom" ? { color: PLUM } : {}} />
                 </div>
-              ))}
-            </div>
-            <div className="hidden lg:block sticky top-24" data-reveal>
-              <div className="rounded-2xl bg-white border border-gray-100 shadow-md overflow-hidden">
-                <svg viewBox="0 0 400 500" className="w-full h-auto">
-                  <rect x="0" y="0" width="400" height="500" rx="16" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="0" y="0" width="400" height="36" rx="16" ry="16" fill={PLUM} />
-                  <text x="20" y="23" fill="white" fontSize="10" fontWeight="600">School Dashboard</text>
-                  <rect x="16" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="16" y="48" width="4" height="20" rx="2" fill="#10B981" />
-                  <text x="28" y="68" fill="#111827" fontSize="13" fontWeight="bold">247</text>
-                  <text x="28" y="84" fill="#6B7280" fontSize="8">Students</text>
-                  <rect x="142" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="142" y="48" width="4" height="20" rx="2" fill="#6366F1" />
-                  <text x="154" y="68" fill="#111827" fontSize="13" fontWeight="bold">GHS 12.4K</text>
-                  <text x="154" y="84" fill="#6B7280" fontSize="8">Fees</text>
-                  <rect x="268" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="268" y="48" width="4" height="20" rx="2" fill="#F59E0B" />
-                  <text x="280" y="68" fill="#111827" fontSize="13" fontWeight="bold">94.2%</text>
-                  <text x="280" y="84" fill="#6B7280" fontSize="8">Attendance</text>
-                  <rect x="16" y="116" width="368" height="140" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <text x="28" y="134" fill="#374151" fontSize="10" fontWeight="600">Monthly Performance</text>
-                  <rect x="36" y="158" width="12" height="30" rx="2" fill={PLUM} opacity="0.15" />
-                  <rect x="56" y="148" width="12" height="40" rx="2" fill={PLUM} opacity="0.25" />
-                  <rect x="76" y="168" width="12" height="20" rx="2" fill={PLUM} opacity="0.15" />
-                  <rect x="96" y="138" width="12" height="50" rx="2" fill="#10B981" />
-                  <rect x="116" y="158" width="12" height="30" rx="2" fill={PLUM} opacity="0.25" />
-                  <rect x="136" y="128" width="12" height="60" rx="2" fill={PLUM} opacity="0.35" />
-                  <polyline points="42,180 62,165 82,185 102,155 122,175 142,145" fill="none" stroke={PLUM} strokeWidth="1.5" strokeDasharray="3 2" />
-                  <rect x="16" y="272" width="178" height="100" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <text x="28" y="290" fill="#374151" fontSize="9" fontWeight="600">Recent Students</text>
-                  <rect x="28" y="298" width="158" height="4" rx="2" fill="#F3F4F6" />
-                  <rect x="28" y="308" width="140" height="4" rx="2" fill="#F3F4F6" />
-                  <rect x="28" y="318" width="120" height="4" rx="2" fill="#F3F4F6" />
-                  <rect x="28" y="328" width="150" height="4" rx="2" fill="#F3F4F6" />
-                  <rect x="28" y="338" width="130" height="4" rx="2" fill="#F3F4F6" />
-                  <rect x="206" y="272" width="178" height="100" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <text x="218" y="290" fill="#374151" fontSize="9" fontWeight="600">Payment Status</text>
-                  <circle cx="260" cy="318" r="18" fill="none" stroke="#E5E7EB" strokeWidth="5" />
-                  <circle cx="260" cy="318" r="18" fill="none" stroke="#10B981" strokeWidth="5" strokeDasharray="85 28" transform="rotate(-90 260 318)" />
-                  <text x="260" y="322" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="bold">78%</text>
-                  <rect x="286" y="306" width="6" height="6" rx="1" fill="#10B981" />
-                  <text x="296" y="312" fill="#6B7280" fontSize="7">Paid</text>
-                  <rect x="286" y="320" width="6" height="6" rx="1" fill="#E5E7EB" />
-                  <text x="296" y="326" fill="#6B7280" fontSize="7">Outstanding</text>
-                  <rect x="16" y="388" width="368" height="36" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <circle cx="56" cy="406" r="4" fill={PLUM} opacity="0.3" />
-                  <circle cx="152" cy="406" r="6" fill={PLUM} />
-                  <circle cx="248" cy="406" r="4" fill={PLUM} opacity="0.3" />
-                  <circle cx="344" cy="406" r="4" fill={PLUM} opacity="0.3" />
-                  <rect x="16" y="440" width="368" height="40" rx="8" fill={PLUM} opacity="0.05" />
-                  <text x="200" y="465" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="500">All data synced in real-time</text>
-                </svg>
+                <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{item.title}</h3>
+                <p className="text-sm flex-1" style={{ color: MUTED, lineHeight: 1.7 }}>{item.desc}</p>
+                <div className="space-y-1.5 mt-4 pt-4 border-t border-gray-100">
+                  {item.subFeatures.map((sf) => (
+                    <div key={sf} className="flex items-start gap-2 text-sm" style={{ color: MUTED }}>
+                      <CheckCircle2 size={14} className="text-green-500 shrink-0 mt-0.5" />
+                      {sf}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
