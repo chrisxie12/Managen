@@ -144,7 +144,7 @@ export function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: MILK }}>
-      <aside className="flex flex-col w-60 flex-shrink-0"
+      <aside className="flex flex-col w-60 flex-shrink-0 overflow-y-auto"
         style={{ background: SIDEBAR_BG, borderRight: "1px solid rgba(56,25,50,0.07)" }}>
         <SidebarContent />
       </aside>
