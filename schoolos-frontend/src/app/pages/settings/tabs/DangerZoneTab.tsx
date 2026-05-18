@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Loader2, Download, Trash2, Skull } from "lucide-react";
+import { AlertTriangle, Loader2, Download, Trash2, Skull, Power } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
@@ -21,6 +21,9 @@ type DangerActionProps = {
   onAction: () => void;
   confirmValue: string;
   onConfirmChange: (v: string) => void;
+  showPassword?: boolean;
+  passwordValue?: string;
+  onPasswordChange?: (v: string) => void;
 };
 
 function DangerAction({
@@ -34,8 +37,13 @@ function DangerAction({
   onAction,
   confirmValue,
   onConfirmChange,
+  showPassword,
+  passwordValue,
+  onPasswordChange,
 }: DangerActionProps) {
   const match = confirmValue === confirmLabel;
+  const showPw = showPassword && match;
+  const canSubmit = match && !loading && !(showPassword && !passwordValue);
   return (
     <div className="py-4 first:pt-0 last:pb-0 border-t border-red-100 first:border-t-0">
       <div className="flex items-start gap-2 mb-3">
@@ -57,9 +65,9 @@ function DangerAction({
         />
         <Button
           onClick={onAction}
-          disabled={!match || loading}
+          disabled={!canSubmit}
           className="text-xs rounded-xl h-9 px-4 whitespace-nowrap"
-          style={{ background: match && !loading ? buttonColor : undefined, color: match && !loading ? "white" : undefined }}
+          style={{ background: canSubmit ? buttonColor : undefined, color: canSubmit ? "white" : undefined }}
         >
           {loading ? (
             <Loader2 size={14} className="animate-spin" />
@@ -68,6 +76,18 @@ function DangerAction({
           )}
         </Button>
       </div>
+      {showPw && (
+        <div className="mt-2">
+          <Input
+            type="password"
+            value={passwordValue || ""}
+            onChange={(e) => onPasswordChange?.(e.target.value)}
+            placeholder="Enter your current password"
+            className="h-9 text-xs rounded-xl w-full"
+            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -78,10 +98,15 @@ export function DangerZoneTab({ profile }: Props) {
   const schoolName = profile?.name || "";
 
   const [exporting, setExporting] = useState(false);
+  const [deactivating, setDeactivating] = useState(false);
+  const [deactivateSchool, setDeactivateSchool] = useState("");
   const [resetTerm, setResetTerm] = useState("");
   const [resetting, setResetting] = useState(false);
   const [archiveYear, setArchiveYear] = useState("");
   const [archiving, setArchiving] = useState(false);
+  const [clearAllData, setClearAllData] = useState("");
+  const [clearAllDataPassword, setClearAllDataPassword] = useState("");
+  const [clearingAllData, setClearingAllData] = useState(false);
   const [deleteStudents, setDeleteStudents] = useState("");
   const [deletingStudents, setDeletingStudents] = useState(false);
   const [deleteAccount, setDeleteAccount] = useState("");
@@ -100,6 +125,23 @@ export function DangerZoneTab({ profile }: Props) {
       toast.error(err?.message || "Failed to queue export");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleDeactivateSchool = async () => {
+    setDeactivating(true);
+    try {
+      const res = await api.put("/api/school/settings/deactivate", { confirm: schoolName });
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("School deactivated. Contact support to reactivate.");
+        setDeactivateSchool("");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to deactivate school");
+    } finally {
+      setDeactivating(false);
     }
   };
 
@@ -134,6 +176,24 @@ export function DangerZoneTab({ profile }: Props) {
       toast.error(err?.message || "Failed to archive school year");
     } finally {
       setArchiving(false);
+    }
+  };
+
+  const handleClearAllData = async () => {
+    setClearingAllData(true);
+    try {
+      const res = await api.post("/api/school/settings/clear-all-data", { confirm: "DELETE ALL DATA", password: clearAllDataPassword });
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("All school data has been cleared.");
+        setClearAllData("");
+        setClearAllDataPassword("");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to clear all data");
+    } finally {
+      setClearingAllData(false);
     }
   };
 
@@ -202,14 +262,33 @@ export function DangerZoneTab({ profile }: Props) {
             style={{ background: PLUM }}
           >
             {exporting ? (
-              <Loader2 size={14} className="animate-spin" />
+              <>
+                <Loader2 size={14} className="animate-spin mr-1" />
+                Downloading...
+              </>
             ) : (
-              <Download size={14} className="mr-1" />
+              <>
+                <Download size={14} className="mr-1" />
+                Export All Data
+              </>
             )}
-            Export All Data
           </Button>
         </div>
       </div>
+
+      {/* Deactivate School */}
+      <DangerAction
+        icon={Power}
+        title="Deactivate School"
+        desc="Temporarily deactivate your school. All users will lose access. Reactivation requires contact with support."
+        confirmLabel={schoolName}
+        buttonLabel="Deactivate School"
+        buttonColor={ORANGE}
+        loading={deactivating}
+        onAction={handleDeactivateSchool}
+        confirmValue={deactivateSchool}
+        onConfirmChange={setDeactivateSchool}
+      />
 
       <DangerAction
         icon={AlertTriangle}
@@ -235,6 +314,23 @@ export function DangerZoneTab({ profile }: Props) {
         onAction={handleArchiveYear}
         confirmValue={archiveYear}
         onConfirmChange={setArchiveYear}
+      />
+
+      {/* Clear All Data */}
+      <DangerAction
+        icon={Trash2}
+        title="Clear All School Data"
+        desc="Remove all attendance, grades, fee records, and class schedules. School profile and user accounts will be preserved."
+        confirmLabel="DELETE ALL DATA"
+        buttonLabel="Clear All Data"
+        buttonColor={RED}
+        loading={clearingAllData}
+        onAction={handleClearAllData}
+        confirmValue={clearAllData}
+        onConfirmChange={setClearAllData}
+        showPassword
+        passwordValue={clearAllDataPassword}
+        onPasswordChange={setClearAllDataPassword}
       />
 
       <DangerAction

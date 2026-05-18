@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Save, Loader2, Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, Eye, EyeOff, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import {
@@ -76,6 +77,86 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
   const [showFlutterwavePub, setShowFlutterwavePub] = useState(false);
   const [showFlutterwaveSec, setShowFlutterwaveSec] = useState(false);
   const [showFlutterwaveEnc, setShowFlutterwaveEnc] = useState(false);
+
+  const [feeStructures, setFeeStructures] = useState<any[]>([]);
+  const [loadingFeeStructures, setLoadingFeeStructures] = useState(false);
+  const [classes, setClasses] = useState<any[]>([]);
+  const [newFeeStructure, setNewFeeStructure] = useState({ name: "", class_id: "", amount: 0, frequency: "termly", is_mandatory: false });
+  const [creatingFeeStructure, setCreatingFeeStructure] = useState(false);
+  const [deletingFeeStructureId, setDeletingFeeStructureId] = useState<string | null>(null);
+  const [editingFeeStructureId, setEditingFeeStructureId] = useState<string | null>(null);
+  const [editFeeData, setEditFeeData] = useState({ name: "", amount: 0, frequency: "termly", is_mandatory: false });
+
+  const [reminderDays, setReminderDays] = useState<number[]>([]);
+  const [reminderTime, setReminderTime] = useState("09:00");
+
+  useEffect(() => {
+    fetchFeeStructures();
+    fetchClasses();
+  }, []);
+
+  const fetchFeeStructures = async () => {
+    setLoadingFeeStructures(true);
+    try {
+      const res = await api.get<any>("/api/school/fee-structures");
+      const data = res.data?.data || res.data;
+      setFeeStructures(Array.isArray(data) ? data : data?.fee_structures || []);
+    } catch { /* ignore */ }
+    finally { setLoadingFeeStructures(false); }
+  };
+
+  const fetchClasses = async () => {
+    try {
+      const res = await api.get<any>("/api/school/classes");
+      const data = res.data?.data?.classes || res.data?.classes || (Array.isArray(res.data) ? res.data : []);
+      setClasses(data);
+    } catch { /* ignore */ }
+  };
+
+  const handleCreateFeeStructure = async () => {
+    if (!newFeeStructure.name || !newFeeStructure.class_id) return;
+    setCreatingFeeStructure(true);
+    try {
+      await api.post("/api/school/fee-structures", newFeeStructure);
+      toast.success("Fee structure created");
+      setNewFeeStructure({ name: "", class_id: "", amount: 0, frequency: "termly", is_mandatory: false });
+      fetchFeeStructures();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to create fee structure");
+    } finally {
+      setCreatingFeeStructure(false);
+    }
+  };
+
+  const handleUpdateFeeStructure = async (id: string) => {
+    try {
+      await api.put(`/api/school/fee-structures/${id}`, editFeeData);
+      toast.success("Fee structure updated");
+      setEditingFeeStructureId(null);
+      fetchFeeStructures();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update fee structure");
+    }
+  };
+
+  const handleDeleteFeeStructure = async (id: string) => {
+    setDeletingFeeStructureId(id);
+    try {
+      await api.delete(`/api/school/fee-structures/${id}`);
+      toast.success("Fee structure deleted");
+      fetchFeeStructures();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete fee structure");
+    } finally {
+      setDeletingFeeStructureId(null);
+    }
+  };
+
+  const toggleReminderDay = (day: number) => {
+    setReminderDays((prev) => prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]);
+  };
+
+  const FEE_REMINDER_DAYS = [1, 3, 7, 14];
 
   useEffect(() => {
     if (profile) {
@@ -207,7 +288,11 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
       fee_categories: form.fee_categories,
       late_fee_settings: form.late_fee_settings,
       receipt_settings: form.receipt_settings,
-      metadata: form.metadata,
+      metadata: {
+        ...form.metadata,
+        payment_gateways: form.metadata?.payment_gateways || {},
+        reminder_settings: form.metadata?.reminder_settings || {},
+      },
     };
     await onSave(data);
     toast.success("Fee settings saved");
@@ -335,6 +420,166 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             );
           })}
         </div>
+      </SectionCard>
+
+      <SectionCard title="Fee Structures per Class" desc="Configure fee amounts per class">
+        {loadingFeeStructures ? (
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+        ) : (
+          <div className="overflow-x-auto mb-3">
+            <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr className="text-left" style={{ color: MUTED }}>
+                  <th className="pb-2 pr-2 font-medium">Class</th>
+                  <th className="pb-2 pr-2 font-medium">Name</th>
+                  <th className="pb-2 pr-2 font-medium">Amount (GHS)</th>
+                  <th className="pb-2 pr-2 font-medium">Frequency</th>
+                  <th className="pb-2 pr-2 font-medium">Mandatory</th>
+                  <th className="pb-2 font-medium w-16" />
+                </tr>
+              </thead>
+              <tbody>
+                {feeStructures.length === 0 ? (
+                  <tr><td colSpan={6} className="py-4 text-center" style={{ color: MUTED }}>No fee structures yet.</td></tr>
+                ) : feeStructures.map((fs: any) => {
+                  const isEditing = editingFeeStructureId === fs.id;
+                  return (
+                    <tr key={fs.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                      <td className="py-2 pr-2" style={{ color: PLUM }}>{fs.class?.name || "—"}</td>
+                      <td className="py-2 pr-2">
+                        {isEditing ? (
+                          <Input value={editFeeData.name} onChange={(e) => setEditFeeData((p) => ({ ...p, name: e.target.value }))}
+                            className="h-8 text-xs rounded-xl min-w-[120px]"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span style={{ color: PLUM }}>{fs.name}</span>
+                        )}
+                      </td>
+                      <td className="py-2 pr-2">
+                        {isEditing ? (
+                          <Input type="number" value={editFeeData.amount} onChange={(e) => setEditFeeData((p) => ({ ...p, amount: Number(e.target.value) }))}
+                            className="h-8 text-xs rounded-xl w-24"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span style={{ color: PLUM }}>{fs.amount}</span>
+                        )}
+                      </td>
+                      <td className="py-2 pr-2">
+                        {isEditing ? (
+                          <Select value={editFeeData.frequency} onValueChange={(v) => setEditFeeData((p) => ({ ...p, frequency: v }))}>
+                            <SelectTrigger className="h-8 text-xs rounded-xl w-24"
+                              style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {["termly", "yearly", "monthly"].map((f) => (
+                                <SelectItem key={f} value={f} className="text-xs capitalize">{f}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <span className="capitalize" style={{ color: PLUM }}>{fs.frequency}</span>
+                        )}
+                      </td>
+                      <td className="py-2 pr-2">
+                        {isEditing ? (
+                          <Switch checked={editFeeData.is_mandatory} onCheckedChange={(v) => setEditFeeData((p) => ({ ...p, is_mandatory: v }))} />
+                        ) : (
+                          <span style={{ color: fs.is_mandatory ? "#16A34A" : MUTED }}>{fs.is_mandatory ? "Yes" : "No"}</span>
+                        )}
+                      </td>
+                      <td className="py-2">
+                        {isEditing ? (
+                          <div className="flex gap-1">
+                            <button onClick={() => handleUpdateFeeStructure(fs.id)}
+                              className="p-1.5 rounded-lg" style={{ background: "rgba(16,185,129,0.1)" }}>
+                              <Save size={13} color="#16A34A" />
+                            </button>
+                            <button onClick={() => setEditingFeeStructureId(null)}
+                              className="p-1.5 rounded-lg" style={{ background: "rgba(239,68,68,0.08)" }}>
+                              <Trash2 size={13} color="#EF4444" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex gap-1">
+                            {!isReadOnly && (
+                              <button onClick={() => {
+                                setEditingFeeStructureId(fs.id);
+                                setEditFeeData({ name: fs.name, amount: fs.amount, frequency: fs.frequency, is_mandatory: fs.is_mandatory || false });
+                              }}
+                                className="p-1.5 rounded-lg transition-colors"
+                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                <Pencil size={13} color={PLUM} />
+                              </button>
+                            )}
+                            {!isReadOnly && (
+                              <button onClick={() => handleDeleteFeeStructure(fs.id)}
+                                disabled={deletingFeeStructureId === fs.id}
+                                className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                style={{ background: "rgba(239,68,68,0.08)" }}>
+                                {deletingFeeStructureId === fs.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} color="#EF4444" />}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {!isReadOnly && (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-end">
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Class</label>
+              <Select value={newFeeStructure.class_id} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, class_id: v }))}>
+                <SelectTrigger className="h-9 text-xs rounded-xl"
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  <SelectValue placeholder="Select class..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {classes.map((cls: any) => (
+                    <SelectItem key={cls.id} value={cls.id} className="text-xs">{cls.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Name</label>
+              <Input value={newFeeStructure.name} onChange={(e) => setNewFeeStructure((p) => ({ ...p, name: e.target.value }))}
+                placeholder="Fee name"
+                className="h-9 text-sm rounded-xl"
+                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Amount</label>
+              <Input type="number" value={newFeeStructure.amount} onChange={(e) => setNewFeeStructure((p) => ({ ...p, amount: Number(e.target.value) }))}
+                className="h-9 text-sm rounded-xl"
+                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Frequency</label>
+              <Select value={newFeeStructure.frequency} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, frequency: v }))}>
+                <SelectTrigger className="h-9 text-xs rounded-xl"
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {["termly", "yearly", "monthly"].map((f) => (
+                    <SelectItem key={f} value={f} className="text-xs capitalize">{f}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={handleCreateFeeStructure} disabled={creatingFeeStructure || !newFeeStructure.name || !newFeeStructure.class_id}
+              className="text-xs rounded-xl h-9 px-3" style={{ background: PLUM }}>
+              {creatingFeeStructure ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
+              Add
+            </Button>
+          </div>
+        )}
       </SectionCard>
 
       <SectionCard title="Default Fee Categories" desc="Set up default fee categories and amounts">
@@ -509,6 +754,76 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             style={{ borderColor: "rgba(56,25,50,0.12)" }}
             placeholder="Thank you for your payment..." />
         </FormField>
+
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-xs font-medium" style={{ color: PLUM }}>Enable Automatic Payment Reminders</label>
+            <Switch
+              checked={form.metadata?.reminder_settings?.enabled || false}
+              onCheckedChange={(checked) => {
+                setForm((prev: Record<string, any>) => ({
+                  ...prev,
+                  metadata: {
+                    ...prev.metadata,
+                    reminder_settings: { ...(prev.metadata?.reminder_settings || {}), enabled: checked },
+                  },
+                }));
+              }}
+              disabled={isReadOnly} />
+          </div>
+          {(form.metadata?.reminder_settings?.enabled) && (
+            <div className="space-y-3 pl-2">
+              <FormField label="Reminder Days Before Due">
+                <div className="flex flex-wrap gap-2">
+                  {FEE_REMINDER_DAYS.map((day) => {
+                    const selected = (form.metadata?.reminder_settings?.days || []).includes(day);
+                    return (
+                      <button key={day} type="button"
+                        onClick={() => {
+                          setForm((prev: Record<string, any>) => {
+                            const current: number[] = prev.metadata?.reminder_settings?.days || [];
+                            const next = current.includes(day) ? current.filter((d: number) => d !== day) : [...current, day];
+                            return {
+                              ...prev,
+                              metadata: {
+                                ...prev.metadata,
+                                reminder_settings: { ...(prev.metadata?.reminder_settings || {}), days: next },
+                              },
+                            };
+                          });
+                        }}
+                        disabled={isReadOnly}
+                        className="px-3 py-1.5 text-xs font-medium rounded-xl transition-all active:scale-95 disabled:cursor-not-allowed"
+                        style={{
+                          background: selected ? PLUM : "rgba(56,25,50,0.06)",
+                          color: selected ? "white" : PLUM,
+                          border: selected ? "none" : "1px solid rgba(56,25,50,0.12)",
+                        }}>
+                        {day} {day === 1 ? "day" : "days"}
+                      </button>
+                    );
+                  })}
+                </div>
+              </FormField>
+              <FormField label="Reminder Time">
+                <Input type="time"
+                  value={form.metadata?.reminder_settings?.time || "09:00"}
+                  onChange={(e) => {
+                    setForm((prev: Record<string, any>) => ({
+                      ...prev,
+                      metadata: {
+                        ...prev.metadata,
+                        reminder_settings: { ...(prev.metadata?.reminder_settings || {}), time: e.target.value },
+                      },
+                    }));
+                  }}
+                  disabled={isReadOnly}
+                  className={`h-9 text-sm rounded-xl max-w-[200px] ${disabledClass}`}
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              </FormField>
+            </div>
+          )}
+        </div>
       </SectionCard>
 
       {!isReadOnly && (

@@ -203,6 +203,17 @@ class ExamService {
         return data;
     }
 
+    async updateGradingScale(schoolId, id, payload) {
+        const { data, error } = await supabase.from('grading_scales')
+            .update(payload)
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
     async deleteGradingScale(schoolId, id) {
         const { error } = await supabase.from('grading_scales')
             .delete()

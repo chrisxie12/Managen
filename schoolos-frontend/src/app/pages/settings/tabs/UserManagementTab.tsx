@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Search, Loader2, Mail, X, Check, Trash2, Ban, Download } from "lucide-react";
+import { Users, Search, Loader2, Mail, X, Check, Trash2, Ban, Download, Save, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
@@ -31,6 +31,19 @@ type Invitation = {
   status: string;
   created_at: string;
   expires_at?: string;
+};
+
+type Role = {
+  id: string;
+  name: string;
+  is_system: boolean;
+};
+
+type Permission = {
+  id: string;
+  name: string;
+  label?: string;
+  module?: string;
 };
 
 const ROLE_OPTIONS = ["Headmaster", "Accountant", "Teacher", "Parent"];
@@ -104,6 +117,15 @@ export function UserManagementTab({ role }: Props) {
   const [togglingStatusId, setTogglingStatusId] = useState<string | null>(null);
   const [updatingRoleId, setUpdatingRoleId] = useState<string | null>(null);
 
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [loadingRoles, setLoadingRoles] = useState(false);
+  const [selectedRoleId, setSelectedRoleId] = useState("");
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [groupedPermissions, setGroupedPermissions] = useState<Record<string, Permission[]>>({});
+  const [loadingPermissions, setLoadingPermissions] = useState(false);
+  const [selectedPermissionIds, setSelectedPermissionIds] = useState<Set<string>>(new Set());
+  const [savingPermissions, setSavingPermissions] = useState(false);
+
   const totalPages = Math.ceil(total / limit);
 
   const fetchUsers = async () => {
@@ -160,6 +182,11 @@ export function UserManagementTab({ role }: Props) {
     }, 400);
     return () => clearTimeout(timer);
   }, [searchInput]);
+
+  useEffect(() => {
+    if (role !== "school_admin") return;
+    fetchRoles();
+  }, [role]);
 
   const handleSendInvite = async () => {
     if (!inviteEmail || !inviteEmail.includes("@")) {
@@ -315,6 +342,83 @@ export function UserManagementTab({ role }: Props) {
       else next.add(id);
       return next;
     });
+  };
+
+  const fetchRoles = async () => {
+    setLoadingRoles(true);
+    try {
+      const res = await api.get<any>("/school/roles");
+      if (res.data) {
+        const d = res.data.data || res.data;
+        setRoles(d.roles || []);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to load roles");
+    } finally {
+      setLoadingRoles(false);
+    }
+  };
+
+  const fetchPermissions = async () => {
+    setLoadingPermissions(true);
+    try {
+      const res = await api.get<any>("/school/permissions");
+      if (res.data) {
+        const d = res.data.data || res.data;
+        setGroupedPermissions(d.grouped || {});
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to load permissions");
+    } finally {
+      setLoadingPermissions(false);
+    }
+  };
+
+  const fetchRolePermissions = async (roleId: string) => {
+    try {
+      const res = await api.get<any>(`/school/roles/${roleId}`);
+      if (res.data) {
+        const d = res.data.data || res.data;
+        const permIds = d.permissions?.map((p: any) => p.id || p) || [];
+        setSelectedPermissionIds(new Set(permIds));
+      }
+    } catch {
+      setSelectedPermissionIds(new Set());
+    }
+  };
+
+  const handleRoleSelect = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    const role = roles.find((r) => r.id === roleId) || null;
+    setSelectedRole(role);
+    if (role) {
+      fetchPermissions();
+      fetchRolePermissions(roleId);
+    }
+  };
+
+  const togglePermission = (permId: string) => {
+    setSelectedPermissionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(permId)) next.delete(permId);
+      else next.add(permId);
+      return next;
+    });
+  };
+
+  const handleSavePermissions = async () => {
+    if (!selectedRoleId) return;
+    setSavingPermissions(true);
+    try {
+      await api.put(`/school/roles/${selectedRoleId}/permissions`, {
+        permission_ids: Array.from(selectedPermissionIds),
+      });
+      toast.success("Permissions saved successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to save permissions");
+    } finally {
+      setSavingPermissions(false);
+    }
   };
 
   const fmtDate = (d: string | null) => {
@@ -700,6 +804,102 @@ export function UserManagementTab({ role }: Props) {
               </div>
             )}
           </div>
+        )}
+      </SectionCard>
+
+      <SectionCard title="Role Permissions" desc="Manage permissions assigned to each role">
+        {loadingRoles ? (
+          <div className="flex justify-center py-10">
+            <Loader2 size={22} className="animate-spin" color={PLUM} />
+          </div>
+        ) : (
+          <>
+            <div className="mb-4">
+              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Select Role</label>
+              <Select value={selectedRoleId} onValueChange={handleRoleSelect}>
+                <SelectTrigger className="h-9 text-xs rounded-xl w-full sm:w-64"
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  <SelectValue placeholder="Choose a role..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((r) => (
+                    <SelectItem key={r.id} value={r.id} className="text-xs">{r.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {selectedRole && (
+              <div className="border-t pt-4" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                {selectedRole.is_system ? (
+                  <div className="flex items-center gap-2 px-3 py-3 rounded-xl text-xs"
+                    style={{ background: "rgba(56,25,50,0.04)", color: MUTED }}>
+                    <Shield size={14} />
+                    System role - permissions managed by system
+                  </div>
+                ) : (
+                  <>
+                    {loadingPermissions ? (
+                      <div className="flex justify-center py-6">
+                        <Loader2 size={18} className="animate-spin" color={PLUM} />
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {Object.entries(groupedPermissions).length === 0 ? (
+                          <p className="text-xs text-center py-4" style={{ color: MUTED }}>No permissions available</p>
+                        ) : (
+                          Object.entries(groupedPermissions).map(([module, perms]) => (
+                            <div key={module}>
+                              <h4 className="text-xs font-semibold mb-2 capitalize" style={{ color: PLUM }}>
+                                {module.replace(/_/g, ' ')}
+                              </h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+                                {perms.map((perm) => {
+                                  const isChecked = selectedPermissionIds.has(perm.id);
+                                  return (
+                                    <label
+                                      key={perm.id}
+                                      className="flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-xs"
+                                      style={{
+                                        background: isChecked ? "rgba(56,25,50,0.06)" : "transparent",
+                                        color: PLUM,
+                                      }}
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={() => togglePermission(perm.id)}
+                                        className="rounded accent-purple-700"
+                                      />
+                                      {perm.label || perm.name}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
+                    <div className="flex justify-end mt-4">
+                      <Button
+                        onClick={handleSavePermissions}
+                        disabled={savingPermissions || loadingPermissions}
+                        className="text-xs rounded-xl h-9 px-6"
+                        style={{ background: PLUM }}
+                      >
+                        {savingPermissions ? (
+                          <Loader2 size={14} className="animate-spin mr-1" />
+                        ) : (
+                          <Save size={14} className="mr-1" />
+                        )}
+                        Save Permissions
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </>
         )}
       </SectionCard>
     </div>

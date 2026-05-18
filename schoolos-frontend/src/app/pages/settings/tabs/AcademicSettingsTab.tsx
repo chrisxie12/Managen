@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { Save, Loader2, Plus, Trash2 } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, ArrowUp, ArrowDown, Check, X, BookOpen } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../components/ui/select";
 import { Button } from "../../../components/ui/button";
+import { Switch } from "../../../components/ui/switch";
 
 const PLUM = "#381932";
 const MUTED = "#7D6077";
@@ -67,6 +69,29 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const [academicTerms, setAcademicTerms] = useState<any[]>([]);
+  const [loadingTerms, setLoadingTerms] = useState(false);
+  const [settingTerm, setSettingTerm] = useState<string | null>(null);
+
+  const [classes, setClasses] = useState<any[]>([]);
+  const [loadingClasses, setLoadingClasses] = useState(false);
+  const [reordering, setReordering] = useState(false);
+
+  const [allSubjects, setAllSubjects] = useState<any[]>([]);
+  const [loadingSubjects, setLoadingSubjects] = useState(false);
+  const [selectedClassForSubjects, setSelectedClassForSubjects] = useState("");
+  const [classSubjects, setClassSubjects] = useState<any[]>([]);
+  const [loadingClassSubjects, setLoadingClassSubjects] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+
+  const [gradingScales, setGradingScales] = useState<any[]>([]);
+  const [loadingScales, setLoadingScales] = useState(false);
+  const [newScaleName, setNewScaleName] = useState("");
+  const [creatingScale, setCreatingScale] = useState(false);
+  const [deletingScaleId, setDeletingScaleId] = useState<string | null>(null);
+  const [editingScaleId, setEditingScaleId] = useState<string | null>(null);
+  const [editScaleName, setEditScaleName] = useState("");
+
   useEffect(() => {
     if (profile) {
       const cs = profile.class_settings || { levels: 3, naming_convention: "Year-based", custom_prefix: "", max_students: 40 };
@@ -86,6 +111,165 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
       });
     }
   }, [profile]);
+
+  useEffect(() => {
+    fetchTerms();
+    fetchClasses();
+    fetchSubjects();
+    fetchGradingScales();
+  }, []);
+
+  const fetchTerms = async () => {
+    setLoadingTerms(true);
+    try {
+      const res = await api.get<any>("/api/school/terms");
+      if (res.data?.data?.terms) setAcademicTerms(res.data.data.terms);
+      else if (res.data?.terms) setAcademicTerms(res.data.terms);
+      else if (Array.isArray(res.data)) setAcademicTerms(res.data);
+    } catch { /* ignore */ }
+    finally { setLoadingTerms(false); }
+  };
+
+  const handleSetCurrentTerm = async (termId: string) => {
+    setSettingTerm(termId);
+    try {
+      await api.put(`/api/school/terms/${termId}/set-current`, {});
+      toast.success("Current term updated");
+      fetchTerms();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to set current term");
+    } finally {
+      setSettingTerm(null);
+    }
+  };
+
+  const fetchClasses = async () => {
+    setLoadingClasses(true);
+    try {
+      const res = await api.get<any>("/api/school/classes");
+      const data = res.data?.data?.classes || res.data?.classes || (Array.isArray(res.data) ? res.data : []);
+      setClasses(data);
+    } catch { /* ignore */ }
+    finally { setLoadingClasses(false); }
+  };
+
+  const moveClass = async (index: number, direction: "up" | "down") => {
+    const newClasses = [...classes];
+    const swapIndex = direction === "up" ? index - 1 : index + 1;
+    if (swapIndex < 0 || swapIndex >= newClasses.length) return;
+    [newClasses[index], newClasses[swapIndex]] = [newClasses[swapIndex], newClasses[index]];
+    setClasses(newClasses);
+    setReordering(true);
+    try {
+      const order = newClasses.map((c: any, i: number) => ({ id: c.id, sort_order: i }));
+      await api.put("/api/school/classes/reorder", { order });
+      toast.success("Classes reordered");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to reorder");
+      fetchClasses();
+    } finally {
+      setReordering(false);
+    }
+  };
+
+  const fetchSubjects = async () => {
+    setLoadingSubjects(true);
+    try {
+      const res = await api.get<any>("/api/school/subjects");
+      const data = res.data?.data?.subjects || res.data?.subjects || (Array.isArray(res.data) ? res.data : []);
+      setAllSubjects(data);
+    } catch { /* ignore */ }
+    finally { setLoadingSubjects(false); }
+  };
+
+  const fetchClassSubjects = async (classId: string) => {
+    if (!classId) { setClassSubjects([]); return; }
+    setLoadingClassSubjects(true);
+    try {
+      const res = await api.get<any>(`/api/school/class-subjects/${classId}`);
+      const data = res.data?.data?.subjects || (Array.isArray(res.data) ? res.data : []);
+      setClassSubjects(data);
+    } catch { /* ignore */ }
+    finally { setLoadingClassSubjects(false); }
+  };
+
+  useEffect(() => {
+    fetchClassSubjects(selectedClassForSubjects);
+  }, [selectedClassForSubjects]);
+
+  const isSubjectAssigned = (subjectId: string) =>
+    classSubjects.some((cs: any) => cs.subject_id === subjectId || cs.subject?.id === subjectId);
+
+  const toggleSubjectAssignment = async (subjectId: string) => {
+    if (!selectedClassForSubjects || isReadOnly) return;
+    setAssigning(true);
+    try {
+      if (isSubjectAssigned(subjectId)) {
+        await api.delete(`/api/school/class-subjects/${selectedClassForSubjects}/${subjectId}`);
+      } else {
+        await api.post("/api/school/class-subjects/assign", {
+          class_id: selectedClassForSubjects,
+          subject_ids: [subjectId],
+        });
+      }
+      fetchClassSubjects(selectedClassForSubjects);
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update subject assignment");
+    } finally {
+      setAssigning(false);
+    }
+  };
+
+  const fetchGradingScales = async () => {
+    setLoadingScales(true);
+    try {
+      const res = await api.get<any>("/api/school/grading-scales");
+      const data = res.data?.data?.scales || res.data?.scales || (Array.isArray(res.data) ? res.data : []);
+      setGradingScales(data);
+    } catch { /* ignore */ }
+    finally { setLoadingScales(false); }
+  };
+
+  const handleCreateScale = async () => {
+    if (!newScaleName.trim()) return;
+    setCreatingScale(true);
+    try {
+      await api.post("/api/school/grading-scales", { name: newScaleName.trim() });
+      toast.success("Grading scale created");
+      setNewScaleName("");
+      fetchGradingScales();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to create grading scale");
+    } finally {
+      setCreatingScale(false);
+    }
+  };
+
+  const handleUpdateScale = async (id: string) => {
+    if (!editScaleName.trim()) return;
+    try {
+      await api.put(`/api/school/grading-scales/${id}`, { name: editScaleName.trim() });
+      toast.success("Grading scale updated");
+      setEditingScaleId(null);
+      setEditScaleName("");
+      fetchGradingScales();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update grading scale");
+    }
+  };
+
+  const handleDeleteScale = async (id: string) => {
+    setDeletingScaleId(id);
+    try {
+      await api.delete(`/api/school/grading-scales/${id}`);
+      toast.success("Grading scale deleted");
+      fetchGradingScales();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete grading scale");
+    } finally {
+      setDeletingScaleId(null);
+    }
+  };
 
   const daysRemaining = (() => {
     if (!form.term_start_date || !form.term_end_date) return null;
@@ -257,6 +441,57 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         )}
       </SectionCard>
 
+      <SectionCard title="Academic Terms" desc="Manage all academic terms and set the current active term">
+        {loadingTerms ? (
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+        ) : academicTerms.length === 0 ? (
+          <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No terms found. Create terms from the academic setup.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr className="text-left" style={{ color: MUTED }}>
+                  <th className="pb-2 pr-3 font-medium">Term Name</th>
+                  <th className="pb-2 pr-3 font-medium">Start Date</th>
+                  <th className="pb-2 pr-3 font-medium">End Date</th>
+                  <th className="pb-2 pr-3 font-medium">Status</th>
+                  <th className="pb-2 font-medium" />
+                </tr>
+              </thead>
+              <tbody>
+                {academicTerms.map((term: any) => (
+                  <tr key={term.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <td className="py-2.5 pr-3 font-medium" style={{ color: PLUM }}>{term.name}</td>
+                    <td className="py-2.5 pr-3" style={{ color: PLUM }}>{term.start_date}</td>
+                    <td className="py-2.5 pr-3" style={{ color: PLUM }}>{term.end_date}</td>
+                    <td className="py-2.5 pr-3">
+                      {term.is_current ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
+                          style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>
+                          <Check size={10} /> Current
+                        </span>
+                      ) : (
+                        <span style={{ color: MUTED }}>Inactive</span>
+                      )}
+                    </td>
+                    <td className="py-2.5">
+                      {!term.is_current && !isReadOnly && (
+                        <Button onClick={() => handleSetCurrentTerm(term.id)}
+                          disabled={settingTerm === term.id}
+                          className="text-xs rounded-lg h-7 px-3"
+                          style={{ background: PLUM }}>
+                          {settingTerm === term.id ? <Loader2 size={12} className="animate-spin" /> : "Set Current"}
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </SectionCard>
+
       <SectionCard title="Grading System" desc="Configure how student performance is evaluated">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <FormField label="Grading Type" error={errors.grading_system}>
@@ -335,6 +570,94 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         </div>
       </SectionCard>
 
+      <SectionCard title="Grading Scales" desc="Manage named grading scales for different purposes">
+        {loadingScales ? (
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+        ) : (
+          <>
+            <div className="overflow-x-auto mb-3">
+              <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+                <thead>
+                  <tr className="text-left" style={{ color: MUTED }}>
+                    <th className="pb-2 pr-3 font-medium">Scale Name</th>
+                    <th className="pb-2 font-medium w-32" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {gradingScales.length === 0 ? (
+                    <tr><td colSpan={2} className="py-4 text-center" style={{ color: MUTED }}>No grading scales yet.</td></tr>
+                  ) : gradingScales.map((scale: any) => (
+                    <tr key={scale.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                      <td className="py-2.5 pr-3">
+                        {editingScaleId === scale.id ? (
+                          <Input value={editScaleName} onChange={(e) => setEditScaleName(e.target.value)}
+                            className="h-8 text-xs rounded-xl"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span className="font-medium" style={{ color: PLUM }}>{scale.name}</span>
+                        )}
+                      </td>
+                      <td className="py-2.5">
+                        <div className="flex gap-1.5">
+                          {editingScaleId === scale.id ? (
+                            <>
+                              <button onClick={() => handleUpdateScale(scale.id)}
+                                className="p-1.5 rounded-lg transition-colors"
+                                style={{ background: "rgba(16,185,129,0.1)" }}>
+                                <Check size={13} color="#16A34A" />
+                              </button>
+                              <button onClick={() => { setEditingScaleId(null); setEditScaleName(""); }}
+                                className="p-1.5 rounded-lg transition-colors"
+                                style={{ background: "rgba(239,68,68,0.08)" }}>
+                                <X size={13} color="#EF4444" />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {!isReadOnly && (
+                                <button onClick={() => { setEditingScaleId(scale.id); setEditScaleName(scale.name); }}
+                                  className="text-xs font-medium px-2 py-1 rounded-lg transition-colors"
+                                  style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+                                  Edit
+                                </button>
+                              )}
+                              {!isReadOnly && (
+                                <button onClick={() => handleDeleteScale(scale.id)}
+                                  disabled={deletingScaleId === scale.id}
+                                  className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                  style={{ background: "rgba(239,68,68,0.08)" }}>
+                                  {deletingScaleId === scale.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} color="#EF4444" />}
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {!isReadOnly && (
+              <div className="flex gap-2 items-end">
+                <div className="flex-1">
+                  <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>New Scale Name</label>
+                  <Input value={newScaleName} onChange={(e) => setNewScaleName(e.target.value)}
+                    placeholder="e.g. Main Grading Scale"
+                    className="h-9 text-sm rounded-xl"
+                    style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                </div>
+                <Button onClick={handleCreateScale} disabled={creatingScale || !newScaleName.trim()}
+                  className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                  {creatingScale ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
+                  Add Scale
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </SectionCard>
+
       <SectionCard title="Class Structure" desc="Define how classes are organized">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <FormField label="Number of Class Levels">
@@ -372,6 +695,82 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
               style={{ borderColor: "rgba(56,25,50,0.12)" }} />
           </FormField>
         </div>
+
+        {!loadingClasses && classes.length > 0 && (
+          <div className="mt-4">
+            <label className="text-xs font-medium mb-2 block" style={{ color: PLUM }}>Reorder Classes</label>
+            <div className="space-y-1">
+              {classes.map((cls: any, index: number) => (
+                <div key={cls.id}
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-xs"
+                  style={{ background: "rgba(56,25,50,0.04)" }}>
+                  <span className="font-medium" style={{ color: PLUM }}>{cls.name}</span>
+                  {!isReadOnly && (
+                    <div className="flex gap-1">
+                      <button onClick={() => moveClass(index, "up")} disabled={index === 0 || reordering}
+                        className="p-1 rounded hover:bg-white/50 disabled:opacity-30 transition-colors">
+                        <ArrowUp size={14} color={PLUM} />
+                      </button>
+                      <button onClick={() => moveClass(index, "down")} disabled={index === classes.length - 1 || reordering}
+                        className="p-1 rounded hover:bg-white/50 disabled:opacity-30 transition-colors">
+                        <ArrowDown size={14} color={PLUM} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </SectionCard>
+
+      <SectionCard title="Subject Assignment" desc="Assign subjects to classes">
+        <FormField label="Select Class">
+          <Select value={selectedClassForSubjects} onValueChange={setSelectedClassForSubjects} disabled={isReadOnly}>
+            <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
+              style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+              <SelectValue placeholder="Choose a class..." />
+            </SelectTrigger>
+            <SelectContent>
+              {classes.map((cls: any) => (
+                <SelectItem key={cls.id} value={cls.id} className="text-xs">{cls.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormField>
+
+        {selectedClassForSubjects && (
+          <>
+            {loadingSubjects || loadingClassSubjects ? (
+              <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+            ) : allSubjects.length === 0 ? (
+              <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No subjects available. Create subjects first.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
+                {allSubjects.map((subj: any) => {
+                  const assigned = isSubjectAssigned(subj.id);
+                  return (
+                    <label key={subj.id}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs cursor-pointer transition-colors ${isReadOnly ? "opacity-60 cursor-not-allowed" : ""}`}
+                      style={{
+                        background: assigned ? "rgba(16,185,129,0.08)" : "rgba(56,25,50,0.04)",
+                        border: assigned ? "1px solid rgba(16,185,129,0.2)" : "1px solid transparent",
+                      }}>
+                      <input type="checkbox" checked={assigned}
+                        disabled={isReadOnly || assigning}
+                        onChange={() => toggleSubjectAssignment(subj.id)}
+                        className="rounded accent-purple-700" />
+                      <div className="min-w-0">
+                        <span className="font-medium block truncate" style={{ color: PLUM }}>{subj.name}</span>
+                        {subj.code && <span style={{ color: MUTED }}>{subj.code}</span>}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
       </SectionCard>
 
       <SectionCard title="Attendance Settings" desc="Configure attendance tracking rules">

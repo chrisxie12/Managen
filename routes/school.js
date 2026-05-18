@@ -2401,3 +2401,165 @@ router.delete('/settings/account', protect, async (req, res) => {
         return res.status(500).json({ error: 'Error scheduling deletion.' });
     }
 });
+
+// ─── Grading Scales (update) ──────────────────────────────────
+router.put('/grading-scales/:id', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const scale = await examService.updateGradingScale(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { scale } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating grading scale.' }); }
+});
+
+// ─── Set Current Term ──────────────────────────────────────────
+router.put('/terms/:id/set-current', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', schoolId);
+        const term = await schoolService.updateTerm(schoolId, req.params.id, { is_current: true });
+        return res.json({ data: { term } });
+    } catch (err) { return res.status(500).json({ error: 'Error setting current term.' }); }
+});
+
+// ─── Reorder Classes ────────────────────────────────────────────
+router.put('/classes/reorder', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const { order } = req.body;
+        if (!Array.isArray(order)) return res.status(400).json({ error: 'order array is required.' });
+        for (const item of order) {
+            await supabase.from('classes').update({ sort_order: item.sort_order }).eq('id', item.id).eq('school_id', req.tenant.id);
+        }
+        return res.json({ data: { message: 'Classes reordered.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error reordering classes.' }); }
+});
+
+// ─── Class-Subject Assignments ─────────────────────────────────
+router.get('/class-subjects/:classId', protect, requirePermission('subjects.view'), async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('class_subjects')
+            .select('*, subject:subjects(name, code)')
+            .eq('school_id', req.tenant.id)
+            .eq('class_id', req.params.classId);
+        if (error) return res.status(500).json({ error: 'Error fetching class subjects.' });
+        return res.json({ data: { subjects: data || [] } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching class subjects.' }); }
+});
+
+router.post('/class-subjects/assign', protect, requirePermission('subjects.create', 'subjects.edit'), async (req, res) => {
+    try {
+        const { class_id, subject_ids } = req.body;
+        if (!class_id || !Array.isArray(subject_ids)) return res.status(400).json({ error: 'class_id and subject_ids array required.' });
+        const schoolId = req.tenant.id;
+        const inserted = [];
+        for (const subject_id of subject_ids) {
+            const { data: existing } = await supabase.from('class_subjects')
+                .select('id').eq('school_id', schoolId).eq('class_id', class_id).eq('subject_id', subject_id).maybeSingle();
+            if (existing) continue;
+            const cs = await schoolService.addClassSubject(schoolId, { class_id, subject_id });
+            inserted.push(cs);
+        }
+        return res.status(201).json({ data: { subjects: inserted } });
+    } catch (err) { return res.status(500).json({ error: 'Error assigning subjects.' }); }
+});
+
+router.delete('/class-subjects/:classId/:subjectId', protect, requirePermission('subjects.delete'), async (req, res) => {
+    try {
+        const { data: cs } = await supabase.from('class_subjects')
+            .select('id').eq('school_id', req.tenant.id).eq('class_id', req.params.classId).eq('subject_id', req.params.subjectId).single();
+        if (!cs) return res.status(404).json({ error: 'Assignment not found.' });
+        await schoolService.removeClassSubject(req.tenant.id, cs.id);
+        return res.json({ data: { message: 'Subject removed from class.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error removing subject.' }); }
+});
+
+// ─── User Login Sessions ────────────────────────────────────────
+router.get('/sessions', protect, async (req, res) => {
+    try {
+        const { data, error } = await supabase.from('user_sessions')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .order('last_active_at', { ascending: false });
+        if (error) return res.status(500).json({ error: 'Error fetching sessions.' });
+        return res.json({ data: data || [] });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching sessions.' }); }
+});
+
+router.delete('/sessions/:id', protect, async (req, res) => {
+    try {
+        await supabase.from('user_sessions').delete().eq('id', req.params.id).eq('user_id', req.user.id);
+        return res.json({ data: { message: 'Session revoked.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error revoking session.' }); }
+});
+
+router.post('/sessions/revoke-all', protect, async (req, res) => {
+    try {
+        await supabase.from('user_sessions').delete().neq('id', req.body.current_session_id || '').eq('user_id', req.user.id);
+        return res.json({ data: { message: 'Other sessions revoked.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error revoking sessions.' }); }
+});
+
+// ─── Bulk User Operations ───────────────────────────────────────
+router.post('/users/bulk-deactivate', protect, requirePermission('users.edit'), async (req, res) => {
+    try {
+        const { user_ids } = req.body;
+        if (!Array.isArray(user_ids) || user_ids.length === 0) return res.status(400).json({ error: 'user_ids array required.' });
+        const { error } = await supabase.from('users')
+            .update({ is_active: false, suspended_at: new Date().toISOString() })
+            .in('id', user_ids)
+            .eq('tenant_id', req.tenant.id);
+        if (error) return res.status(500).json({ error: 'Error deactivating users.' });
+        return res.json({ data: { message: `${user_ids.length} user(s) deactivated.` } });
+    } catch (err) { return res.status(500).json({ error: 'Error deactivating users.' }); }
+});
+
+router.post('/users/:id/resend', protect, requirePermission('users.create'), async (req, res) => {
+    try {
+        const { data: user, error } = await supabase.from('users')
+            .select('id, full_name, email').eq('id', req.params.id).eq('tenant_id', req.tenant.id).single();
+        if (error || !user) return res.status(404).json({ error: 'User not found.' });
+        await supabase.from('users').update({ invited_at: new Date().toISOString() }).eq('id', user.id);
+        return res.json({ data: { message: `Invitation resent to ${user.email}.` } });
+    } catch (err) { return res.status(500).json({ error: 'Error resending invitation.' }); }
+});
+
+// ─── Clear All Data ──────────────────────────────────────────────
+router.post('/settings/clear-all-data', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { confirm, password } = req.body;
+        if (confirm !== 'DELETE ALL DATA') return res.status(400).json({ error: 'Confirmation text mismatch.' });
+        const { data: user } = await supabase.from('users').select('password').eq('id', req.user.id).single();
+        const valid = await bcrypt.compare(password || '', user.password);
+        if (!valid) return res.status(400).json({ error: 'Current password is incorrect.' });
+        const tables = ['attendance', 'exam_results', 'gradebook_entries', 'fee_structures', 'invoices', 'payments', 'waivers', 'discounts', 'class_subjects', 'subject_teachers', 'class_teachers', 'timetable_entries'];
+        for (const table of tables) {
+            await supabase.from(table).delete().eq('school_id', schoolId);
+        }
+        return res.json({ data: { message: 'All school data has been cleared.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error clearing data.' }); }
+});
+
+// ─── Password Policy Settings ────────────────────────────────────
+router.put('/settings/security-policy', protect, requirePermission('settings.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const allowed = ['min_password_length', 'require_uppercase', 'require_lowercase', 'require_digit', 'require_special', 'password_expiry_days', 'max_login_attempts', 'lockout_duration_minutes'];
+        const data = {};
+        for (const key of allowed) {
+            if (req.body[key] !== undefined) data[key] = req.body[key];
+        }
+        const { error } = await supabase.from('schools').update({ password_policy: supabase.raw('jsonb_set(COALESCE(password_policy, ?::jsonb), ?, ?::jsonb)', ['{}', '{policy}', JSON.stringify(data)]) }).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { message: 'Security policy updated.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error updating security policy.' }); }
+});
+
+router.put('/settings/deactivate', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { confirm } = req.body;
+        const { data: school } = await supabase.from('schools').select('name').eq('id', schoolId).single();
+        if (confirm !== school.name) return res.status(400).json({ error: 'School name mismatch.' });
+        await supabase.from('schools').update({ is_active: false }).eq('id', schoolId);
+        return res.json({ data: { message: 'School deactivated. Contact support to reactivate.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error deactivating school.' }); }
+});
