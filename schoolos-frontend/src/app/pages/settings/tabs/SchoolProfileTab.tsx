@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Upload, Image as ImageIcon, Save, Loader2 } from "lucide-react";
+import { Upload, Image as ImageIcon, Save, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
@@ -7,6 +7,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../components/ui/select";
 import { Button } from "../../../components/ui/button";
+import { api } from "../../../services/api";
 
 const PLUM = "#381932";
 const MUTED = "#7D6077";
@@ -42,10 +43,13 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
   );
 }
 
-function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
+function FormField({ label, required, error, children }: { label: string; required?: boolean; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>
+        {label}
+        {required && <span className="text-red-500 ml-0.5">*</span>}
+      </label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -70,6 +74,8 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [localSaving, setLocalSaving] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -77,7 +83,10 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
         name: profile.name || "", motto: profile.motto || "",
         school_type: profile.school_type || "", year_established: profile.year_established || "",
         registration_number: profile.registration_number || "",
-        email: profile.email || "", phone: profile.phone || "",
+        email: profile.email || "",
+        phone: profile.phone
+          ? (profile.phone.startsWith("+233") ? profile.phone : "+233" + profile.phone.replace(/^0?/, ""))
+          : "+233",
         website: profile.website || "", address: profile.address || "",
         city: profile.city || "", region: profile.region || "",
         country: profile.country || "Ghana",
@@ -103,8 +112,20 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
   const handleSave = async () => {
     if (isReadOnly) return;
     if (!validate()) return;
-    await onSave(form);
-    toast.success("School profile saved");
+    setLocalSaving(true);
+    try {
+      const res = await api.patch<any>("/school/settings/school-profile", form);
+      if (res.data) {
+        toast.success("School profile updated!");
+        await onSave(form);
+      } else {
+        toast.error("Failed to update school profile");
+      }
+    } catch {
+      toast.error("Failed to update school profile");
+    } finally {
+      setLocalSaving(false);
+    }
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +165,7 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
         <div className="lg:col-span-2 space-y-4">
           <SectionCard title="School Identity" desc="Basic information about your school">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-              <FormField label="School Name" error={errors.name}>
+              <FormField label="School Name" required error={errors.name}>
                 <Input value={form.name} onChange={set("name")} disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
@@ -154,7 +175,7 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </FormField>
-              <FormField label="School Type" error={errors.school_type}>
+              <FormField label="School Type" required error={errors.school_type}>
                 <Select value={form.school_type || ""} onValueChange={setSelect("school_type")} disabled={isReadOnly}>
                   <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
                     style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -182,27 +203,37 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
 
           <SectionCard title="Contact Information" desc="How people can reach your school">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-              <FormField label="Email" error={errors.email}>
+              <FormField label="Email" required error={errors.email}>
                 <Input type="email" value={form.email} onChange={set("email")} disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </FormField>
-              <FormField label="Phone" error={errors.phone}>
-                <Input value={form.phone || ""} onChange={set("phone")} disabled={isReadOnly}
-                  className={`h-9 text-sm rounded-xl ${disabledClass}`}
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="+233 XX XXX XXXX" />
+              <FormField label="Phone" required error={errors.phone}>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-medium pointer-events-none"
+                    style={{ color: MUTED }}>+233</span>
+                  <Input type="tel" value={form.phone?.replace("+233", "") || ""}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, "");
+                      setForm((prev: Record<string, any>) => ({ ...prev, phone: "+233" + val }));
+                      if (errors.phone) setErrors((prev) => { const n = { ...prev }; delete n.phone; return n; });
+                    }}
+                    disabled={isReadOnly}
+                    className={`h-9 text-sm rounded-xl pl-12 ${disabledClass}`}
+                    style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="XX XXX XXXX" />
+                </div>
               </FormField>
               <FormField label="Website">
                 <Input value={form.website || ""} onChange={set("website")} disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="https://" />
               </FormField>
-              <FormField label="City" error={errors.city}>
+              <FormField label="City" required error={errors.city}>
                 <Input value={form.city || ""} onChange={set("city")} disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </FormField>
-              <FormField label="Region" error={errors.region}>
+              <FormField label="Region" required error={errors.region}>
                 <Select value={form.region || ""} onValueChange={setSelect("region")} disabled={isReadOnly}>
                   <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
                     style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -221,9 +252,9 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </FormField>
             </div>
-            <FormField label="Address" error={errors.address}>
+            <FormField label="Address" required error={errors.address}>
               <Textarea value={form.address || ""} onChange={set("address")} disabled={isReadOnly}
-                rows={2}
+                rows={3}
                 className={`text-sm rounded-xl resize-none ${disabledClass}`}
                 style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </FormField>
@@ -238,7 +269,7 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                 style={{ borderColor: "rgba(99,102,241,0.2)" }}>
                 {form.logo_url ? (
                   <img src={form.logo_url} alt="School logo"
-                    className="w-20 h-20 rounded-full object-cover mx-auto"
+                    className="w-[120px] h-[120px] rounded-full object-cover mx-auto"
                     style={{ border: "3px solid rgba(56,25,50,0.1)" }} />
                 ) : (
                   <div>
@@ -250,6 +281,11 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                 <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/svg+xml"
                   onChange={handleLogoUpload} className="hidden" />
               </div>
+              {fileName && (
+                <p className="text-xs mt-1.5 truncate" style={{ color: MUTED }}>
+                  {fileName}
+                </p>
+              )}
             </FormField>
 
             <FormField label="Primary Color">
@@ -257,12 +293,17 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                 {PRESET_COLORS.map((c) => (
                   <button key={c} type="button" onClick={() => { if (!isReadOnly) setForm((prev: Record<string, any>) => ({ ...prev, primary_color: c })); }}
                     disabled={isReadOnly}
-                    className="w-7 h-7 rounded-full active:scale-90 transition-transform disabled:cursor-not-allowed"
+                    className="w-7 h-7 rounded-full active:scale-90 transition-transform disabled:cursor-not-allowed relative"
                     style={{
                       background: c,
                       border: form.primary_color === c ? "3px solid white" : "2px solid transparent",
                       boxShadow: form.primary_color === c ? `0 0 0 2px ${c}` : "0 1px 3px rgba(0,0,0,0.15)",
-                    }} />
+                    }}>
+                    {form.primary_color === c && (
+                      <Check size={12} className="absolute inset-0 m-auto"
+                        style={{ color: "#fff", filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.3))" }} />
+                    )}
+                  </button>
                 ))}
                 <input type="color" value={form.primary_color || PLUM}
                   onChange={(e) => { if (!isReadOnly) setForm((prev: Record<string, any>) => ({ ...prev, primary_color: e.target.value })); }}
@@ -276,12 +317,13 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
           </SectionCard>
 
           <SectionCard title="Live Preview">
-            <div className="rounded-xl overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${form.primary_color || PLUM} 0%, ${(form.primary_color || PLUM) + "dd"} 100%)`,
-                boxShadow: `0 4px 20px ${(form.primary_color || PLUM)}33`,
-              }}>
-              <div className="p-4">
+            <div className="rounded-xl overflow-hidden shadow-lg"
+              style={{ background: "white" }}>
+              <div className="p-4"
+                style={{
+                  background: `linear-gradient(135deg, ${form.primary_color || PLUM} 0%, ${(form.primary_color || PLUM) + "dd"} 100%)`,
+                  boxShadow: `0 4px 20px ${(form.primary_color || PLUM)}33`,
+                }}>
                 <div className="flex items-center gap-3">
                   {form.logo_url ? (
                     <img src={form.logo_url} alt="Logo"
@@ -298,17 +340,17 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
                       {form.name || "School Name"}
                     </h4>
                     {form.motto && (
-                      <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      <p className="text-[10px] truncate italic" style={{ color: "rgba(255,255,255,0.7)" }}>
                         {form.motto}
                       </p>
                     )}
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }}>
-                  <div className="flex gap-3 text-[10px]" style={{ color: "rgba(255,255,255,0.65)" }}>
-                    <span className="truncate">{form.email || "email@school.com"}</span>
-                    <span className="truncate">{form.phone || "+233 XX XXX XXXX"}</span>
-                  </div>
+              </div>
+              <div className="p-3 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                <div className="flex gap-3 text-[10px]" style={{ color: MUTED }}>
+                  <span className="truncate">{form.email || "email@school.com"}</span>
+                  <span className="truncate">{form.phone || "+233 XX XXX XXXX"}</span>
                 </div>
               </div>
             </div>
@@ -321,9 +363,9 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
 
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
-          <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6"
+          <Button onClick={handleSave} disabled={saving || localSaving} className="text-xs rounded-xl h-9 px-6"
             style={{ background: PLUM }}>
-            {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
+            {saving || localSaving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save School Profile
           </Button>
         </div>
