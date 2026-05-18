@@ -62,7 +62,8 @@ export function SettingsPage() {
 
   const blocker = useBlocker(dirty);
 
-  const visibleTabs = tabs.filter(t => t.roles.includes(role) || role === "school_admin");
+  const adminRoles = ["school_admin", "admin"];
+  const visibleTabs = tabs.filter(t => t.roles.includes(role) || adminRoles.includes(role));
 
   const fetchProfile = useCallback(async () => {
     setLoading(true);

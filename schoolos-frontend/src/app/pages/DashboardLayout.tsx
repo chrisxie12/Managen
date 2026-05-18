@@ -39,6 +39,7 @@ const allNavItems = [
   { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
   { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
   { icon: Activity, label: "System Health", path: "/dashboard/system-health" },
+  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
 const roleLabels: Record<string, string> = {
@@ -114,7 +115,7 @@ export function DashboardLayout() {
 
         <div className="mt-6 mb-2">
           <p className="px-3 mb-2 uppercase tracking-widest" style={{ color: MUTED, fontSize: "0.65rem" }}>Support</p>
-          {[{ icon: Settings, label: "Settings", path: "/dashboard/settings" }, { icon: HelpCircle, label: "Help & Support", path: "mailto:support@getschoolos.me" }].map((item) => (
+          {[{ icon: HelpCircle, label: "Help & Support", path: "mailto:support@getschoolos.me" }].map((item) => (
             <button key={item.label}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left hover:opacity-70 transition-opacity"
               style={{ color: MUTED }}>
