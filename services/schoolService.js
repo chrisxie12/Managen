@@ -1662,6 +1662,209 @@ class SchoolService {
 
         return [];
     }
+    // ─── Student Profile ────────────────────────────────────────────
+    async getStudentByUser(schoolId, userId) {
+        // Find student record matching this user (by user's full_name)
+        const { data: user } = await supabase.from('users')
+            .select('name, email')
+            .eq('id', userId)
+            .single();
+        if (!user) return null;
+
+        // Try matching by name first, then by name parts
+        let { data: student } = await supabase.from('students')
+            .select('*')
+            .eq('tenant_id', schoolId)
+            .eq('is_active', true)
+            .ilike('name', user.name)
+            .maybeSingle();
+
+        if (!student) {
+            const firstName = user.name?.split(' ')[0];
+            if (firstName) {
+                const { data: byFirst } = await supabase.from('students')
+                    .select('*')
+                    .eq('tenant_id', schoolId)
+                    .eq('is_active', true)
+                    .ilike('name', `${firstName}%`)
+                    .limit(1)
+                    .maybeSingle();
+                student = byFirst;
+            }
+        }
+        return student || null;
+    }
+
+    // ─── Student Dashboard ───────────────────────────────────────────
+    async getStudentDashboard(schoolId, studentId) {
+        const [studentRes, attendanceRes, timetableRes, invoicesRes, interventionsRes] = await Promise.all([
+            supabase.from('students').select('*').eq('id', studentId).single(),
+            supabase.from('attendance').select('*').eq('tenant_id', schoolId).eq('student_id', studentId).order('date', { ascending: false }).limit(30),
+            supabase.from('timetable').select('*').eq('tenant_id', schoolId),
+            supabase.from('invoices').select('*, term:academic_terms(name)').eq('school_id', schoolId).eq('student_id', studentId).order('created_at', { ascending: false }).limit(10),
+            supabase.from('interventions').select('*, assigned:users!assigned_to(full_name)').eq('school_id', schoolId).eq('student_id', studentId).eq('status', 'open').order('created_at', { ascending: false }).limit(10),
+        ]);
+
+        const student = studentRes.data;
+        const className = student?.class_name;
+
+        // Get timetable for this class
+        const allTt = timetableRes.data || [];
+        const classTt = allTt.filter(t => t.class_name?.toLowerCase() === className?.toLowerCase());
+
+        // Get report cards
+        const { data: reportCards } = await supabase.from('report_cards')
+            .select('*, term:academic_terms(name), session:academic_sessions(name)')
+            .eq('school_id', schoolId)
+            .eq('student_id', studentId)
+            .order('created_at', { ascending: false })
+            .limit(5);
+
+        return {
+            student: student || null,
+            attendance: attendanceRes.data || [],
+            timetable: classTt,
+            invoices: invoicesRes.data || [],
+            interventions: interventionsRes.data || [],
+            reportCards: reportCards || [],
+        };
+    }
+
+    // ─── Parent Children ─────────────────────────────────────────────
+    async getParentChildren(schoolId, email) {
+        const { data, error } = await supabase.from('students')
+            .select('*')
+            .eq('tenant_id', schoolId)
+            .eq('is_active', true)
+            .ilike('parent_email', email);
+        if (error) throw error;
+        return data || [];
+    }
+
+    async getStudentBrief(schoolId, studentId) {
+        const studentRes = await supabase.from('students')
+            .select('*')
+            .eq('id', studentId)
+            .single();
+
+        if (!studentRes.data) return null;
+
+        const { count: attendanceCount } = await supabase.from('attendance')
+            .select('id', { count: 'exact', head: true })
+            .eq('tenant_id', schoolId)
+            .eq('student_id', studentId);
+
+        const { data: invoices } = await supabase.from('invoices')
+            .select('status, paid_amount, total_amount')
+            .eq('school_id', schoolId)
+            .eq('student_id', studentId);
+
+        const totalPaid = (invoices || []).reduce((s, i) => s + Number(i.paid_amount || 0), 0);
+        const totalDue = (invoices || []).reduce((s, i) => s + Number(i.total_amount || 0), 0);
+
+        return {
+            student: studentRes.data,
+            attendance_count: attendanceCount || 0,
+            fee_paid: totalPaid,
+            fee_due: totalDue,
+        };
+    }
+
+    async getTeacherClasses(schoolId, teacherId) {
+        // Get class-teacher assignments (form teacher / assistant roles)
+        const { data: ctData, error: ctErr } = await supabase
+            .from('class_teachers')
+            .select('*, class:classes(id, name)')
+            .eq('school_id', schoolId)
+            .eq('teacher_id', teacherId);
+        if (ctErr) throw ctErr;
+
+        // Get subject-teacher assignments
+        const { data: stData, error: stErr } = await supabase
+            .from('subject_teachers')
+            .select('*, subject:subjects(name, code), class:classes(id, name)')
+            .eq('school_id', schoolId)
+            .eq('teacher_id', teacherId);
+        if (stErr) throw stErr;
+
+        // Unique class names from both assignments
+        const classNames = [...new Set([
+            ...(ctData || []).map(a => a.class?.name).filter(Boolean),
+            ...(stData || []).map(a => a.class?.name).filter(Boolean),
+        ])];
+
+        if (classNames.length === 0) return [];
+
+        // Student counts per class
+        const { data: studentData } = await supabase
+            .from('students')
+            .select('class_name')
+            .eq('tenant_id', schoolId)
+            .eq('is_active', true)
+            .in('class_name', classNames);
+
+        const studentCountMap = {};
+        (studentData || []).forEach(s => {
+            studentCountMap[s.class_name] = (studentCountMap[s.class_name] || 0) + 1;
+        });
+
+        // Build class info list
+        const classes = classNames.map(name => {
+            const ct = (ctData || []).find(a => a.class?.name === name);
+            const subjects = (stData || []).filter(a => a.class?.name === name).map(a => a.subject).filter(Boolean);
+            return {
+                id: ct?.class?.id || (stData?.find(a => a.class?.name === name)?.class?.id),
+                name,
+                student_count: studentCountMap[name] || 0,
+                role: ct?.role || 'subject_teacher',
+                subjects,
+            };
+        });
+
+        return classes;
+    }
+
+    // ─── User Inbox ──────────────────────────────────────────────────
+    async getUserInbox(schoolId, userId, filters = {}) {
+        // Find messages where user is a recipient (via role-based lookup or direct)
+        let query = supabase.from('message_recipients')
+            .select('*, message:messages(*)')
+            .eq('channel', 'in_app')
+            .order('created_at', { ascending: false });
+
+        // For now, get messages where recipient_id matches user_id
+        // (In a full implementation, also match by role/class)
+        query = query.eq('recipient_id', userId);
+
+        const page = Math.max(1, Number.parseInt(filters.page) || 1);
+        const limit = Math.min(100, Math.max(1, Number.parseInt(filters.limit) || 50));
+        query = query.range((page - 1) * limit, page * limit - 1);
+
+        const { data, error } = await query;
+        if (error) throw error;
+        return data || [];
+    }
+
+    // ─── User Notifications ──────────────────────────────────────────
+    async getUserNotifications(schoolId, userId, filters = {}) {
+        const { data, error } = await supabase.from('notification_logs')
+            .select('*')
+            .eq('school_id', schoolId)
+            .eq('actor_id', userId)
+            .order('created_at', { ascending: false })
+            .limit(Math.min(100, Number(filters.limit) || 50));
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createUserNotification(schoolId, payload) {
+        const { data, error } = await supabase.from('notification_logs')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
 }
 
 module.exports = new SchoolService();

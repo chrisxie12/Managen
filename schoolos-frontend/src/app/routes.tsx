@@ -6,9 +6,14 @@ import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { TeacherDashboard } from "./pages/TeacherDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
+import { StudentDetails } from "./pages/StudentDetails";
 import { ParentDashboard } from "./pages/ParentDashboard";
+import { ParentChildDetails } from "./pages/ParentChildDetails";
+import { Inbox } from "./pages/Inbox";
+import { NotificationsPage } from "./pages/NotificationsPage";
 import { Students } from "./pages/Students";
 import { Academics } from "./pages/Academics";
+import { TeacherClassManagement } from "./pages/TeacherClassManagement";
 import { Finance } from "./pages/Finance";
 import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
@@ -64,8 +69,14 @@ export const router = createBrowserRouter([
       { path: "headmaster", Component: HeadmasterDashboard },
       { path: "accountant", Component: AccountantDashboard },
       { path: "teacher", Component: TeacherDashboard },
+      { path: "teacher/classes", Component: TeacherClassManagement },
       { path: "student", Component: StudentDashboard },
+      { path: "student/details", Component: StudentDetails },
+      { path: "student/details/:id", Component: StudentDetails },
       { path: "parent", Component: ParentDashboard },
+      { path: "parent/child/:id", Component: ParentChildDetails },
+      { path: "inbox", Component: Inbox },
+      { path: "notifications", Component: NotificationsPage },
       { path: "students", Component: Students },
       { path: "attendance", Component: Attendance },
       { path: "assessments", Component: Assessments },

@@ -74,8 +74,26 @@ router.get('/info', protect, (req, res) => {
                 maxStudents: getPlanConfig(req.tenant.plan).maxStudents,
                 trialEndsAt: null,
             }
-        }
-    });
+    }
+});
+
+// ─── Inbox (in-app messages) ──────────────────────────────────
+router.get('/inbox', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const messages = await schoolService.getUserInbox(req.tenant.id, userId, req.query);
+        return res.json({ data: { messages } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching inbox.' }); }
+});
+
+// ─── User Notifications ──────────────────────────────────────
+router.get('/notifications', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const notifications = await schoolService.getUserNotifications(req.tenant.id, userId, req.query);
+        return res.json({ data: { notifications } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching notifications.' }); }
+});
 });
 
 // GET /api/school/dashboard
@@ -103,6 +121,50 @@ router.get('/students', protect, requirePermission('students.view'), async (req,
         }
         return res.status(500).json({ error: 'Error fetching students.' });
     }
+});
+
+// GET /api/school/student/profile — logged-in student's profile & dashboard
+router.get('/student/profile', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const student = await schoolService.getStudentByUser(req.tenant.id, userId);
+        if (!student) return res.status(404).json({ error: 'Student profile not found. Contact your school admin to link your account.' });
+        return res.json({ data: { student } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching profile.' }); }
+});
+
+// GET /api/school/student/dashboard — full student dashboard data
+router.get('/student/dashboard', protect, async (req, res) => {
+    try {
+        const userId = req.user.userId || req.user.id;
+        const student = await schoolService.getStudentByUser(req.tenant.id, userId);
+        if (!student) return res.status(404).json({ error: 'Student profile not found.' });
+        const data = await schoolService.getStudentDashboard(req.tenant.id, student.id);
+        return res.json({ data });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching dashboard.' }); }
+});
+
+// GET /api/school/parent/children — parent's linked children
+router.get('/parent/children', protect, async (req, res) => {
+    try {
+        const email = req.user.email;
+        if (!email) return res.status(400).json({ error: 'No email on profile.' });
+        const children = await schoolService.getParentChildren(req.tenant.id, email);
+        return res.json({ data: { children } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching children.' }); }
+});
+
+// GET /api/school/parent/children/:id — brief summary of one child
+router.get('/parent/children/:id', protect, async (req, res) => {
+    try {
+        const email = req.user.email;
+        if (!email) return res.status(400).json({ error: 'No email on profile.' });
+        const children = await schoolService.getParentChildren(req.tenant.id, email);
+        const child = children.find(c => c.id === req.params.id);
+        if (!child) return res.status(403).json({ error: 'Access denied.' });
+        const brief = await schoolService.getStudentBrief(req.tenant.id, child.id);
+        return res.json({ data: brief });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching child details.' }); }
 });
 
 // ─── Zod Schemas ──────────────────────────────────────────────
@@ -825,6 +887,17 @@ router.post('/classes', protect, requirePermission('classes.create', 'classes.ed
         return res.status(201).json({ data: { class: cls } });
     } catch (err) {
         return res.status(500).json({ error: 'Error creating class.' });
+    }
+});
+
+// GET /api/school/my-classes — teacher's assigned classes with student counts
+router.get('/my-classes', protect, async (req, res) => {
+    try {
+        const teacherId = req.user.userId || req.user.id;
+        const classes = await schoolService.getTeacherClasses(req.tenant.id, teacherId);
+        return res.json({ data: { classes } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching your classes.' });
     }
 });
 

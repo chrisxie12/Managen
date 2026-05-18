@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
-  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity,
+  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity, School, Mail,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
@@ -15,6 +15,9 @@ const MUTED = "#7D6077";
 
 const allNavItems = [
   { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
+  { icon: School, label: "My Classes", path: "/dashboard/teacher/classes" },
+  { icon: Mail, label: "Inbox", path: "/dashboard/inbox" },
+  { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
   { icon: Shield, label: "Roles & Permissions", path: "/dashboard/roles" },
   { icon: UserPlus, label: "Users", path: "/dashboard/users" },
   { icon: Users, label: "Students", path: "/dashboard/students" },
