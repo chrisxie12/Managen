@@ -311,8 +311,48 @@ router.delete('/fee-structures/:id', protect, requirePermission('fees.delete'), 
 });
 
 // Invoices
-router.get('/invoices', protect, requirePermission('fees.view'), async (req, res) => {
+router.get('/invoices', protect, async (req, res) => {
     try {
+        const userId = req.user.userId || req.user.id;
+        const userRole = req.user.role;
+
+        // Admin/staff: require fees.view permission
+        if (['superadmin', 'school_admin', 'headmaster', 'teacher'].includes(userRole)) {
+            if (!req.user.permissions?.includes('fees.view') && userRole !== 'superadmin') {
+                return res.status(403).json({ error: 'Access denied.' });
+            }
+        } else if (userRole === 'student') {
+            // Student: can only see own invoices
+            req.query.student_id = userId;
+        } else if (userRole === 'parent') {
+            // Parent: can only see children's invoices
+            const { data: children } = await supabase
+                .from('parents')
+                .select('student_id')
+                .eq('user_id', userId);
+            const childIds = (children || []).map(c => c.student_id);
+            if (req.query.student_id && !childIds.includes(req.query.student_id)) {
+                return res.status(403).json({ error: 'Access denied.' });
+            }
+            // Handle parent with multiple children via manual query
+            if (!req.query.student_id && childIds.length > 0) {
+                let query = supabase.from('invoices')
+                    .select('*, student:students(name, admission_no, class_name), class:classes(name), term:academic_terms(name)', { count: 'exact' })
+                    .eq('school_id', req.tenant.id)
+                    .in('student_id', childIds)
+                    .order('created_at', { ascending: false });
+                if (req.query.status) query = query.eq('status', req.query.status);
+                const page = Math.max(1, Number.parseInt(req.query.page) || 1);
+                const limit = Math.min(200, Math.max(1, Number.parseInt(req.query.limit) || 50));
+                query = query.range((page - 1) * limit, page * limit - 1);
+                const { data, count, error } = await query;
+                if (error) throw error;
+                return res.json({ data: { invoices: data || [], total: count || 0, page, limit } });
+            }
+        } else {
+            return res.status(403).json({ error: 'Access denied.' });
+        }
+
         const result = await schoolService.getInvoices(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) { return res.status(500).json({ error: 'Error fetching invoices.' }); }
@@ -1279,325 +1319,209 @@ router.post('/terms', protect, requirePermission('settings.edit'), validate(term
         const term = await schoolService.createTerm(req.tenant.id, req.body);
         return res.status(201).json({ data: { term } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating term.' });
+        return res.status(500).json({ error: 'Error activating user.' });
     }
 });
 
-router.put('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        if (req.body.is_current) {
-            await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', req.tenant.id);
+// ==================== WEIGHTED GRADEBOOK ENDPOINTS ====================
+
+/**
+ * GET /api/school/classes/:classId/terms/:termId/gradebook
+ * Returns term averages for all students in a class
+ * Permissions: school_admin, headmaster, teacher
+ */
+router.get('/classes/:classId/terms/:termId/gradebook',
+    protect,
+    requirePermission('view_assessments'),
+    async (req, res) => {
+        try {
+            const { classId, termId } = req.params;
+            const schoolId = req.tenant?.id || req.schoolId;
+
+            // Verify class belongs to this school
+            const { data: classData, error: classError } = await supabase
+                .from('classes')
+                .select('id')
+                .eq('id', classId)
+                .eq('school_id', schoolId)
+                .single();
+
+            if (classError || !classData) {
+                return res.status(404).json({ error: 'Class not found in this school' });
+            }
+
+            // Verify term belongs to this school
+            const { data: termData, error: termError } = await supabase
+                .from('academic_terms')
+                .select('id')
+                .eq('id', termId)
+                .eq('school_id', schoolId)
+                .single();
+
+            if (termError || !termData) {
+                return res.status(404).json({ error: 'Term not found in this school' });
+            }
+
+            const includeBreakdown = req.query.include_breakdown === 'true';
+
+            const results = await gradebookService.calculateClassTermAverages(classId, termId, schoolId);
+
+            // Optionally remove category breakdown if not requested (to reduce payload)
+            if (!includeBreakdown && results) {
+                results.forEach(r => {
+                    if (r.category_breakdown) delete r.category_breakdown;
+                });
+            }
+
+            res.json({ success: true, data: results });
+        } catch (error) {
+            console.error('Gradebook fetch error:', error);
+            res.status(500).json({ error: error.message });
         }
-        const term = await schoolService.updateTerm(req.tenant.id, req.params.id, req.body);
-        return res.json({ data: { term } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating term.' });
     }
-});
+);
 
-router.delete('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.deleteTerm(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Term deleted.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error deleting term.' });
-    }
-});
+/**
+ * GET /api/school/students/:studentId/classes/:classId/terms/:termId/grade
+ * Returns single student's term average and breakdown
+ * Permissions: student (self), parent (own child), teacher, admin, headmaster
+ */
+router.get('/students/:studentId/classes/:classId/terms/:termId/grade',
+    protect,
+    async (req, res) => {
+        try {
+            const { studentId, classId, termId } = req.params;
+            const schoolId = req.tenant?.id || req.schoolId;
+            const userId = req.user.id;
+            const userRole = req.user.role;
 
-// ─── Interventions ────────────────────────────────────────────
-router.get('/interventions', protect, async (req, res) => {
-    try {
-        const interventions = await schoolService.getInterventions(req.tenant.id, req.query.student_id);
-        return res.json({ data: { interventions } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching interventions.' });
-    }
-});
+            // Authorization: check if user can access this student's data
+            let authorized = false;
 
-const interventionSchema = {
-    body: z.object({
-        student_id: z.string().uuid(),
-        type: z.enum(['attendance', 'performance', 'behavior']),
-        severity: z.enum(['low', 'medium', 'high', 'critical']),
-        notes: z.string().optional(),
-        assigned_to: z.string().uuid().optional(),
-    })
-};
-router.post('/interventions', protect, requirePermission('students.edit'), validate(interventionSchema), async (req, res) => {
-    try {
-        const intervention = await schoolService.createIntervention(req.tenant.id, {
-            ...req.body,
-            created_by: req.user.userId,
-            status: 'open',
-        });
-        return res.status(201).json({ data: { intervention } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error creating intervention.' });
-    }
-});
+            if (['superadmin', 'school_admin', 'headmaster', 'teacher'].includes(userRole)) {
+                authorized = true;
+            } else if (userRole === 'student' && userId === studentId) {
+                authorized = true;
+            } else if (userRole === 'parent') {
+                // Check if this parent has this student linked
+                const { data: parentLink, error: linkError } = await supabase
+                    .from('parents')
+                    .select('id')
+                    .eq('user_id', userId)
+                    .eq('student_id', studentId)
+                    .single();
+                if (!linkError && parentLink) authorized = true;
+            }
 
-router.put('/interventions/:id', protect, requirePermission('students.edit'), async (req, res) => {
-    try {
-        const payload = { ...req.body };
-        if (payload.status === 'resolved') payload.resolved_at = new Date().toISOString();
-        const intervention = await schoolService.updateIntervention(req.tenant.id, req.params.id, payload);
-        return res.json({ data: { intervention } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating intervention.' });
-    }
-});
+            if (!authorized) {
+                return res.status(403).json({ error: 'Access denied' });
+            }
 
-// ─── Class Update/Delete ──────────────────────────────────────
-router.put('/classes/:id', protect, requirePermission('classes.edit'), async (req, res) => {
-    try {
-        const cls = await schoolService.updateClass(req.tenant.id, req.params.id, req.body);
-        return res.json({ data: { class: cls } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating class.' });
-    }
-});
+            const result = await gradebookService.calculateTermAverage(studentId, classId, termId, schoolId);
 
-router.delete('/classes/:id', protect, requirePermission('classes.delete'), async (req, res) => {
-    try {
-        await schoolService.deleteClass(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Class deleted.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error deleting class.' });
-    }
-});
+            if (!result) {
+                return res.status(404).json({ error: 'No assessment data found for this student' });
+            }
 
-// ─── Timetable Update/Delete ──────────────────────────────────
-router.put('/timetable/:id', protect, requirePermission('timetable.edit'), async (req, res) => {
-    try {
-        const entry = await schoolService.updateTimetableEntry(req.tenant.id, req.params.id, req.body);
-        return res.json({ data: { entry } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating timetable entry.' });
+            res.json({ success: true, data: result });
+        } catch (error) {
+            console.error('Student grade fetch error:', error);
+            res.status(500).json({ error: error.message });
+        }
     }
-});
+);
 
-router.delete('/timetable/:id', protect, requirePermission('timetable.delete'), async (req, res) => {
-    try {
-        await schoolService.deleteTimetableEntry(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Timetable entry deleted.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error deleting timetable entry.' });
-    }
-});
+/**
+ * POST /api/school/report-cards/generate/:classId/:termId
+ * Triggers batch report card generation for a class (async with BullMQ)
+ * Permissions: school_admin, headmaster
+ */
+router.post('/report-cards/generate/:classId/:termId',
+    protect,
+    requirePermission('manage_report_cards'),
+    async (req, res) => {
+        try {
+            const { classId, termId } = req.params;
+            const schoolId = req.tenant?.id || req.schoolId;
 
-// GET /api/school/timetable/conflicts - detect timetable conflicts
-router.get('/timetable/conflicts', protect, async (req, res) => {
-    try {
-        const conflicts = await schoolService.checkTimetableConflicts(req.tenant.id, req.query);
-        return res.json({ data: { conflicts } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error checking timetable conflicts.' });
-    }
-});
+            // Verify class belongs to school
+            const { data: classData, error: classError } = await supabase
+                .from('classes')
+                .select('id')
+                .eq('id', classId)
+                .eq('school_id', schoolId)
+                .single();
+            if (classError || !classData) {
+                return res.status(404).json({ error: 'Class not found' });
+            }
 
-// GET /api/school/teachers/workload - teacher workload summary
-router.get('/teachers/workload', protect, async (req, res) => {
-    try {
-        const workload = await schoolService.getTeacherWorkload(req.tenant.id);
-        return res.json({ data: { workload } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching teacher workload.' });
-    }
-});
+            // Check if BullMQ queue is available
+            let jobId = null;
+            let syncFallback = false;
 
-// ─── Streams ──────────────────────────────────────────────────
-router.get('/streams', protect, async (req, res) => {
-    try {
-        const streams = await schoolService.getStreams(req.tenant.id);
-        return res.json({ data: { streams } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching streams.' });
-    }
-});
+            if (global.reportCardQueue) {
+                // Queue exists (from queueService.js)
+                const job = await global.reportCardQueue.add('generate-class-report-cards', {
+                    classId,
+                    termId,
+                    schoolId,
+                    triggeredBy: req.user.id
+                });
+                jobId = job.id;
+            } else {
+                // Fallback to synchronous processing if queue not set up yet
+                syncFallback = true;
+                const results = await gradebookService.batchUpdateReportCards(classId, termId, schoolId);
+                return res.json({ success: true, sync: true, data: results });
+            }
 
-router.post('/streams', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const stream = await schoolService.createStream(req.tenant.id, req.body);
-        return res.status(201).json({ data: { stream } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error creating stream.' });
+            res.json({ success: true, async: true, jobId });
+        } catch (error) {
+            console.error('Report card generation error:', error);
+            res.status(500).json({ error: error.message });
+        }
     }
-});
+);
 
-router.put('/streams/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const stream = await schoolService.updateStream(req.tenant.id, req.params.id, req.body);
-        return res.json({ data: { stream } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating stream.' });
-    }
-});
+/**
+ * GET /api/school/report-cards/status/:jobId
+ * Check status of async report card generation job
+ * Permissions: school_admin, headmaster
+ */
+router.get('/report-cards/status/:jobId',
+    protect,
+    requirePermission('manage_report_cards'),
+    async (req, res) => {
+        try {
+            const { jobId } = req.params;
 
-router.delete('/streams/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.deleteStream(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Stream deleted.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error deleting stream.' });
-    }
-});
+            if (!global.reportCardQueue) {
+                return res.status(501).json({ error: 'Async jobs not configured' });
+            }
 
-// ─── Academic Sessions ─────────────────────────────────────────
-router.get('/sessions', protect, async (req, res) => {
-    try {
-        const sessions = await schoolService.getSessions(req.tenant.id);
-        return res.json({ data: { sessions } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching sessions.' });
-    }
-});
+            const job = await global.reportCardQueue.getJob(jobId);
+            if (!job) {
+                return res.status(404).json({ error: 'Job not found' });
+            }
 
-router.post('/sessions', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const session = await schoolService.createSession(req.tenant.id, req.body);
-        return res.status(201).json({ data: { session } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error creating session.' });
-    }
-});
+            const state = await job.getState();
+            const progress = job.progress();
+            const result = job.returnvalue;
+            const failedReason = job.failedReason;
 
-router.put('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const session = await schoolService.updateSession(req.tenant.id, req.params.id, req.body);
-        return res.json({ data: { session } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating session.' });
+            res.json({
+                jobId,
+                state,
+                progress,
+                result: state === 'completed' ? result : null,
+                failedReason: state === 'failed' ? failedReason : null
+            });
+        } catch (error) {
+            console.error('Job status error:', error);
+            res.status(500).json({ error: error.message });
+        }
     }
-});
-
-router.delete('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.deleteSession(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Session deleted.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error deleting session.' });
-    }
-});
-
-// ─── Class-Subject Association ─────────────────────────────────
-router.get('/class-subjects', protect, async (req, res) => {
-    try {
-        const associations = await schoolService.getClassSubjects(req.tenant.id);
-        return res.json({ data: { associations } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching class-subject associations.' });
-    }
-});
-
-router.post('/class-subjects', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const association = await schoolService.addClassSubject(req.tenant.id, req.body);
-        return res.status(201).json({ data: { association } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error adding class-subject association.' });
-    }
-});
-
-router.delete('/class-subjects/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.removeClassSubject(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Association removed.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error removing class-subject association.' });
-    }
-});
-
-// ─── Subject-Teacher Assignment ────────────────────────────────
-router.get('/subject-teachers', protect, async (req, res) => {
-    try {
-        const assignments = await schoolService.getSubjectTeachers(req.tenant.id);
-        return res.json({ data: { assignments } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching subject-teacher assignments.' });
-    }
-});
-
-router.post('/subject-teachers', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const assignment = await schoolService.assignSubjectTeacher(req.tenant.id, req.body);
-        return res.status(201).json({ data: { assignment } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error assigning subject teacher.' });
-    }
-});
-
-router.delete('/subject-teachers/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.removeSubjectTeacher(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Assignment removed.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error removing subject-teacher assignment.' });
-    }
-});
-
-// ─── Class-Teacher Assignment ──────────────────────────────────
-router.get('/class-teachers', protect, async (req, res) => {
-    try {
-        const assignments = await schoolService.getClassTeachers(req.tenant.id);
-        return res.json({ data: { assignments } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching class-teacher assignments.' });
-    }
-});
-
-router.post('/class-teachers', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        const assignment = await schoolService.assignClassTeacher(req.tenant.id, req.body);
-        return res.status(201).json({ data: { assignment } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error assigning class teacher.' });
-    }
-});
-
-router.delete('/class-teachers/:id', protect, requirePermission('settings.edit'), async (req, res) => {
-    try {
-        await schoolService.removeClassTeacher(req.tenant.id, req.params.id);
-        return res.json({ data: { message: 'Assignment removed.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error removing class-teacher assignment.' });
-    }
-});
-
-// ─── Exam Update ──────────────────────────────────────────────
-const updateExamSchema = {
-    body: z.object({
-        name: z.string().min(1).optional(),
-        subject: z.string().min(1).optional(),
-        class_name: z.string().min(1).optional(),
-        date: z.string().min(1).optional(),
-        total_marks: z.number().positive().optional(),
-    })
-};
-router.put('/exams/:id', protect, requirePermission('grades.edit'), validate(updateExamSchema), async (req, res) => {
-    try {
-        const { data: exam, error } = await supabase.from('exams')
-            .update(req.body)
-            .eq('id', req.params.id)
-            .eq('tenant_id', req.tenant.id)
-            .select()
-            .single();
-        if (error) return res.status(500).json({ error: 'Error updating exam.' });
-        return res.json({ data: { exam } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating exam.' });
-    }
-});
-
-// ─── Single Student ───────────────────────────────────────────
-router.get('/students/:id', protect, async (req, res) => {
-    try {
-        const student = await schoolService.getStudent(req.tenant.id, req.params.id);
-        if (!student) return res.status(404).json({ error: 'Student not found.' });
-        return res.json({ data: { student } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error fetching student.' });
-    }
-});
+);
 
 module.exports = router;
 module.exports.protect = protect;

@@ -26,6 +26,9 @@ import { Communication } from "./pages/Communication";
 import { AdminRoles } from "./pages/AdminRoles";
 import { AdminUsers } from "./pages/AdminUsers";
 import { Attendance } from "./pages/Attendance";
+import { WeightedGradebook } from "./pages/WeightedGradebook";
+import { FeePayment } from "./pages/FeePayment";
+import { PaymentVerify } from "./pages/PaymentVerify";
 import { Assessments } from "./pages/Assessments";
 import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { Reports } from "./pages/Reports";
@@ -92,11 +95,13 @@ export const router = createBrowserRouter([
       { path: "staff", Component: StaffDirectory },
       { path: "daily-signin", Component: DailySignIn },
       { path: "assessments", Component: Assessments },
+      { path: "weighted-gradebook", Component: WeightedGradebook },
       { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },
       { path: "reports", Component: Reports },
       { path: "audit-logs", Component: AuditLogs },
+      { path: "fees", Component: FeePayment },
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
       { path: "system-health", Component: SystemHealth },
@@ -104,6 +109,10 @@ export const router = createBrowserRouter([
       { path: "users", Component: AdminUsers },
       { path: "roles", Component: AdminRoles },
     ],
+  },
+  {
+    path: "/payment/verify",
+    Component: PaymentVerify,
   },
   {
     path: "/superadmin",
