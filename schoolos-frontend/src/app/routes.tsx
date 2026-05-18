@@ -12,6 +12,12 @@ import { ParentChildDetails } from "./pages/ParentChildDetails";
 import { Inbox } from "./pages/Inbox";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { Students } from "./pages/Students";
+import { StudentsEnhanced } from "./pages/StudentsEnhanced";
+import { AttendanceLinks } from "./pages/AttendanceLinks";
+import { ReportCards } from "./pages/ReportCards";
+import { BulkImport } from "./pages/BulkImport";
+import { StaffDirectory } from "./pages/StaffDirectory";
+import { DailySignIn } from "./pages/DailySignIn";
 import { Academics } from "./pages/Academics";
 import { TeacherClassManagement } from "./pages/TeacherClassManagement";
 import { Finance } from "./pages/Finance";
@@ -31,6 +37,7 @@ import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
 import { SuperAdminOverview } from "./pages/SuperAdminOverview";
 import { SuperAdminBilling } from "./pages/SuperAdminBilling";
+import { SuperAdminReportCards } from "./pages/SuperAdminReportCards";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
@@ -77,8 +84,13 @@ export const router = createBrowserRouter([
       { path: "parent/child/:id", Component: ParentChildDetails },
       { path: "inbox", Component: Inbox },
       { path: "notifications", Component: NotificationsPage },
-      { path: "students", Component: Students },
+      { path: "students", Component: StudentsEnhanced },
       { path: "attendance", Component: Attendance },
+      { path: "attendance-links", Component: AttendanceLinks },
+      { path: "report-cards", Component: ReportCards },
+      { path: "bulk-import", Component: BulkImport },
+      { path: "staff", Component: StaffDirectory },
+      { path: "daily-signin", Component: DailySignIn },
       { path: "assessments", Component: Assessments },
       { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
@@ -105,6 +117,7 @@ export const router = createBrowserRouter([
         { path: "overview", Component: SuperAdminOverview },
       { path: "schools", Component: SuperAdminSchools },
       { path: "billing", Component: SuperAdminBilling },
+      { path: "report-cards", Component: SuperAdminReportCards },
     ],
   },
 ]);

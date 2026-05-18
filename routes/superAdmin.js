@@ -767,6 +767,36 @@ router.delete('/schools/:id', superAdminAuth, async (req, res) => {
     }
 });
 
+// ─── Report Card Template Management ─────────────────────────
+const featureService = require('./../services/featureService');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+
+// POST /api/superadmin/report-card/upload-template
+router.post('/report-card/upload-template', superAdminAuth, upload.single('template'), async (req, res) => {
+    try {
+        if (!req.file || !req.file.originalname.endsWith('.docx')) {
+            return res.status(400).json({ error: 'A .docx file is required.' });
+        }
+        const { schoolId } = req.body;
+        if (!schoolId) return res.status(400).json({ error: 'schoolId is required.' });
+        const template = await featureService.uploadReportCardTemplate(schoolId, req.admin.email, req.file);
+        return res.status(201).json({ data: { template, message: 'Template uploaded to school successfully.' } });
+    } catch (err) {
+        return res.status(500).json({ error: err.message || 'Error uploading template.' });
+    }
+});
+
+// GET /api/superadmin/schools/templates/:schoolId
+router.get('/schools/templates/:schoolId', superAdminAuth, async (req, res) => {
+    try {
+        const templates = await featureService.getReportCardTemplates(req.params.schoolId);
+        return res.json({ data: { templates } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching templates.' });
+    }
+});
+
 // ─── GET /api/superadmin/payments ────────────────────────────
 router.get('/payments', superAdminAuth, async (req, res) => {
     try {

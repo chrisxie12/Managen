@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
   Bell, LogOut, Settings, HelpCircle, BookOpen, Search,
   Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity, School, Mail,
+  MapPin, FileText, Upload, Clock, Briefcase,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
@@ -21,9 +22,14 @@ const allNavItems = [
   { icon: Shield, label: "Roles & Permissions", path: "/dashboard/roles" },
   { icon: UserPlus, label: "Users", path: "/dashboard/users" },
   { icon: Users, label: "Students", path: "/dashboard/students" },
+  { icon: Briefcase, label: "Staff Directory", path: "/dashboard/staff" },
   { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
+  { icon: MapPin, label: "Geo Attendance", path: "/dashboard/attendance-links" },
+  { icon: Clock, label: "Daily Sign In/Out", path: "/dashboard/daily-signin" },
   { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
   { icon: ClipboardCheck, label: "Assessments", path: "/dashboard/assessments" },
+  { icon: FileText, label: "Report Cards", path: "/dashboard/report-cards" },
+  { icon: Upload, label: "Bulk Import", path: "/dashboard/bulk-import" },
   { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
   { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
   { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },

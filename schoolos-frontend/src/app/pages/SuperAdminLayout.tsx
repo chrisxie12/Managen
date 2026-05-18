@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { Shield, LayoutDashboard, Building2, CreditCard, LogOut, Menu, X } from "lucide-react";
+import { Shield, LayoutDashboard, Building2, CreditCard, FileText, LogOut, Menu, X } from "lucide-react";
 
 const DARK = "#080810";
 const CARD_BG = "#0f0f1a";
@@ -11,6 +11,7 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/superadmin" },
   { icon: Building2, label: "Schools", path: "/superadmin/schools" },
   { icon: CreditCard, label: "Billing", path: "/superadmin/billing" },
+  { icon: FileText, label: "Report Cards", path: "/superadmin/report-cards" },
 ];
 
 export function SuperAdminLayout() {

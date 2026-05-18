@@ -12,6 +12,8 @@ const requirePermission = (...permissions) => (req, res, next) => {
             superadmin: true, // superadmin has everything
             admin: [
                 'dashboard.view',
+                'import.create', 'import.view',
+                'attendance_links.create', 'attendance_links.view',
                 'students.create', 'students.view', 'students.edit', 'students.delete',
                 'teachers.create', 'teachers.view', 'teachers.edit', 'teachers.delete',
                 'classes.create', 'classes.view', 'classes.edit', 'classes.delete',
@@ -32,6 +34,8 @@ const requirePermission = (...permissions) => (req, res, next) => {
             ],
             school_admin: [
                 'dashboard.view',
+                'import.create', 'import.view',
+                'attendance_links.create', 'attendance_links.view',
                 'students.create', 'students.view', 'students.edit', 'students.delete',
                 'teachers.create', 'teachers.view', 'teachers.edit', 'teachers.delete',
                 'classes.create', 'classes.view', 'classes.edit', 'classes.delete',
@@ -69,6 +73,7 @@ const requirePermission = (...permissions) => (req, res, next) => {
                 'dashboard.view',
                 'students.view', 'classes.view', 'subjects.view', 'timetable.view',
                 'attendance.create', 'attendance.view', 'attendance.edit',
+                'attendance_links.view',
                 'grades.create', 'grades.view', 'grades.edit',
                 'messages.create', 'messages.view',
                 'announcements.view', 'notifications.view',
