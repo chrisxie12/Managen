@@ -45,8 +45,8 @@ import { SuperAdminReportCards } from "./pages/SuperAdminReportCards";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
-import { SetupGuard } from "../components/SetupGuard";
-import { SetupWizard } from "./pages/SetupWizard";
+import { OnboardingGuard } from "../components/OnboardingGuard";
+import { Onboarding } from "./pages/Onboarding";
 import { RoleRouter } from "./components/RoleRouter";
 
 export const router = createBrowserRouter([
@@ -71,10 +71,10 @@ export const router = createBrowserRouter([
     Component: AuthPage,
   },
   {
-    path: "/setup",
+    path: "/onboarding",
     element: (
       <AuthGuard>
-        <SetupWizard />
+        <Onboarding />
       </AuthGuard>
     ),
   },
@@ -82,9 +82,9 @@ export const router = createBrowserRouter([
     path: "/dashboard",
     element: (
       <AuthGuard>
-        <SetupGuard>
+        <OnboardingGuard>
           <DashboardLayout />
-        </SetupGuard>
+        </OnboardingGuard>
       </AuthGuard>
     ),
     children: [

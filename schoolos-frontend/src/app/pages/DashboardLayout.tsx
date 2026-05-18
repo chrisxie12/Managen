@@ -6,6 +6,7 @@ import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
+import { SetupChecklist } from "../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
 const PLUM = "#381932";
@@ -185,6 +186,7 @@ export function DashboardLayout() {
         </header>
 
         <main className="flex-1 overflow-y-auto p-6">
+          <SetupChecklist />
           <Outlet />
         </main>
       </div>
