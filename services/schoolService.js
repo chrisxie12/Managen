@@ -2021,6 +2021,24 @@ class SchoolService {
         if (error) throw error;
         return data || [];
     }
+
+    // ─── Profile Completion ───────────────────────────────────────
+    async checkProfileCompletion(schoolId) {
+        const { data: school, error } = await supabase
+            .from('schools')
+            .select('name, email, phone, address, city, region, school_type')
+            .eq('id', schoolId)
+            .single();
+        if (error) throw error;
+        const required = ['name', 'email', 'phone', 'address', 'city', 'region', 'school_type'];
+        const missing = required.filter(field => !school[field] || String(school[field]).trim() === '');
+        const completed = missing.length === 0;
+        await supabase
+            .from('schools')
+            .update({ profile_completed: completed })
+            .eq('id', schoolId);
+        return { completed, missing };
+    }
 }
 
 module.exports = new SchoolService();

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { useBlocker } from "react-router";
+import { useBlocker, useLocation } from "react-router";
 import {
   Building2, BookOpen, Wallet, Bell, Users, Shield,
-  CreditCard, AlertTriangle, ChevronDown, Loader2,
+  CreditCard, AlertTriangle, ChevronDown, Loader2, Info,
 } from "lucide-react";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
@@ -53,10 +53,12 @@ const tabs = [
 export function SettingsPage() {
   const { user } = useAuth();
   const role = user?.role || "school_admin";
+  const location = useLocation();
+  const missingFromGuard = (location.state as { missing?: string[] })?.missing || null;
   const [profile, setProfile] = useState<SchoolProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState(missingFromGuard ? "profile" : "profile");
   const [dirty, setDirty] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -87,7 +89,7 @@ export function SettingsPage() {
 
   const renderTab = () => {
     if (!profile) return null;
-    const props = { profile, onSave: handleSave, saving, role };
+    const props = { profile, onSave: handleSave, saving, role, redirectOnComplete: !!missingFromGuard };
     switch (activeTab) {
       case "profile": return <SchoolProfileTab {...props} />;
       case "academic": return <AcademicSettingsTab {...props} />;
@@ -171,6 +173,16 @@ export function SettingsPage() {
 
       {/* Content area */}
       <div className="flex-1 p-4 lg:p-6 overflow-y-auto">
+        {missingFromGuard && (
+          <div className="mb-4 px-4 py-3 rounded-xl text-xs flex items-start gap-2"
+            style={{ background: "#FEF3C7", color: "#92400E", border: "1px solid #FDE68A" }}>
+            <Info size={14} className="mt-0.5 shrink-0" />
+            <div>
+              <span className="font-semibold">Please complete your school profile.</span>
+              {" "}The following fields are required: <span className="font-medium">{missingFromGuard.join(", ")}</span>
+            </div>
+          </div>
+        )}
         {dirty && (
           <div className="mb-4 px-4 py-2 rounded-xl text-xs flex items-center gap-2"
             style={{ background: "#FEF3C7", color: "#92400E", border: "1px solid #FDE68A" }}>

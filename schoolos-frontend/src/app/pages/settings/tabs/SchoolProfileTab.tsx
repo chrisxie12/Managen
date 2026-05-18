@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import { Upload, Image as ImageIcon, Save, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "../../../components/ui/input";
@@ -61,11 +62,13 @@ type Props = {
   onSave: (data: Record<string, any>) => Promise<void>;
   saving: boolean;
   role: string;
+  redirectOnComplete?: boolean;
 };
 
-export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
+export function SchoolProfileTab({ profile, onSave, saving, role, redirectOnComplete }: Props) {
   const isReadOnly = role !== "school_admin" && role !== "headmaster";
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState<Record<string, any>>({
     name: "", motto: "", school_type: "", year_established: "", registration_number: "",
@@ -118,6 +121,12 @@ export function SchoolProfileTab({ profile, onSave, saving, role }: Props) {
       if (res.data) {
         toast.success("School profile updated!");
         await onSave(form);
+        if (redirectOnComplete) {
+          const statusRes = await api.get<any>("/school/profile/status");
+          if (statusRes.data?.completed) {
+            navigate("/dashboard", { replace: true });
+          }
+        }
       } else {
         toast.error("Failed to update school profile");
       }

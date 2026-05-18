@@ -2269,6 +2269,17 @@ router.patch('/settings/school-profile', protect, async (req, res) => {
     }
 });
 
+// GET /api/school/profile/status
+router.get('/profile/status', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const result = await schoolService.checkProfileCompletion(schoolId);
+        return res.json(result);
+    } catch (err) {
+        return res.status(500).json({ error: 'Error checking profile completion.' });
+    }
+});
+
 // PUT /api/school/settings/academic
 router.put('/settings/academic', protect, async (req, res) => {
     try {

@@ -46,6 +46,7 @@ import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
 import { OnboardingGuard } from "../components/OnboardingGuard";
+import { ProfileGuard } from "../components/ProfileGuard";
 import { Onboarding } from "./pages/Onboarding";
 import { RoleRouter } from "./components/RoleRouter";
 
@@ -83,7 +84,9 @@ export const router = createBrowserRouter([
     element: (
       <AuthGuard>
         <OnboardingGuard>
-          <DashboardLayout />
+          <ProfileGuard>
+            <DashboardLayout />
+          </ProfileGuard>
         </OnboardingGuard>
       </AuthGuard>
     ),
