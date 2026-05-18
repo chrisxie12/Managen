@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+// Build version: 2026-05-18 19:45 UTC
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
