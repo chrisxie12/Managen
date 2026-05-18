@@ -168,7 +168,7 @@ export function LandingPage() {
 
   const featureItems = [
     { icon: Users, title: "Student Management", desc: "Maintain complete student profiles including attendance history, academic records, fee payment history, and parent contact details. Support for up to 800 students on the Pro plan.", subFeatures: ["Detailed student profiles and history", "Class and subject assignment", "Parent portal and contact management"], iconColor: "text-blue-500", bgColor: "bg-blue-100" },
-    { icon: Wallet, title: "Fee Tracking & Payments", desc: "Create custom fee structures per class, track payments, generate invoices, and send automated reminders via WhatsApp. Integrated with Paystack and Flutterwave for online collection.", subFeatures: ["Custom fee structures per class/term", "Paystack and Flutterwave integration", "Automated overdue fee reminders"], iconColor: "text-green-500", bgColor: "bg-green-100" },
+    { icon: Wallet, title: "Fee Tracking & Payments", desc: "Create custom fee structures per class, track payments, generate invoices, and send automated reminders via WhatsApp. Integrated with Paystack for seamless online collection.", subFeatures: ["Custom fee structures per class/term", "Paystack payment integration", "Automated overdue fee reminders"], iconColor: "text-green-500", bgColor: "bg-green-100" },
     { icon: BookOpen, title: "Exams & Academics", desc: "Schedule exams, enter results, generate report cards, and track academic performance over time. Supports WAEC and BECE result formats.", subFeatures: ["Exam scheduling and timetabling", "Result entry and grade computation", "WAEC/BECE-compatible report cards"], iconColor: "text-purple-500", bgColor: "bg-purple-100" },
     { icon: MessageSquare, title: "WhatsApp Reports", desc: "Send automated attendance summaries, fee reminders, exam results, and custom announcements directly to parents and staff via WhatsApp Business API - without any manual effort.", subFeatures: ["Daily attendance notifications to parents", "Fee payment receipts and reminders", "Term results and report card delivery"], iconColor: "text-green-600", bgColor: "bg-green-100" },
     { icon: BarChart3, title: "Analytics Dashboard", desc: "Track school performance with real-time dashboards showing attendance trends, fee collection rates, academic performance, and staff activity - all in one command center.", subFeatures: ["Real-time attendance and fee dashboards", "Term-over-term performance comparison", "Export reports to PDF and CSV"], iconColor: "text-amber-500", bgColor: "bg-amber-100" },
@@ -306,7 +306,7 @@ export function LandingPage() {
               </p>
               <div className="reveal reveal-5 mt-8 flex items-center flex-wrap gap-2">
                 <span className="text-xs text-gray-400 mr-1">Works with</span>
-                {["WAEC", "BECE", "Paystack", "WhatsApp", "Flutterwave"].map((name) => (
+                {["WAEC", "BECE", "Paystack", "WhatsApp"].map((name) => (
                   <span key={name} className="rounded-full bg-white border border-gray-200 px-3 py-1 text-xs text-gray-600 shadow-sm">{name}</span>
                 ))}
               </div>
