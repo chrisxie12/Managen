@@ -83,7 +83,8 @@ router.get('/info', protect, (req, res) => {
 // ─── Setup / Onboarding ──────────────────────────────────────
 router.get('/setup/status', protect, async (req, res) => {
     try {
-        const schoolId = req.tenant.id;
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
         const { data, error } = await supabase
             .from('schools')
             .select('setup_completed, setup_step')
@@ -98,7 +99,8 @@ router.get('/setup/status', protect, async (req, res) => {
 
 router.post('/setup/finish', protect, async (req, res) => {
     try {
-        const schoolId = req.tenant.id;
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'School not found.' });
         const { error } = await supabase
             .from('schools')
             .update({ setup_completed: true, setup_step: null })
