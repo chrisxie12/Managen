@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Plus, X, Loader2, Search, Check, AlertCircle, FileSpreadsheet,
-  ClipboardCheck, Scale, BookOpen, Users, School, Star,
+  ClipboardCheck, Scale, Users, School, Star,
   Eye, SendHorizonal, ShieldCheck, Percent, ChevronDown, ChevronRight, RefreshCw,
 } from "lucide-react";
 import { api } from "../services/api";
@@ -311,7 +311,7 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
           <div className="space-y-3">
             {scales.map(s => (
               <div key={s.id} className={`p-3 rounded-lg cursor-pointer ${selectedScaleId === s.id ? "ring-2" : ""}`}
-                style={{ background: MILK, ringColor: selectedScaleId === s.id ? PLUM : "transparent" }}
+                style={{ background: MILK }}
                 onClick={() => setSelectedScaleId(s.id)}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-medium text-sm" style={{ color: PLUM }}>{s.name}</span>
@@ -631,7 +631,6 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
   const [selectedAssessmentId, setSelectedAssessmentId] = useState("");
   const [students, setStudents] = useState<Student[]>([]);
   const [scores, setScores] = useState<Record<string, number>>({});
-  const [existingScores, setExistingScores] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
@@ -644,7 +643,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
   }, []);
 
   useEffect(() => {
-    if (!selectedAssessmentId) { setStudents([]); setScores({}); setExistingScores([]); return; }
+    if (!selectedAssessmentId) { setStudents([]); setScores({}); return; }
     const assessment = assessments.find(a => a.id === selectedAssessmentId);
     if (!assessment?.class_id) return;
     setLoading(true);
@@ -661,7 +660,6 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
         score: Number(s.score),
         id: s.id,
       }));
-      setExistingScores(exList);
       exList.forEach(s => { existing[s.student_id] = s.score; });
       setScores(existing);
     }).catch(() => setError("Failed to load data"))

@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   Loader2, X, AlertCircle, Check, TrendingUp, Users,
-  UserCheck, AlertTriangle, BookOpen, School, Star,
+  AlertTriangle, BookOpen, School, Star,
   ArrowUp, ArrowDown, ShieldAlert,
 } from "lucide-react";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend, Cell,
+  Tooltip, ResponsiveContainer, Cell,
 } from "recharts";
 import { api } from "../services/api";
 
 const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
