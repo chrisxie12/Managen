@@ -48,3 +48,6 @@ server.log
 server.err.log
 server_stderr.log
 server_stdout.log
+
+# opencode
+opencode.json

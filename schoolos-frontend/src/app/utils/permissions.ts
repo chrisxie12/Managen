@@ -156,6 +156,7 @@ export const pagePermissions: Record<string, string[]> = {
   "/dashboard/attendance": [Permissions.Attendance.view],
   "/dashboard/assessments": [Permissions.Grades.view],
   "/dashboard/weighted-gradebook": [Permissions.Grades.view],
+  "/dashboard/timetable-scheduler": [Permissions.Timetable.view],
   "/dashboard/analytics": [Permissions.Reports.view],
   "/dashboard/reports": [Permissions.Reports.view],
   "/dashboard/audit-logs": [Permissions.Reports.view],

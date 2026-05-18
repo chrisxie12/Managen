@@ -29,6 +29,7 @@ import { Attendance } from "./pages/Attendance";
 import { WeightedGradebook } from "./pages/WeightedGradebook";
 import { FeePayment } from "./pages/FeePayment";
 import { PaymentVerify } from "./pages/PaymentVerify";
+import { TimetableScheduler } from "./pages/TimetableScheduler";
 import { Assessments } from "./pages/Assessments";
 import { AnalyticsDashboard } from "./pages/AnalyticsDashboard";
 import { Reports } from "./pages/Reports";
@@ -96,6 +97,7 @@ export const router = createBrowserRouter([
       { path: "daily-signin", Component: DailySignIn },
       { path: "assessments", Component: Assessments },
       { path: "weighted-gradebook", Component: WeightedGradebook },
+      { path: "timetable-scheduler", Component: TimetableScheduler },
       { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },

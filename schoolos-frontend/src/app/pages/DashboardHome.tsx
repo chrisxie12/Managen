@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   Users, Wallet, Clock, BookOpen, MessageSquare,
-  ArrowRight, CheckCircle2, Bell,
+  ArrowRight, CheckCircle2, Bell, Briefcase,
+  TrendingUp, AlertTriangle,
 } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line, BarChart, Bar,
+} from "recharts";
 import { api } from "../services/api";
 import {
-  LoadingSpinner, StatCard, ChartCard, ActivityFeed, QuickActions, SectionHeader, palette,
+  LoadingSpinner, StatCard, ChartCard, ActivityFeed, QuickActions, SectionHeader,
+  DashboardCard, MiniTable, palette,
 } from "../components/dashboard";
 
 const { PLUM, PLUM_LIGHT, MUTED } = palette;
@@ -19,31 +24,94 @@ const quickActions = [
   { label: "Add Student", icon: Users, color: "#EC4899", path: "/dashboard/students" },
 ];
 
+// ─── PHASE 1: Types for new API response shapes ──────────────────
+type MonthlyRevenue = { month: string; label: string; amount: number; count: number };
+type PaymentBreakdown = { status: string; amount: number; count: number };
+type FinanceSummary = {
+  totalBilled: number; totalPaid: number; totalOutstanding: number;
+  overdueAmount: number; totalCollected: number;
+  invoiceCount: number; overdueCount: number; paymentCount: number;
+};
+type AttTrendItem = { date: string; present: number; total: number; rate: number };
+type StaffSummary = {
+  totalStaff: number; teachingStaff: number; nonTeachingStaff: number;
+  staffAttendanceToday: number; staffPresentToday: number; staffAttendanceRate: number;
+};
+type ClassComparisonItem = { class_id: string; class_name: string; average: number; rate: number; studentCount: number };
+type TopPerformer = { student: { name: string; admission_no: string }; class: { name: string }; average: number; grade: string };
+type RiskAlert = { type: string; severity: string; student_id: string; student: { name: string; class_name: string }; metric: number; message: string };
+type AuditLog = { id: string; user: { name: string; role: string }; action: string; resource: string; created_at: string };
+
+const STATUS_COLORS: Record<string, string> = {
+  completed: "#10B981", paid: "#10B981",
+  pending: "#F59E0B", partial: "#F59E0B",
+  failed: "#EF4444", overdue: "#EF4444",
+  refunded: "#8B5CF6",
+};
+
 export function DashboardHome() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  // ─── PHASE 1: New state from finance endpoints ────────────
+  const [financeSummary, setFinanceSummary] = useState<FinanceSummary | null>(null);
+  const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([]);
+  const [paymentBreakdown, setPaymentBreakdown] = useState<PaymentBreakdown[]>([]);
+  // ─── PHASE 2: State for new stat cards ────────────────────
+  const [staffSummary, setStaffSummary] = useState<StaffSummary | null>(null);
+  // ─── PHASE 3: Attendance trend state ──────────────────────
+  const [attendanceTrend, setAttendanceTrend] = useState<AttTrendItem[]>([]);
+  // ─── PHASE 4: Academic performance state ──────────────────
+  const [classComparison, setClassComparison] = useState<ClassComparisonItem[]>([]);
+  const [topPerformers, setTopPerformers] = useState<TopPerformer[]>([]);
+  const [riskAlerts, setRiskAlerts] = useState<RiskAlert[]>([]);
+  // ─── PHASE 5: Activity feed state ─────────────────────────
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+
+  // Existing state kept for student/teacher counts and attendance rate
   const [stats, setStats] = useState<{
     totalStudents: number;
     totalTeachers: number;
     attendanceRate: number | string;
-    recentActivity: { name: string; class_name: string; created_at: string }[];
   } | null>(null);
-  const [fees, setFees] = useState<any[]>([]);
 
+  // PHASE 1: Replace legacy fee data with new finance endpoints
+  // PHASE 2-4: Add staff, attendance trend, academic data
+  // PHASE 5: Replace activity feed
   useEffect(() => {
     const load = async () => {
       try {
-        const [statsRes, feesRes] = await Promise.all([
-          api.get<{
-            totalStudents: number;
-            totalTeachers: number;
-            attendanceRate: number | string;
-            recentActivity: { name: string; class_name: string; created_at: string }[];
-          }>("/api/school/dashboard"),
-          api.get<{ fees: any[] }>("/api/school/fees"),
+        const [dashRes, finSumRes, finMonthRes, finBreakRes, staffRes,
+          attTrendRes, termsRes, auditRes] = await Promise.all([
+          api.get<{ totalStudents: number; totalTeachers: number; attendanceRate: number | string }>("/api/school/dashboard"),
+          api.get<FinanceSummary>("/api/school/finance/summary"),
+          api.get<{ monthly: MonthlyRevenue[] }>("/api/school/finance/monthly?months=6"),
+          api.get<{ breakdown: PaymentBreakdown[] }>("/api/school/finance/payment-status-breakdown"),
+          api.get<StaffSummary>("/api/school/staff/summary"),
+          api.get<AttTrendItem[]>("/api/school/analytics/attendance-trend?days=30"),
+          api.get<{ terms: { id: string; name: string; is_current: boolean }[] }>("/api/school/terms"),
+          api.get<{ logs: AuditLog[] }>("/api/school/audit?limit=10"),
         ]);
-        if (statsRes.data) setStats(statsRes.data);
-        if (feesRes.data) setFees(feesRes.data.fees || []);
+
+        if (dashRes.data) setStats(dashRes.data);
+        if (finSumRes.data) setFinanceSummary(finSumRes.data);
+        if (finMonthRes.data) setMonthlyRevenue(finMonthRes.data?.monthly || []);
+        if (finBreakRes.data) setPaymentBreakdown(finBreakRes.data?.breakdown || []);
+        if (staffRes.data) setStaffSummary(staffRes.data);
+        if (attTrendRes.data) setAttendanceTrend(attTrendRes.data);
+        if (auditRes.data) setAuditLogs(auditRes.data?.logs || []);
+
+        // PHASE 4: Fetch academic endpoints that need term_id
+        const currentTerm = (termsRes.data?.terms || []).find(t => t.is_current);
+        if (currentTerm && finSumRes.data) {
+          const [classRes, topRes, riskRes] = await Promise.all([
+            api.get<ClassComparisonItem[]>(`/api/school/analytics/class-comparison?term_id=${currentTerm.id}`),
+            api.get<{ top: TopPerformer[]; bottom: any[] }>(`/api/school/analytics/top-bottom?term_id=${currentTerm.id}&limit=5`),
+            api.get<{ alerts: RiskAlert[]; openInterventions: any[] }>("/api/school/analytics/risk-alerts"),
+          ]);
+          if (classRes.data) setClassComparison(classRes.data);
+          if (topRes.data) setTopPerformers(topRes.data?.top || []);
+          if (riskRes.data) setRiskAlerts(riskRes.data?.alerts || []);
+        }
       } catch {
       } finally {
         setLoading(false);
@@ -54,63 +122,69 @@ export function DashboardHome() {
 
   if (loading) return <LoadingSpinner />;
 
+  // ─── PHASE 1: Derived finance values ───────────────────────────
   const totalStudents = stats?.totalStudents ?? 0;
   const totalTeachers = stats?.totalTeachers ?? 0;
   const attendanceRate = stats?.attendanceRate ?? 0;
 
-  const paidFees = fees.filter((f) => f.status === "paid");
-  const partialFees = fees.filter((f) => f.status === "partial");
-  const overdueFees = fees.filter((f) => f.status === "overdue" || f.status === "pending");
-  const totalRevenue = paidFees.reduce((sum: number, f: any) => sum + Number(f.amount || 0), 0);
+  const totalBilled = financeSummary?.totalBilled ?? 0;
+  const totalCollected = financeSummary?.totalCollected ?? 0;
+  const totalOutstanding = financeSummary?.totalOutstanding ?? 0;
+  const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
 
-  const pieData = [
-    { name: "Paid", value: paidFees.length || 1, color: "#10B981" },
-    { name: "Partial", value: partialFees.length || 1, color: "#F59E0B" },
-    { name: "Overdue", value: overdueFees.length || 1, color: "#EF4444" },
-  ];
+  // Monthly revenue chart data (PHASE 1: replaces old fees-based revenueData)
+  const revenueData = monthlyRevenue.map(m => ({ month: m.label, amount: m.amount }));
 
-  const totalFeesForPie = paidFees.length + partialFees.length + overdueFees.length;
-
-  const revenueData = (() => {
-    const months: Record<string, number> = {};
-    const now = new Date();
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const key = d.toLocaleString("en", { month: "short" });
-      months[key] = 0;
-    }
-    paidFees.forEach((f: any) => {
-      if (f.paid_at || f.created_at) {
-        const d = new Date(f.paid_at || f.created_at);
-        const key = d.toLocaleString("en", { month: "short" });
-        if (key in months) {
-          months[key] += Number(f.amount || 0);
-        }
-      }
-    });
-    return Object.entries(months).map(([month, amount]) => ({ month, amount }));
-  })();
-
-  const activityItems = (stats?.recentActivity || []).map((s: any) => ({
-    icon: CheckCircle2,
-    color: "#10B981",
-    text: `${s.name} (${s.class_name || "No class"}) joined`,
-    time: s.created_at ? new Date(s.created_at).toLocaleDateString() : "",
+  // Payment status pie chart (PHASE 1: replaces old fees status pie)
+  const pieData = (paymentBreakdown.length > 0 ? paymentBreakdown : [
+    { status: "completed", amount: 1, count: 0 },
+  ]).map(p => ({
+    name: p.status.charAt(0).toUpperCase() + p.status.slice(1),
+    value: p.amount,
+    color: STATUS_COLORS[p.status] || MUTED,
   }));
+  const totalPieAmount = pieData.reduce((s, p) => s + p.value, 0);
 
-  const hasData = totalStudents > 0 || fees.length > 0;
+  // Staff summary (PHASE 2)
+  const totalStaff = staffSummary?.totalStaff ?? 0;
+  const staffAttRate = staffSummary?.staffAttendanceRate ?? 0;
+  const teachingStaff = staffSummary?.teachingStaff ?? 0;
+
+  // PHASE 5: Activity feed from audit logs
+  const activityItems = auditLogs.map((log) => ({
+    icon: log.action === 'created' ? CheckCircle2
+      : log.action === 'updated' ? BookOpen
+      : log.action === 'deleted' ? AlertTriangle
+      : Clock,
+    color: log.action === 'created' ? "#10B981"
+      : log.action === 'updated' ? "#6366F1"
+      : log.action === 'deleted' ? "#EF4444"
+      : "#F59E0B",
+    text: `${log.user?.name || "Someone"} ${log.action} ${log.resource}`,
+    time: log.created_at ? new Date(log.created_at).toLocaleDateString() : "",
+  }));
 
   return (
     <div className="space-y-6 overflow-x-hidden">
+      {/* ─── PHASE 1+2: Stat cards row ─────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users} label="Total Students" value={totalStudents.toLocaleString()} color="#6366F1" path="/dashboard/students" badge={`${totalTeachers} teacher${totalTeachers !== 1 ? "s" : ""}`} />
-        <StatCard icon={Wallet} label="Total Revenue" value={`GHS ${totalRevenue.toLocaleString()}`} color="#10B981" path="/dashboard/finance" badge={`${fees.length} fee record${fees.length !== 1 ? "s" : ""}`} />
+        <StatCard icon={Wallet} label="Total Revenue" value={`GHS ${(totalCollected / 100).toLocaleString()}`} color="#10B981" path="/dashboard/finance" badge={`${collectionRate}% collected`} />
         <StatCard icon={Clock} label="Avg Attendance" value={`${attendanceRate}%`} color="#F59E0B" path="/dashboard/students" badge="Today" />
-        <StatCard icon={MessageSquare} label="Fee Collections" value={`${paidFees.length}`} color="#25D366" path="/dashboard/communication" badge={`${overdueFees.length} overdue`} />
+        <StatCard icon={Briefcase} label="Total Staff" value={totalStaff.toLocaleString()} color="#6366F1" path="/dashboard/staff" badge={`${teachingStaff} teaching`} />
       </div>
 
+      {/* ─── Additional stat cards (PHASE 2) ───────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={MessageSquare} label="Fee Collection" value={`${collectionRate}%`} color="#25D366" path="/dashboard/finance" badge={`${financeSummary?.overdueCount || 0} overdue`} />
+        <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" badge="Today" />
+        <StatCard icon={Wallet} label="Outstanding" value={`GHS ${(totalOutstanding / 100).toLocaleString()}`} color="#EF4444" path="/dashboard/finance" badge={`${financeSummary?.overdueCount || 0} overdue`} />
+        <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#10B981" badge={`${totalCollected}/${totalBilled}`} />
+      </div>
+
+      {/* ─── PHASE 1: Fee Collection chart + Payment Status pie (replaced) ── */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <ChartCard title="Fee Collection" subtitle="This academic year" action={
+        <ChartCard title="Fee Collection" subtitle="Last 6 months" action={
           <button onClick={() => navigate("/dashboard/finance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
             View all <ArrowRight size={13} />
           </button>
@@ -126,8 +200,8 @@ export function DashboardHome() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
-                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`GHS ${v.toLocaleString()}`, "Revenue"]} />
+                <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `GHS ${(v / 100).toFixed(0)}`} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, "Revenue"]} />
                 <Area type="monotone" dataKey="amount" stroke={PLUM} strokeWidth={2.5} fill="url(#revGrad)" />
               </AreaChart>
             </ResponsiveContainer>
@@ -138,15 +212,15 @@ export function DashboardHome() {
           )}
         </ChartCard>
 
-        <ChartCard title="Fee Status" subtitle={`${totalStudents} student${totalStudents !== 1 ? "s" : ""}`}>
-          {totalFeesForPie > 0 ? (
+        <ChartCard title="Payment Status" subtitle={`${totalStudents} student${totalStudents !== 1 ? "s" : ""}`}>
+          {totalPieAmount > 1 ? (
             <>
               <ResponsiveContainer width="100%" height={160}>
                 <PieChart>
                   <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
                     {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 8, fontSize: 11 }} />
+                  <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 8, fontSize: 11 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, ""]} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-2">
@@ -157,9 +231,11 @@ export function DashboardHome() {
                       <span style={{ color: MUTED, fontSize: "0.8rem" }}>{d.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.82rem", fontWeight: 600 }}>{d.value}</span>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.82rem", fontWeight: 600 }}>
+                        GHS {(d.value / 100).toLocaleString()}
+                      </span>
                       <span className="px-1.5 py-0.5 rounded-full text-xs" style={{ background: `${d.color}15`, color: d.color, fontSize: "0.65rem" }}>
-                        {totalFeesForPie > 0 ? ((d.value / totalFeesForPie) * 100).toFixed(0) : 0}%
+                        {totalPieAmount > 0 ? ((d.value / totalPieAmount) * 100).toFixed(0) : 0}%
                       </span>
                     </div>
                   </div>
@@ -169,13 +245,102 @@ export function DashboardHome() {
           ) : (
             <div className="flex items-center justify-center h-[260px]" style={{ color: MUTED }}>
               <p style={{ fontSize: "0.85rem", textAlign: "center" }}>
-                No fees recorded yet.<br />Fee status breakdown will appear here.
+                No payments recorded yet.<br />Payment status breakdown will appear here.
               </p>
             </div>
           )}
         </ChartCard>
       </div>
 
+      {/* ─── PHASE 3: Attendance Trend Chart ─────────────────────── */}
+      <ChartCard title="Attendance Trend" subtitle="Last 30 days" action={
+        <button onClick={() => navigate("/dashboard/attendance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+          View attendance <ArrowRight size={13} />
+        </button>
+      }>
+        {attendanceTrend.length > 0 ? (
+          <ResponsiveContainer width="100%" height={220}>
+            <LineChart data={attendanceTrend}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: string) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })} />
+              <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
+              <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Attendance"]} labelFormatter={(v: string) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })} />
+              <Line type="monotone" dataKey="rate" stroke="#6366F1" strokeWidth={2.5} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex items-center justify-center h-[220px]" style={{ color: MUTED }}>
+            <p style={{ fontSize: "0.85rem" }}>No attendance data yet — trend will appear once records are created.</p>
+          </div>
+        )}
+      </ChartCard>
+
+      {/* ─── PHASE 4: Academic Performance Widget ────────────────── */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        <DashboardCard title="Class Performance Comparison" action={
+          <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+            View All <ArrowRight size={11} />
+          </button>
+        }>
+          {classComparison.length > 0 ? (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={classComparison}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
+                <XAxis dataKey="class_name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Average"]} />
+                <Bar dataKey="rate" fill={PLUM} radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[220px]" style={{ color: MUTED }}>
+              <p style={{ fontSize: "0.85rem" }}>Class performance data will appear once assessments are graded.</p>
+            </div>
+          )}
+        </DashboardCard>
+
+        <DashboardCard title="Top Performers">
+          {topPerformers.length > 0 ? (
+            <MiniTable
+              headers={["Student", "Class", "Average", "Grade"]}
+              rows={topPerformers.map((p) => [
+                p.student?.name || "—",
+                p.class?.name || "—",
+                `${p.average}%`,
+                p.grade || "—",
+              ])}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-[220px]" style={{ color: MUTED }}>
+              <p style={{ fontSize: "0.85rem" }}>Top performers will appear once report cards are published.</p>
+            </div>
+          )}
+        </DashboardCard>
+      </div>
+
+      {/* ─── At-Risk Students (PHASE 4) ─────────────────────────── */}
+      {riskAlerts.length > 0 && (
+        <DashboardCard title={`At-Risk Students (${riskAlerts.length})`} action={
+          <button onClick={() => navigate("/dashboard/students")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+            View Students <ArrowRight size={11} />
+          </button>
+        }>
+          <MiniTable
+            headers={["Student", "Type", "Severity", "Metric"]}
+            rows={riskAlerts.slice(0, 5).map((a) => [
+              a.student?.name || "—",
+              a.type,
+              <span key={a.student_id} className="px-2 py-0.5 rounded-full text-xs" style={{
+                background: a.severity === 'high' ? "#FEF2F2" : "#FEF3C7",
+                color: a.severity === 'high' ? "#EF4444" : "#92400E",
+              }}>{a.severity}</span>,
+              a.message,
+            ])}
+          />
+        </DashboardCard>
+      )}
+
+      {/* ─── PHASE 5: Replaced Activity Feed + Quick Actions ────── */}
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
           <SectionHeader title="Recent Activity" />
@@ -190,11 +355,11 @@ export function DashboardHome() {
 
           <div className="p-5 rounded-[24px] flex-1" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#FFF3E6", fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
-              {hasData ? "School Overview" : "Welcome!"}
+              {totalStudents > 0 ? "School Overview" : "Welcome!"}
             </h3>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
-              {hasData
-                ? `${totalStudents} students enrolled · ${fees.length} fee records`
+              {totalStudents > 0
+                ? `${totalStudents} students · ${totalStaff} staff · ${collectionRate}% collection rate`
                 : "Start by adding students and setting up fees. Use the Quick Actions above to get started."}
             </p>
             <div className="space-y-2">
@@ -212,6 +377,7 @@ export function DashboardHome() {
           </div>
         </div>
       </div>
+      {/* ─── PHASE 6: Legacy fees table references fully removed ── */}
     </div>
   );
 }

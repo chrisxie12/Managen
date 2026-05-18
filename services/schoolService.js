@@ -1865,6 +1865,162 @@ class SchoolService {
         if (error) throw error;
         return data;
     }
+
+    // ─── Scheduling Settings ─────────────────────────────────────
+    async getSchedulingSettings(schoolId) {
+        const { data, error } = await supabase.from('school_scheduling_settings')
+            .select('*')
+            .eq('school_id', schoolId)
+            .maybeSingle();
+        if (error) throw error;
+        return data;
+    }
+
+    async createOrUpdateSchedulingSettings(schoolId, payload) {
+        const existing = await this.getSchedulingSettings(schoolId);
+        if (existing) {
+            const { data, error } = await supabase.from('school_scheduling_settings')
+                .update({ ...payload, updated_at: new Date().toISOString() })
+                .eq('school_id', schoolId)
+                .select()
+                .single();
+            if (error) throw error;
+            return data;
+        }
+        const { data, error } = await supabase.from('school_scheduling_settings')
+            .insert({ id: crypto.randomUUID(), school_id: schoolId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    // ─── Rooms ───────────────────────────────────────────────────
+    async getRooms(tenantId) {
+        const { data, error } = await supabase.from('rooms')
+            .select('*')
+            .eq('school_id', tenantId);
+        if (error) throw error;
+        return data || [];
+    }
+
+    async createRoom(tenantId, payload) {
+        const { data, error } = await supabase.from('rooms')
+            .insert({ id: crypto.randomUUID(), school_id: tenantId, ...payload })
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async deleteRoom(tenantId, id) {
+        const { error } = await supabase.from('rooms')
+            .delete()
+            .eq('id', id)
+            .eq('school_id', tenantId);
+        if (error) throw error;
+        return true;
+    }
+
+    // ─── Teacher Availability ────────────────────────────────────
+    async updateTeacherAvailability(tenantId, teacherId, availability) {
+        const { data, error } = await supabase.from('users')
+            .update({ availability })
+            .eq('id', teacherId)
+            .eq('tenant_id', tenantId)
+            .select('id, name, availability')
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    async getTeacherAvailabilityList(tenantId) {
+        const { data, error } = await supabase.from('users')
+            .select('id, name, email, availability')
+            .eq('tenant_id', tenantId)
+            .eq('role', 'teacher')
+            .order('name');
+        if (error) throw error;
+        return data || [];
+    }
+
+    // ─── Class Subjects with Periods ─────────────────────────────
+    async getClassSubjectsWithDetails(classId, schoolId) {
+        const { data, error } = await supabase
+            .from('class_subjects')
+            .select(`
+                id, subject_id, periods_per_week,
+                subject:subjects(name, code)
+            `)
+            .eq('class_id', classId)
+            .eq('school_id', schoolId);
+        if (error) throw error;
+
+        const result = [];
+        for (const cs of data || []) {
+            const { data: teachers } = await supabase
+                .from('subject_teachers')
+                .select(`
+                    teacher:users!subject_teachers_teacher_id_fkey(id, name)
+                `)
+                .eq('subject_id', cs.subject_id)
+                .eq('class_id', classId)
+                .eq('school_id', schoolId);
+            result.push({
+                ...cs,
+                teachers: (teachers || []).map(t => t.teacher).filter(Boolean),
+            });
+        }
+        return result;
+    }
+
+    async updateClassSubjectPeriods(schoolId, id, periodsPerWeek) {
+        const { data, error } = await supabase.from('class_subjects')
+            .update({ periods_per_week: periodsPerWeek })
+            .eq('id', id)
+            .eq('school_id', schoolId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }
+
+    // ─── Staff Summary ──────────────────────────────────────────
+    async getStaffSummary(tenantId) {
+        const [usersRes, staffAttRes] = await Promise.all([
+            supabase.from('users')
+                .select('role')
+                .eq('tenant_id', tenantId),
+            supabase.from('staff_attendance')
+                .select('status')
+                .eq('school_id', tenantId)
+                .eq('date', new Date().toISOString().split('T')[0]),
+        ]);
+
+        const users = usersRes.data || [];
+        const staffAttendance = staffAttRes.data || [];
+
+        const totalStaff = users.length;
+        const teachingStaff = users.filter(u => u.role === 'teacher').length;
+        const nonTeachingStaff = totalStaff - teachingStaff;
+        const presentStaff = staffAttendance.filter(a => a.status === 'Present' || a.status === 'Late').length;
+        const staffAttRate = staffAttendance.length > 0
+            ? Number(((presentStaff / staffAttendance.length) * 100).toFixed(1))
+            : 0;
+
+        return { totalStaff, teachingStaff, nonTeachingStaff, staffAttendanceToday: staffAttendance.length, staffPresentToday: presentStaff, staffAttendanceRate: staffAttRate };
+    }
+
+    // ─── Audit Logs ─────────────────────────────────────────────
+    async getRecentAuditLogs(schoolId, limit = 10) {
+        const { data, error } = await supabase.from('audit_logs')
+            .select('*, user:users(name, role)')
+            .eq('school_id', schoolId)
+            .order('created_at', { ascending: false })
+            .limit(Math.min(100, Math.max(1, limit)));
+        if (error) throw error;
+        return data || [];
+    }
 }
 
 module.exports = new SchoolService();

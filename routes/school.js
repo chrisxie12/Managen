@@ -9,6 +9,7 @@ const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
 const gradebookService = require('../services/gradebookService');
 const notifService = require('../services/notificationService');
+const TimetableScheduler = require('../services/timetableScheduler');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
 const { requirePermission } = require('../middleware/permission');
@@ -1221,6 +1222,133 @@ router.post('/timetable', protect, requirePermission('timetable.create', 'timeta
     }
 });
 
+// Specific scheduler routes must come BEFORE parameterized /:id routes
+// ─── Timetable Scheduler ─────────────────────────────────────
+router.post('/timetable/auto-generate', protect, requirePermission('timetable.create'), async (req, res) => {
+    try {
+        const { class_id, overwrite, term_id } = req.body;
+        if (!class_id) return res.status(400).json({ error: 'class_id is required.' });
+        const scheduler = new TimetableScheduler();
+        const result = await scheduler.generateTimetable({
+            classId: class_id,
+            schoolId: req.tenant.id,
+            overwrite: !!overwrite,
+            termId: term_id || null,
+        });
+        return res.json({ data: result });
+    } catch (err) {
+        console.error('Timetable generation error:', err);
+        return res.status(500).json({ error: err.message || 'Error generating timetable.' });
+    }
+});
+
+router.get('/timetable/constraints', protect, requirePermission('timetable.view'), async (req, res) => {
+    try {
+        const { class_id } = req.query;
+        const [settings, classes, teachers, rooms, subjects] = await Promise.all([
+            schoolService.getSchedulingSettings(req.tenant.id),
+            schoolService.getClasses(req.tenant.id),
+            schoolService.getTeacherAvailabilityList(req.tenant.id),
+            schoolService.getRooms(req.tenant.id),
+            class_id
+                ? schoolService.getClassSubjectsWithDetails(class_id, req.tenant.id)
+                : schoolService.getSubjects(req.tenant.id),
+        ]);
+        return res.json({ data: { settings, classes, teachers, rooms, subjects } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching constraints.' });
+    }
+});
+
+router.put('/timetable/teacher-availability', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const { teacher_id, availability } = req.body;
+        if (!teacher_id || !availability) return res.status(400).json({ error: 'teacher_id and availability are required.' });
+        const teacher = await schoolService.updateTeacherAvailability(req.tenant.id, teacher_id, availability);
+        return res.json({ data: { teacher } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating availability.' });
+    }
+});
+
+// Parameterized timetable routes (must come after specific routes)
+router.put('/timetable/:id', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const entry = await schoolService.updateTimetableEntry(req.tenant.id, req.params.id, req.body);
+        return res.json({ data: { entry } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating timetable entry.' });
+    }
+});
+
+router.delete('/timetable/:id', protect, requirePermission('timetable.delete'), async (req, res) => {
+    try {
+        await schoolService.deleteTimetableEntry(req.tenant.id, req.params.id);
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting timetable entry.' });
+    }
+});
+
+// ─── Scheduling Settings ─────────────────────────────────────
+router.get('/scheduling-settings', protect, requirePermission('timetable.view'), async (req, res) => {
+    try {
+        const settings = await schoolService.getSchedulingSettings(req.tenant.id);
+        return res.json({ data: { settings } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching scheduling settings.' });
+    }
+});
+
+router.put('/scheduling-settings', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const settings = await schoolService.createOrUpdateSchedulingSettings(req.tenant.id, req.body);
+        return res.json({ data: { settings } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating scheduling settings.' });
+    }
+});
+
+// ─── Rooms ────────────────────────────────────────────────────
+router.get('/rooms', protect, requirePermission('timetable.view'), async (req, res) => {
+    try {
+        const rooms = await schoolService.getRooms(req.tenant.id);
+        return res.json({ data: { rooms } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching rooms.' });
+    }
+});
+
+router.post('/rooms', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const room = await schoolService.createRoom(req.tenant.id, req.body);
+        return res.status(201).json({ data: { room } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error creating room.' });
+    }
+});
+
+router.delete('/rooms/:id', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        await schoolService.deleteRoom(req.tenant.id, req.params.id);
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error deleting room.' });
+    }
+});
+
+// ─── Class Subject Periods ────────────────────────────────────
+router.put('/class-subjects/:id/periods', protect, requirePermission('timetable.edit'), async (req, res) => {
+    try {
+        const { periods_per_week } = req.body;
+        if (!periods_per_week || periods_per_week < 1) return res.status(400).json({ error: 'periods_per_week must be >= 1.' });
+        const cs = await schoolService.updateClassSubjectPeriods(req.tenant.id, req.params.id, periods_per_week);
+        return res.json({ data: { class_subject: cs } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating periods.' });
+    }
+});
+
 // ─── Payroll ─────────────────────────────────────────────────
 router.get('/payroll', protect, requirePermission('fees.view'), async (req, res) => {
     try {
@@ -1937,6 +2065,27 @@ router.put('/users/:id/suspend', protect, requirePermission('users.edit'), async
         return res.json({ data: { user: data } });
     } catch (err) {
         return res.status(500).json({ error: 'Error suspending user.' });
+    }
+});
+
+// GET /api/school/staff/summary
+router.get('/staff/summary', protect, async (req, res) => {
+    try {
+        const summary = await schoolService.getStaffSummary(req.tenant.id);
+        return res.json({ data: summary });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching staff summary.' });
+    }
+});
+
+// GET /api/school/audit
+router.get('/audit', protect, requirePermission('reports.view'), async (req, res) => {
+    try {
+        const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit) || 10));
+        const logs = await schoolService.getRecentAuditLogs(req.tenant.id, limit);
+        return res.json({ data: { logs } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching audit logs.' });
     }
 });
 
