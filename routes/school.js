@@ -80,6 +80,36 @@ router.get('/info', protect, (req, res) => {
     }
 });
 
+// ─── Setup / Onboarding ──────────────────────────────────────
+router.get('/setup/status', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { data, error } = await supabase
+            .from('schools')
+            .select('setup_completed, setup_step')
+            .eq('id', schoolId)
+            .single();
+        if (error) return res.status(500).json({ error: 'Error fetching setup status.' });
+        return res.json({ data: { setup_completed: data.setup_completed, setup_step: data.setup_step } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching setup status.' });
+    }
+});
+
+router.post('/setup/finish', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { error } = await supabase
+            .from('schools')
+            .update({ setup_completed: true, setup_step: null })
+            .eq('id', schoolId);
+        if (error) return res.status(500).json({ error: 'Error completing setup.' });
+        return res.json({ data: { success: true } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error completing setup.' });
+    }
+});
+
 // ─── Inbox (in-app messages) ──────────────────────────────────
 router.get('/inbox', protect, async (req, res) => {
     try {
