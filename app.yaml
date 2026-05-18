@@ -18,7 +18,7 @@ static_sites:
     github:
       branch: main
       repo: chrisxie12/Managen
-    build_command: cd schoolos-frontend && npm install && npm run build
+    build_command: cd schoolos-frontend && npm install -g pnpm && pnpm install && pnpm run build
     output_dir: /schoolos-frontend/dist
     source_dir: /
     error_document: index.html
