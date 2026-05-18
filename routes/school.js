@@ -2254,6 +2254,21 @@ router.put('/settings/profile', protect, async (req, res) => {
     }
 });
 
+// PATCH /api/school/settings/school-profile
+router.patch('/settings/school-profile', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const allowed = ['name','motto','school_type','year_established','registration_number','email','phone','website','address','city','region','country','logo_url','primary_color'];
+        const updateData = settingsFields(req, allowed);
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        return res.json({ data: school });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving school profile.' });
+    }
+});
+
 // PUT /api/school/settings/academic
 router.put('/settings/academic', protect, async (req, res) => {
     try {
