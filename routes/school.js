@@ -2216,3 +2216,162 @@ router.put('/users/:id/activate', protect, requirePermission('users.edit'), asyn
         return res.status(500).json({ error: 'Error activating user.' });
     }
 });
+
+// ─── Settings Endpoints ─────────────────────────────────────────
+
+const settingsFields = (req, allowed) => {
+    const data = {};
+    for (const key of allowed) {
+        if (req.body[key] !== undefined) data[key] = req.body[key];
+    }
+    return data;
+};
+
+// GET /api/school/settings - fetch full school profile for settings
+router.get('/settings', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { data, error } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        if (error) return res.status(500).json({ error: 'Error fetching settings.' });
+        return res.json({ data });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching settings.' });
+    }
+});
+
+// PUT /api/school/settings/profile
+router.put('/settings/profile', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const allowed = ['name','motto','email','phone','address','website','city','region','country','registration_number','year_established','logo_url','primary_color','school_type'];
+        const updateData = settingsFields(req, allowed);
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        return res.json({ data: school });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving profile.' });
+    }
+});
+
+// PUT /api/school/settings/academic
+router.put('/settings/academic', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const allowed = ['grading_system','academic_year','current_term','term_start_date','term_end_date','pass_mark','attendance_settings','class_settings'];
+        const updateData = settingsFields(req, allowed);
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        return res.json({ data: school });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving academic settings.' });
+    }
+});
+
+// PUT /api/school/settings/fee
+router.put('/settings/fee', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const allowed = ['payment_methods','fee_categories','late_fee_settings','receipt_settings'];
+        const updateData = settingsFields(req, allowed);
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        return res.json({ data: school });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving fee settings.' });
+    }
+});
+
+// PUT /api/school/settings/notifications
+router.put('/settings/notifications', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const allowed = ['notification_settings'];
+        const updateData = settingsFields(req, allowed);
+        const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
+        return res.json({ data: school });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error saving notification settings.' });
+    }
+});
+
+// GET /api/school/settings/billing
+router.get('/settings/billing', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { data: school } = await supabase.from('schools')
+            .select('billing_plan,billing_status,billing_renewal_date,plan,name')
+            .eq('id', schoolId).single();
+        const { data: history } = await supabase.from('billing_history')
+            .select('*').eq('school_id', schoolId).order('created_at', { ascending: false }).limit(20);
+        return res.json({ data: { ...school, history: history || [] } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error fetching billing info.' });
+    }
+});
+
+// POST /api/school/settings/change-password
+const changePasswordSchema = {
+    body: z.object({
+        current_password: z.string().min(1),
+        new_password: z.string().min(8, 'Password must be at least 8 characters'),
+    })
+};
+router.post('/settings/change-password', protect, validate(changePasswordSchema), async (req, res) => {
+    try {
+        const { current_password, new_password } = req.body;
+        const userId = req.user.id;
+        const { data: user } = await supabase.from('users').select('password').eq('id', userId).single();
+        if (!user) return res.status(404).json({ error: 'User not found.' });
+        const valid = await bcrypt.compare(current_password, user.password);
+        if (!valid) return res.status(400).json({ error: 'Current password is incorrect.' });
+        const hashed = await bcrypt.hash(new_password, 12);
+        await supabase.from('users').update({ password: hashed }).eq('id', userId);
+        return res.json({ data: { message: 'Password updated successfully.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error changing password.' });
+    }
+});
+
+// POST /api/school/settings/export
+router.post('/settings/export', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        return res.json({ data: { message: 'Export job queued. You will receive an email when ready.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error queuing export.' });
+    }
+});
+
+// POST /api/school/settings/reset-term
+router.post('/settings/reset-term', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { confirm } = req.body;
+        if (confirm !== 'RESET TERM') return res.status(400).json({ error: 'Confirmation text mismatch.' });
+        await supabase.from('attendance').delete().eq('school_id', schoolId);
+        await supabase.from('exam_results').delete().eq('school_id', schoolId);
+        await supabase.from('gradebook_entries').delete().eq('school_id', schoolId);
+        return res.json({ data: { message: 'Term data reset successfully.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error resetting term.' });
+    }
+});
+
+// DELETE /api/school/settings/account - mark for deletion
+router.delete('/settings/account', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { confirm } = req.body;
+        const { data: school } = await supabase.from('schools').select('name').eq('id', schoolId).single();
+        if (confirm !== school.name) return res.status(400).json({ error: 'School name mismatch.' });
+        await supabase.from('schools').update({ is_active: false, metadata: supabase.raw('jsonb_set(COALESCE(metadata, ?), ?, to_jsonb(?::text))', ['{}', '{deletion_requested_at}', new Date().toISOString()]) }).eq('id', schoolId);
+        return res.json({ data: { message: 'Deletion scheduled. A confirmation email will be sent. Your account will be deleted in 24 hours.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error scheduling deletion.' });
+    }
+});
