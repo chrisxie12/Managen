@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
-  Bell, LogOut, Menu, X, Settings, HelpCircle, BookOpen, Search,
+  Bell, LogOut, Settings, HelpCircle, BookOpen, Search,
   Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity, School, Mail,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
@@ -45,7 +45,6 @@ export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school, logout } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notifCount] = useState(3);
 
   const userPerms = user?.permissions || [];
@@ -135,26 +134,15 @@ export function DashboardLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: MILK }}>
-      <aside className="hidden lg:flex flex-col w-60 flex-shrink-0"
+      <aside className="flex flex-col w-60 flex-shrink-0"
         style={{ background: SIDEBAR_BG, borderRight: "1px solid rgba(56,25,50,0.07)" }}>
         <SidebarContent />
       </aside>
-
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden" onClick={() => setSidebarOpen(false)}>
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-          <aside className="relative w-64 flex flex-col h-full" style={{ background: SIDEBAR_BG }} onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setSidebarOpen(false)} className="absolute top-4 right-4"><X size={20} color={MUTED} /></button>
-            <SidebarContent />
-          </aside>
-        </div>
-      )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between px-6 py-4 flex-shrink-0"
           style={{ background: "rgba(255,243,230,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden"><Menu size={22} color={PLUM} /></button>
             <div>
               <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }}>
                 {navItems.find((n) => isActive(n.path))?.label || "Dashboard"}
