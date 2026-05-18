@@ -93,7 +93,8 @@ export function LandingPage() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("reveal");
+            const isStagger = entry.target.dataset.stagger === "true";
+            entry.target.classList.add(isStagger ? "reveal-group" : "reveal");
           }
         });
       },
@@ -195,6 +196,11 @@ export function LandingPage() {
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
         .reveal { animation: fadeUp 0.6s ease-out both; }
         .reveal-1 { animation-delay: 0.1s; }
         .reveal-2 { animation-delay: 0.2s; }
@@ -202,8 +208,16 @@ export function LandingPage() {
         .reveal-4 { animation-delay: 0.4s; }
         .reveal-5 { animation-delay: 0.5s; }
         .reveal-6 { animation-delay: 0.6s; }
+        .reveal-group > * { animation: slideUp 0.5s ease-out both; }
+        .reveal-group > *:nth-child(1) { animation-delay: 0s; }
+        .reveal-group > *:nth-child(2) { animation-delay: 0.1s; }
+        .reveal-group > *:nth-child(3) { animation-delay: 0.2s; }
+        .reveal-group > *:nth-child(4) { animation-delay: 0.3s; }
+        .reveal-group > *:nth-child(5) { animation-delay: 0.4s; }
+        .reveal-group > *:nth-child(6) { animation-delay: 0.5s; }
         .modal-overlay { animation: fadeIn 0.2s ease-out; }
         .modal-content { animation: fadeUp 0.3s ease-out; }
+        .hero-icon { animation: iconFloat 3s ease-in-out infinite; }
         @keyframes gradientShift {
           0%   { background-position: 0% 50%; }
           50%  { background-position: 100% 50%; }
@@ -390,7 +404,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8" data-reveal data-stagger="true">
             {[
               {
                 num: "01", icon: Zap, title: "Set up your school in minutes",
@@ -408,7 +422,7 @@ export function LandingPage() {
                 items: ["WhatsApp reports sent to parents automatically", "Term-end report card generation", "Fee collection analytics", "Multi-school performance overview"]
               }
             ].map((step, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 group" data-reveal>
+              <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 group">
                 <div className="h-36 relative flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
                   <span className="absolute select-none font-bold leading-none" style={{ fontSize: "8rem", color: "white", opacity: 0.08, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{step.num}</span>
                   <step.icon size={44} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
@@ -445,10 +459,10 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal data-stagger="true">
             {featureItems.map((item, i) => (
-              <div key={i} className="rounded-2xl bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 p-6 lg:p-7 flex flex-col" data-reveal>
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${item.bgColor}`}>
+              <div key={i} className="rounded-2xl bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 p-6 lg:p-7 flex flex-col group">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${item.bgColor} group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300`}>
                   <item.icon size={24} className={item.iconColor === "text-custom" ? "" : item.iconColor} style={item.iconColor === "text-custom" ? { color: PLUM } : {}} />
                 </div>
                 <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{item.title}</h3>
@@ -517,7 +531,7 @@ export function LandingPage() {
               Whether you run a single classroom or a network of campuses, Managen scales with you.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal data-stagger="true">
             {schoolTypes.map((s) => (
               <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition bg-white overflow-hidden">
                 <div className="h-36 overflow-hidden relative">
@@ -592,7 +606,7 @@ export function LandingPage() {
               Hear from administrators who switched to Managen.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" data-reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" data-reveal data-stagger="true">
             {testimonials.map((t) => (
               <div key={t.name} className="rounded-2xl p-6"
                 style={{
@@ -636,7 +650,7 @@ export function LandingPage() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal data-stagger="true">
             {pricingPlans.map((plan, i) => {
               const isAnnual = billing === "annual";
               const showSaveBadge = isAnnual && (plan.name === "Growth" || plan.name === "Pro");
