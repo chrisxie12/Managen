@@ -176,10 +176,10 @@ export function LandingPage() {
   ];
 
   const schoolTypes = [
-    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100" },
-    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100" },
-    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100" },
-    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom" },
+    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", photo: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80" },
+    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100", photo: "https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&q=80" },
+    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100", photo: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80" },
+    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom", photo: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80" },
   ];
 
   const testimonials = [
@@ -312,67 +312,18 @@ export function LandingPage() {
               </div>
             </div>
             <div className="relative hidden lg:block">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <svg viewBox="0 0 520 380" className="w-full h-auto">
-                  <rect x="0" y="0" width="520" height="380" rx="12" fill={PLUM} />
-                  <rect x="0" y="0" width="520" height="36" rx="12" ry="12" fill={PLUM} />
-                  <circle cx="18" cy="18" r="4" fill="#EF4444" />
-                  <circle cx="32" cy="18" r="4" fill="#F59E0B" />
-                  <circle cx="46" cy="18" r="4" fill="#10B981" />
-                  <text x="60" y="22" fill="rgba(255,255,255,0.8)" fontSize="10" fontWeight="600">Managen Dashboard</text>
-                  <rect x="12" y="44" width="496" height="324" rx="8" fill="white" />
-                  <rect x="12" y="44" width="100" height="324" rx="8" ry="8" fill="#F9FAFB" />
-                  <rect x="20" y="56" width="84" height="24" rx="6" fill={PLUM} opacity="0.08" />
-                  <text x="62" y="71" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="500">Dashboard</text>
-                  <rect x="20" y="88" width="84" height="24" rx="6" fill="transparent" />
-                  <text x="62" y="103" textAnchor="middle" fill="#6B7280" fontSize="9">Students</text>
-                  <rect x="20" y="120" width="84" height="24" rx="6" fill="transparent" />
-                  <text x="62" y="135" textAnchor="middle" fill="#6B7280" fontSize="9">Fees</text>
-                  <rect x="20" y="152" width="84" height="24" rx="6" fill="transparent" />
-                  <text x="62" y="167" textAnchor="middle" fill="#6B7280" fontSize="9">Reports</text>
-                  <rect x="124" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="132" y="64" width="4" height="20" rx="2" fill="#10B981" />
-                  <text x="142" y="78" fill="#111827" fontSize="12" fontWeight="bold">247</text>
-                  <text x="142" y="92" fill="#6B7280" fontSize="8">Students enrolled</text>
-                  <rect x="250" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="258" y="64" width="4" height="20" rx="2" fill="#6366F1" />
-                  <text x="268" y="78" fill="#111827" fontSize="12" fontWeight="bold">GHS 12,400</text>
-                  <text x="268" y="92" fill="#6B7280" fontSize="8">Fees collected</text>
-                  <rect x="376" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <rect x="384" y="64" width="4" height="20" rx="2" fill="#F59E0B" />
-                  <text x="394" y="78" fill="#111827" fontSize="12" fontWeight="bold">94.2%</text>
-                  <text x="394" y="92" fill="#6B7280" fontSize="8">Attendance rate</text>
-                  <text x="124" y="134" fill="#374151" fontSize="10" fontWeight="600">Weekly Attendance Trends</text>
-                  <rect x="124" y="142" width="370" height="80" rx="4" fill="#F9FAFB" />
-                  <rect x="144" y="154" width="20" height="40" rx="3" fill={PLUM} opacity="0.15" />
-                  <rect x="174" y="154" width="20" height="55" rx="3" fill={PLUM} opacity="0.25" />
-                  <rect x="204" y="154" width="20" height="35" rx="3" fill={PLUM} opacity="0.15" />
-                  <rect x="234" y="154" width="20" height="65" rx="3" fill="#10B981" />
-                  <rect x="264" y="154" width="20" height="48" rx="3" fill={PLUM} opacity="0.25" />
-                  <rect x="294" y="154" width="20" height="58" rx="3" fill={PLUM} opacity="0.15" />
-                  <text x="154" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Mon</text>
-                  <text x="184" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Tue</text>
-                  <text x="214" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Wed</text>
-                  <text x="244" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Thu</text>
-                  <text x="274" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Fri</text>
-                  <text x="304" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Sat</text>
-                  <rect x="124" y="230" width="180" height="110" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <text x="136" y="248" fill="#374151" fontSize="9" fontWeight="600">Recent Activity</text>
-                  <rect x="136" y="258" width="160" height="6" rx="3" fill="#F3F4F6" />
-                  <rect x="136" y="272" width="140" height="6" rx="3" fill="#F3F4F6" />
-                  <rect x="136" y="286" width="120" height="6" rx="3" fill="#F3F4F6" />
-                  <rect x="136" y="300" width="150" height="6" rx="3" fill="#F3F4F6" />
-                  <rect x="136" y="314" width="100" height="6" rx="3" fill="#F3F4F6" />
-                  <rect x="314" y="230" width="180" height="110" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
-                  <text x="326" y="248" fill="#374151" fontSize="9" fontWeight="600">Fee Collection</text>
-                  <circle cx="364" cy="278" r="20" fill="none" stroke="#E5E7EB" strokeWidth="6" />
-                  <circle cx="364" cy="278" r="20" fill="none" stroke="#10B981" strokeWidth="6" strokeDasharray="94 32" transform="rotate(-90 364 278)" />
-                  <text x="364" y="282" textAnchor="middle" fill={PLUM} fontSize="10" fontWeight="bold">84%</text>
-                  <rect x="392" y="264" width="8" height="8" rx="2" fill="#10B981" />
-                  <text x="404" y="272" fill="#6B7280" fontSize="8">Collected</text>
-                  <rect x="392" y="280" width="8" height="8" rx="2" fill="#E5E7EB" />
-                  <text x="404" y="288" fill="#6B7280" fontSize="8">Outstanding</text>
-                </svg>
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '480px' }}>
+                <img
+                  src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80"
+                  alt="Students in a Ghanaian classroom"
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 rounded-2xl"
+                  style={{ background:
+                    'linear-gradient(135deg, rgba(56,25,50,0.15) 0%, rgba(0,0,0,0.05) 100%)'
+                  }}
+                />
               </div>
               <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3">
                 <p className="text-sm font-semibold" style={{ color: PLUM }}>&#x2713; GHS 24,800 fees collected this term</p>
@@ -741,20 +692,35 @@ export function LandingPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal>
             {schoolTypes.map((s) => (
-              <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition bg-white">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor}`}>
-                  <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: PLUM } : {}} />
+              <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition bg-white overflow-hidden">
+                <div className="h-36 overflow-hidden relative">
+                  <img
+                    src={s.photo}
+                    alt={s.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0"
+                    style={{ background:
+                      'linear-gradient(to bottom, transparent 40%, rgba(56,25,50,0.4) 100%)'
+                    }}
+                  />
                 </div>
-                <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{s.title}</h3>
-                <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {s.pills.map((pill) => (
-                    <span key={pill} className={`text-xs rounded-full px-2 py-0.5 ${s.pillBg} ${s.pillText}`}>{pill}</span>
-                  ))}
-                </div>
-                <div className="text-xs" style={{ color: "#9CA3AF" }}>
-                  <p>{s.example}</p>
-                  <p>{s.example2}</p>
+                <div className="p-6">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor} -mt-8 relative z-10 shadow-md border-2 border-white`}>
+                    <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: PLUM } : {}} />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{s.title}</h3>
+                  <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {s.pills.map((pill) => (
+                      <span key={pill} className={`text-xs rounded-full px-2 py-0.5 ${s.pillBg} ${s.pillText}`}>{pill}</span>
+                    ))}
+                  </div>
+                  <div className="text-xs" style={{ color: "#9CA3AF" }}>
+                    <p>{s.example}</p>
+                    <p>{s.example2}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -769,28 +735,55 @@ export function LandingPage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="testimonials-quotes" className="py-24 px-6 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
+      <section id="testimonials-quotes" className="py-24 px-6 relative overflow-hidden">
+        {/* Background photo with overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=1200&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            aria-hidden="true"
+          />
+          <div className="absolute inset-0"
+            style={{ background:
+              'rgba(56,25,50,0.88)'
+            }}
+          />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4"
+              style={{ borderColor: 'rgba(255,243,230,0.4)', color: 'rgba(255,243,230,0.8)' }}>
               What schools say
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Trusted by school leaders</h2>
-            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mt-2 text-white">
+              Trusted by school leaders
+            </h2>
+            <p className="mt-3 max-w-2xl mx-auto"
+              style={{ color: 'rgba(255,243,230,0.65)' }}>
               Hear from administrators who switched to Managen.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" data-reveal>
             {testimonials.map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <div key={t.name} className="rounded-2xl p-6"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255,255,255,0.12)'
+                }}>
                 <div className="text-amber-400 text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
-                <p className="text-sm mb-6" style={{ color: MUTED, lineHeight: 1.7, fontStyle: "italic" }}>{t.quote}</p>
+                <p className="text-sm mb-6 italic"
+                  style={{ color: 'rgba(255,243,230,0.85)', lineHeight: 1.7 }}>
+                  {t.quote}
+                </p>
                 <div className="flex items-center gap-3">
                   <InitialsAvatar name={t.name} color={t.avatarColor} />
                   <div>
-                    <p className="font-semibold text-sm" style={{ color: PLUM }}>{t.name}</p>
-                    <p className="text-xs" style={{ color: MUTED }}>{t.role}</p>
-                    <p className="text-xs" style={{ color: "#9CA3AF" }}>{t.location}</p>
+                    <p className="font-semibold text-sm text-white">{t.name}</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,243,230,0.6)' }}>{t.role}</p>
+                    <p className="text-xs" style={{ color: 'rgba(255,243,230,0.45)' }}>{t.location}</p>
                   </div>
                 </div>
               </div>
