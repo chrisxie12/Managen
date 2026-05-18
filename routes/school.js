@@ -7,6 +7,7 @@ const supabase = require('../config/db');
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
+const gradebookService = require('../services/gradebookService');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
 const { requirePermission } = require('../middleware/permission');
@@ -832,6 +833,136 @@ router.put('/report-cards/:id/approve', protect, requirePermission('settings.edi
         const card = await examService.approveReportCard(req.tenant.id, req.params.id, req.user?.userId);
         return res.json({ data: { reportCard: card, message: 'Report card approved.' } });
     } catch (err) { return res.status(500).json({ error: 'Error approving report card.' }); }
+});
+
+// ─── Gradebook ────────────────────────────────────────────────
+
+// GET /api/school/classes/:classId/terms/:termId/gradebook
+// Returns term averages for all students in a class.
+// Query: ?include_category_breakdown=true to include per-category breakdown
+router.get('/classes/:classId/terms/:termId/gradebook', protect, requirePermission('grades.view'), async (req, res) => {
+    try {
+        const { classId, termId } = req.params;
+        const includeBreakdown = req.query.include_category_breakdown === 'true';
+
+        const results = await gradebookService.calculateClassTermAverages(classId, termId, req.tenant.id);
+
+        if (!includeBreakdown) {
+            return res.json({
+                data: results.map(r => ({
+                    student_id: r.student_id,
+                    student_name: r.student_name,
+                    admission_no: r.admission_no,
+                    percentage: r.percentage,
+                    grade: r.grade,
+                    grade_remark: r.grade_remark,
+                    rank: r.rank,
+                }))
+            });
+        }
+
+        return res.json({ data: results });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error fetching gradebook.' });
+    }
+});
+
+// GET /api/school/students/:studentId/classes/:classId/terms/:termId/grade
+// Returns single student's term average and category breakdown.
+// Student can access own grade, parent can access their child's grade,
+// teacher/admin requires grades.view permission.
+router.get('/students/:studentId/classes/:classId/terms/:termId/grade', protect, async (req, res, next) => {
+    const role = req.user.role;
+    if (role !== 'student' && role !== 'parent') {
+        return requirePermission('grades.view')(req, res, next);
+    }
+    next();
+}, async (req, res) => {
+    try {
+        const { studentId, classId, termId } = req.params;
+        const userId = req.user.userId || req.user.id;
+        const role = req.user.role;
+
+        if (role === 'student') {
+            const student = await schoolService.getStudentByUser(req.tenant.id, userId);
+            if (!student || student.id !== studentId) {
+                return res.status(403).json({ error: 'Access denied.' });
+            }
+        } else if (role === 'parent') {
+            const email = req.user.email;
+            if (!email) return res.status(400).json({ error: 'No email on profile.' });
+            const children = await schoolService.getParentChildren(req.tenant.id, email);
+            if (!children.some(c => c.id === studentId)) {
+                return res.status(403).json({ error: 'Access denied.' });
+            }
+        }
+
+        const result = await gradebookService.calculateTermAverage(studentId, classId, termId, req.tenant.id);
+
+        if (!result || !result.category_breakdown) {
+            return res.status(404).json({ error: 'Grade data not found.' });
+        }
+
+        return res.json({ data: result });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error fetching grade.' });
+    }
+});
+
+// POST /api/school/report-cards/generate/:classId/:termId
+// Triggers batch calculation and updates all report cards for the class.
+// Returns job ID for async processing (BullMQ) or sync fallback.
+router.post('/report-cards/generate/:classId/:termId', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+    try {
+        const { classId, termId } = req.params;
+        const redis = require('../config/redis');
+        const redisAvailable = redis.isRedisConfigured();
+
+        if (redisAvailable) {
+            const { Queue } = require('bullmq');
+            const reportCardQueue = new Queue('report-card-generation', {
+                connection: redis,
+                defaultJobOptions: {
+                    attempts: 3,
+                    backoff: { type: 'exponential', delay: 2000 },
+                    removeOnComplete: true,
+                },
+            });
+
+            const job = await reportCardQueue.add('generate-batch', {
+                schoolId: req.tenant.id,
+                classId,
+                termId,
+            });
+
+            return res.json({
+                data: {
+                    jobId: job.id,
+                    message: 'Report card generation queued.',
+                }
+            });
+        }
+
+        // Fallback: process synchronously
+        const classResults = await gradebookService.calculateClassTermAverages(classId, termId, req.tenant.id);
+        const results = [];
+        for (const student of classResults) {
+            const card = await gradebookService.updateReportCard(student.student_id, classId, termId, req.tenant.id);
+            results.push(card);
+        }
+
+        return res.json({
+            data: {
+                message: 'Report cards generated synchronously.',
+                count: results.length,
+            }
+        });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error generating report cards.' });
+    }
 });
 
 // ─── Teachers ────────────────────────────────────────────────
