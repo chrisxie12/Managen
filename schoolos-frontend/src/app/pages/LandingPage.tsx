@@ -26,7 +26,7 @@ const faqs = [
   { q: "Is there really no credit card required for the free trial?", a: "Correct. The 7-day Free Trial gives you full access to the platform with no payment details required. You only provide billing information when you choose to upgrade to a paid plan." },
   { q: "What happens when my free trial ends?", a: "Your account is paused - no data is deleted. You can upgrade to Growth, Pro, or Enterprise at any time to reactivate. We'll send you reminders before and after the trial ends." },
   { q: "Can I switch plans later?", a: "Yes. You can upgrade or downgrade your plan at any time from your school dashboard. Changes take effect at the start of your next billing cycle." },
-  { q: "Does Managen support the Ghanaian curriculum?", a: "Yes. Managen is built for Ghanaian schools and fully supports the local curriculum including WAEC and BECE structures. Pricing is displayed in GHS." },
+  { q: "Does Managen support the Ghanaian curriculum?", a: "Yes. Managen is built specifically for Ghanaian schools and fully supports the local curriculum including WAEC and BECE structures. Pricing is displayed in GHS." },
   { q: "How does the WhatsApp reporting work?", a: "Managen integrates directly with WhatsApp Business API to send automated reports - attendance summaries, fee reminders, and exam results - to parents and staff without any manual effort from administrators." },
   { q: "Is our school's data secure?", a: "Yes. All data is encrypted in transit and at rest. Each school operates in its own isolated environment - no school can access another school's data. We use Supabase (PostgreSQL) hosted on secure infrastructure with regular backups." },
   { q: "What is the student limit on each plan?", a: "Free Trial supports up to 50 students. Growth supports up to 300. Pro supports up to 800. Enterprise has no student limit. If you need a custom limit, contact us." },
@@ -34,7 +34,7 @@ const faqs = [
 ];
 
 const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
-  const initials = name.split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase();
+  const initials = name.replace(/^(Mr|Mrs|Ms|Dr|Prof)\.?\s+/i, "").split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase();
   return (
     <div style={{ backgroundColor: color }} className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
       {initials}
@@ -120,9 +120,9 @@ export function LandingPage() {
 
   const testimonials = [
     { quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week - and parents actually get their receipts on WhatsApp now.", name: "Mrs. Abena Asante", role: "Headmistress, Sunrise Academy", location: "Accra, Ghana", avatarColor: "#7C3AED" },
-    { quote: "Managing multiple campuses used to be a nightmare. Now I see everything - attendance, fees, staff - from one dashboard. It's exactly what we needed.", name: "Mr. Babatunde Adeyemi", role: "Director, Adeyemi Group of Schools", location: "Ibadan, Nigeria", avatarColor: "#0EA5E9" },
     { quote: "The WhatsApp reports changed everything. Parents used to call us constantly asking about fees. Now they get automatic updates and the calls stopped completely.", name: "Ms. Efua Mensah", role: "Administrator, Cape Coast Academy", location: "Cape Coast, Ghana", avatarColor: "#10B981" },
-    { quote: "Setup took less than a day. Our staff picked it up immediately - no training needed. The attendance system alone made it worth it.", name: "Mr. Chukwuemeka Obi", role: "Principal, Excellence High School", location: "Lagos, Nigeria", avatarColor: "#F59E0B" },
+    { quote: "We tried two other platforms before Managen. Nothing came close. The fee tracking and WhatsApp reports alone justified the switch.", name: "Mr. Kofi Boateng", role: "Headmaster, Kumasi Prep School", location: "Kumasi, Ghana", avatarColor: "#0EA5E9" },
+    { quote: "Running three campuses from one dashboard seemed impossible before Managen. Now it is just how we work.", name: "Mrs. Akosua Darkwa", role: "Director, Darkwa Group of Schools", location: "Takoradi, Ghana", avatarColor: "#F59E0B" },
   ];
 
   return (
@@ -192,7 +192,7 @@ export function LandingPage() {
             <div>
               <div className="reveal reveal-1">
                 <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-6" style={{ borderColor: PLUM, color: PLUM }}>
-                  &#x1F1EC;&#x1F1ED; Built for African Schools
+                  &#x1F1EC;&#x1F1ED; Built for Ghanaian Schools
                 </div>
               </div>
               <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: PLUM }}>
@@ -312,7 +312,7 @@ export function LandingPage() {
           </div>
           <div className="text-center reveal reveal-3">
             <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>1</div>
-            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Country</div>
+            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Country Supported</div>
           </div>
         </div>
       </section>
@@ -334,9 +334,6 @@ export function LandingPage() {
 
             {/* Step 1 */}
             <div className="flex flex-col lg:flex-row items-center gap-8 mb-24 relative" data-reveal>
-              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
-                <span className="font-bold text-xl" style={{ color: PLUM }}>01</span>
-              </div>
               <div className="flex-1 lg:pl-20">
                 <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>01</span>
                 <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Set up your school in minutes</h3>
@@ -382,9 +379,6 @@ export function LandingPage() {
 
             {/* Step 2 */}
             <div className="flex flex-col lg:flex-row-reverse items-center gap-8 mb-24 relative" data-reveal>
-              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
-                <span className="font-bold text-xl" style={{ color: PLUM }}>02</span>
-              </div>
               <div className="flex-1 lg:pl-20">
                 <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>02</span>
                 <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Track attendance, fees, and exams daily</h3>
@@ -446,9 +440,6 @@ export function LandingPage() {
 
             {/* Step 3 */}
             <div className="flex flex-col lg:flex-row items-center gap-8 relative" data-reveal>
-              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
-                <span className="font-bold text-xl" style={{ color: PLUM }}>03</span>
-              </div>
               <div className="flex-1 lg:pl-20">
                 <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>03</span>
                 <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Get insights and reports automatically</h3>
@@ -673,7 +664,7 @@ export function LandingPage() {
             ))}
           </div>
           <div className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap" data-reveal>
-            <span className="text-sm text-gray-500">Join schools across Ghana and Nigeria managing their institutions with Managen</span>
+            <span className="text-sm text-gray-500">Join schools across Ghana managing their institutions with Managen</span>
             <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-semibold flex items-center gap-1" style={{ color: PLUM }}>
               Start Free Trial <ArrowRight size={14} />
             </button>
@@ -809,7 +800,7 @@ export function LandingPage() {
               Your School Deserves Better Tools
             </h2>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
-              Join {stats.schools ? `${stats.schools}+` : ""} schools across Ghana that have eliminated spreadsheets forever.
+              Join schools across Ghana who have eliminated spreadsheets forever.
             </p>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
               Get Started Free -- No Credit Card
@@ -858,7 +849,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-3">
                 {[
                   { icon: Mail, text: "support@schoolos.me" },
-                  { icon: Phone, text: "+233 53 278 5149" },
+                  { icon: Phone, text: "WhatsApp: wa.me/233XXXXXXXXX" },
                   { icon: MapPin, text: "Accra, Ghana" },
                   { icon: MessageSquare, text: "WhatsApp Support" },
                 ].map((item) => (
