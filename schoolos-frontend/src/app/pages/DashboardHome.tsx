@@ -170,16 +170,16 @@ export function DashboardHome() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users} label="Total Students" value={totalStudents.toLocaleString()} color="#6366F1" path="/dashboard/students" badge={`${totalTeachers} teacher${totalTeachers !== 1 ? "s" : ""}`} />
         <StatCard icon={Wallet} label="Total Revenue" value={`GHS ${(totalCollected / 100).toLocaleString()}`} color="#10B981" path="/dashboard/finance" badge={`${collectionRate}% collected`} />
-        <StatCard icon={Clock} label="Avg Attendance" value={`${attendanceRate}%`} color="#F59E0B" path="/dashboard/students" badge="Today" />
+        <StatCard icon={Clock} label="Avg Attendance" value={`${attendanceRate}%`} color="#F59E0B" path="/dashboard/attendance" badge="Today" />
         <StatCard icon={Briefcase} label="Total Staff" value={totalStaff.toLocaleString()} color="#6366F1" path="/dashboard/staff" badge={`${teachingStaff} teaching`} />
       </div>
 
       {/* ─── Additional stat cards (PHASE 2) ───────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={MessageSquare} label="Fee Collection" value={`${collectionRate}%`} color="#25D366" path="/dashboard/finance" badge={`${financeSummary?.overdueCount || 0} overdue`} />
-        <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" badge="Today" />
-        <StatCard icon={Wallet} label="Outstanding" value={`GHS ${(totalOutstanding / 100).toLocaleString()}`} color="#EF4444" path="/dashboard/finance" badge={`${financeSummary?.overdueCount || 0} overdue`} />
-        <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#10B981" badge={`${totalCollected}/${totalBilled}`} />
+        <StatCard icon={MessageSquare} label="Fee Collection" value={`${collectionRate}%`} color="#25D366" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
+        <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" onClick={() => { console.warn('Staff attendance detail page not yet implemented – navigating to staff directory'); navigate('/dashboard/staff'); }} badge="Today" />
+        <StatCard icon={Wallet} label="Outstanding" value={`GHS ${(totalOutstanding / 100).toLocaleString()}`} color="#EF4444" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
+        <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#10B981" path="/dashboard/finance" badge={`${totalCollected}/${totalBilled}`} />
       </div>
 
       {/* ─── PHASE 1: Fee Collection chart + Payment Status pie (replaced) ── */}
@@ -289,7 +289,13 @@ export function DashboardHome() {
                 <XAxis dataKey="class_name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
                 <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Average"]} />
-                <Bar dataKey="rate" fill={PLUM} radius={[6, 6, 0, 0]} />
+                <Bar dataKey="rate" fill={PLUM} radius={[6, 6, 0, 0]} cursor="pointer"
+                  onClick={(data) => {
+                    if (data?.payload?.class_id) {
+                      navigate(`/dashboard/students?class_id=${data.payload.class_id}`);
+                    }
+                  }}
+                  activeBar={{ fill: '#ffc658' }} />
               </BarChart>
             </ResponsiveContainer>
           ) : (

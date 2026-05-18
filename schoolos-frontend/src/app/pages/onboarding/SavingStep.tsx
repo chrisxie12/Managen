@@ -73,7 +73,7 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
         </div>
 
         <div className="space-y-4">
-          {STEPS.map((step, i) => {
+          {STEPS.map((step) => {
             const done = completed.includes(step.key);
             const active = currentLabel === step.label && !done;
             return (

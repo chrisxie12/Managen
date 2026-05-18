@@ -6,7 +6,7 @@ import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { pagePermissions } from "../utils/permissions";
-import { SetupChecklist } from "../components/SetupChecklist";
+import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
 const PLUM = "#381932";

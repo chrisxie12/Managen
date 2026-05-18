@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Upload, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "../../services/api";
 
 const INDIGO = "#6366F1";
 const PLUM = "#381932";

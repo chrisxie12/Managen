@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router";
 import {
   Wallet, Loader2, CreditCard, Smartphone,
   CheckCircle2, Receipt, Banknote,
@@ -227,12 +228,15 @@ function CheckoutModal({
 
 export function FeePayment() {
   const { user } = useAuth();
+  const location = useLocation();
   const [children, setChildren] = useState<Child[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("");
   const [checkoutInvoice, setCheckoutInvoice] = useState<Invoice | null>(null);
-  const [filterTab, setFilterTab] = useState<"pending" | "paid">("pending");
+  const [filterTab, setFilterTab] = useState<"pending" | "paid">(
+    (location.state as { filter?: string } | null)?.filter === 'overdue' ? 'pending' : 'pending'
+  );
 
   const isParent = user?.role === "parent";
   const isStudent = user?.role === "student";

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Check, FileText, Settings, Sparkles } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
-import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding";
+import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding/index";
 import { toast } from "sonner";
 
 const PLUM = "#381932";
@@ -20,12 +20,11 @@ const STEPS = [
 
 export function Onboarding() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const schoolId = user?.schoolId || user?.tenantId;
+  const { user, school } = useAuth();
+  const schoolId = school?.slug;
   const [currentStep, setCurrentStep] = useState(0);
   const [surveyAnswers, setSurveyAnswers] = useState<any>({});
   const [schoolData, setSchoolData] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(false);
   const [checkingResume, setCheckingResume] = useState(true);
 
   const STORAGE_KEY = `schoolos_onboarding_${schoolId || "anonymous"}`;
@@ -43,6 +42,7 @@ export function Onboarding() {
             if (parsed.schoolData) setSchoolData(parsed.schoolData);
             toast("Welcome back! Continue where you left off?", {
               action: { label: "Continue", onClick: () => {} },
+              cancel: { label: "Start Over", onClick: handleStartOver },
               duration: 6000,
             });
           }
@@ -68,11 +68,9 @@ export function Onboarding() {
 
   const handleSurveyComplete = useCallback(async (answers: any) => {
     setSurveyAnswers(answers);
-    setIsLoading(true);
     try {
       await api.post("/api/school/onboarding/survey", { survey: answers });
     } catch { /* continue regardless */ }
-    setIsLoading(false);
     handleStepChange(2);
   }, [handleStepChange]);
 
@@ -95,6 +93,7 @@ export function Onboarding() {
     setCurrentStep(0);
     setSurveyAnswers({});
     setSchoolData({});
+    window.location.reload();
   }, [STORAGE_KEY]);
 
   if (checkingResume) {
@@ -113,7 +112,7 @@ export function Onboarding() {
           <p className="text-xs mt-1" style={{ color: MUTED }}>Onboarding</p>
         </div>
         <div className="space-y-6">
-          {STEPS.map((step, i) => {
+          {STEPS.map((step) => {
             const Icon = step.icon;
             const isActive = currentStep >= step.id;
             const isCurrent = currentStep === step.id;
@@ -139,7 +138,7 @@ export function Onboarding() {
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-6 py-10">
           <div className="flex md:hidden items-center justify-center gap-2 mb-8">
-            {STEPS.map((step, i) => (
+            {STEPS.map((step) => (
               <div key={step.id}
                 className="w-3 h-3 rounded-full transition-all"
                 style={{
@@ -160,7 +159,7 @@ export function Onboarding() {
             >
               {currentStep === 0 && (
                 <WelcomeStep
-                  adminName={user?.name || user?.full_name || "Admin"}
+                  adminName={user?.fullName || "Admin"}
                   onNext={() => handleStepChange(1)}
                   onSkip={() => {
                     api.post("/api/school/onboarding/complete", {}).catch(() => {});
@@ -194,7 +193,7 @@ export function Onboarding() {
               )}
               {currentStep === 4 && (
                 <CelebrationStep
-                  schoolName={schoolData.name || user?.school_name || "Your School"}
+                  schoolName={schoolData.name || school?.name || "Your School"}
                   currentTerm={schoolData.current_term || "First Term"}
                   academicYear={schoolData.academic_year || "2025/2026"}
                   primaryColor={schoolData.primary_color || INDIGO}

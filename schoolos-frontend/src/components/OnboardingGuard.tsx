@@ -4,10 +4,9 @@ import { useAuth } from "../app/contexts/AuthContext";
 import { useOnboardingStatus } from "../hooks/useOnboardingStatus";
 
 export function OnboardingGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading: authLoading } = useAuth();
+  const { user, school, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const schoolId = user?.schoolId || user?.tenantId;
-  const { onboardingCompleted, loading } = useOnboardingStatus(schoolId);
+  const { onboardingCompleted, loading } = useOnboardingStatus(school?.slug);
 
   useEffect(() => {
     if (authLoading || loading) return;

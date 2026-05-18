@@ -108,9 +108,9 @@ export function StatCard({ icon: Icon, label, value, color, path, badge, onClick
   );
 }
 
-export function KpiCard({ value, label, sub, positive }: { value: string; label: string; sub?: string; positive?: boolean }) {
+export function KpiCard({ value, label, sub, positive, onClick }: { value: string; label: string; sub?: string; positive?: boolean; onClick?: () => void }) {
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div onClick={onClick} className={`p-5 rounded-[24px] ${onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform' : ''}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
       <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
       {sub && (

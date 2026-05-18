@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Check, ArrowRight, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { api } from "../app/services/api";
 
 const PLUM = "#381932";
@@ -29,7 +29,6 @@ export function SetupChecklist() {
   const navigate = useNavigate();
   const [items, setItems] = useState<ChecklistItems | null>(null);
   const [dismissed, setDismissed] = useState(false);
-  const [hideUntil, setHideUntil] = useState<string | null>(null);
 
   useEffect(() => {
     const hidden = localStorage.getItem("schoolos_checklist_hidden_until");
