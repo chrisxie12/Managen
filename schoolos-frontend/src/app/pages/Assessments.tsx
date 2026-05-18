@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Plus, X, Loader2, Search, Check, AlertCircle, FileSpreadsheet,
   ClipboardCheck, Scale, BookOpen, Users, School, Star,
-  Eye, SendHorizonal, ShieldCheck,
+  Eye, SendHorizonal, ShieldCheck, Percent, ChevronDown, ChevronRight, RefreshCw,
 } from "lucide-react";
 import { api } from "../services/api";
 
@@ -106,6 +106,7 @@ const TABS = [
   { key: "setup", label: "Setup", icon: Scale },
   { key: "assessments", label: "Assessments", icon: ClipboardCheck },
   { key: "scores", label: "Scores", icon: FileSpreadsheet },
+  { key: "term-average", label: "Term Average", icon: Percent },
   { key: "report-cards", label: "Report Cards", icon: Star },
 ];
 
@@ -140,6 +141,7 @@ export function Assessments() {
       {tab === "setup" && <SetupTab setError={setError} setSuccess={setSuccess} />}
       {tab === "assessments" && <AssessmentsTab setError={setError} setSuccess={setSuccess} />}
       {tab === "scores" && <ScoresTab setError={setError} setSuccess={setSuccess} />}
+      {tab === "term-average" && <TermAverageTab setError={setError} setSuccess={setSuccess} />}
       {tab === "report-cards" && <ReportCardsTab setError={setError} setSuccess={setSuccess} />}
     </div>
   );
@@ -766,6 +768,228 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
         </div>
       )}
     </>
+  );
+}
+
+// ─── Term Average Tab ─────────────────────────────────────────
+type TermGradeStudent = {
+  student_id: string;
+  student_name: string;
+  admission_no: string;
+  percentage: number;
+  grade: string;
+  grade_remark: string;
+  rank: number;
+  category_breakdown?: { category_name: string; average: number; weight: number; scored: number; total: number }[];
+};
+
+function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => void; setSuccess: (s: string) => void }) {
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [terms, setTerms] = useState<Term[]>([]);
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedTerm, setSelectedTerm] = useState("");
+  const [students, setStudents] = useState<TermGradeStudent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    Promise.all([
+      api.get<any>("/api/school/classes"),
+      api.get<any>("/api/school/terms"),
+    ]).then(([cRes, tRes]) => {
+      setClasses(cRes.data?.data?.classes || cRes.data?.classes || []);
+      setTerms(tRes.data?.data?.terms || tRes.data?.terms || []);
+    }).catch(() => {});
+  }, []);
+
+  const loadGradebook = useCallback(async () => {
+    if (!selectedClass || !selectedTerm) return;
+    setLoading(true);
+    try {
+      const res = await api.get<any>(
+        `/api/school/classes/${selectedClass}/terms/${selectedTerm}/gradebook?include_category_breakdown=true`
+      );
+      setStudents(res.data?.data || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to load gradebook");
+      setStudents([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedClass, selectedTerm, setError]);
+
+  useEffect(() => {
+    loadGradebook();
+  }, [loadGradebook]);
+
+  const toggleExpand = (id: string) => {
+    setExpanded(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleUpdateReportCard = async (studentId: string) => {
+    setGenerating(prev => new Set(prev).add(studentId));
+    setError("");
+    setSuccess("");
+    try {
+      await api.post("/api/school/report-cards/generate", {
+        student_id: studentId,
+        class_id: selectedClass,
+        term_id: selectedTerm,
+      });
+      setSuccess("Report card updated");
+    } catch (err: any) {
+      setError(err.message || "Failed to update report card");
+    } finally {
+      setGenerating(prev => {
+        const next = new Set(prev);
+        next.delete(studentId);
+        return next;
+      });
+    }
+  };
+
+  return (
+    <div>
+      <div className="p-5 rounded-xl mb-6" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="flex items-end gap-4 flex-wrap">
+          <div className="flex-1 min-w-[180px]">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Class</label>
+            <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
+              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              <option value="">Select class...</option>
+              {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+          <div className="flex-1 min-w-[180px]">
+            <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Term</label>
+            <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
+              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              <option value="">Select term...</option>
+              {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+            </select>
+          </div>
+          {selectedClass && selectedTerm && (
+            <button onClick={loadGradebook} disabled={loading}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 disabled:opacity-50"
+              style={{ border: "1px solid rgba(56,25,50,0.1)", color: PLUM_LIGHT, background: "white" }}>
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+              Recalculate
+            </button>
+          )}
+        </div>
+      </div>
+
+      {!selectedClass || !selectedTerm ? (
+        <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+          <Percent size={40} color={MUTED} className="mx-auto mb-3" />
+          <p className="font-semibold text-sm" style={{ color: PLUM }}>Select a class and term</p>
+          <p className="text-xs mt-1" style={{ color: MUTED }}>Choose a class and term above to view weighted term averages</p>
+        </div>
+      ) : loading ? (
+        <LoadingSpinner height={200} />
+      ) : students.length === 0 ? (
+        <EmptyState icon={Percent} title="No grade data" desc="No assessments or scores for this class and term" />
+      ) : (
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px]">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                  <th className="px-4 py-3 font-medium w-8"></th>
+                  <th className="px-4 py-3 font-medium">#</th>
+                  <th className="px-4 py-3 font-medium">Student Name</th>
+                  <th className="px-4 py-3 font-medium">Roll Number</th>
+                  <th className="px-4 py-3 font-medium">Category Breakdown</th>
+                  <th className="px-4 py-3 font-medium">Term Average (%)</th>
+                  <th className="px-4 py-3 font-medium">Grade</th>
+                  <th className="px-4 py-3 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map(s => {
+                  const isExpanded = expanded.has(s.student_id);
+                  const breakdown = s.category_breakdown || [];
+                  const isGenerating = generating.has(s.student_id);
+                  return (
+                    <tr key={s.student_id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                      <td className="px-4 py-3">
+                        <button onClick={() => toggleExpand(s.student_id)}
+                          className="p-1 rounded hover:opacity-70 transition-opacity" style={{ color: MUTED }}>
+                          {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.rank}</td>
+                      <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{s.student_name}</td>
+                      <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</td>
+                      <td className="px-4 py-3">
+                        <span className="text-xs" style={{ color: MUTED }}>
+                          {breakdown.length > 0 ? `${breakdown.length} categories` : "—"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-semibold" style={{ color: PLUM }}>{s.percentage.toFixed(1)}%</td>
+                      <td className="px-4 py-3">
+                        <span className="px-2.5 py-1 rounded-full text-xs font-medium"
+                          style={{
+                            background: s.grade === "N/A" || s.grade === "ERR" ? "#FEF2F2" : "#D1FAE5",
+                            color: s.grade === "N/A" || s.grade === "ERR" ? "#EF4444" : "#065F46",
+                          }}>{s.grade}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <button onClick={() => handleUpdateReportCard(s.student_id)} disabled={isGenerating}
+                          className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg font-medium transition-all active:scale-95 disabled:opacity-50"
+                          style={{ background: "rgba(99,102,241,0.1)", color: "#6366F1" }}>
+                          {isGenerating ? <Loader2 size={12} className="animate-spin" /> : <Star size={12} />}
+                          {isGenerating ? "Updating..." : "Update Report Card"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {students.map(s => {
+            const isExpanded = expanded.has(s.student_id);
+            const breakdown = s.category_breakdown || [];
+            if (!isExpanded || breakdown.length === 0) return null;
+            return (
+              <div key={`bd-${s.student_id}`} className="border-t px-4 py-3"
+                style={{ background: "rgba(56,25,50,0.02)", borderColor: "rgba(56,25,50,0.05)" }}>
+                <p className="text-xs font-semibold mb-2" style={{ color: PLUM }}>
+                  {s.student_name} — Category Breakdown
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {breakdown.map((cat, i) => (
+                    <div key={i} className="flex-1 min-w-[140px] p-3 rounded-xl"
+                      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                      <p className="text-xs font-medium" style={{ color: PLUM }}>{cat.category_name}</p>
+                      <div className="flex items-baseline gap-1 mt-1">
+                        <span className="text-lg font-bold" style={{ color: cat.average >= 50 ? "#065F46" : "#EF4444" }}>
+                          {cat.average.toFixed(1)}%
+                        </span>
+                        <span className="text-xs" style={{ color: MUTED }}>w:{cat.weight}</span>
+                      </div>
+                      <p className="text-xs mt-0.5" style={{ color: MUTED }}>
+                        {cat.scored}/{cat.total} scored
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 
