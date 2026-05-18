@@ -21,6 +21,7 @@ const auditRoutes      = require('./routes/audit');
 const communicationRoutes = require('./routes/communication');
 const healthRoutes        = require('./routes/health');
 const settingsRoutes      = require('./routes/settings');
+const featureRoutes       = require('./routes/features');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -146,6 +147,7 @@ app.use('/api/school/audit-logs', tenantMiddleware, auditRoutes);
 app.use('/api/school/communications', tenantMiddleware, communicationRoutes);
 app.use('/api/school/health', tenantMiddleware, healthRoutes);
 app.use('/api/school/settings', tenantMiddleware, settingsRoutes);
+app.use('/api/school/features', tenantMiddleware, featureRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
@@ -171,8 +173,13 @@ if (require.main === module) {
             const { scheduleTrialCheck } = require('./jobs/trialQueue');
             await scheduleTrialCheck();
         } catch (err) {
-            console.warn('⚠️  Queue initialization error (non-fatal):', err.message);
-            console.warn('ℹ️  Server will continue running without background jobs.');
+            console.warn('⚠️  Trial queue initialization error (non-fatal):', err.message);
+        }
+        try {
+            const { initializeQueue } = require('./services/queueService');
+            await initializeQueue();
+        } catch (err) {
+            console.warn('⚠️  Report card queue initialization error (non-fatal):', err.message);
         }
     };
 

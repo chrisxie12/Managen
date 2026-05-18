@@ -913,30 +913,15 @@ router.get('/students/:studentId/classes/:classId/terms/:termId/grade', protect,
 
 // POST /api/school/report-cards/generate/:classId/:termId
 // Triggers batch calculation and updates all report cards for the class.
-// Returns job ID for async processing (BullMQ) or sync fallback.
+// Returns job ID for async processing via queueService or sync fallback.
 router.post('/report-cards/generate/:classId/:termId', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
         const { classId, termId } = req.params;
         const redis = require('../config/redis');
-        const redisAvailable = redis.isRedisConfigured();
 
-        if (redisAvailable) {
-            const { Queue } = require('bullmq');
-            const reportCardQueue = new Queue('report-card-generation', {
-                connection: redis,
-                defaultJobOptions: {
-                    attempts: 3,
-                    backoff: { type: 'exponential', delay: 2000 },
-                    removeOnComplete: true,
-                },
-            });
-
-            const job = await reportCardQueue.add('generate-batch', {
-                schoolId: req.tenant.id,
-                classId,
-                termId,
-            });
-
+        if (redis.isRedisConfigured()) {
+            const { addReportCardJob } = require('../services/queueService');
+            const job = await addReportCardJob(req.tenant.id, classId, termId);
             return res.json({
                 data: {
                     jobId: job.id,
@@ -962,6 +947,26 @@ router.post('/report-cards/generate/:classId/:termId', protect, requirePermissio
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
         return res.status(500).json({ error: 'Error generating report cards.' });
+    }
+});
+
+// GET /api/school/report-cards/status/:jobId
+// Returns the current status and progress of a report card generation job.
+router.get('/report-cards/status/:jobId', protect, async (req, res) => {
+    try {
+        const redis = require('../config/redis');
+        if (!redis.isRedisConfigured()) {
+            return res.status(503).json({ error: 'Queue not available.' });
+        }
+        const { getJobStatus } = require('../services/queueService');
+        const status = await getJobStatus(req.params.jobId);
+        if (!status) {
+            return res.status(404).json({ error: 'Job not found.' });
+        }
+        return res.json({ data: status });
+    } catch (err) {
+        if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
+        return res.status(500).json({ error: 'Error fetching job status.' });
     }
 });
 

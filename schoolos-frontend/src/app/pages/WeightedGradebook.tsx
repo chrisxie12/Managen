@@ -63,6 +63,8 @@ export function WeightedGradebook() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [genProgress, setGenProgress] = useState(0);
+  const [genJobId, setGenJobId] = useState<string | null>(null);
 
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
@@ -112,6 +114,8 @@ export function WeightedGradebook() {
   const generateReportCards = async () => {
     if (!selectedClass || !selectedTerm) return;
     setGenerating(true);
+    setGenProgress(0);
+    setGenJobId(null);
     setError("");
     setSuccess("");
     try {
@@ -119,14 +123,47 @@ export function WeightedGradebook() {
         `/api/school/report-cards/generate/${selectedClass}/${selectedTerm}`,
         {}
       );
-      const msg = res.data?.data?.message || "Report card generation queued.";
-      setSuccess(msg);
+      const jobId = res.data?.data?.jobId;
+      if (jobId) {
+        setGenJobId(jobId);
+      } else {
+        setSuccess(res.data?.data?.message || "Report cards generated.");
+        setGenerating(false);
+      }
     } catch (err: any) {
       setError(err.message || "Failed to generate report cards");
-    } finally {
       setGenerating(false);
     }
   };
+
+  // Poll job status while generation is running
+  useEffect(() => {
+    if (!genJobId) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await api.get<{ data: { status: string; progress: number; result: { total: number; processed: number } | null; failedReason: string | null } }>(
+          `/api/school/report-cards/status/${genJobId}`
+        );
+        const s = res.data?.data;
+        if (!s) return;
+        setGenProgress(s.progress || 0);
+        if (s.status === "completed") {
+          clearInterval(interval);
+          setSuccess(`Report cards generated: ${s.result?.processed || 0} of ${s.result?.total || 0} students.`);
+          setGenJobId(null);
+          setGenerating(false);
+        } else if (s.status === "failed") {
+          clearInterval(interval);
+          setError(s.failedReason || "Report card generation failed.");
+          setGenJobId(null);
+          setGenerating(false);
+        }
+      } catch {
+        // ignore polling errors; will retry next interval
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [genJobId]);
 
   return (
     <div>
@@ -138,14 +175,22 @@ export function WeightedGradebook() {
           <h2 className="text-xl font-bold" style={{ color: PLUM }}>Weighted Gradebook</h2>
           <p className="text-sm" style={{ color: MUTED }}>View and manage term averages with weighted category breakdown</p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
           {selectedClass && selectedTerm && (
             <button onClick={generateReportCards} disabled={generating || students.length === 0}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
               style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
               {generating ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
-              {generating ? "Generating..." : "Generate Report Cards"}
+              {generating ? `${genProgress}%` : "Generate Report Cards"}
             </button>
+          )}
+          {generating && genJobId && (
+            <div className="flex items-center gap-2">
+              <div className="w-32 h-2 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.1)" }}>
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${genProgress}%`, background: `linear-gradient(90deg, ${PLUM}, ${PLUM_LIGHT})` }} />
+              </div>
+              <span className="text-xs" style={{ color: MUTED }}>{genProgress}%</span>
+            </div>
           )}
         </div>
       </div>
