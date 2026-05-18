@@ -5,7 +5,7 @@ import {
   CheckCircle2, GraduationCap, Wallet, Bell, Menu, X,
   Zap, Clock, Award, XCircle, Send, Building2, Loader2,
   ChevronDown, Mail, MapPin, Globe, Linkedin, Twitter,
-  Facebook, Youtube, Phone,
+  Facebook, Youtube, Phone, Sun, Moon,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -53,6 +53,18 @@ export function LandingPage() {
   const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "", country: "Ghana" });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [openFeature, setOpenFeature] = useState<number | null>(null);
+  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [dark]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -126,7 +138,7 @@ export function LandingPage() {
   ];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: MILK }} className="min-h-screen">
+    <div style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: dark ? undefined : MILK }} className="min-h-screen dark:bg-gray-950">
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -165,6 +177,9 @@ export function LandingPage() {
             ))}
           </div>
           <div className="hidden md:flex items-center gap-3">
+            <button onClick={() => setDark(!dark)} className="p-2 rounded-full hover:opacity-70 transition-opacity" style={{ color: PLUM }} title="Toggle theme">
+              {dark ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <button onClick={() => navigate("/auth")} style={{ color: PLUM, fontSize: "0.9rem" }} className="px-4 py-2 hover:opacity-70">Sign in</button>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, boxShadow: "0 4px 14px rgba(56,25,50,0.3)" }}>
               Start Free <ArrowRight size={14} />
