@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
-  Shield, Zap, CheckCircle2, GraduationCap, Wallet, Bell,
-  Menu, X, TrendingUp, Clock, Award, XCircle, Send,
-  Building2, Loader2, ChevronDown, Mail, MapPin, Globe,
-  Linkedin, Twitter, Facebook, Youtube, Phone,
+  CheckCircle2, GraduationCap, Wallet, Bell, Menu, X,
+  Zap, Clock, Award, XCircle, Send, Building2, Loader2,
+  ChevronDown, Mail, MapPin, Globe, Linkedin, Twitter,
+  Facebook, Youtube, Phone,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
@@ -14,15 +14,6 @@ const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
-
-const features = [
-  { icon: Users, title: "Student Management", desc: "Complete student lifecycle — enrollment, profiles, attendance, and academic history in one view.", color: "#10B981" },
-  { icon: BookOpen, title: "Exam & Academics", desc: "Generate WAEC/BECE-style terminal reports, manage class schedules, and track grades effortlessly.", color: "#6366F1" },
-  { icon: Wallet, title: "Finance & Payroll", desc: "Automate school fee collection, track paid/owed balances, and run payroll with Paystack or Flutterwave.", color: "#F59E0B" },
-  { icon: MessageSquare, title: "WhatsApp Reports", desc: "Send terminal reports, fee reminders, and alerts directly to parents' phones via WhatsApp.", color: "#25D366" },
-  { icon: BarChart3, title: "Analytics Dashboard", desc: "Real-time metrics on enrollment, revenue, attendance trends — no spreadsheets needed.", color: "#EF4444" },
-  { icon: Shield, title: "Multi-Tenant & Secure", desc: "Each school gets a private, branded workspace with role-based access and data isolation.", color: "#8B5CF6" },
-];
 
 const pricingPlans = [
   { name: "Free Trial", tagline: "Get started with no commitment", price: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
@@ -33,14 +24,23 @@ const pricingPlans = [
 
 const faqs = [
   { q: "Is there really no credit card required for the free trial?", a: "Correct. The 7-day Free Trial gives you full access to the platform with no payment details required. You only provide billing information when you choose to upgrade to a paid plan." },
-  { q: "What happens when my free trial ends?", a: "Your account is paused — no data is deleted. You can upgrade to Growth, Pro, or Enterprise at any time to reactivate. We'll send you reminders before and after the trial ends." },
+  { q: "What happens when my free trial ends?", a: "Your account is paused - no data is deleted. You can upgrade to Growth, Pro, or Enterprise at any time to reactivate. We'll send you reminders before and after the trial ends." },
   { q: "Can I switch plans later?", a: "Yes. You can upgrade or downgrade your plan at any time from your school dashboard. Changes take effect at the start of your next billing cycle." },
   { q: "Does Managen support the Ghanaian curriculum?", a: "Yes. Managen is built for Ghanaian schools and fully supports the local curriculum including WAEC and BECE structures. Pricing is displayed in GHS." },
-  { q: "How does the WhatsApp reporting work?", a: "Managen integrates directly with WhatsApp Business API to send automated reports — attendance summaries, fee reminders, and exam results — to parents and staff without any manual effort from administrators." },
-  { q: "Is our school's data secure?", a: "Yes. All data is encrypted in transit and at rest. Each school operates in its own isolated environment — no school can access another school's data. We use Supabase (PostgreSQL) hosted on secure infrastructure with regular backups." },
+  { q: "How does the WhatsApp reporting work?", a: "Managen integrates directly with WhatsApp Business API to send automated reports - attendance summaries, fee reminders, and exam results - to parents and staff without any manual effort from administrators." },
+  { q: "Is our school's data secure?", a: "Yes. All data is encrypted in transit and at rest. Each school operates in its own isolated environment - no school can access another school's data. We use Supabase (PostgreSQL) hosted on secure infrastructure with regular backups." },
   { q: "What is the student limit on each plan?", a: "Free Trial supports up to 50 students. Growth supports up to 300. Pro supports up to 800. Enterprise has no student limit. If you need a custom limit, contact us." },
-  { q: "Can I get a live demo before committing?", a: 'Absolutely. Click "Request Demo" on this page and our team will schedule a personalised walkthrough of the platform for your school.' },
+  { q: "Can I get a live demo before committing?", a: "Absolutely. Click on Request Demo on this page and our team will schedule a personalised walkthrough of the platform for your school." },
 ];
+
+const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
+  const initials = name.split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase();
+  return (
+    <div style={{ backgroundColor: color }} className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+      {initials}
+    </div>
+  );
+};
 
 export function LandingPage() {
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ export function LandingPage() {
   const [stats, setStats] = useState<{ schools: number | null }>({ schools: null });
   const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "", country: "Ghana" });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFeature, setOpenFeature] = useState<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -70,6 +71,21 @@ export function LandingPage() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const submitDemo = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!demoForm.name || !demoForm.email || !demoForm.schoolName) return toast.error("Please fill in all fields");
@@ -85,6 +101,29 @@ export function LandingPage() {
       setSending(false);
     }
   };
+
+  const featureItems = [
+    { icon: Users, title: "Student Management", desc: "Maintain complete student profiles including attendance history, academic records, fee payment history, and parent contact details. Support for up to 800 students on the Pro plan.", subFeatures: ["Detailed student profiles and history", "Class and subject assignment", "Parent portal and contact management"], iconColor: "text-blue-500", bgColor: "bg-blue-100" },
+    { icon: Wallet, title: "Fee Tracking & Payments", desc: "Create custom fee structures per class, track payments, generate invoices, and send automated reminders via WhatsApp. Integrated with Paystack and Flutterwave for online collection.", subFeatures: ["Custom fee structures per class/term", "Paystack and Flutterwave integration", "Automated overdue fee reminders"], iconColor: "text-green-500", bgColor: "bg-green-100" },
+    { icon: BookOpen, title: "Exams & Academics", desc: "Schedule exams, enter results, generate report cards, and track academic performance over time. Supports WAEC and BECE result formats.", subFeatures: ["Exam scheduling and timetabling", "Result entry and grade computation", "WAEC/BECE-compatible report cards"], iconColor: "text-purple-500", bgColor: "bg-purple-100" },
+    { icon: MessageSquare, title: "WhatsApp Reports", desc: "Send automated attendance summaries, fee reminders, exam results, and custom announcements directly to parents and staff via WhatsApp Business API - without any manual effort.", subFeatures: ["Daily attendance notifications to parents", "Fee payment receipts and reminders", "Term results and report card delivery"], iconColor: "text-green-600", bgColor: "bg-green-100" },
+    { icon: BarChart3, title: "Analytics Dashboard", desc: "Track school performance with real-time dashboards showing attendance trends, fee collection rates, academic performance, and staff activity - all in one command center.", subFeatures: ["Real-time attendance and fee dashboards", "Term-over-term performance comparison", "Export reports to PDF and CSV"], iconColor: "text-amber-500", bgColor: "bg-amber-100" },
+    { icon: Building2, title: "Multi-School Management", desc: "Manage multiple campuses or school branches from a single superadmin dashboard. Each school gets its own isolated environment with custom branding and subdomain.", subFeatures: ["Centralized superadmin dashboard", "Per-school isolation and data security", "Custom subdomain per school"], iconColor: "text-custom", bgColor: "bg-custom" },
+  ];
+
+  const schoolTypes = [
+    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100" },
+    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100" },
+    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100" },
+    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom" },
+  ];
+
+  const testimonials = [
+    { quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week - and parents actually get their receipts on WhatsApp now.", name: "Mrs. Abena Asante", role: "Headmistress, Sunrise Academy", location: "Accra, Ghana", avatarColor: "#7C3AED" },
+    { quote: "Managing multiple campuses used to be a nightmare. Now I see everything - attendance, fees, staff - from one dashboard. It's exactly what we needed.", name: "Mr. Babatunde Adeyemi", role: "Director, Adeyemi Group of Schools", location: "Ibadan, Nigeria", avatarColor: "#0EA5E9" },
+    { quote: "The WhatsApp reports changed everything. Parents used to call us constantly asking about fees. Now they get automatic updates and the calls stopped completely.", name: "Ms. Efua Mensah", role: "Administrator, Cape Coast Academy", location: "Cape Coast, Ghana", avatarColor: "#10B981" },
+    { quote: "Setup took less than a day. Our staff picked it up immediately - no training needed. The attendance system alone made it worth it.", name: "Mr. Chukwuemeka Obi", role: "Principal, Excellence High School", location: "Lagos, Nigeria", avatarColor: "#F59E0B" },
+  ];
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", backgroundColor: MILK }} className="min-h-screen">
@@ -103,9 +142,16 @@ export function LandingPage() {
         .modal-content { animation: fadeUp 0.3s ease-out; }
       `}</style>
 
-      {/* ── NAV ── */}
-      <nav className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
-        style={{ background: scrolled ? "rgba(255,243,230,0.9)" : "rgba(255,243,230,0.5)", backdropFilter: "blur(20px)", borderBottom: scrolled ? "1px solid rgba(56,25,50,0.08)" : "1px solid transparent" }}>
+      {/* NAV */}
+      <nav
+        className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+        style={{
+          background: scrolled ? "white" : "rgba(255,243,230,0.5)",
+          backdropFilter: "blur(20px)",
+          borderBottom: scrolled ? "1px solid rgba(56,25,50,0.08)" : "1px solid transparent",
+          boxShadow: scrolled ? "0 4px 24px rgba(56,25,50,0.06)" : "none",
+        }}
+      >
         <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
@@ -114,7 +160,7 @@ export function LandingPage() {
             <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {["Features", "Pricing", "FAQ", "Contact"].map((item) => (
+            {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
             ))}
           </div>
@@ -128,9 +174,9 @@ export function LandingPage() {
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-96' : 'max-h-0'}`}>
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-96" : "max-h-0"}`}>
           <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
-            {["Features", "Pricing", "FAQ", "Contact"].map((item) => (
+            {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
             ))}
             <button onClick={() => navigate("/auth")} style={{ color: PLUM }} className="text-left">Sign in</button>
@@ -139,99 +185,121 @@ export function LandingPage() {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section className="pt-32 pb-20 px-6">
-        <div className="max-w-[1280px] mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="reveal reveal-1">
-              <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-sm" style={{ background: `rgba(56,25,50,0.06)`, color: PLUM_LIGHT, border: "1px solid rgba(56,25,50,0.12)" }}>
-                <Zap size={13} fill={PLUM_LIGHT} /> Built for African Institutions
+            <div>
+              <div className="reveal reveal-1">
+                <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-6" style={{ borderColor: PLUM, color: PLUM }}>
+                  &#x1F1EC;&#x1F1ED; Built for African Schools
+                </div>
               </div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(2.4rem, 5vw, 4rem)", fontWeight: 700, lineHeight: 1.15 }} className="mb-6">
-                Run Your Entire School.{" "}
-                <span style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  No Spreadsheets.
-                </span>
+              <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: PLUM }}>
+                Run Your Entire<br />School Smarter.
               </h1>
-              <p style={{ color: MUTED, fontSize: "1.1rem", lineHeight: 1.75 }} className="mb-8 max-w-lg">
-                Managen is the all-in-one school management platform for Ghana — from fee tracking to WhatsApp reports, WAEC results to payroll. Everything automated.
+              <p className="reveal reveal-2 text-gray-600 max-w-lg mt-4" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>
+                From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <button onClick={() => navigate("/auth?mode=signup")} className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, fontSize: "1rem", boxShadow: "0 8px 28px rgba(56,25,50,0.28)" }}>
-                  Start for Free <ArrowRight size={16} />
+              <div className="reveal reveal-3 mt-8 flex gap-4 flex-wrap">
+                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: PLUM, color: "white" }}>
+                  Start Free Trial <ArrowRight size={16} />
                 </button>
-                <button onClick={() => setDemoOpen(true)} className="px-7 py-3.5 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: "white", color: PLUM, fontSize: "1rem", border: "1.5px solid rgba(56,25,50,0.15)", boxShadow: "0 4px 16px rgba(56,25,50,0.06)" }}>
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${PLUM}`, color: PLUM }}>
                   Request Demo
                 </button>
               </div>
-              <div className="mt-10 flex flex-wrap gap-6 items-center">
-                <p style={{ color: MUTED, fontSize: "0.8rem" }}>TRUSTED INTEGRATIONS</p>
-                {["WAEC", "BECE", "Paystack", "Flutterwave", "WhatsApp"].map((name) => (
-                  <div key={name} className="px-3 py-1 rounded-lg text-sm" style={{ background: "white", color: PLUM_LIGHT, border: "1px solid rgba(56,25,50,0.10)", fontWeight: 600, fontSize: "0.78rem" }}>{name}</div>
+              <p className="reveal reveal-4 text-sm text-gray-500 mt-4">
+                &#x2713; No credit card required  &#x2713; 7-day free trial  &#x2713; Setup in 10 minutes
+              </p>
+              <div className="reveal reveal-5 mt-8 flex items-center flex-wrap gap-2">
+                <span className="text-xs text-gray-400 mr-1">Works with</span>
+                {["WAEC", "BECE", "Paystack", "WhatsApp", "Flutterwave"].map((name) => (
+                  <span key={name} className="rounded-full bg-white border border-gray-200 px-3 py-1 text-xs text-gray-600 shadow-sm">{name}</span>
                 ))}
               </div>
             </div>
-            <div className="relative hidden lg:block reveal reveal-2">
-              <div className="rounded-[48px] overflow-hidden" style={{ boxShadow: "0 24px 80px rgba(56,25,50,0.18)", border: "1px solid rgba(56,25,50,0.07)" }}>
-                <svg viewBox="0 0 400 480" className="w-full h-[480px]" style={{ background: "#F8F6F3" }}>
-                  <rect x="0" y="0" width="400" height="44" rx="12" ry="12" fill={PLUM} />
-                  <circle cx="24" cy="22" r="6" fill="#EF4444" />
-                  <circle cx="42" cy="22" r="6" fill="#F59E0B" />
-                  <circle cx="60" cy="22" r="6" fill="#10B981" />
-                  <rect x="20" y="64" width="360" height="396" rx="16" fill="white" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
-                  <rect x="36" y="90" width="156" height="190" rx="12" fill="#FAF8F6" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
-                  <rect x="36" y="90" width="156" height="28" rx="12" ry="12" fill="#F0EDE9" />
-                  <text x="114" y="108" textAnchor="middle" fill={PLUM} fontSize="11" fontFamily="'DM Sans', sans-serif" fontWeight="600">Revenue</text>
-                  <rect x="48" y="232" width="20" height="28" rx="4" fill={PLUM} opacity="0.3" />
-                  <rect x="76" y="210" width="20" height="50" rx="4" fill={PLUM} opacity="0.5" />
-                  <rect x="104" y="175" width="20" height="85" rx="4" fill={PLUM} opacity="0.7" />
-                  <rect x="132" y="140" width="20" height="120" rx="4" fill={PLUM} />
-                  <rect x="160" y="160" width="20" height="100" rx="4" fill={PLUM_LIGHT} opacity="0.6" />
-                  <rect x="208" y="90" width="156" height="190" rx="12" fill="#FAF8F6" stroke="rgba(56,25,50,0.06)" strokeWidth="1" />
-                  <rect x="208" y="90" width="156" height="28" rx="12" ry="12" fill="#F0EDE9" />
-                  <text x="286" y="108" textAnchor="middle" fill={PLUM} fontSize="11" fontFamily="'DM Sans', sans-serif" fontWeight="600">Attendance</text>
-                  <circle cx="286" cy="165" r="36" fill="none" stroke="#E8E0DA" strokeWidth="10" />
-                  <circle cx="286" cy="165" r="36" fill="none" stroke="#10B981" strokeWidth="10" strokeDasharray="180 46" transform="rotate(-90 286 165)" />
-                  <text x="286" y="171" textAnchor="middle" fill={PLUM} fontSize="20" fontFamily="'JetBrains Mono', monospace" fontWeight="700">94%</text>
-                  <text x="286" y="185" textAnchor="middle" fill={MUTED} fontSize="9">Present</text>
-                  <rect x="220" y="218" width="60" height="14" rx="7" fill="#D1FAE5" />
-                  <text x="250" y="228" textAnchor="middle" fill="#065F46" fontSize="9" fontWeight="600">+2.4%</text>
-                  <rect x="36" y="300" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
-                  <rect x="52" y="310" width="80" height="8" rx="4" fill={PLUM} opacity="0.4" />
-                  <rect x="52" y="324" width="140" height="4" rx="2" fill={PLUM} opacity="0.15" />
-                  <rect x="36" y="344" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
-                  <rect x="52" y="354" width="100" height="8" rx="4" fill={PLUM} opacity="0.4" />
-                  <rect x="52" y="368" width="120" height="4" rx="2" fill={PLUM} opacity="0.15" />
-                  <rect x="36" y="388" width="328" height="36" rx="10" fill="rgba(56,25,50,0.03)" />
-                  <rect x="52" y="398" width="90" height="8" rx="4" fill={PLUM} opacity="0.4" />
-                  <rect x="52" y="412" width="160" height="4" rx="2" fill={PLUM} opacity="0.15" />
-                  <rect x="36" y="432" width="328" height="2" rx="1" fill="rgba(56,25,50,0.04)" />
+            <div className="relative hidden lg:block">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <svg viewBox="0 0 520 380" className="w-full h-auto">
+                  <rect x="0" y="0" width="520" height="380" rx="12" fill={PLUM} />
+                  <rect x="0" y="0" width="520" height="36" rx="12" ry="12" fill={PLUM} />
+                  <circle cx="18" cy="18" r="4" fill="#EF4444" />
+                  <circle cx="32" cy="18" r="4" fill="#F59E0B" />
+                  <circle cx="46" cy="18" r="4" fill="#10B981" />
+                  <text x="60" y="22" fill="rgba(255,255,255,0.8)" fontSize="10" fontWeight="600">Managen Dashboard</text>
+                  <rect x="12" y="44" width="496" height="324" rx="8" fill="white" />
+                  <rect x="12" y="44" width="100" height="324" rx="8" ry="8" fill="#F9FAFB" />
+                  <rect x="20" y="56" width="84" height="24" rx="6" fill={PLUM} opacity="0.08" />
+                  <text x="62" y="71" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="500">Dashboard</text>
+                  <rect x="20" y="88" width="84" height="24" rx="6" fill="transparent" />
+                  <text x="62" y="103" textAnchor="middle" fill="#6B7280" fontSize="9">Students</text>
+                  <rect x="20" y="120" width="84" height="24" rx="6" fill="transparent" />
+                  <text x="62" y="135" textAnchor="middle" fill="#6B7280" fontSize="9">Fees</text>
+                  <rect x="20" y="152" width="84" height="24" rx="6" fill="transparent" />
+                  <text x="62" y="167" textAnchor="middle" fill="#6B7280" fontSize="9">Reports</text>
+                  <rect x="124" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="132" y="64" width="4" height="20" rx="2" fill="#10B981" />
+                  <text x="142" y="78" fill="#111827" fontSize="12" fontWeight="bold">247</text>
+                  <text x="142" y="92" fill="#6B7280" fontSize="8">Students enrolled</text>
+                  <rect x="250" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="258" y="64" width="4" height="20" rx="2" fill="#6366F1" />
+                  <text x="268" y="78" fill="#111827" fontSize="12" fontWeight="bold">GHS 12,400</text>
+                  <text x="268" y="92" fill="#6B7280" fontSize="8">Fees collected</text>
+                  <rect x="376" y="56" width="118" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="384" y="64" width="4" height="20" rx="2" fill="#F59E0B" />
+                  <text x="394" y="78" fill="#111827" fontSize="12" fontWeight="bold">94.2%</text>
+                  <text x="394" y="92" fill="#6B7280" fontSize="8">Attendance rate</text>
+                  <text x="124" y="134" fill="#374151" fontSize="10" fontWeight="600">Weekly Attendance Trends</text>
+                  <rect x="124" y="142" width="370" height="80" rx="4" fill="#F9FAFB" />
+                  <rect x="144" y="154" width="20" height="40" rx="3" fill={PLUM} opacity="0.15" />
+                  <rect x="174" y="154" width="20" height="55" rx="3" fill={PLUM} opacity="0.25" />
+                  <rect x="204" y="154" width="20" height="35" rx="3" fill={PLUM} opacity="0.15" />
+                  <rect x="234" y="154" width="20" height="65" rx="3" fill="#10B981" />
+                  <rect x="264" y="154" width="20" height="48" rx="3" fill={PLUM} opacity="0.25" />
+                  <rect x="294" y="154" width="20" height="58" rx="3" fill={PLUM} opacity="0.15" />
+                  <text x="154" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Mon</text>
+                  <text x="184" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Tue</text>
+                  <text x="214" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Wed</text>
+                  <text x="244" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Thu</text>
+                  <text x="274" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Fri</text>
+                  <text x="304" y="210" textAnchor="middle" fill="#9CA3AF" fontSize="7">Sat</text>
+                  <rect x="124" y="230" width="180" height="110" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <text x="136" y="248" fill="#374151" fontSize="9" fontWeight="600">Recent Activity</text>
+                  <rect x="136" y="258" width="160" height="6" rx="3" fill="#F3F4F6" />
+                  <rect x="136" y="272" width="140" height="6" rx="3" fill="#F3F4F6" />
+                  <rect x="136" y="286" width="120" height="6" rx="3" fill="#F3F4F6" />
+                  <rect x="136" y="300" width="150" height="6" rx="3" fill="#F3F4F6" />
+                  <rect x="136" y="314" width="100" height="6" rx="3" fill="#F3F4F6" />
+                  <rect x="314" y="230" width="180" height="110" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <text x="326" y="248" fill="#374151" fontSize="9" fontWeight="600">Fee Collection</text>
+                  <circle cx="364" cy="278" r="20" fill="none" stroke="#E5E7EB" strokeWidth="6" />
+                  <circle cx="364" cy="278" r="20" fill="none" stroke="#10B981" strokeWidth="6" strokeDasharray="94 32" transform="rotate(-90 364 278)" />
+                  <text x="364" y="282" textAnchor="middle" fill={PLUM} fontSize="10" fontWeight="bold">84%</text>
+                  <rect x="392" y="264" width="8" height="8" rx="2" fill="#10B981" />
+                  <text x="404" y="272" fill="#6B7280" fontSize="8">Collected</text>
+                  <rect x="392" y="280" width="8" height="8" rx="2" fill="#E5E7EB" />
+                  <text x="404" y="288" fill="#6B7280" fontSize="8">Outstanding</text>
                 </svg>
               </div>
-              <div className="absolute -left-10 top-16 p-4 rounded-2xl" style={{ background: "white", boxShadow: "0 8px 32px rgba(56,25,50,0.12)", border: "1px solid rgba(56,25,50,0.07)", minWidth: 180 }}>
-                <div className="flex items-center gap-2 mb-1"><TrendingUp size={14} color="#10B981" /><span style={{ color: MUTED, fontSize: "0.75rem" }}>Fee collection</span></div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "1.4rem", fontWeight: 600 }}>GHS 24,800</div>
-                <div style={{ color: "#10B981", fontSize: "0.75rem" }}>+18% this term</div>
+              <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3">
+                <p className="text-sm font-semibold" style={{ color: PLUM }}>&#x2713; GHS 24,800 fees collected this term</p>
               </div>
-              <div className="absolute -right-6 bottom-24 p-4 rounded-2xl" style={{ background: "white", boxShadow: "0 8px 32px rgba(56,25,50,0.12)", border: "1px solid rgba(56,25,50,0.07)" }}>
-                <div className="flex items-center gap-2 mb-2"><Clock size={13} color={PLUM_LIGHT} /><span style={{ color: MUTED, fontSize: "0.75rem" }}>Today's Attendance</span></div>
-                <div className="flex items-center gap-2">
-                  <div className="text-2xl font-bold" style={{ color: PLUM, fontFamily: "'JetBrains Mono', monospace" }}>94.2%</div>
-                  <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "#D1FAE5", color: "#065F46" }}>Present</span>
-                </div>
+              <div className="absolute -top-4 -right-4 bg-white rounded-xl shadow-lg px-4 py-3">
+                <p className="text-sm font-semibold text-green-600">&#x1F4C8; 94.2% attendance rate</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── STATS ── */}
+      {/* STATS */}
       <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
-        <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 gap-8">
           <div className="text-center reveal reveal-1">
             <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
               {stats.schools === null ? (
-                <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>—</span>
+                <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
               ) : (
                 `${stats.schools}+`
               )}
@@ -249,31 +317,294 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
-      <section id="features" className="py-24 px-6">
-        <div className="max-w-[1280px] mx-auto">
-          <div className="text-center mb-16 reveal">
-            <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Platform Modules</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700 }}>Everything a School Needs</h2>
+      {/* HOW MANAGEN WORKS */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20" data-reveal>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              Simple by design
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>How Managen Works</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+              Set up your school, track everything, and get insights -- all in one place.
+            </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <div key={f.title} className={`p-8 rounded-[24px] group hover:scale-[1.02] transition-all duration-300 reveal reveal-${(i % 6) + 1}`}
-                style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300" style={{ background: `${f.color}15` }}>
-                  <f.icon size={22} color={f.color} />
-                </div>
-                <h3 style={{ color: PLUM, fontWeight: 600, fontSize: "1.05rem", marginBottom: "0.5rem" }}>{f.title}</h3>
-                <p style={{ color: MUTED, fontSize: "0.9rem", lineHeight: 1.7 }}>{f.desc}</p>
+          <div className="relative">
+            <div className="absolute left-[31px] top-12 bottom-12 w-0.5 bg-gray-200 hidden lg:block" />
+
+            {/* Step 1 */}
+            <div className="flex flex-col lg:flex-row items-center gap-8 mb-24 relative" data-reveal>
+              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
+                <span className="font-bold text-xl" style={{ color: PLUM }}>01</span>
               </div>
-            ))}
+              <div className="flex-1 lg:pl-20">
+                <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>01</span>
+                <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Set up your school in minutes</h3>
+                <p className="text-gray-500 mt-2 mb-4 max-w-lg">
+                  Add your students, teachers, classes, and fee structures. Import existing data or start fresh -- Managen guides you through every step.
+                </p>
+                <div className="space-y-2">
+                  {["Add unlimited classes and subjects", "Import student data via CSV", "Set custom fee structures per class", "Invite staff with role-based access"].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <CheckCircle2 size={16} className="text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1 hidden lg:block">
+                <div className="rounded-2xl bg-white border border-gray-100 shadow-md overflow-hidden">
+                  <svg viewBox="0 0 480 300" className="w-full h-auto">
+                    <rect x="0" y="0" width="480" height="300" rx="16" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                    <rect x="0" y="0" width="480" height="40" rx="16" ry="16" fill={PLUM} />
+                    <text x="24" y="26" fill="white" fontSize="12" fontWeight="600">Add School Details</text>
+                    <rect x="24" y="60" width="432" height="32" rx="8" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
+                    <text x="36" y="79" fill="#9CA3AF" fontSize="10">School name</text>
+                    <rect x="24" y="104" width="432" height="32" rx="8" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
+                    <text x="36" y="123" fill="#9CA3AF" fontSize="10">Admin email</text>
+                    <rect x="24" y="148" width="208" height="32" rx="8" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
+                    <text x="36" y="167" fill="#9CA3AF" fontSize="10">Country</text>
+                    <rect x="248" y="148" width="208" height="32" rx="8" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
+                    <text x="260" y="167" fill="#9CA3AF" fontSize="10">Phone</text>
+                    <rect x="24" y="200" width="432" height="36" rx="10" fill={PLUM} />
+                    <text x="240" y="222" textAnchor="middle" fill="white" fontSize="11" fontWeight="600">Save School</text>
+                    <circle cx="100" cy="260" r="14" fill="#6366F1" opacity="0.2" />
+                    <text x="100" y="264" textAnchor="middle" fill="#6366F1" fontSize="8" fontWeight="bold">AM</text>
+                    <circle cx="134" cy="260" r="14" fill="#10B981" opacity="0.2" />
+                    <text x="134" y="264" textAnchor="middle" fill="#10B981" fontSize="8" fontWeight="bold">KM</text>
+                    <circle cx="168" cy="260" r="14" fill="#F59E0B" opacity="0.2" />
+                    <text x="168" y="264" textAnchor="middle" fill="#F59E0B" fontSize="8" fontWeight="bold">EA</text>
+                    <text x="196" y="264" fill="#9CA3AF" fontSize="9">+ 3 more added</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-8 mb-24 relative" data-reveal>
+              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
+                <span className="font-bold text-xl" style={{ color: PLUM }}>02</span>
+              </div>
+              <div className="flex-1 lg:pl-20">
+                <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>02</span>
+                <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Track attendance, fees, and exams daily</h3>
+                <p className="text-gray-500 mt-2 mb-4 max-w-lg">
+                  Mark attendance in seconds, collect fee payments, schedule exams, and manage results -- all from one dashboard your staff will actually use.
+                </p>
+                <div className="space-y-2">
+                  {["One-tap daily attendance marking", "Automated fee reminders via WhatsApp", "Exam scheduling and result entry", "Payroll and staff management"].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <CheckCircle2 size={16} className="text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1 hidden lg:block">
+                <div className="rounded-2xl bg-white border border-gray-100 shadow-md overflow-hidden">
+                  <svg viewBox="0 0 480 300" className="w-full h-auto">
+                    <rect x="0" y="0" width="480" height="300" rx="16" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                    <rect x="0" y="0" width="480" height="36" rx="16" ry="16" fill={PLUM} />
+                    <text x="24" y="23" fill="white" fontSize="11" fontWeight="600">Attendance * Week 12</text>
+                    <text x="132" y="55" textAnchor="middle" fill="#6B7280" fontSize="10">Mon</text>
+                    <text x="202" y="55" textAnchor="middle" fill="#6B7280" fontSize="10">Tue</text>
+                    <text x="272" y="55" textAnchor="middle" fill="#6B7280" fontSize="10">Wed</text>
+                    <text x="342" y="55" textAnchor="middle" fill="#6B7280" fontSize="10">Thu</text>
+                    <text x="412" y="55" textAnchor="middle" fill="#6B7280" fontSize="10">Fri</text>
+                    <text x="24" y="80" fill={PLUM} fontSize="9" fontWeight="500">Kwame Mensah</text>
+                    <text x="132" y="80" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="202" y="80" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="272" y="80" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="342" y="80" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="412" y="80" textAnchor="middle" fill="#EF4444" fontSize="12">&#x2717;</text>
+                    <text x="24" y="104" fill={PLUM} fontSize="9" fontWeight="500">Ama Serwaa</text>
+                    <text x="132" y="104" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="202" y="104" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="272" y="104" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="342" y="104" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="412" y="104" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="24" y="128" fill={PLUM} fontSize="9" fontWeight="500">Yaw Asante</text>
+                    <text x="132" y="128" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="202" y="128" textAnchor="middle" fill="#EF4444" fontSize="12">&#x2717;</text>
+                    <text x="272" y="128" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="342" y="128" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="412" y="128" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="24" y="152" fill={PLUM} fontSize="9" fontWeight="500">Efua Mensah</text>
+                    <text x="132" y="152" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="202" y="152" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="272" y="152" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="342" y="152" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="412" y="152" textAnchor="middle" fill="#10B981" fontSize="12">&#x2713;</text>
+                    <text x="24" y="190" fill="#374151" fontSize="10" fontWeight="600">Fee Collection Progress</text>
+                    <rect x="24" y="196" width="432" height="16" rx="8" fill="#E5E7EB" />
+                    <rect x="24" y="196" width="302" height="16" rx="8" fill="#10B981" />
+                    <text x="240" y="207" textAnchor="middle" fill="white" fontSize="8" fontWeight="600">GHS 8,400 / GHS 12,000</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col lg:flex-row items-center gap-8 relative" data-reveal>
+              <div className="hidden lg:flex absolute left-0 w-16 h-16 rounded-full border-2 bg-white items-center justify-center z-10" style={{ borderColor: PLUM }}>
+                <span className="font-bold text-xl" style={{ color: PLUM }}>03</span>
+              </div>
+              <div className="flex-1 lg:pl-20">
+                <span className="font-bold text-5xl opacity-20 block mb-2" style={{ color: PLUM }}>03</span>
+                <h3 className="text-2xl font-bold" style={{ color: PLUM }}>Get insights and reports automatically</h3>
+                <p className="text-gray-500 mt-2 mb-4 max-w-lg">
+                  Managen generates attendance summaries, fee collection reports, and exam results -- then sends them directly to parents via WhatsApp. No manual work required.
+                </p>
+                <div className="space-y-2">
+                  {["WhatsApp reports sent to parents automatically", "Term-end report card generation", "Fee collection analytics", "Multi-school performance overview"].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <CheckCircle2 size={16} className="text-green-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1 hidden lg:block">
+                <div className="rounded-2xl bg-white border border-gray-100 shadow-md overflow-hidden">
+                  <svg viewBox="0 0 480 300" className="w-full h-auto">
+                    <rect x="0" y="0" width="480" height="300" rx="16" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                    <rect x="24" y="24" width="200" height="160" rx="16" fill="#25D366" />
+                    <rect x="24" y="24" width="200" height="28" rx="16" ry="16" fill="#1DA851" />
+                    <text x="40" y="42" fill="white" fontSize="9" fontWeight="600">WhatsApp Report</text>
+                    <rect x="40" y="62" width="170" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="74" width="140" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="90" width="170" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="102" width="100" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="118" width="170" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="130" width="120" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <rect x="40" y="150" width="170" height="4" rx="2" fill="rgba(255,255,255,0.6)" />
+                    <text x="124" y="170" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7">Attendance Summary</text>
+                    <text x="260" y="42" fill="#374151" fontSize="10" fontWeight="600">Weekly Attendance</text>
+                    <rect x="264" y="50" width="192" height="200" rx="8" fill="#F9FAFB" />
+                    <rect x="278" y="140" width="20" height="60" rx="3" fill={PLUM} opacity="0.15" />
+                    <rect x="308" y="120" width="20" height="80" rx="3" fill={PLUM} opacity="0.25" />
+                    <rect x="338" y="160" width="20" height="40" rx="3" fill={PLUM} opacity="0.15" />
+                    <rect x="368" y="100" width="20" height="100" rx="3" fill="#10B981" />
+                    <rect x="398" y="130" width="20" height="70" rx="3" fill={PLUM} opacity="0.25" />
+                    <text x="288" y="220" textAnchor="middle" fill="#9CA3AF" fontSize="7">Mon</text>
+                    <text x="318" y="220" textAnchor="middle" fill="#9CA3AF" fontSize="7">Tue</text>
+                    <text x="348" y="220" textAnchor="middle" fill="#9CA3AF" fontSize="7">Wed</text>
+                    <text x="378" y="220" textAnchor="middle" fill="#9CA3AF" fontSize="7">Thu</text>
+                    <text x="408" y="220" textAnchor="middle" fill="#9CA3AF" fontSize="7">Fri</text>
+                    <text x="264" y="256" fill="#10B981" fontSize="9" fontWeight="600">&uarr; +5.2% this week</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── DASHBOARD PREVIEW ── */}
+      {/* FEATURES ACCORDION */}
+      <section id="features" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16" data-reveal>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              Everything your school needs
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Everything your school needs</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+              Built for how African schools actually work -- not adapted from software made elsewhere.
+            </p>
+          </div>
+          <div className="lg:grid lg:grid-cols-2 gap-12 items-start">
+            <div className="space-y-0" data-reveal>
+              {featureItems.map((item, i) => (
+                <div key={item.title} className="border-b border-gray-100">
+                  <button
+                    onClick={() => setOpenFeature(openFeature === i ? null : i)}
+                    className="w-full flex items-center justify-between py-5 px-2 text-left active:scale-[0.99] transition-transform"
+                    style={{ color: PLUM }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${item.bgColor}`}>
+                        <item.icon size={20} className={item.iconColor === "text-custom" ? "" : item.iconColor} style={item.iconColor === "text-custom" ? { color: PLUM } : {}} />
+                      </div>
+                      <span className="font-semibold text-sm" style={{ color: PLUM }}>{item.title}</span>
+                    </div>
+                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${openFeature === i ? "rotate-180" : ""}`} style={{ color: MUTED }} />
+                  </button>
+                  <div className={`overflow-hidden transition-all duration-300 ${openFeature === i ? "max-h-96" : "max-h-0"}`}>
+                    <div className="px-2 pb-5 space-y-3">
+                      <p className="text-sm" style={{ color: MUTED, lineHeight: 1.7 }}>{item.desc}</p>
+                      <div className="space-y-1.5">
+                        {item.subFeatures.map((sf) => (
+                          <div key={sf} className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
+                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: PLUM }} />
+                            {sf}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="hidden lg:block sticky top-24" data-reveal>
+              <div className="rounded-2xl bg-white border border-gray-100 shadow-md overflow-hidden">
+                <svg viewBox="0 0 400 500" className="w-full h-auto">
+                  <rect x="0" y="0" width="400" height="500" rx="16" fill="#F9FAFB" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="0" y="0" width="400" height="36" rx="16" ry="16" fill={PLUM} />
+                  <text x="20" y="23" fill="white" fontSize="10" fontWeight="600">School Dashboard</text>
+                  <rect x="16" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="16" y="48" width="4" height="20" rx="2" fill="#10B981" />
+                  <text x="28" y="68" fill="#111827" fontSize="13" fontWeight="bold">247</text>
+                  <text x="28" y="84" fill="#6B7280" fontSize="8">Students</text>
+                  <rect x="142" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="142" y="48" width="4" height="20" rx="2" fill="#6366F1" />
+                  <text x="154" y="68" fill="#111827" fontSize="13" fontWeight="bold">GHS 12.4K</text>
+                  <text x="154" y="84" fill="#6B7280" fontSize="8">Fees</text>
+                  <rect x="268" y="48" width="116" height="56" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <rect x="268" y="48" width="4" height="20" rx="2" fill="#F59E0B" />
+                  <text x="280" y="68" fill="#111827" fontSize="13" fontWeight="bold">94.2%</text>
+                  <text x="280" y="84" fill="#6B7280" fontSize="8">Attendance</text>
+                  <rect x="16" y="116" width="368" height="140" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <text x="28" y="134" fill="#374151" fontSize="10" fontWeight="600">Monthly Performance</text>
+                  <rect x="36" y="158" width="12" height="30" rx="2" fill={PLUM} opacity="0.15" />
+                  <rect x="56" y="148" width="12" height="40" rx="2" fill={PLUM} opacity="0.25" />
+                  <rect x="76" y="168" width="12" height="20" rx="2" fill={PLUM} opacity="0.15" />
+                  <rect x="96" y="138" width="12" height="50" rx="2" fill="#10B981" />
+                  <rect x="116" y="158" width="12" height="30" rx="2" fill={PLUM} opacity="0.25" />
+                  <rect x="136" y="128" width="12" height="60" rx="2" fill={PLUM} opacity="0.35" />
+                  <polyline points="42,180 62,165 82,185 102,155 122,175 142,145" fill="none" stroke={PLUM} strokeWidth="1.5" strokeDasharray="3 2" />
+                  <rect x="16" y="272" width="178" height="100" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <text x="28" y="290" fill="#374151" fontSize="9" fontWeight="600">Recent Students</text>
+                  <rect x="28" y="298" width="158" height="4" rx="2" fill="#F3F4F6" />
+                  <rect x="28" y="308" width="140" height="4" rx="2" fill="#F3F4F6" />
+                  <rect x="28" y="318" width="120" height="4" rx="2" fill="#F3F4F6" />
+                  <rect x="28" y="328" width="150" height="4" rx="2" fill="#F3F4F6" />
+                  <rect x="28" y="338" width="130" height="4" rx="2" fill="#F3F4F6" />
+                  <rect x="206" y="272" width="178" height="100" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <text x="218" y="290" fill="#374151" fontSize="9" fontWeight="600">Payment Status</text>
+                  <circle cx="260" cy="318" r="18" fill="none" stroke="#E5E7EB" strokeWidth="5" />
+                  <circle cx="260" cy="318" r="18" fill="none" stroke="#10B981" strokeWidth="5" strokeDasharray="85 28" transform="rotate(-90 260 318)" />
+                  <text x="260" y="322" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="bold">78%</text>
+                  <rect x="286" y="306" width="6" height="6" rx="1" fill="#10B981" />
+                  <text x="296" y="312" fill="#6B7280" fontSize="7">Paid</text>
+                  <rect x="286" y="320" width="6" height="6" rx="1" fill="#E5E7EB" />
+                  <text x="296" y="326" fill="#6B7280" fontSize="7">Outstanding</text>
+                  <rect x="16" y="388" width="368" height="36" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" />
+                  <circle cx="56" cy="406" r="4" fill={PLUM} opacity="0.3" />
+                  <circle cx="152" cy="406" r="6" fill={PLUM} />
+                  <circle cx="248" cy="406" r="4" fill={PLUM} opacity="0.3" />
+                  <circle cx="344" cy="406" r="4" fill={PLUM} opacity="0.3" />
+                  <rect x="16" y="440" width="368" height="40" rx="8" fill={PLUM} opacity="0.05" />
+                  <text x="200" y="465" textAnchor="middle" fill={PLUM} fontSize="9" fontWeight="500">All data synced in real-time</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DASHBOARD PREVIEW */}
       <section className="py-16 px-6">
-        <div className="max-w-[1280px] mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(56,25,50,0.25)" }}>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div className="reveal">
@@ -282,15 +613,15 @@ export function LandingPage() {
                   A Command Center for Your Institution
                 </h2>
                 <p style={{ color: "rgba(255,243,230,0.75)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "1.5rem" }}>
-                  Get instant visibility into every corner of your school — fee collection, attendance rates, pending exam results — all from a single bento dashboard.
+                  Get instant visibility into every corner of your school -- fee collection, attendance rates, pending exam results -- all from a single bento dashboard.
                 </p>
-                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 600, fontSize: "0.95rem" }}>
-                  Get Started Free <ArrowRight size={16} />
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 600, fontSize: "0.95rem" }}>
+                  See It In Action <ArrowRight size={16} />
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Schools Managed", value: stats.schools ? `${stats.schools}` : "—", icon: Building2, color: "#6366F1" },
+                  { label: "Schools Managed", value: stats.schools ? `${stats.schools}` : "--", icon: Building2, color: "#6366F1" },
                   { label: "Automated Tasks", value: "Track fees, grades, attendance", icon: Zap, color: "#10B981" },
                   { label: "Avg Attendance", value: "94%+", icon: Clock, color: "#F59E0B" },
                   { label: "Reports Generated", value: "Automated", icon: Bell, color: "#EC4899" },
@@ -309,12 +640,87 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── PRICING ── */}
+      {/* SCHOOL TYPES */}
+      <section id="testimonials" className="py-24 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16" data-reveal>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              Trusted by schools across Africa
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Built for every type of school</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+              Whether you run a single classroom or a network of campuses, Managen scales with you.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal>
+            {schoolTypes.map((s) => (
+              <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition bg-white">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor}`}>
+                  <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: PLUM } : {}} />
+                </div>
+                <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{s.title}</h3>
+                <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {s.pills.map((pill) => (
+                    <span key={pill} className={`text-xs rounded-full px-2 py-0.5 ${s.pillBg} ${s.pillText}`}>{pill}</span>
+                  ))}
+                </div>
+                <div className="text-xs" style={{ color: "#9CA3AF" }}>
+                  <p>{s.example}</p>
+                  <p>{s.example2}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap" data-reveal>
+            <span className="text-sm text-gray-500">Join schools across Ghana and Nigeria managing their institutions with Managen</span>
+            <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-semibold flex items-center gap-1" style={{ color: PLUM }}>
+              Start Free Trial <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section id="testimonials-quotes" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16" data-reveal>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              What schools say
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Trusted by school leaders</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+              Hear from administrators who switched to Managen.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" data-reveal>
+            {testimonials.map((t) => (
+              <div key={t.name} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div className="text-amber-400 text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+                <p className="text-sm mb-6" style={{ color: MUTED, lineHeight: 1.7, fontStyle: "italic" }}>{t.quote}</p>
+                <div className="flex items-center gap-3">
+                  <InitialsAvatar name={t.name} color={t.avatarColor} />
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: PLUM }}>{t.name}</p>
+                    <p className="text-xs" style={{ color: MUTED }}>{t.role}</p>
+                    <p className="text-xs" style={{ color: "#9CA3AF" }}>{t.location}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
       <section id="pricing" className="py-24 px-6">
-        <div className="max-w-[1280px] mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6 reveal">
-            <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>Surgical Pricing</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "1rem" }}>Pay Only for What You Need</h2>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              Simple pricing
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Plans that grow with your school</h2>
+            <p className="text-gray-500 mt-3">Start free. Upgrade when you're ready.</p>
           </div>
           <div className="flex justify-center mb-12">
             <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
@@ -361,12 +767,14 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section id="faq" className="py-24 px-6">
+      {/* FAQ */}
+      <section id="faq" className="py-24 px-6 bg-gray-50">
         <div className="max-w-[768px] mx-auto">
           <div className="text-center mb-16 reveal">
-            <p className="uppercase tracking-widest mb-3 text-sm" style={{ color: MUTED }}>FAQ</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently Asked Questions</h2>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+              Questions and answers
+            </div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently asked questions</h2>
             <p style={{ color: MUTED, fontSize: "0.9rem" }}>Everything you need to know before getting started</p>
           </div>
           <div className="space-y-3">
@@ -380,9 +788,9 @@ export function LandingPage() {
                     style={{ color: PLUM }}
                   >
                     <span style={{ fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.4, paddingRight: "1rem" }}>{faq.q}</span>
-                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} style={{ color: MUTED }} />
+                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} style={{ color: MUTED }} />
                   </button>
-                  <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96" : "max-h-0"}`}>
                     <div className="px-5 pb-5" style={{ color: MUTED, fontSize: "0.88rem", lineHeight: 1.7 }}>{faq.a}</div>
                   </div>
                 </div>
@@ -392,28 +800,32 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
+      {/* CTA BANNER */}
       <section className="py-20 px-6">
-        <div className="max-w-[1280px] mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(56,25,50,0.3)" }}>
             <Award size={36} color="rgba(255,243,230,0.7)" className="mx-auto mb-5" />
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
               Your School Deserves Better Tools
             </h2>
-            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 2rem", lineHeight: 1.7 }}>
+            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
               Join {stats.schools ? `${stats.schools}+` : ""} schools across Ghana that have eliminated spreadsheets forever.
             </p>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
-              Get Started Free — No Credit Card
+              Get Started Free -- No Credit Card
             </button>
+            <div className="mt-4">
+              <button onClick={() => setDemoOpen(true)} className="text-sm underline" style={{ color: "rgba(255,243,230,0.8)" }}>
+                Or request a free demo &rarr;
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* FOOTER */}
       <footer id="contact" className="bg-gray-50 py-12 px-6">
         <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 px-10 py-12">
-          {/* Row 1 — Logo + Tagline */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
@@ -424,10 +836,7 @@ export function LandingPage() {
             <span className="text-gray-500 text-sm">School management that actually works.</span>
           </div>
           <hr className="border-gray-100 mb-8" />
-
-          {/* Row 2 — 4 columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Column 1 — Company */}
             <div>
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Company</h4>
               <div className="flex flex-col gap-2.5">
@@ -436,18 +845,14 @@ export function LandingPage() {
                 ))}
               </div>
             </div>
-
-            {/* Column 2 — Product */}
             <div>
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Product</h4>
               <div className="flex flex-col gap-2.5">
-                  {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }].map((link) => (
+                {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }].map((link) => (
                   <a key={link.label} href={link.href} className="text-sm hover:opacity-70 transition-opacity" style={{ color: MUTED }}>{link.label}</a>
                 ))}
               </div>
             </div>
-
-            {/* Column 3 — Contact */}
             <div>
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Contact</h4>
               <div className="flex flex-col gap-3">
@@ -464,8 +869,6 @@ export function LandingPage() {
                 ))}
               </div>
             </div>
-
-            {/* Column 4 — Social + Region */}
             <div>
               <div className="inline-flex items-center gap-1.5 border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-500 mb-6">
                 <Globe size={13} />
@@ -485,11 +888,9 @@ export function LandingPage() {
               </div>
             </div>
           </div>
-
-          {/* Row 3 — Bottom bar */}
           <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-gray-400">© 2025 Managen. All rights reserved.</span>
-            <span className="text-xs text-gray-400">Made for African schools 🌍</span>
+            <span className="text-xs text-gray-400">&copy; 2025 Managen. All rights reserved.</span>
+            <span className="text-xs text-gray-400">Made for African schools &#x1F30D;</span>
             <div className="flex gap-4 text-xs text-gray-400">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Service</a>
@@ -499,7 +900,7 @@ export function LandingPage() {
         </div>
       </footer>
 
-      {/* ── DEMO MODAL ── */}
+      {/* DEMO MODAL */}
       {demoOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay" style={{ background: "rgba(56,25,50,0.6)", backdropFilter: "blur(4px)" }} onClick={() => !sending && setDemoOpen(false)}>
           <div className="w-full max-w-md rounded-[32px] p-8 modal-content" style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }} onClick={(e) => e.stopPropagation()}>
