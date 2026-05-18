@@ -1,26 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Users, GraduationCap, Loader2, AlertCircle, CheckCircle2, X } from "lucide-react";
+import { Users, GraduationCap } from "lucide-react";
 import { api } from "../services/api";
 import { ChildCard } from "../components/parent/ChildCard";
+import { LoadingSpinner, ErrorState, EmptyState, AlertBanner, palette } from "../components/dashboard";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
-
-function AlertBanner({ type, message, onClose }: { type: "error" | "success"; message: string; onClose: () => void }) {
-  return (
-    <div className="mb-4 p-3 rounded-xl flex items-center gap-2" style={{
-      background: type === "error" ? "#FEF2F2" : "#D1FAE5",
-      color: type === "error" ? "#EF4444" : "#065F46",
-      border: `1px solid ${type === "error" ? "#FECACA" : "#A7F3D0"}`,
-      fontSize: "0.9rem",
-    }}>
-      {type === "error" ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
-      <span className="flex-1">{message}</span>
-      <button onClick={onClose}><X size={14} /></button>
-    </div>
-  );
-}
+const { PLUM, MUTED } = palette;
 
 type ChildData = {
   id: string;
@@ -42,34 +27,19 @@ export function ParentDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[400px]"><Loader2 className="animate-spin" size={32} color={PLUM} /></div>;
-  }
+  if (loading) return <LoadingSpinner />;
 
   if (error) {
     return (
       <div className="space-y-4">
         <AlertBanner type="error" message={error} onClose={() => setError("")} />
-        <div className="text-center py-16" style={{ color: MUTED }}>
-          <GraduationCap size={48} className="mx-auto mb-4" color={MUTED} />
-          <p className="text-lg font-semibold" style={{ color: PLUM }}>Could not load data</p>
-        </div>
+        <ErrorState message="Please try again or contact support." />
       </div>
     );
   }
 
   if (children.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <div className="text-center p-8">
-          <GraduationCap size={40} color={MUTED} className="mx-auto mb-4" />
-          <p className="text-lg font-semibold" style={{ color: PLUM }}>No Children Linked Yet</p>
-          <p className="text-sm mt-1" style={{ color: MUTED }}>
-            Your child's attendance, grades, and fee status will appear here once your account is linked by the school.
-          </p>
-        </div>
-      </div>
-    );
+    return <EmptyState icon={GraduationCap} title="No Children Linked Yet" desc="Your child's attendance, grades, and fee status will appear here once your account is linked by the school." />;
   }
 
   return (

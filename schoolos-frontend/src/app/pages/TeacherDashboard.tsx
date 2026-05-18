@@ -2,16 +2,17 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import {
   BookOpen, Users, Clock, GraduationCap, CheckCircle2, AlertCircle,
-  X, ArrowRight, ChevronRight, Loader2, Calendar, Bell, MessageSquare,
+  ArrowRight, Loader2, Calendar, Bell, MessageSquare,
   FileSpreadsheet, ClipboardCheck, UserCheck,
 } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
+import {
+  LoadingSpinner, StatCard, DashboardCard, MiniTable, EmptyState, AlertBanner,
+  SummaryCard, QuickActions as QuickActionsGrid, StatusBadge, palette,
+} from "../components/dashboard";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const { PLUM, PLUM_LIGHT, MUTED } = palette;
 
 type TeacherClass = { id: string; name: string; student_count?: number };
 type SubjectAssignment = { id: string; subject: { name: string; code?: string }; class: { name: string } };
@@ -21,110 +22,6 @@ type AttendanceRecord = { id: string; student_id: string; date: string; status: 
 type Assessment = { id: string; name: string; date: string; max_score: number; status: string; class?: { name: string }; subject?: { name: string } };
 type Announcement = { id: string; title: string; body: string; status: string; created_at: string; created_by?: string };
 type RepeatedAbsence = { student_id: string; streak: number; start_date: string; student: { name: string; class_name: string } };
-
-function LoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <Loader2 className="animate-spin" size={32} color={PLUM} />
-    </div>
-  );
-}
-
-function SummaryCard({ icon: Icon, label, value, sub, color }: { icon: any; label: string; value: string | number; sub?: string; color?: string }) {
-  return (
-    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <div className="flex items-center gap-2 mb-1">
-        <Icon size={14} color={color || MUTED} />
-        <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
-      </div>
-      <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
-      {sub && <p className="text-xs mt-1" style={{ color: MUTED }}>{sub}</p>}
-    </div>
-  );
-}
-
-function StatCard({ icon: Icon, label, value, color, path, onClick }: { icon: any; label: string; value: string; color: string; path?: string; onClick?: () => void }) {
-  const nav = useNavigate();
-  const handleClick = onClick || (path ? () => nav(path) : undefined);
-  return (
-    <div
-      onClick={handleClick}
-      className="p-5 rounded-[24px] cursor-pointer hover:scale-[1.02] transition-transform"
-      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}
-    >
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${color}15` }}>
-          <Icon size={18} color={color} />
-        </div>
-        <ChevronRight size={14} color={MUTED} />
-      </div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
-      <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
-    </div>
-  );
-}
-
-function AlertBanner({ type, message, onClose }: { type: "error" | "success"; message: string; onClose: () => void }) {
-  const bg = type === "error" ? "#FEF2F2" : "#D1FAE5";
-  const color = type === "error" ? "#EF4444" : "#065F46";
-  const border = type === "error" ? "#FECACA" : "#A7F3D0";
-  return (
-    <div className="mb-4 p-3 rounded-xl flex items-center gap-2" style={{ background: bg, color, border: `1px solid ${border}`, fontSize: "0.9rem" }}>
-      {type === "error" ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
-      <span className="flex-1">{message}</span>
-      <button onClick={onClose} className="ml-auto"><X size={14} /></button>
-    </div>
-  );
-}
-
-function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
-  return (
-    <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <div className="text-center p-8">
-        <Icon size={36} color={MUTED} className="mx-auto mb-3" />
-        <p style={{ color: PLUM, fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.3rem" }}>{title}</p>
-        <p style={{ color: MUTED, fontSize: "0.8rem" }}>{desc}</p>
-      </div>
-    </div>
-  );
-}
-
-function Card({ title, action, children }: { title: string; action?: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
-        {action}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function MiniTable({ headers, rows }: { headers: string[]; rows: (string | React.ReactNode)[][] }) {
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr>
-            {headers.map((h, i) => (
-              <th key={i} className="text-left pb-2 font-medium" style={{ color: MUTED, fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, ri) => (
-            <tr key={ri} className="border-t" style={{ borderColor: "rgba(56,25,50,0.05)" }}>
-              {row.map((cell, ci) => (
-                <td key={ci} className="py-2.5 pr-3" style={{ color: PLUM_LIGHT, fontSize: "0.82rem" }}>{cell}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
 
 function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
   const [selectedClass, setSelectedClass] = useState("");
@@ -177,7 +74,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
   const statusColor = (s: string) => s === "Present" ? "#10B981" : s === "Absent" ? "#EF4444" : s === "Late" ? "#F59E0B" : "#6366F1";
 
   return (
-    <Card title="Quick Attendance" action={
+    <DashboardCard title="Quick Attendance" action={
       selectedClass && students.length > 0 ? (
         <button onClick={saveAttendance} disabled={saving} className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium active:scale-95 transition-transform" style={{ background: `${PLUM}12`, color: PLUM }}>
           {saving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
@@ -190,7 +87,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
         value={selectedClass}
         onChange={(e) => { setSelectedClass(e.target.value); loadStudents(e.target.value); }}
         className="w-full mb-3 p-2.5 rounded-xl text-sm outline-none"
-        style={{ background: MILK, color: PLUM, border: "1px solid rgba(56,25,50,0.1)" }}
+        style={{ background: "#FFF3E6", color: PLUM, border: "1px solid rgba(56,25,50,0.1)" }}
       >
         <option value="">Select a class...</option>
         {classes.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
@@ -202,7 +99,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
       ) : selectedClass ? (
         <div className="max-h-[240px] overflow-y-auto space-y-1">
           {students.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-2 rounded-xl" style={{ background: MILK }}>
+            <div key={s.id} className="flex items-center justify-between p-2 rounded-xl" style={{ background: "#FFF3E6" }}>
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: `${PLUM}15`, color: PLUM }}>
                   {s.name.charAt(0).toUpperCase()}
@@ -219,7 +116,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
           ))}
         </div>
       ) : null}
-    </Card>
+    </DashboardCard>
   );
 }
 
@@ -240,7 +137,7 @@ function AlertWidget({ absentees, pendingAssessments, missingScores }:
   if (alerts.length === 0) return null;
 
   return (
-    <Card title="Alerts">
+    <DashboardCard title="Alerts">
       <div className="space-y-2">
         {alerts.map((a, i) => (
           <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: `${a.color}10`, border: `1px solid ${a.color}20` }}>
@@ -249,7 +146,7 @@ function AlertWidget({ absentees, pendingAssessments, missingScores }:
           </div>
         ))}
       </div>
-    </Card>
+    </DashboardCard>
   );
 }
 
@@ -294,7 +191,6 @@ export function TeacherDashboard() {
         const abs = absRes.data?.absentees || [];
         const ct = ctRes.data?.assignments || [];
 
-        // Filter by current teacher
         const teacherId = user?.id;
         const teacherName = user?.fullName;
         const mySubjects = Array.isArray(subs) ? subs.filter((s: any) => s.teacher_id === teacherId) : [];
@@ -349,7 +245,7 @@ export function TeacherDashboard() {
         <div className="grid lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2 space-y-5">
             {todayPeriods.length > 0 ? (
-              <Card title={`Today's Schedule (${todayName})`} action={
+              <DashboardCard title={`Today's Schedule (${todayName})`} action={
                 <button onClick={() => navigate("/dashboard/academics")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
                   Full Timetable <ArrowRight size={11} />
                 </button>
@@ -363,18 +259,18 @@ export function TeacherDashboard() {
                     p.room || "—",
                   ])}
                 />
-              </Card>
+              </DashboardCard>
             ) : timetable.length > 0 ? (
-              <Card title={`Today (${todayName})`}>
+              <DashboardCard title={`Today (${todayName})`}>
                 <p className="text-center py-8" style={{ color: MUTED, fontSize: "0.85rem" }}>No periods scheduled for today.</p>
-              </Card>
+              </DashboardCard>
             ) : (
-              <Card title="Timetable">
+              <DashboardCard title="Timetable">
                 <p className="text-center py-8" style={{ color: MUTED, fontSize: "0.85rem" }}>No timetable assigned yet. Contact the admin.</p>
-              </Card>
+              </DashboardCard>
             )}
 
-            <Card title="Upcoming Assessments & Grading" action={
+            <DashboardCard title="Upcoming Assessments & Grading" action={
               assessments.length > 0 ? (
                 <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
                   Assessments <ArrowRight size={11} />
@@ -389,20 +285,15 @@ export function TeacherDashboard() {
                     a.class?.name || "—",
                     a.subject?.name || "—",
                     a.date ? new Date(a.date).toLocaleDateString() : "—",
-                    <span key={a.id} className="px-2 py-0.5 rounded-full text-xs" style={{
-                      background: a.status === "published" ? "#D1FAE5" : a.status === "graded" ? "#EEF2FF" : "#FEF3C7",
-                      color: a.status === "published" ? "#065F46" : a.status === "graded" ? "#3730A3" : "#92400E",
-                    }}>
-                      {a.status || "draft"}
-                    </span>,
+                    <StatusBadge key={a.id} status={a.status || "draft"} />,
                   ])}
                 />
               ) : (
                 <EmptyState icon={FileSpreadsheet} title="No Assessments" desc="Assessments will appear here once created." />
               )}
-            </Card>
+            </DashboardCard>
 
-            <Card title="Recent Announcements" action={
+            <DashboardCard title="Recent Announcements" action={
               announcements.length > 0 ? (
                 <button onClick={() => navigate("/dashboard/communication")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
                   View All <ArrowRight size={11} />
@@ -412,7 +303,7 @@ export function TeacherDashboard() {
               {announcements.length > 0 ? (
                 <div className="space-y-3 max-h-[260px] overflow-y-auto">
                   {announcements.slice(0, 4).map((a) => (
-                    <div key={a.id} className="p-3 rounded-xl" style={{ background: MILK }}>
+                    <div key={a.id} className="p-3 rounded-xl" style={{ background: "#FFF3E6" }}>
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-medium" style={{ color: PLUM }}>{a.title}</p>
                         <span className="text-xs" style={{ color: MUTED }}>
@@ -426,17 +317,17 @@ export function TeacherDashboard() {
               ) : (
                 <EmptyState icon={Bell} title="No Announcements" desc="School announcements will appear here." />
               )}
-            </Card>
+            </DashboardCard>
           </div>
 
           <div className="space-y-5">
             <AttendanceMarkWidget classes={classes} />
 
             {subjects.length > 0 ? (
-              <Card title="My Subjects & Classes">
+              <DashboardCard title="My Subjects & Classes">
                 <div className="space-y-2 max-h-[240px] overflow-y-auto">
                   {subjects.slice(0, 8).map((s) => (
-                    <div key={s.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: MILK }}>
+                    <div key={s.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "#FFF3E6" }}>
                       <div>
                         <p className="text-sm font-medium" style={{ color: PLUM }}>{s.subject?.name || "—"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{s.class?.name || "—"}</p>
@@ -447,40 +338,26 @@ export function TeacherDashboard() {
                     </div>
                   ))}
                 </div>
-              </Card>
+              </DashboardCard>
             ) : null}
 
-            <Card title="Quick Stats">
+            <DashboardCard title="Quick Stats">
               <div className="grid grid-cols-2 gap-3">
                 <SummaryCard icon={Users} label="Students" value={totalStudents} color="#6366F1" />
                 <SummaryCard icon={BookOpen} label="Classes" value={classCount} color="#10B981" />
                 <SummaryCard icon={GraduationCap} label="Subjects" value={subjectCount} color="#F59E0B" />
                 <SummaryCard icon={Clock} label="Periods Today" value={todayPeriods.length} color="#8B5CF6" sub={timetable.length > 0 ? `${timetable.length} total` : undefined} />
               </div>
-            </Card>
+            </DashboardCard>
 
-            <Card title="Quick Actions">
-              <div className="grid grid-cols-1 gap-2">
-                {[
-                  { label: "Mark Attendance", icon: UserCheck, color: "#6366F1", path: "/dashboard/attendance" },
-                  { label: "Enter Scores", icon: FileSpreadsheet, color: "#10B981", path: "/dashboard/assessments" },
-                  { label: "View Schedule", icon: Calendar, color: "#F59E0B", path: "/dashboard/academics" },
-                  { label: "Messages", icon: MessageSquare, color: "#25D366", path: "/dashboard/communication" },
-                ].map((action) => (
-                  <button
-                    key={action.label}
-                    onClick={() => navigate(action.path)}
-                    className="p-3 rounded-2xl text-left hover:scale-[1.02] transition-transform active:scale-95"
-                    style={{ background: `${action.color}10`, border: `1px solid ${action.color}20` }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <action.icon size={15} color={action.color} />
-                      <p style={{ color: PLUM, fontSize: "0.78rem", fontWeight: 500 }}>{action.label}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </Card>
+            <DashboardCard title="Quick Actions">
+              <QuickActionsGrid items={[
+                { label: "Mark Attendance", icon: UserCheck, color: "#6366F1", path: "/dashboard/attendance" },
+                { label: "Enter Scores", icon: FileSpreadsheet, color: "#10B981", path: "/dashboard/assessments" },
+                { label: "View Schedule", icon: Calendar, color: "#F59E0B", path: "/dashboard/academics" },
+                { label: "Messages", icon: MessageSquare, color: "#25D366", path: "/dashboard/communication" },
+              ]} />
+            </DashboardCard>
           </div>
         </div>
       )}
