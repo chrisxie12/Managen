@@ -170,8 +170,8 @@ export function SecurityTab({ role }: Props) {
     const fetchData = async () => {
       try {
         const [sessionsRes, settingsRes] = await Promise.all([
-          api.get<any>("/school/sessions"),
-          api.get<any>("/school/settings"),
+          api.get<any>("/api/school/sessions"),
+          api.get<any>("/api/school/settings"),
         ]);
         if (sessionsRes.data?.length) setSessions(sessionsRes.data);
         if (settingsRes.data?.security_settings) {
@@ -211,7 +211,7 @@ export function SecurityTab({ role }: Props) {
       if (auditDateFrom) params.set("date_from", auditDateFrom);
       if (auditDateTo) params.set("date_to", auditDateTo);
       if (auditStatusFilter !== "all") params.set("status", auditStatusFilter);
-      const res = await api.get<any>(`/school/audit?${params.toString()}`);
+      const res = await api.get<any>(`/api/school/audit?${params.toString()}`);
       if (res.data) {
         const d = res.data.data || res.data;
         const logs = d.audit_logs || d.logs || (Array.isArray(d) ? d : []);
@@ -245,7 +245,7 @@ export function SecurityTab({ role }: Props) {
     if (!validatePassword()) return;
     setChangingPassword(true);
     try {
-      const res = await api.post("/school/settings/change-password", {
+      const res = await api.post("/api/school/settings/change-password", {
         current_password: currentPassword,
         new_password: newPassword,
       });
@@ -269,7 +269,7 @@ export function SecurityTab({ role }: Props) {
     if (isReadOnly) return;
     setRevokingId(id);
     try {
-      const res = await api.delete(`/school/sessions/${id}`);
+      const res = await api.delete(`/api/school/sessions/${id}`);
       if (res.error) {
         toast.error(res.error);
       } else {
@@ -287,7 +287,7 @@ export function SecurityTab({ role }: Props) {
     if (isReadOnly) return;
     setRevokingAll(true);
     try {
-      const res = await api.post("/school/sessions/revoke-all", {});
+      const res = await api.post("/api/school/sessions/revoke-all", {});
       if (res.error) {
         toast.error(res.error);
       } else {
@@ -305,7 +305,7 @@ export function SecurityTab({ role }: Props) {
     if (isReadOnly) return;
     setSavingAlerts(true);
     try {
-      const res = await api.put("/school/settings/profile", {
+      const res = await api.put("/api/school/settings/profile", {
         security_settings: {
           alert_on_new_device: alertOnNewDevice,
           alert_on_password_change: alertOnPasswordChange,
@@ -361,7 +361,7 @@ export function SecurityTab({ role }: Props) {
     if (isReadOnly) return;
     setSavingPolicy(true);
     try {
-      await api.put("/school/settings/security-policy", {
+      await api.put("/api/school/settings/security-policy", {
         min_password_length: minPasswordLength,
         require_uppercase: requireUppercase,
         require_lowercase: requireLowercase,

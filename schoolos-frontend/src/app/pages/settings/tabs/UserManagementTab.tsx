@@ -137,7 +137,7 @@ export function UserManagementTab({ role }: Props) {
       if (filterRole !== "all") params.set("role", filterRole);
       if (filterStatus !== "all") params.set("status", filterStatus);
       if (search) params.set("search", search);
-      const res = await api.get<any>(`/school/users?${params.toString()}`);
+      const res = await api.get<any>(`/api/school/users?${params.toString()}`);
       if (res.data) {
         const d = res.data.data || res.data;
         setUsers(Array.isArray(d) ? d : d.users || d.results || []);
@@ -153,7 +153,7 @@ export function UserManagementTab({ role }: Props) {
   const fetchInvitations = async () => {
     setLoadingInvitations(true);
     try {
-      const res = await api.get<any>("/school/users?status=pending&limit=50");
+      const res = await api.get<any>("/api/school/users?status=pending&limit=50");
       if (res.data) {
         const d = res.data.data || res.data;
         setInvitations(Array.isArray(d) ? d : d.users || d.results || []);
@@ -196,7 +196,7 @@ export function UserManagementTab({ role }: Props) {
     setSendingInvite(true);
     try {
       const fullName = inviteEmail.split("@")[0];
-      const res = await api.post<any>("/school/users/invite", {
+      const res = await api.post<any>("/api/school/users/invite", {
         full_name: fullName,
         email: inviteEmail,
         role: inviteRole,
@@ -219,7 +219,7 @@ export function UserManagementTab({ role }: Props) {
   const handleResendInvite = async (invitationId: string) => {
     setResendingId(invitationId);
     try {
-      await api.post(`/school/users/${invitationId}/resend`, {});
+      await api.post(`/api/school/users/${invitationId}/resend`, {});
       toast.success("Invitation resent");
       fetchInvitations();
     } catch (err: any) {
@@ -232,7 +232,7 @@ export function UserManagementTab({ role }: Props) {
   const handleCancelInvite = async (invitationId: string) => {
     setCancellingId(invitationId);
     try {
-      await api.delete(`/school/users/${invitationId}`);
+      await api.delete(`/api/school/users/${invitationId}`);
       toast.success("Invitation cancelled");
       fetchInvitations();
     } catch (err: any) {
@@ -245,7 +245,7 @@ export function UserManagementTab({ role }: Props) {
   const handleRemoveUser = async (userId: string) => {
     setRemovingUserId(userId);
     try {
-      await api.delete(`/school/users/${userId}`);
+      await api.delete(`/api/school/users/${userId}`);
       toast.success("User removed");
       setSelectedIds((prev) => {
         const next = new Set(prev);
@@ -265,8 +265,8 @@ export function UserManagementTab({ role }: Props) {
     try {
       const endpoint =
         currentStatus === "active"
-          ? `/school/users/${userId}/suspend`
-          : `/school/users/${userId}/activate`;
+          ? `/api/school/users/${userId}/suspend`
+          : `/api/school/users/${userId}/activate`;
       await api.put(endpoint, {});
       toast.success(currentStatus === "active" ? "User suspended" : "User activated");
       fetchUsers();
@@ -280,7 +280,7 @@ export function UserManagementTab({ role }: Props) {
   const handleResetPassword = async (userId: string) => {
     setResettingPwId(userId);
     try {
-      await api.post("/school/settings/change-password", { user_id: userId });
+      await api.post("/api/school/settings/change-password", { user_id: userId });
       toast.success("Password reset email sent");
     } catch (err: any) {
       toast.error(err.message || "Failed to reset password");
@@ -292,7 +292,7 @@ export function UserManagementTab({ role }: Props) {
   const handleUpdateRole = async (userId: string, newRole: string) => {
     setUpdatingRoleId(userId);
     try {
-      await api.put(`/school/users/${userId}`, { role: newRole });
+      await api.put(`/api/school/users/${userId}`, { role: newRole });
       toast.success("Role updated");
       fetchUsers();
     } catch (err: any) {
@@ -306,7 +306,7 @@ export function UserManagementTab({ role }: Props) {
     if (selectedIds.size === 0) return;
     setBulkDeactivating(true);
     try {
-      await api.post("/school/users/bulk-deactivate", { user_ids: Array.from(selectedIds) });
+      await api.post("/api/school/users/bulk-deactivate", { user_ids: Array.from(selectedIds) });
       toast.success(`${selectedIds.size} user(s) deactivated`);
       setSelectedIds(new Set());
       fetchUsers();
@@ -347,7 +347,7 @@ export function UserManagementTab({ role }: Props) {
   const fetchRoles = async () => {
     setLoadingRoles(true);
     try {
-      const res = await api.get<any>("/school/roles");
+      const res = await api.get<any>("/api/school/roles");
       if (res.data) {
         const d = res.data.data || res.data;
         setRoles(d.roles || []);
@@ -362,7 +362,7 @@ export function UserManagementTab({ role }: Props) {
   const fetchPermissions = async () => {
     setLoadingPermissions(true);
     try {
-      const res = await api.get<any>("/school/permissions");
+      const res = await api.get<any>("/api/school/permissions");
       if (res.data) {
         const d = res.data.data || res.data;
         setGroupedPermissions(d.grouped || {});
@@ -376,7 +376,7 @@ export function UserManagementTab({ role }: Props) {
 
   const fetchRolePermissions = async (roleId: string) => {
     try {
-      const res = await api.get<any>(`/school/roles/${roleId}`);
+      const res = await api.get<any>(`/api/school/roles/${roleId}`);
       if (res.data) {
         const d = res.data.data || res.data;
         const permIds = d.permissions?.map((p: any) => p.id || p) || [];
@@ -410,7 +410,7 @@ export function UserManagementTab({ role }: Props) {
     if (!selectedRoleId) return;
     setSavingPermissions(true);
     try {
-      await api.put(`/school/roles/${selectedRoleId}/permissions`, {
+      await api.put(`/api/school/roles/${selectedRoleId}/permissions`, {
         permission_ids: Array.from(selectedPermissionIds),
       });
       toast.success("Permissions saved successfully");
