@@ -99,22 +99,46 @@ class SchoolService {
     }
 
     async getDashboardStats(tenantId) {
-        // Run queries in parallel for performance
-        const [studentsRes, teachersRes, attendanceRes, activityRes] = await Promise.all([
+        const [studentsRes, usersRes, teachersRes, attendanceRes, activityRes, pendingAssRes, smsRes] = await Promise.all([
             supabase.from('students').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).eq('is_active', true),
+            supabase.from('users').select('id, role', { count: 'exact' }).eq('tenant_id', tenantId),
             supabase.from('users').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).eq('role', 'teacher'),
             supabase.from('attendance').select('status').eq('tenant_id', tenantId).eq('date', new Date().toISOString().split('T')[0]),
-            supabase.from('students').select('name, class_name, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(5)
+            supabase.from('students').select('name, class_name, created_at').eq('tenant_id', tenantId).order('created_at', { ascending: false }).limit(5),
+            supabase.from('assessment_types').select('id', { count: 'exact', head: true }).eq('school_id', tenantId).neq('status', 'completed'),
+            supabase.from('school_settings').select('value').eq('school_id', tenantId).eq('key', 'sms_balance').maybeSingle(),
         ]);
 
         const attendance = attendanceRes.data || [];
         const presentCount = attendance.filter(a => a.status === 'Present').length;
         const attendanceRate = attendance.length > 0 ? (presentCount / attendance.length) * 100 : 0;
 
+        const allUsers = usersRes.data || [];
+        const totalStaff = allUsers.filter(u => u.role !== 'student' && u.role !== 'parent' && u.role !== 'alumni').length;
+
+        let smsBalance = 0;
+        let lowBalanceThreshold = 100;
+        if (smsRes.data?.value) {
+            const raw = smsRes.data.value;
+            if (typeof raw === 'object' && 'balance' in raw) {
+                smsBalance = Number(raw.balance) || 0;
+                lowBalanceThreshold = Number(raw.low_balance_threshold) || 100;
+            } else if (typeof raw === 'object' && 'value' in raw) {
+                smsBalance = Number(raw.value) || 0;
+            } else {
+                smsBalance = Number(raw) || 0;
+            }
+        }
+
         return {
             totalStudents: studentsRes.count || 0,
             totalTeachers: teachersRes.count || 0,
+            totalStaff,
+            teachingStaff: teachersRes.count || 0,
             attendanceRate: attendanceRate.toFixed(1),
+            smsBalance,
+            lowBalanceThreshold,
+            pendingAssessments: pendingAssRes.count || 0,
             recentActivity: activityRes.data || []
         };
     }
@@ -929,26 +953,49 @@ class SchoolService {
         const { data: classes } = await supabase.from('classes').select('id, name').in('id', classIds);
         const classMap = (classes || []).reduce((acc, c) => ({ ...acc, [c.id]: c.name }), {});
 
-        const assMap = {};
+        const assByClass = {};
         assessments.forEach(a => {
-            if (!assMap[a.class_id]) assMap[a.class_id] = { totalScore: 0, totalMax: 0, studentSet: new Set() };
-            assMap[a.class_id].totalMax += a.max_score;
+            if (!assByClass[a.class_id]) assByClass[a.class_id] = [];
+            assByClass[a.class_id].push(a);
         });
+
+        const studentPctMap = {};
         (scores || []).forEach(s => {
             const a = assessments.find(ass => ass.id === s.assessment_id);
-            if (a && assMap[a.class_id]) {
-                assMap[a.class_id].totalScore += Number(s.score);
-                assMap[a.class_id].studentSet.add(s.student_id);
+            if (a) {
+                const pct = a.max_score > 0 ? (Number(s.score) / a.max_score) * 100 : 0;
+                const key = `${a.class_id}:${s.student_id}`;
+                if (!studentPctMap[key]) studentPctMap[key] = { classId: a.class_id, total: 0, count: 0 };
+                studentPctMap[key].total += pct;
+                studentPctMap[key].count += 1;
             }
         });
 
-        return Object.entries(assMap).map(([classId, d]) => ({
-            class_id: classId,
-            class_name: classMap[classId] || 'Unknown',
-            average: d.studentSet.size > 0 ? Number((d.totalScore / (d.studentSet.size * Object.keys(assMap[classId]).length || 1)).toFixed(1)) : 0,
-            rate: d.totalMax > 0 ? Number(((d.totalScore / (d.studentSet.size * d.totalMax || 1)) * 100).toFixed(1)) : 0,
-            studentCount: d.studentSet.size,
-        })).sort((a, b) => b.rate - a.rate);
+        const classBandMap = {};
+        Object.values(studentPctMap).forEach(({ classId, total, count }) => {
+            if (!classBandMap[classId]) classBandMap[classId] = { ee: 0, me: 0, ae: 0, b: 0, totalStudents: 0 };
+            const avg = total / count;
+            classBandMap[classId].totalStudents += 1;
+            if (avg >= 80) classBandMap[classId].ee += 1;
+            else if (avg >= 60) classBandMap[classId].me += 1;
+            else if (avg >= 40) classBandMap[classId].ae += 1;
+            else classBandMap[classId].b += 1;
+        });
+
+        const classMapKeys = Object.keys(assByClass);
+        return classMapKeys.map(classId => {
+            const band = classBandMap[classId] || { ee: 0, me: 0, ae: 0, b: 0, totalStudents: 0 };
+            const total = band.totalStudents || 1;
+            return {
+                class_id: classId,
+                class_name: classMap[classId] || 'Unknown',
+                studentCount: band.totalStudents,
+                ee: Number(((band.ee / total) * 100).toFixed(1)),
+                me: Number(((band.me / total) * 100).toFixed(1)),
+                ae: Number(((band.ae / total) * 100).toFixed(1)),
+                b: Number(((band.b / total) * 100).toFixed(1)),
+            };
+        });
     }
 
     async getRiskAlerts(schoolId) {

@@ -212,6 +212,11 @@ router.delete('/grade-rules/:id', protect, requirePermission('settings.edit'), a
 });
 
 // ─── Key-Value Settings ────────────────────────────────────────
+router.get('/kv/:key', protect, async (req, res) => {
+  try { const data = await settingsService.getSetting(req.tenant.id, req.params.key); return res.json({ data }); }
+  catch (err) { return res.status(500).json({ error: 'Error fetching setting.' }); }
+});
+
 router.put('/kv', protect, requirePermission('settings.edit'), async (req, res) => {
   try { const data = await settingsService.updateSetting(req.tenant.id, req.body.key, req.body.value); return res.json({ data }); }
   catch (err) { return res.status(500).json({ error: 'Error updating setting.' }); }

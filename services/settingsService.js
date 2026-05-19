@@ -86,6 +86,16 @@ class SettingsService {
     return data;
   }
 
+  async getSetting(schoolId, key) {
+    const { data, error } = await supabase.from('school_settings')
+      .select('value').eq('school_id', schoolId).eq('key', key).maybeSingle();
+    if (error) throw error;
+    const raw = data?.value;
+    if (typeof raw === 'object' && raw !== null && 'balance' in raw) return raw;
+    if (typeof raw === 'object' && raw !== null && 'value' in raw) return raw.value;
+    return raw;
+  }
+
   async deleteSetting(schoolId, key) {
     const { error } = await supabase.from('school_settings').delete().eq('school_id', schoolId).eq('key', key);
     if (error) throw error;
