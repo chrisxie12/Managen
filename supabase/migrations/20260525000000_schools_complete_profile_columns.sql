@@ -1,6 +1,7 @@
 -- =====================================================
 -- Complete Schools Table Migration
 -- Adds all missing columns for school profile & settings
+-- Run this in Supabase SQL Editor
 -- =====================================================
 
 -- SCHOOL IDENTITY
@@ -51,10 +52,7 @@ ALTER TABLE schools
   ADD COLUMN IF NOT EXISTS profile_completed BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
 
--- =====================================================
--- Backfill Defaults for Existing Schools
--- =====================================================
-
+-- Backfill defaults for existing schools
 UPDATE schools 
 SET 
   country = COALESCE(country, 'Ghana'),
@@ -67,19 +65,13 @@ SET
   is_active = COALESCE(is_active, TRUE),
   subscription_plan = COALESCE(subscription_plan, 'free');
 
--- =====================================================
--- Indexes for Performance
--- =====================================================
-
+-- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_schools_is_active ON schools(is_active);
 CREATE INDEX IF NOT EXISTS idx_schools_subscription_plan ON schools(subscription_plan);
 CREATE INDEX IF NOT EXISTS idx_schools_current_term ON schools(current_term_id);
 CREATE INDEX IF NOT EXISTS idx_schools_timezone ON schools(timezone);
 
--- =====================================================
--- Update updated_at trigger if not exists
--- =====================================================
-
+-- Auto-update updated_at trigger
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
