@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   CalendarCheck, Wallet, MessageSquare, ClipboardCheck,
-  ArrowRight, Loader2, AlertTriangle, TrendingUp, TrendingDown,
+  ArrowRight, Loader2, TrendingUp, TrendingDown, GripVertical, EyeOff,
 } from "lucide-react";
 import { api } from "../../services/api";
 import { PerformanceChart } from "./components/PerformanceChart";
 import { QuickActions } from "./components/QuickActions";
+import { useUserPreferences } from "../../contexts/UserPreferencesContext";
+import { SkeletonLoader } from "../../components/ui/SkeletonLoader";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -53,6 +55,7 @@ function MetricCard({
   trend,
   color,
   loading,
+  onClick,
 }: {
   icon: typeof CalendarCheck;
   label: string;
@@ -61,9 +64,15 @@ function MetricCard({
   trend?: { direction: "up" | "down"; text: string };
   color: string;
   loading?: boolean;
+  onClick?: () => void;
 }) {
+  const Wrapper = onClick ? "button" : "div";
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <Wrapper
+      onClick={onClick}
+      className={`p-5 rounded-[24px] ${onClick ? "cursor-pointer active:scale-[0.98] transition-all" : ""}`}
+      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: `${color}15` }}>
           <Icon size={20} color={color} />
@@ -94,19 +103,23 @@ function MetricCard({
           )}
         </>
       )}
-    </div>
+    </Wrapper>
   );
 }
 
 export function AdminOverview() {
   const navigate = useNavigate();
+  const { preferences, updateDashboardWidgets } = useUserPreferences();
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
 
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [finance, setFinance] = useState<FinanceSummary | null>(null);
   const [smsBalance, setSmsBalance] = useState<SmsBalance | null>(null);
   const [pendingAssessments, setPendingAssessments] = useState<PendingAssessment[]>([]);
   const [currentTerm, setCurrentTerm] = useState<TermInfo | null>(null);
+
+  const widgets = preferences.dashboardLayout.widgets;
 
   useEffect(() => {
     const load = async () => {
@@ -154,6 +167,14 @@ export function AdminOverview() {
   const isLowBalance = smsBal < lowThreshold;
   const pendingCount = pendingAssessments.length;
 
+  const toggleWidget = (widgetId: string) => {
+    updateDashboardWidgets(
+      widgets.map((w) => (w.id === widgetId ? { ...w, visible: !w.visible } : w)),
+    );
+  };
+
+  const visibleWidgets = widgets.filter((w) => w.visible);
+
   return (
     <div className="space-y-6 overflow-x-hidden">
       <div className="flex items-start justify-between">
@@ -167,72 +188,120 @@ export function AdminOverview() {
               : "Welcome to the new term"}
           </p>
         </div>
+        <button
+          onClick={() => setEditMode(!editMode)}
+          className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+          style={{
+            background: editMode ? PLUM : "white",
+            color: editMode ? MILK : MUTED,
+            border: editMode ? "none" : "1px solid rgba(56,25,50,0.1)",
+          }}
+        >
+          {editMode ? "Done" : "Customize"}
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          icon={CalendarCheck}
-          label="Today's Attendance"
-          value={loading ? "—" : `${attendanceRate}%`}
-          trend={!loading ? { direction: Number(attendanceRate) >= 75 ? "up" : "down", text: `${stats?.totalStudents ?? 0} students` } : undefined}
-          color="#6366F1"
-          loading={loading}
-        />
-        <MetricCard
-          icon={Wallet}
-          label="Term Fees Recovered"
-          value={loading ? "—" : `GH₵ ${(totalCollected / 100).toLocaleString()}`}
-          sub={!loading ? `${collectionRate}% collection rate` : undefined}
-          color="#10B981"
-          loading={loading}
-        />
-        <MetricCard
-          icon={MessageSquare}
-          label="Arkesel SMS Balance"
-          value={loading ? "—" : smsBal.toLocaleString()}
-          sub={!loading ? (isLowBalance ? "Low balance — top up soon" : "Sufficient credits") : undefined}
-          color={isLowBalance ? "#EF4444" : "#25D366"}
-          loading={loading}
-        />
-        <MetricCard
-          icon={ClipboardCheck}
-          label="Pending Assessments"
-          value={loading ? "—" : String(pendingCount)}
-          sub={!loading ? "NaCCA SBA tracker" : undefined}
-          color={pendingCount > 0 ? "#F59E0B" : PLUM_LIGHT}
-          loading={loading}
-        />
-      </div>
+      {editMode && (
+        <div className="p-4 rounded-xl flex flex-wrap gap-2" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          {widgets.map((w) => (
+            <button
+              key={w.id}
+              onClick={() => toggleWidget(w.id)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={{
+                background: w.visible ? `${PLUM}12` : "transparent",
+                color: PLUM,
+                border: `1px solid ${w.visible ? `${PLUM}30` : "rgba(56,25,50,0.1)"}`,
+                opacity: w.visible ? 1 : 0.5,
+              }}
+            >
+              {w.visible ? <EyeOff size={12} /> : <GripVertical size={12} />}
+              {w.id.charAt(0).toUpperCase() + w.id.slice(1).replace("-", " ")}
+            </button>
+          ))}
+        </div>
+      )}
 
-      <PerformanceChart />
+      {/* Metrics Widget */}
+      {visibleWidgets.find((w) => w.id === "metrics") && (
+        <>
+          {loading ? (
+            <SkeletonLoader variant="metric" count={4} />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <MetricCard
+                icon={CalendarCheck}
+                label="Today's Attendance"
+                value={`${attendanceRate}%`}
+                trend={{ direction: Number(attendanceRate) >= 75 ? "up" : "down", text: `${stats?.totalStudents ?? 0} students` }}
+                color="#6366F1"
+                onClick={() => navigate("/dashboard/attendance")}
+              />
+              <MetricCard
+                icon={Wallet}
+                label="Term Fees Recovered"
+                value={`GH₵ ${(totalCollected / 100).toLocaleString()}`}
+                sub={`${collectionRate}% collection rate`}
+                color="#10B981"
+                onClick={() => navigate("/dashboard/fees")}
+              />
+              <MetricCard
+                icon={MessageSquare}
+                label="Arkesel SMS Balance"
+                value={smsBal.toLocaleString()}
+                sub={isLowBalance ? "Low balance — top up soon" : "Sufficient credits"}
+                color={isLowBalance ? "#EF4444" : "#25D366"}
+              />
+              <MetricCard
+                icon={ClipboardCheck}
+                label="Pending Assessments"
+                value={String(pendingCount)}
+                sub="NaCCA SBA tracker"
+                color={pendingCount > 0 ? "#F59E0B" : PLUM_LIGHT}
+                onClick={() => navigate("/dashboard/assessments")}
+              />
+            </div>
+          )}
+        </>
+      )}
 
+      {/* Chart Widget */}
+      {visibleWidgets.find((w) => w.id === "chart") && (
+        loading ? <SkeletonLoader variant="chart" /> : <PerformanceChart />
+      )}
+
+      {/* Quick Actions & School at a Glance Widgets */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <QuickActions />
-        </div>
-
-        <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
-            {stats?.totalStudents ? "School at a Glance" : "Welcome!"}
-          </h3>
-          <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
-            {stats?.totalStudents
-              ? `${stats.totalStudents} learners · ${stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
-              : "Start by adding learners and configuring your school profile."}
-          </p>
-          <div className="space-y-2 mt-auto">
-            {[
-              { label: "Manage Learners", path: "/dashboard/students" },
-              { label: "View Reports", path: "/dashboard/reports" },
-            ].map((item) => (
-              <button key={item.label} onClick={() => navigate(item.path)}
-                className="w-full py-2.5 rounded-full text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
-                style={{ background: "rgba(255,243,230,0.12)", color: MILK, border: "1px solid rgba(255,243,230,0.2)" }}>
-                {item.label} <ArrowRight size={11} />
-              </button>
-            ))}
+        {visibleWidgets.find((w) => w.id === "quick-actions") && (
+          <div className="lg:col-span-2">
+            {loading ? <SkeletonLoader variant="card" count={1} /> : <QuickActions />}
           </div>
-        </div>
+        )}
+
+        {visibleWidgets.find((w) => w.id === "school-glance") && (
+          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
+              {stats?.totalStudents ? "School at a Glance" : "Welcome!"}
+            </h3>
+            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
+              {stats?.totalStudents
+                ? `${stats.totalStudents} learners · ${stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
+                : "Start by adding learners and configuring your school profile."}
+            </p>
+            <div className="space-y-2 mt-auto">
+              {[
+                { label: "Manage Learners", path: "/dashboard/students" },
+                { label: "View Reports", path: "/dashboard/reports" },
+              ].map((item) => (
+                <button key={item.label} onClick={() => navigate(item.path)}
+                  className="w-full py-2.5 rounded-full text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+                  style={{ background: "rgba(255,243,230,0.12)", color: MILK, border: "1px solid rgba(255,243,230,0.2)" }}>
+                  {item.label} <ArrowRight size={11} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

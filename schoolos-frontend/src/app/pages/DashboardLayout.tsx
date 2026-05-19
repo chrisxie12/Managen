@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
   Bell, Search, Menu,
@@ -7,6 +7,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { Sidebar } from "../components/Sidebar";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
+import { UserPreferencesProvider, useUserPreferences } from "../contexts/UserPreferencesContext";
+import { Breadcrumbs } from "../components/ui/Breadcrumbs";
+import { MobileBottomNav } from "../components/layout/MobileBottomNav";
+import { GlobalSearch } from "../components/layout/GlobalSearch";
+import { CommandPalette } from "../components/CommandPalette";
+import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -39,16 +45,21 @@ const topLevelPaths: Record<string, string> = {
   "/dashboard/roles": "Security & Roles",
   "/dashboard/profile": "My Profile",
   "/dashboard/notifications": "Notifications",
+  "/dashboard/inbox": "Inbox",
 };
 
-export function DashboardLayout() {
+function DashboardLayoutInner() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, school, logout } = useAuth();
+  const { user, school } = useAuth();
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
+  const { preferences, toggleSidebar, addRecentItem } = useUserPreferences();
 
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+
+  useKeyboardShortcuts();
 
   const role = user?.role || "";
   const roleLabel = roleLabels[role] || "Administrator";
@@ -62,16 +73,17 @@ export function DashboardLayout() {
       : location.pathname.startsWith(path),
   )?.[1] || "Dashboard";
 
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
+  useEffect(() => {
+    if (pageTitle !== "Dashboard") {
+      addRecentItem(location.pathname, pageTitle);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: MILK }}>
       <Sidebar
-        collapsed={sidebarCollapsed}
-        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        collapsed={preferences.sidebarCollapsed}
+        onToggleCollapse={toggleSidebar}
         mobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
       />
@@ -92,21 +104,44 @@ export function DashboardLayout() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)", width: 220 }}>
+            <button
+              onClick={() => setGlobalSearchOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95"
+              style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}
+            >
               <Search size={14} color={MUTED} />
-              <input placeholder="Search..." className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
-            </div>
-
-            <button onClick={() => navigate("/dashboard/notifications")}
-              className="relative w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
-              <Bell size={16} color={PLUM_LIGHT} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
-                  style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
-              )}
+              <span style={{ color: MUTED, fontSize: "0.82rem" }}>Search...</span>
+              <kbd className="px-1.5 py-0.5 rounded text-[10px] font-medium ml-4"
+                style={{ background: `${PLUM}08`, color: MUTED }}>
+                ⌘K
+              </kbd>
             </button>
+
+            <div className="relative">
+              <button onClick={() => setShowNotifDropdown(!showNotifDropdown)}
+                className="relative w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
+                <Bell size={16} color={PLUM_LIGHT} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
+                    style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
+                )}
+              </button>
+              {showNotifDropdown && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
+                  <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl shadow-lg overflow-hidden"
+                    style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+                    <div className="p-3 text-center text-sm" style={{ color: MUTED }}>
+                      <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }}
+                        className="text-xs font-medium" style={{ color: PLUM }}>
+                        View all notifications
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             <div className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
               style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
@@ -115,11 +150,24 @@ export function DashboardLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
           <SetupChecklist />
+          <Breadcrumbs />
           <Outlet />
         </main>
       </div>
+
+      <GlobalSearch open={globalSearchOpen} onClose={() => setGlobalSearchOpen(false)} />
+      <CommandPalette />
+      <MobileBottomNav />
     </div>
+  );
+}
+
+export function DashboardLayout() {
+  return (
+    <UserPreferencesProvider>
+      <DashboardLayoutInner />
+    </UserPreferencesProvider>
   );
 }

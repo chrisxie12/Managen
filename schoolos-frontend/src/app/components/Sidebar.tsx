@@ -3,9 +3,10 @@ import {
   LayoutDashboard, Users, GraduationCap, ShieldCheck, School,
   CalendarCheck, NotebookPen, FileSpreadsheet, Wallet, Receipt,
   Megaphone, Sliders, Lock, UserCircle, LogOut, HelpCircle,
-  ChevronLeft, PanelRightClose, GraduationCap as Logo,
+  ChevronLeft, PanelRightClose, GraduationCap as Logo, Clock,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { useUserPreferences } from "../contexts/UserPreferencesContext";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -89,6 +90,8 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school, logout } = useAuth();
+  const { preferences, clearRecentItems } = useUserPreferences();
+  const recentItems = preferences.recentItems;
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
@@ -115,7 +118,6 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* Brand */}
       <div className="flex items-center gap-2 px-5 py-6 cursor-pointer" onClick={() => navigate("/")}>
         <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
@@ -131,49 +133,81 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
 
       <div className="mx-4 mb-4" style={{ height: 1, background: `rgba(56,25,50,0.07)` }} />
 
+      {/* Recent Items */}
+      {!collapsed && recentItems.length > 0 && (
+        <div className="px-3 mb-2">
+          <p className="px-3 mb-1.5 uppercase tracking-widest" style={{ color: MUTED, fontSize: "0.63rem" }}>
+            Recent
+          </p>
+          <div className="flex flex-col gap-0.5">
+            {recentItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => { navigate(item.path); onMobileClose(); }}
+                className="flex items-center gap-3 px-3 py-1.5 rounded-xl w-full text-left transition-all active:scale-95"
+                style={{ color: PLUM_LIGHT }}
+              >
+                <Clock size={13} className="shrink-0" style={{ opacity: 0.5 }} />
+                <span style={{ fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {item.label}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="mx-3 mt-1" style={{ height: 1, background: `rgba(56,25,50,0.07)` }} />
+        </div>
+      )}
+
       {/* Navigation */}
       <div className="flex-1 px-3 overflow-y-auto">
-        {navSections.map((section) => (
-          <div key={section.heading} className="mb-4">
-            {!collapsed && (
-              <p className="px-3 mb-1.5 uppercase tracking-widest" style={{ color: MUTED, fontSize: "0.63rem" }}>
-                {section.heading}
-              </p>
-            )}
-            <div className="flex flex-col gap-0.5">
-              {section.items.map((item) => {
-                const active = isActive(item.path);
-                return (
-                  <button key={item.path} onClick={() => handleNavigate(item)}
-                    className="flex items-center gap-3 px-3 py-2 rounded-xl w-full text-left transition-all active:scale-95 relative group"
-                    style={{
-                      background: active ? PLUM : "transparent",
-                      color: active ? MILK : item.future ? MUTED : PLUM_LIGHT,
-                      opacity: item.future ? 0.45 : 1,
-                      cursor: item.future ? "not-allowed" : "pointer",
-                    }}
-                    title={collapsed ? item.label : undefined}
-                  >
-                    <item.icon size={17} className="shrink-0" />
-                    {!collapsed && (
-                      <>
-                        <span style={{ fontSize: "0.85rem", fontWeight: active ? 600 : 400, whiteSpace: "nowrap" }}>
-                          {item.label}
-                        </span>
-                        {item.future && (
-                          <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full"
-                            style={{ background: "rgba(56,25,50,0.08)", color: MUTED }}>
-                            Soon
+        {navSections.map((section) => {
+          const sectionActive = section.items.some((item) => isActive(item.path));
+          return (
+            <div key={section.heading} className="mb-4">
+              {!collapsed && (
+                <p className="px-3 mb-1.5 uppercase tracking-widest" style={{
+                  color: sectionActive ? PLUM : MUTED,
+                  fontSize: "0.63rem",
+                  fontWeight: sectionActive ? 600 : 400,
+                }}>
+                  {section.heading}
+                </p>
+              )}
+              <div className="flex flex-col gap-0.5">
+                {section.items.map((item) => {
+                  const active = isActive(item.path);
+                  return (
+                    <button key={item.path} onClick={() => handleNavigate(item)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-xl w-full text-left transition-all active:scale-95 relative group"
+                      style={{
+                        background: active ? PLUM : "transparent",
+                        color: active ? MILK : item.future ? MUTED : PLUM_LIGHT,
+                        opacity: item.future ? 0.45 : 1,
+                        cursor: item.future ? "not-allowed" : "pointer",
+                      }}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      <item.icon size={17} className="shrink-0" />
+                      {!collapsed && (
+                        <>
+                          <span style={{ fontSize: "0.85rem", fontWeight: active ? 600 : 400, whiteSpace: "nowrap" }}>
+                            {item.label}
                           </span>
-                        )}
-                      </>
-                    )}
-                  </button>
-                );
-              })}
+                          {item.future && (
+                            <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full"
+                              style={{ background: "rgba(56,25,50,0.08)", color: MUTED }}>
+                              Soon
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Support */}
@@ -218,7 +252,6 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside
         className="hidden lg:flex flex-col flex-shrink-0 overflow-y-auto transition-all duration-200"
         style={{
@@ -227,7 +260,6 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
           width: collapsed ? 72 : 240,
         }}
       >
-        {/* Collapse toggle */}
         <button
           onClick={onToggleCollapse}
           className="absolute z-10 -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center hidden lg:flex"
@@ -238,7 +270,6 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
         {sidebarContent}
       </aside>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={onMobileClose} />
