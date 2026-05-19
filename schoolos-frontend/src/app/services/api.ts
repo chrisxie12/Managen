@@ -110,4 +110,13 @@ export const api = {
     });
     return handleResponse<T>(response);
   },
+
+  upload: async <T>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> => {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...defaultFetchInit,
+      method: 'POST',
+      body: formData,
+    });
+    return handleResponse<T>(response);
+  },
 };

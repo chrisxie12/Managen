@@ -3,7 +3,10 @@ const router   = express.Router();
 const jwt      = require('jsonwebtoken');
 const crypto   = require('crypto');
 const bcrypt   = require('bcryptjs');
+const multer   = require('multer');
 const supabase = require('../config/db');
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
@@ -2252,6 +2255,23 @@ router.patch('/', protect, async (req, res) => {
         return res.json({ data: school });
     } catch (err) {
         return res.status(500).json({ error: 'Error saving school profile.' });
+    }
+});
+
+// POST /api/school/upload-logo - upload logo as multipart, store as base64
+router.post('/upload-logo', protect, upload.single('logo'), async (req, res) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        if (!schoolId) return res.status(400).json({ error: 'Unable to determine school ID.' });
+
+        const base64Logo = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        const { error } = await supabase.from('schools').update({ logo_url: base64Logo }).eq('id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+
+        res.json({ data: { logo_url: base64Logo } });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

@@ -79,6 +79,7 @@ export function SchoolProfileTab() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -127,8 +128,23 @@ export function SchoolProfileTab() {
     if (!validate()) return;
     setSaving(true);
     try {
-      const res = await api.patch<any>("/api/school", form);
+      let logoUrl = form.logo_url;
+
+      if (logoFile) {
+        const fd = new FormData();
+        fd.append('logo', logoFile);
+        const uploadRes = await api.upload<any>('/api/school/upload-logo', fd);
+        logoUrl = uploadRes.data.logo_url;
+      }
+
+      const payload = { ...form, logo_url: logoUrl };
+      const res = await api.patch<any>("/api/school", payload);
       if (res.data) {
+        setLogoFile(null);
+        setForm((prev: Record<string, any>) => ({
+          ...prev,
+          logo_url: logoUrl,
+        }));
         toast.success("School profile updated!");
       } else {
         const msg = res.error || "Failed to update school profile";
@@ -154,6 +170,7 @@ export function SchoolProfileTab() {
       toast.error("Only PNG, JPG, and SVG files are allowed");
       return;
     }
+    setLogoFile(file);
     const reader = new FileReader();
     reader.onload = (ev) => {
       const dataUrl = ev.target?.result as string;
