@@ -24,8 +24,8 @@ ALTER TABLE schools
 
 -- ACADEMIC DEFAULTS
 ALTER TABLE schools 
-  ADD COLUMN IF NOT EXISTS current_term_id UUID REFERENCES academic_terms(id) ON DELETE SET NULL,
-  ADD COLUMN IF NOT EXISTS current_session_id UUID REFERENCES academic_sessions(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS current_term_id UUID,
+  ADD COLUMN IF NOT EXISTS current_session_id UUID,
   ADD COLUMN IF NOT EXISTS academic_year_start DATE,
   ADD COLUMN IF NOT EXISTS academic_year_end DATE,
   ADD COLUMN IF NOT EXISTS week_start_day TEXT DEFAULT 'Monday';
