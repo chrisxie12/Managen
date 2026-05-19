@@ -28,6 +28,7 @@ bun.lockb
 *.sublime-workspace
 .claude/
 .superdesign/
+.superpowers/
 
 # OS Files
 .DS_Store
