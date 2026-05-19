@@ -56,13 +56,13 @@ function FormField({ label, error, children }: { label: string; error?: string |
 
 type Props = {
   profile: Record<string, any>;
-  onSave: (data: Record<string, any>) => Promise<void>;
+  onSave: (data: Record<string, any>) => Promise<boolean>;
   saving: boolean;
   role: string;
 };
 
 export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
-  const isReadOnly = role !== "school_admin";
+  const isReadOnly = role !== "school_admin" && role !== "headmaster" && role !== "admin";
 
   const [form, setForm] = useState<Record<string, any>>({
     payment_methods: [],
@@ -294,8 +294,8 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
         reminder_settings: form.metadata?.reminder_settings || {},
       },
     };
-    await onSave(data);
-    toast.success("Fee settings saved");
+    const ok = await onSave(data);
+    if (ok) toast.success("Fee settings saved");
   };
 
   const disabledClass = isReadOnly ? "opacity-60 cursor-not-allowed" : "";

@@ -117,6 +117,22 @@ router.post('/test-whatsapp', protect, requirePermission('settings.edit'), valid
   } catch (err) { return res.status(500).json({ error: err.message }); }
 });
 
+// ─── Academic Settings ─────────────────────────────────────────
+router.put('/academic', protect, requirePermission('settings.edit'), async (req, res) => {
+  try {
+    const data = await settingsService.updateAcademic(req.tenant.id, req.body);
+    return res.json({ data });
+  } catch (err) { return res.status(500).json({ error: 'Error updating academic settings.' }); }
+});
+
+// ─── Fee Settings ──────────────────────────────────────────────
+router.put('/fee', protect, requirePermission('settings.edit'), async (req, res) => {
+  try {
+    const data = await settingsService.updateFee(req.tenant.id, req.body);
+    return res.json({ data });
+  } catch (err) { return res.status(500).json({ error: 'Error updating fee settings.' }); }
+});
+
 // ─── Academic Terms ────────────────────────────────────────────
 router.get('/terms', protect, requirePermission('settings.view'), async (req, res) => {
   try { const data = await settingsService.getTerms(req.tenant.id); return res.json({ data }); }

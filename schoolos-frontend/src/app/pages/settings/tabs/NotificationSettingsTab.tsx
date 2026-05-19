@@ -110,7 +110,7 @@ function FormField({ label, error, children }: { label: string; error?: string |
 
 type Props = {
   profile: Record<string, any>;
-  onSave: (data: Record<string, any>) => Promise<void>;
+  onSave: (data: Record<string, any>) => Promise<boolean>;
   saving: boolean;
   role: string;
 };
@@ -134,7 +134,7 @@ const DEFAULT_SCHEDULE = {
 };
 
 export function NotificationSettingsTab({ profile, onSave, saving, role }: Props) {
-  const isReadOnly = role !== "school_admin";
+  const isReadOnly = role !== "school_admin" && role !== "headmaster" && role !== "admin";
 
   const [form, setForm] = useState<Record<string, any>>({
     notification_settings: {
@@ -373,8 +373,8 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
 
   const handleSave = async () => {
     if (isReadOnly) return;
-    await onSave({ notification_settings: form.notification_settings });
-    toast.success("Notification settings saved");
+    const ok = await onSave({ notification_settings: form.notification_settings });
+    if (ok) toast.success("Notification settings saved");
   };
 
   const disabledClass = isReadOnly ? "opacity-60 cursor-not-allowed" : "";

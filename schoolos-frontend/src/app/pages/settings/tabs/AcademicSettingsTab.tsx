@@ -50,13 +50,13 @@ type GradeBoundary = { grade: string; min: number; max: number };
 
 type Props = {
   profile: Record<string, any>;
-  onSave: (data: Record<string, any>) => Promise<void>;
+  onSave: (data: Record<string, any>) => Promise<boolean>;
   saving: boolean;
   role: string;
 };
 
 export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
-  const isReadOnly = role !== "school_admin" && role !== "headmaster";
+  const isReadOnly = role !== "school_admin" && role !== "headmaster" && role !== "admin";
 
   const [form, setForm] = useState<Record<string, any>>({
     academic_year: "", current_term: "", term_start_date: "", term_end_date: "",
@@ -72,6 +72,9 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
   const [academicTerms, setAcademicTerms] = useState<any[]>([]);
   const [loadingTerms, setLoadingTerms] = useState(false);
   const [settingTerm, setSettingTerm] = useState<string | null>(null);
+  const [editingTermId, setEditingTermId] = useState<string | null>(null);
+  const [editTermData, setEditTermData] = useState({ name: "", start_date: "", end_date: "" });
+  const [deletingTermId, setDeletingTermId] = useState<string | null>(null);
 
   const [classes, setClasses] = useState<any[]>([]);
   const [loadingClasses, setLoadingClasses] = useState(false);
@@ -149,6 +152,30 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
       toast.error(err?.message || "Failed to set current term");
     } finally {
       setSettingTerm(null);
+    }
+  };
+
+  const handleUpdateTerm = async (id: string) => {
+    try {
+      await api.put(`/api/school/settings/terms/${id}`, editTermData);
+      toast.success("Term updated");
+      setEditingTermId(null);
+      fetchTerms();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update term");
+    }
+  };
+
+  const handleDeleteTerm = async (id: string) => {
+    setDeletingTermId(id);
+    try {
+      await api.delete(`/api/school/settings/terms/${id}`);
+      toast.success("Term deleted");
+      fetchTerms();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete term");
+    } finally {
+      setDeletingTermId(null);
     }
   };
 
@@ -364,8 +391,8 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
       grade_boundaries: form.grade_boundaries,
       metadata: { resume_date: form.resume_date || null },
     };
-    await onSave(data);
-    toast.success("Academic settings saved");
+    const ok = await onSave(data);
+    if (ok) toast.success("Academic settings saved");
   };
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -517,33 +544,95 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {academicTerms.map((term: any) => (
-                  <tr key={term.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                    <td className="py-2.5 pr-3 font-medium" style={{ color: PLUM }}>{term.name}</td>
-                    <td className="py-2.5 pr-3" style={{ color: PLUM }}>{term.start_date}</td>
-                    <td className="py-2.5 pr-3" style={{ color: PLUM }}>{term.end_date}</td>
-                    <td className="py-2.5 pr-3">
-                      {term.is_current ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-                          style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>
-                          <Check size={10} /> Current
-                        </span>
-                      ) : (
-                        <span style={{ color: MUTED }}>Inactive</span>
-                      )}
-                    </td>
-                    <td className="py-2.5">
-                      {!term.is_current && !isReadOnly && (
-                        <Button onClick={() => handleSetCurrentTerm(term.id)}
-                          disabled={settingTerm === term.id}
-                          className="text-xs rounded-lg h-7 px-3"
-                          style={{ background: PLUM }}>
-                          {settingTerm === term.id ? <Loader2 size={12} className="animate-spin" /> : "Set Current"}
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {academicTerms.map((term: any) => {
+                  const isEditing = editingTermId === term.id;
+                  return (
+                    <tr key={term.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Input value={editTermData.name} onChange={(e) => setEditTermData((p) => ({ ...p, name: e.target.value }))}
+                            className="h-8 text-xs rounded-xl min-w-[100px]"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span className="font-medium" style={{ color: PLUM }}>{term.name}</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Input type="date" value={editTermData.start_date} onChange={(e) => setEditTermData((p) => ({ ...p, start_date: e.target.value }))}
+                            className="h-8 text-xs rounded-xl w-[130px]"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span style={{ color: PLUM }}>{term.start_date}</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Input type="date" value={editTermData.end_date} onChange={(e) => setEditTermData((p) => ({ ...p, end_date: e.target.value }))}
+                            className="h-8 text-xs rounded-xl w-[130px]"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span style={{ color: PLUM }}>{term.end_date}</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 pr-3">
+                        {term.is_current ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
+                            style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>
+                            <Check size={10} /> Current
+                          </span>
+                        ) : (
+                          <span style={{ color: MUTED }}>Inactive</span>
+                        )}
+                      </td>
+                      <td className="py-2.5">
+                        {isEditing ? (
+                          <div className="flex gap-1">
+                            <button onClick={() => handleUpdateTerm(term.id)}
+                              className="p-1.5 rounded-lg transition-colors"
+                              style={{ background: "rgba(16,185,129,0.1)" }}>
+                              <Check size={13} color="#16A34A" />
+                            </button>
+                            <button onClick={() => { setEditingTermId(null); }}
+                              className="p-1.5 rounded-lg transition-colors"
+                              style={{ background: "rgba(239,68,68,0.08)" }}>
+                              <X size={13} color="#EF4444" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex gap-1">
+                            {!term.is_current && !isReadOnly && (
+                              <Button onClick={() => handleSetCurrentTerm(term.id)}
+                                disabled={settingTerm === term.id}
+                                className="text-xs rounded-lg h-7 px-3"
+                                style={{ background: PLUM }}>
+                                {settingTerm === term.id ? <Loader2 size={12} className="animate-spin" /> : "Set Current"}
+                              </Button>
+                            )}
+                            {!isReadOnly && (
+                              <button onClick={() => {
+                                setEditingTermId(term.id);
+                                setEditTermData({ name: term.name, start_date: term.start_date, end_date: term.end_date });
+                              }}
+                                className="p-1.5 rounded-lg transition-colors"
+                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                <Pencil size={13} color={PLUM} />
+                              </button>
+                            )}
+                            {!isReadOnly && (
+                              <button onClick={() => handleDeleteTerm(term.id)}
+                                disabled={deletingTermId === term.id}
+                                className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                style={{ background: "rgba(239,68,68,0.08)" }}>
+                                {deletingTermId === term.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} color="#EF4444" />}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

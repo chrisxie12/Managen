@@ -84,6 +84,10 @@ export function SettingsPage() {
       const res = await api.put<any>(`/api/school/settings/${activeTab}`, data);
       if (res.data) setProfile(prev => prev ? { ...prev, ...(res.data.data || res.data) } : null);
       setDirty(false);
+      return true;
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || err?.message || "Failed to save settings");
+      return false;
     } finally { setSaving(false); }
   };
 

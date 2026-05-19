@@ -24,6 +24,17 @@ const NOTIFICATION_FIELDS = [
   'auto_publish_report_cards', 'enable_fee_reminders',
 ];
 
+const ACADEMIC_FIELDS = [
+  'academic_year', 'current_term', 'term_start_date', 'term_end_date',
+  'grading_system', 'pass_mark', 'class_settings', 'attendance_settings',
+  'grade_boundaries', 'metadata',
+];
+
+const FEE_FIELDS = [
+  'payment_methods', 'fee_categories', 'late_fee_settings',
+  'receipt_settings', 'metadata',
+];
+
 class SettingsService {
   // ─── Profile ──────────────────────────────────────────────────
   async getProfile(schoolId) {
@@ -85,6 +96,32 @@ class SettingsService {
   async updateNotificationPrefs(schoolId, payload) {
     const allowed = {};
     for (const key of NOTIFICATION_FIELDS) {
+      if (payload[key] !== undefined) allowed[key] = payload[key];
+    }
+    if (Object.keys(allowed).length === 0) return this.getProfile(schoolId);
+
+    const { data, error } = await supabase.from('schools').update(allowed).eq('id', schoolId).select().single();
+    if (error) throw error;
+    return data;
+  }
+
+  // ─── Academic Settings ──────────────────────────────────────────
+  async updateAcademic(schoolId, payload) {
+    const allowed = {};
+    for (const key of ACADEMIC_FIELDS) {
+      if (payload[key] !== undefined) allowed[key] = payload[key];
+    }
+    if (Object.keys(allowed).length === 0) return this.getProfile(schoolId);
+
+    const { data, error } = await supabase.from('schools').update(allowed).eq('id', schoolId).select().single();
+    if (error) throw error;
+    return data;
+  }
+
+  // ─── Fee Settings ────────────────────────────────────────────────
+  async updateFee(schoolId, payload) {
+    const allowed = {};
+    for (const key of FEE_FIELDS) {
       if (payload[key] !== undefined) allowed[key] = payload[key];
     }
     if (Object.keys(allowed).length === 0) return this.getProfile(schoolId);
