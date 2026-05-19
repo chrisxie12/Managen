@@ -4,10 +4,7 @@ const cors     = require('cors');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 
-const {
-    handlePaystackWebhook,
-    handleStripeWebhook,
-} = require('./services/billingService');
+const paymentWebhookService = require('./services/paymentWebhookService');
 
 const onboardRoutes    = require('./routes/onboard');
 const authRoutes       = require('./routes/auth');
@@ -42,17 +39,20 @@ const corsOrigins = allowedOrigins.length > 0 ? allowedOrigins : defaultOrigins;
 const allowAnyOrigin = allowedOrigins.includes('*');
 
 // ─── Billing Webhooks (must be before express.json) ───────────
-app.post(
-    '/webhooks/paystack',
-    express.raw({ type: 'application/json' }),
-    handlePaystackWebhook
-);
+app.post('/webhooks/paystack', express.raw({ type: 'application/json' }), async (req, res) => {
+    const signature = req.headers['x-paystack-signature'];
+    if (!paymentWebhookService.verifySignature(req.body, signature)) {
+        return res.status(401).json({ error: 'Invalid webhook signature.' });
+    }
+    let event;
+    try { event = JSON.parse(req.body.toString('utf8')); } catch { return res.status(400).json({ error: 'Invalid payload.' }); }
+    if (event.event === 'charge.success') await paymentWebhookService.handleChargeSuccess(event);
+    res.sendStatus(200);
+});
 
-app.post(
-    '/webhooks/stripe',
-    express.raw({ type: 'application/json' }),
-    handleStripeWebhook
-);
+app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, res) => {
+    res.status(501).json({ error: 'Stripe webhooks not configured.' });
+});
 
 // ─── Global Middleware ────────────────────────────────────────
 const corsOptions = {
@@ -82,8 +82,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Fallback for JSON parsing errors
-app.use(express.json({ limit: '5mb' }));
+// Fallback for JSON parsing errors (verify callback preserves raw body for webhook signature validation)
+app.use(express.json({ limit: '5mb', verify: (req, res, buf) => { req.rawBody = buf; } }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {

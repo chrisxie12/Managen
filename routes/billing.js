@@ -8,6 +8,7 @@ const schoolService = require('../services/schoolService');
 const { getPublicPlans } = require('../services/provisionService');
 const { initializePayment } = require('../services/billingService');
 const { createNotification } = require('../services/notificationService');
+const paymentWebhookService = require('../services/paymentWebhookService');
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 
@@ -22,6 +23,29 @@ const protect = (req, res, next) => {
         return res.status(401).json({ error: 'Invalid or expired token.' });
     }
 };
+
+/**
+ * POST /api/billing/webhook
+ * Paystack webhook listener for charge.success events
+ * Signature verified via HMAC-SHA512; uses req.rawBody captured by server.js express.json verify callback
+ */
+router.post('/webhook', async (req, res) => {
+    const signature = req.headers['x-paystack-signature'];
+    if (!paymentWebhookService.verifySignature(req.rawBody, signature)) {
+        return res.status(401).json({ error: 'Invalid webhook signature.' });
+    }
+
+    const event = req.body;
+    if (!event || !event.event) {
+        return res.status(400).json({ error: 'Invalid webhook payload.' });
+    }
+
+    if (event.event === 'charge.success') {
+        await paymentWebhookService.handleChargeSuccess(event);
+    }
+
+    res.sendStatus(200);
+});
 
 router.get('/', (req, res) => {
     try {
@@ -82,8 +106,27 @@ router.post('/paystack-initialize', protect, async (req, res) => {
             return res.status(403).json({ error: 'Access denied.' });
         }
 
-        // Call Paystack to initialize transaction
-        const paystackResponse = await initializePayment(email, amount);
+        // Build metadata for Paystack webhook reconciliation
+        const metadata = {
+            tenant_id: invoice.school_id,
+            invoice_id: invoice.id,
+            student_id: invoice.student_id,
+            custom_fields: [
+                {
+                    display_name: 'Invoice Number',
+                    variable_name: 'invoice_number',
+                    value: invoice.invoice_number,
+                },
+                {
+                    display_name: 'Student Name',
+                    variable_name: 'student_name',
+                    value: invoice.student?.name || '',
+                },
+            ],
+        };
+
+        // Call Paystack to initialize transaction with metadata
+        const paystackResponse = await initializePayment(email, amount, metadata);
         const reference = paystackResponse?.data?.reference;
 
         if (!reference) {
