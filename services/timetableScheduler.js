@@ -83,7 +83,7 @@ class TimetableScheduler {
   }
 
   /**
-   * Core CSP solver: backtracking with MRV heuristic.
+   * Core CSP solver: iterative backtracking with MRV heuristic.
    * @param {Array} requiredSlots - list of { id, subjectId, teacherId, allowConsecutive }
    * @param {Array} allSlots - list of { day, periodNumber }
    * @param {Object} existingMap - keyed by "day:periodNumber" -> { teacherId, subjectId, roomId }
@@ -102,7 +102,7 @@ class TimetableScheduler {
     const conflicts = [];
     let iterations = 0;
 
-    // Copy existing entries into tracking maps
+    // Copy existing entries into tracking maps (e.g., entries from non-overwrite mode)
     for (const key of Object.keys(existingMap)) {
       const ex = existingMap[key];
       if (ex.teacherId) {
@@ -114,104 +114,176 @@ class TimetableScheduler {
       }
     }
 
-    for (let i = 0; i < requiredSlots.length; i++) {
+    // Stack for backtracking: each entry = { index, rs, validSlots, chosenIndex }
+    const stack = [];
+    const assigned = new Set();
+
+    while (assigned.size < requiredSlots.length) {
       iterations++;
       if (iterations > maxAttempts) {
+        // Record remaining count as a timeout conflict
+        const remaining = requiredSlots.length - assigned.size;
         conflicts.push({
           type: 'max_attempts_exceeded',
-          message: `Could not find complete solution within ${maxAttempts} iterations. ${requiredSlots.length - i} slots remaining.`,
-          unscheduledCount: requiredSlots.length - i,
+          message: `Could not find complete solution within ${maxAttempts} iterations. ${remaining} slots remaining.`,
+          unscheduledCount: remaining,
         });
         break;
       }
 
-      // MRV: pick the remaining slot with fewest valid domain values
-      let bestIdx = i;
+      // --- MRV: find the most constrained unassigned slot ---
+      let bestIdx = -1;
       let bestDomainSize = Infinity;
-      for (let j = i; j < requiredSlots.length; j++) {
+      for (let j = 0; j < requiredSlots.length; j++) {
+        if (assigned.has(j)) continue;
         const rs = requiredSlots[j];
-        const domainSize = allSlots.filter(slot =>
-          this.isValidAssignment(slot, rs, assignments, existingMap, usedTeacherSlots,
-            usedRoomSlots, subjectDayCount, teacherDayCount, teacherAvailability,
-            teacherMaxPeriods, rooms)
-        ).length;
+        let domainSize = 0;
+        for (const slot of allSlots) {
+          if (this.isValidAssignment(slot, rs, assignments, existingMap, usedTeacherSlots,
+              usedRoomSlots, subjectDayCount, teacherDayCount, teacherAvailability,
+              teacherMaxPeriods, rooms)) {
+            domainSize++;
+          }
+        }
         if (domainSize < bestDomainSize) {
           bestDomainSize = domainSize;
           bestIdx = j;
         }
-        if (domainSize === 0) break;
+        if (domainSize === 0) break; // no valid options for this one, want it first
       }
 
-      // Swap to front (MRV ordering)
-      if (bestIdx !== i) {
-        [requiredSlots[i], requiredSlots[bestIdx]] = [requiredSlots[bestIdx], requiredSlots[i]];
-      }
-      const rs = requiredSlots[i];
+      if (bestIdx === -1) break; // safety: should not happen
 
-      // Get valid slots sorted by soft constraint score
-      const validSlots = allSlots
-        .map(slot => ({
-          slot,
-          score: this.scoreAssignment(slot, rs, assignments, subjectDayCount, teacherDayCount, teacherAvailability),
-        }))
-        .filter(s => {
-          const key = `${s.slot.day}:${s.slot.periodNumber}`;
-          return this.isValidAssignment(s.slot, rs, assignments, existingMap, usedTeacherSlots,
+      const rs = requiredSlots[bestIdx];
+
+      // Compute valid slots sorted by soft constraint score
+      const validSlots = [];
+      for (const slot of allSlots) {
+        if (this.isValidAssignment(slot, rs, assignments, existingMap, usedTeacherSlots,
             usedRoomSlots, subjectDayCount, teacherDayCount, teacherAvailability,
-            teacherMaxPeriods, rooms);
-        })
-        .sort((a, b) => a.score - b.score);
-
-      if (validSlots.length === 0) {
-        conflicts.push({
-          type: 'no_valid_slot',
-          message: `No available slot for ${rs.subjectName} (teacher: ${rs.teacherName})`,
-          subjectId: rs.subjectId,
-          teacherId: rs.teacherId,
-          subjectName: rs.subjectName,
-          teacherName: rs.teacherName,
-        });
-        continue;
+            teacherMaxPeriods, rooms)) {
+          const score = this.scoreAssignment(slot, rs, assignments, subjectDayCount, teacherDayCount, teacherAvailability);
+          validSlots.push({ slot, score });
+        }
       }
+      validSlots.sort((a, b) => a.score - b.score);
 
-      const chosen = validSlots[0];
-      const key = `${chosen.slot.day}:${chosen.slot.periodNumber}`;
-      const pickedRoom = this.pickRoom(rooms, key, usedRoomSlots);
+      if (validSlots.length > 0) {
+        // Assign best option
+        const chosen = validSlots[0];
+        this.applyAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, rs, chosen.slot, rooms);
+        stack.push({ index: bestIdx, rs, validSlots, chosenIndex: 0, slot: chosen.slot });
+        assigned.add(bestIdx);
+      } else {
+        // No valid slots for this variable — backtrack
+        let found = false;
+        while (stack.length > 0 && !found) {
+          const prev = stack[stack.length - 1];
+          if (prev.chosenIndex + 1 < prev.validSlots.length) {
+            // Undo previous assignment
+            const prevSlot = prev.validSlots[prev.chosenIndex].slot;
+            this.undoAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, prev.rs, prevSlot);
+            // Try next option for previous slot
+            prev.chosenIndex++;
+            const newChoice = prev.validSlots[prev.chosenIndex];
+            this.applyAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, prev.rs, newChoice.slot, rooms);
+            prev.slot = newChoice.slot;
+            found = true;
+          } else {
+            // No more options for the previous assignment — pop it entirely
+            const prevSlot = prev.validSlots[prev.chosenIndex].slot;
+            this.undoAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, prev.rs, prevSlot);
+            assigned.delete(prev.index);
+            stack.pop();
+          }
+        }
 
-      assignments[key] = {
-        subjectId: rs.subjectId,
-        subjectName: rs.subjectName,
-        teacherId: rs.teacherId,
-        teacherName: rs.teacherName,
-        roomId: pickedRoom?.id || null,
-        roomName: pickedRoom?.name || null,
-      };
-
-      // Track teacher
-      if (!usedTeacherSlots[rs.teacherId]) usedTeacherSlots[rs.teacherId] = {};
-      usedTeacherSlots[rs.teacherId][key] = true;
-      if (!teacherDayCount[rs.teacherId]) teacherDayCount[rs.teacherId] = {};
-      teacherDayCount[rs.teacherId][chosen.slot.day] = (teacherDayCount[rs.teacherId][chosen.slot.day] || 0) + 1;
-
-      // Track room
-      if (pickedRoom) {
-        if (!usedRoomSlots[pickedRoom.id]) usedRoomSlots[pickedRoom.id] = {};
-        usedRoomSlots[pickedRoom.id][key] = true;
+        if (!found) {
+          // Even the root slot is impossible — record conflict and skip
+          conflicts.push({
+            type: 'no_valid_slot',
+            message: `No available slot for ${rs.subjectName} (teacher: ${rs.teacherName})`,
+            subjectId: rs.subjectId,
+            teacherId: rs.teacherId,
+            subjectName: rs.subjectName,
+            teacherName: rs.teacherName,
+          });
+          assigned.add(bestIdx);
+        }
       }
-
-      // Track subject day count
-      if (!subjectDayCount[rs.subjectId]) subjectDayCount[rs.subjectId] = {};
-      subjectDayCount[rs.subjectId][chosen.slot.day] = (subjectDayCount[rs.subjectId][chosen.slot.day] || 0) + 1;
     }
+
+    // Clean up max_attempts_exceeded if everything actually got assigned
+    const realConflicts = conflicts.filter(c => c.type !== 'max_attempts_exceeded' || assigned.size < requiredSlots.length);
 
     const finalScore = this.computeOverallScore(assignments, subjectDayCount);
     return {
       assignments,
-      conflicts,
+      conflicts: realConflicts,
       iterations,
-      success: conflicts.length === 0,
+      success: realConflicts.length === 0,
       score: finalScore,
     };
+  }
+
+  applyAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, rs, slot, rooms) {
+    const key = `${slot.day}:${slot.periodNumber}`;
+    const pickedRoom = this.pickRoom(rooms, key, usedRoomSlots);
+
+    assignments[key] = {
+      subjectId: rs.subjectId,
+      subjectName: rs.subjectName,
+      teacherId: rs.teacherId,
+      teacherName: rs.teacherName,
+      roomId: pickedRoom?.id || null,
+      roomName: pickedRoom?.name || null,
+    };
+
+    if (!usedTeacherSlots[rs.teacherId]) usedTeacherSlots[rs.teacherId] = {};
+    usedTeacherSlots[rs.teacherId][key] = true;
+
+    if (!teacherDayCount[rs.teacherId]) teacherDayCount[rs.teacherId] = {};
+    teacherDayCount[rs.teacherId][slot.day] = (teacherDayCount[rs.teacherId][slot.day] || 0) + 1;
+
+    if (pickedRoom) {
+      if (!usedRoomSlots[pickedRoom.id]) usedRoomSlots[pickedRoom.id] = {};
+      usedRoomSlots[pickedRoom.id][key] = true;
+    }
+
+    if (!subjectDayCount[rs.subjectId]) subjectDayCount[rs.subjectId] = {};
+    subjectDayCount[rs.subjectId][slot.day] = (subjectDayCount[rs.subjectId][slot.day] || 0) + 1;
+  }
+
+  undoAssignment(assignments, usedTeacherSlots, usedRoomSlots, subjectDayCount, teacherDayCount, rs, slot) {
+    const key = `${slot.day}:${slot.periodNumber}`;
+
+    delete assignments[key];
+
+    if (usedTeacherSlots[rs.teacherId]) {
+      delete usedTeacherSlots[rs.teacherId][key];
+    }
+
+    if (teacherDayCount[rs.teacherId]) {
+      teacherDayCount[rs.teacherId][slot.day] = (teacherDayCount[rs.teacherId][slot.day] || 1) - 1;
+      if (teacherDayCount[rs.teacherId][slot.day] <= 0) {
+        delete teacherDayCount[rs.teacherId][slot.day];
+      }
+    }
+
+    // We don't track which room was used in the undo because pickRoom always
+    // picks the first available; undoing room tracking is handled by removing
+    // from usedRoomSlots — but we need the roomId. Look it up from the assignment
+    // that we already deleted. For simplicity, we clear the slot from all rooms.
+    for (const roomId of Object.keys(usedRoomSlots)) {
+      delete usedRoomSlots[roomId][key];
+    }
+
+    if (subjectDayCount[rs.subjectId]) {
+      subjectDayCount[rs.subjectId][slot.day] = (subjectDayCount[rs.subjectId][slot.day] || 1) - 1;
+      if (subjectDayCount[rs.subjectId][slot.day] <= 0) {
+        delete subjectDayCount[rs.subjectId][slot.day];
+      }
+    }
   }
 
   isValidAssignment(slot, rs, assignments, existingMap, usedTeacherSlots, usedRoomSlots,
