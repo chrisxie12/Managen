@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
+import { SadexLogo } from '../components/SadexLogo';
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -754,7 +755,13 @@ export function LandingPage() {
               </div>
               <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700 }}>Managen</span>
             </div>
-            <span className="text-gray-500 text-sm">School management that actually works.</span>
+            <div className="flex items-center gap-4">
+              <span className="text-gray-500 text-sm hidden sm:inline">School management that actually works.</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-100 bg-gray-50/50">
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">A Product of</span>
+                <SadexLogo size={18} variant="light" />
+              </div>
+            </div>
           </div>
           <hr className="border-gray-100 mb-8" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
