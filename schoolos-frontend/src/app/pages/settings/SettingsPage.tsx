@@ -70,9 +70,9 @@ export function SettingsPage() {
   const fetchProfile = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get<any>("/school/settings");
+      const res = await api.get<any>("/api/school/settings");
       if (res.data) setProfile(res.data.data || res.data);
-    } catch { /* ignore */ }
+    } catch (e) { console.error("Settings fetch failed:", e); }
     finally { setLoading(false); }
   }, []);
 
@@ -81,24 +81,23 @@ export function SettingsPage() {
   const handleSave = async (data: Record<string, any>) => {
     setSaving(true);
     try {
-      const res = await api.put<any>(`/school/settings/${activeTab}`, data);
+      const res = await api.put<any>(`/api/school/settings/${activeTab}`, data);
       if (res.data) setProfile(prev => prev ? { ...prev, ...(res.data.data || res.data) } : null);
       setDirty(false);
     } finally { setSaving(false); }
   };
 
   const renderTab = () => {
-    if (!profile) return null;
     const props = { profile, onSave: handleSave, saving, role, redirectOnComplete: !!missingFromGuard };
     switch (activeTab) {
-      case "profile": return <SchoolProfileTab {...props} />;
-      case "academic": return <AcademicSettingsTab {...props} />;
-      case "fee": return <FeeSettingsTab {...props} />;
-      case "notifications": return <NotificationSettingsTab {...props} />;
+      case "profile": return <SchoolProfileTab />;
+      case "academic": return profile ? <AcademicSettingsTab {...props} /> : null;
+      case "fee": return profile ? <FeeSettingsTab {...props} /> : null;
+      case "notifications": return profile ? <NotificationSettingsTab {...props} /> : null;
       case "users": return <UserManagementTab role={role} />;
       case "security": return <SecurityTab role={role} />;
-      case "billing": return <BillingTab profile={profile} />;
-      case "danger": return <DangerZoneTab profile={profile} />;
+      case "billing": return profile ? <BillingTab profile={profile} /> : null;
+      case "danger": return profile ? <DangerZoneTab profile={profile} /> : null;
       default: return null;
     }
   };
@@ -189,12 +188,7 @@ export function SettingsPage() {
             <span>You have unsaved changes</span>
           </div>
         )}
-        {profile ? renderTab() : (
-          <div className="text-center py-16">
-            <p className="text-sm" style={{ color: "#EF4444" }}>Failed to load settings.</p>
-            <button onClick={fetchProfile} className="mt-2 text-xs underline" style={{ color: PLUM }}>Retry</button>
-          </div>
-        )}
+        {renderTab()}
       </div>
     </div>
   );
