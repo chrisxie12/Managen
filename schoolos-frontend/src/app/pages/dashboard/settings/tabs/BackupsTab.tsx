@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Download, Loader2, Calendar } from "lucide-react";
+import { Download, Loader2, Calendar, AlertTriangle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../../../../components/ui/button";
+import { Input } from "../../../../components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../../components/ui/select";
@@ -129,6 +130,63 @@ export function BackupsTab({ role }: Props) {
           </p>
         )}
       </SectionCard>
+
+      {!isReadOnly && (
+        <DangerZone />
+      )}
+    </div>
+  );
+}
+
+function DangerZone() {
+  const [confirmText, setConfirmText] = useState("");
+  const [resetting, setResetting] = useState(false);
+  const confirmed = confirmText === "RESET";
+
+  const handleReset = async () => {
+    if (!confirmed) return;
+    setResetting(true);
+    try {
+      const res = await api.post<any>("/api/school/settings/reset-tenant", {});
+      if (!res.error) {
+        toast.success("Tenant data has been reset. Redirecting...");
+        setTimeout(() => window.location.reload(), 2000);
+      } else {
+        toast.error(res.error || "Failed to reset tenant data");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to reset tenant data");
+    } finally { setResetting(false); }
+  };
+
+  return (
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(239,68,68,0.2)" }}>
+      <div className="flex items-center gap-2 mb-1">
+        <AlertTriangle size={16} color="#EF4444" />
+        <h3 className="text-sm font-semibold" style={{ color: "#EF4444" }}>Danger Zone</h3>
+      </div>
+      <p className="text-xs mb-4" style={{ color: MUTED }}>
+        These actions are irreversible. Proceed with extreme caution.
+      </p>
+
+      <div className="p-3 rounded-xl" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.15)" }}>
+        <p className="text-xs font-medium mb-1" style={{ color: "#EF4444" }}>Reset All Tenant Data</p>
+        <p className="text-[11px] mb-3" style={{ color: MUTED }}>
+          This will permanently delete all students, staff, attendance records, fees, assessments, and grades
+          associated with your school. School profile and settings will be preserved. This action cannot be undone.
+        </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <Input value={confirmText} onChange={(e) => setConfirmText(e.target.value)}
+            placeholder='Type "RESET" to confirm'
+            className="h-9 text-sm rounded-xl max-w-[200px]"
+            style={{ borderColor: confirmText === "RESET" ? "#EF4444" : "rgba(239,68,68,0.3)" }} />
+          <Button onClick={handleReset} disabled={!confirmed || resetting}
+            className="text-xs rounded-xl h-9 px-5" style={{ background: "#EF4444" }}>
+            {resetting ? <Loader2 size={14} className="animate-spin mr-1" /> : <Trash2 size={14} className="mr-1" />}
+            {resetting ? "Resetting..." : "Reset Tenant Data"}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

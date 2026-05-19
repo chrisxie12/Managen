@@ -18,6 +18,16 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
   );
 }
 
+function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
+  return (
+    <div className="mb-3">
+      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      {children}
+      {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
+    </div>
+  );
+}
+
 const DEFAULT_DOCUMENTS = [
   { id: "1", name: "Ghana Card", mandatory: true, requiredAtRegistration: true },
   { id: "2", name: "Birth Certificate", mandatory: true, requiredAtRegistration: true },
@@ -37,6 +47,8 @@ type Props = { role: string };
 export function AdmissionTab({ role }: Props) {
   const isReadOnly = role !== "school_admin" && role !== "admin";
   const [docs, setDocs] = useState<DocItem[]>(DEFAULT_DOCUMENTS);
+  const [maxApplicationsPerTerm, setMaxApplicationsPerTerm] = useState(500);
+  const [maxStudentsPerGrade, setMaxStudentsPerGrade] = useState(45);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +61,14 @@ export function AdmissionTab({ role }: Props) {
           if (Array.isArray(items) && items.length > 0) setDocs(items);
         }
       } catch { /* ignore */ }
+      try {
+        const limRes = await api.get<any>("/api/school/settings/kv/admission_limits").catch(() => null);
+        if (limRes?.data) {
+          const limits = limRes.data.data || limRes.data;
+          if (limits.max_applications_per_term) setMaxApplicationsPerTerm(limits.max_applications_per_term);
+          if (limits.max_students_per_grade) setMaxStudentsPerGrade(limits.max_students_per_grade);
+        }
+      } catch { /* ignore */ }
       finally { setLoading(false); }
     })();
   }, []);
@@ -57,10 +77,15 @@ export function AdmissionTab({ role }: Props) {
     if (isReadOnly) return;
     setSaving(true);
     try {
-      const payload = { key: "admission_checklist", value: docs };
-      const res = await api.put<any>("/api/school/settings/kv", payload);
-      if (res.data) toast.success("Admission checklist saved");
-      else toast.error(res.error || "Failed to save");
+      const [checklistRes, limitsRes] = await Promise.all([
+        api.put<any>("/api/school/settings/kv", { key: "admission_checklist", value: docs }),
+        api.put<any>("/api/school/settings/kv", {
+          key: "admission_limits",
+          value: { max_applications_per_term: maxApplicationsPerTerm, max_students_per_grade: maxStudentsPerGrade },
+        }),
+      ]);
+      if (checklistRes.data && limitsRes.data) toast.success("Admission settings saved");
+      else toast.error("Failed to save some admission settings");
     } catch (err: any) {
       toast.error(err?.message || "Failed to save admission checklist");
     } finally { setSaving(false); }
@@ -148,11 +173,28 @@ export function AdmissionTab({ role }: Props) {
         </p>
       </SectionCard>
 
+      <SectionCard title="Onboarding Capacity Limits" desc="Set maximum capacities for admission intake">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+          <FormField label="Max Applications Per Term">
+            <Input type="number" min={1} max={99999} value={maxApplicationsPerTerm}
+              onChange={(e) => setMaxApplicationsPerTerm(Math.max(1, Number(e.target.value) || 1))}
+              disabled={isReadOnly}
+              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+          </FormField>
+          <FormField label="Max Students Per Grade/Class">
+            <Input type="number" min={1} max={999} value={maxStudentsPerGrade}
+              onChange={(e) => setMaxStudentsPerGrade(Math.max(1, Number(e.target.value) || 1))}
+              disabled={isReadOnly}
+              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+          </FormField>
+        </div>
+      </SectionCard>
+
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
           <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
-            Save Checklist
+            Save Admission Settings
           </Button>
         </div>
       )}

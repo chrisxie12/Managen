@@ -39,6 +39,7 @@ export function ArkeselSmsTab({ role }: Props) {
   const [showKey, setShowKey] = useState(false);
   const [paymentReceipts, setPaymentReceipts] = useState(true);
   const [absenceAlerts, setAbsenceAlerts] = useState(true);
+  const [senderIdError, setSenderIdError] = useState<string | null>(null);
   const [smsBalance, setSmsBalance] = useState<number | null>(null);
   const [lowThreshold, setLowThreshold] = useState(100);
   const [saving, setSaving] = useState(false);
@@ -72,8 +73,21 @@ export function ArkeselSmsTab({ role }: Props) {
     })();
   }, []);
 
+  const validateSenderId = (id: string): string | null => {
+    if (id && !/^[a-zA-Z0-9]+$/.test(id)) return "Only letters and numbers allowed (no spaces or special characters)";
+    return null;
+  };
+
+  const handleSenderIdChange = (value: string) => {
+    const cleaned = value.slice(0, 11).replace(/[^a-zA-Z0-9]/g, "");
+    setSenderId(cleaned);
+    setSenderIdError(validateSenderId(cleaned));
+  };
+
   const handleSave = async () => {
     if (isReadOnly) return;
+    const err = validateSenderId(senderId);
+    if (err) { setSenderIdError(err); return; }
     setSaving(true);
     try {
       const payload = {
@@ -110,11 +124,11 @@ export function ArkeselSmsTab({ role }: Props) {
               </button>
             </div>
           </FormField>
-          <FormField label="Sender ID">
-            <Input value={senderId} onChange={(e) => setSenderId(e.target.value.slice(0, 11))}
+          <FormField label="Sender ID" error={senderIdError}>
+            <Input value={senderId} onChange={(e) => handleSenderIdChange(e.target.value)}
               className="h-9 text-sm rounded-xl" maxLength={11}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="e.g. MYSCHOOL (max 11 chars)" />
-            <p className="text-[10px] mt-0.5" style={{ color: MUTED }}>{senderId.length}/11 characters (alphanumeric, no spaces)</p>
+              style={{ borderColor: senderIdError ? "#EF4444" : "rgba(56,25,50,0.12)" }} placeholder="e.g. MYSCHOOL (max 11 chars)" />
+            <p className="text-[10px] mt-0.5" style={{ color: senderIdError ? "#EF4444" : MUTED }}>{senderId.length}/11 characters (letters and numbers only)</p>
           </FormField>
         </div>
       </SectionCard>
