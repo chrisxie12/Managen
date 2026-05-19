@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const PLUM = "#381932";
 const MUTED = "#7D6077";
@@ -95,6 +96,14 @@ function DangerAction({
 type Props = { profile: Record<string, any> };
 
 export function DangerZoneTab({ profile }: Props) {
+  const { user } = useAuth();
+  if (user?.role !== "school_admin" && user?.role !== "admin") {
+    return (
+      <p className="text-xs py-4 text-center" style={{ color: "#7D6077" }}>
+        You don't have permission to access the Danger Zone.
+      </p>
+    );
+  }
   const schoolName = profile?.name || "";
 
   const [exporting, setExporting] = useState(false);

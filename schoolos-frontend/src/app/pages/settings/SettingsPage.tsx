@@ -52,7 +52,7 @@ const tabs = [
 
 export function SettingsPage() {
   const { user } = useAuth();
-  const role = user?.role || "school_admin";
+  const role = user?.role || "";
   const location = useLocation();
   const missingFromGuard = (location.state as { missing?: string[] })?.missing || null;
   const [profile, setProfile] = useState<SchoolProfile | null>(null);
@@ -96,7 +96,7 @@ export function SettingsPage() {
       case "notifications": return profile ? <NotificationSettingsTab {...props} /> : null;
       case "users": return <UserManagementTab role={role} />;
       case "security": return <SecurityTab role={role} />;
-      case "billing": return profile ? <BillingTab profile={profile} /> : null;
+      case "billing": return profile ? <BillingTab profile={profile} role={role} /> : null;
       case "danger": return profile ? <DangerZoneTab profile={profile} /> : null;
       default: return null;
     }
@@ -106,6 +106,14 @@ export function SettingsPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="animate-spin" size={32} color={PLUM} />
+      </div>
+    );
+  }
+
+  if (visibleTabs.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-sm" style={{ color: MUTED }}>You don't have access to Settings.</p>
       </div>
     );
   }

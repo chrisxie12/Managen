@@ -59,15 +59,15 @@ export function DashboardLayout() {
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
 
   const userPerms = user?.permissions || [];
-  const role = user?.role || "school_admin";
+  const role = user?.role || "";
 
   // Permission-driven nav filtering
-  const navItems = userPerms.length === 0
-    ? allNavItems
-    : allNavItems.filter((item) => {
-        const required = pagePermissions[item.path];
-        return !required || required.some((p) => userPerms.includes(p));
-      });
+  const navItems = allNavItems.filter((item) => {
+    const required = pagePermissions[item.path];
+    if (!required) return true;
+    if (userPerms.length > 0) return required.some((p) => userPerms.includes(p));
+    return role === "school_admin" || role === "admin";
+  });
 
   const roleLabel = roleLabels[role] || "Administrator";
   const initials = user?.fullName

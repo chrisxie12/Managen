@@ -43,6 +43,7 @@ import { SuperAdminOverview } from "./pages/SuperAdminOverview";
 import { SuperAdminBilling } from "./pages/SuperAdminBilling";
 import { SuperAdminReportCards } from "./pages/SuperAdminReportCards";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
+import { RequireRole } from "../components/RequireRole";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
 import { OnboardingGuard } from "../components/OnboardingGuard";
@@ -122,9 +123,9 @@ export const router = createBrowserRouter([
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
       { path: "system-health", Component: SystemHealth },
-      { path: "settings", Component: SettingsPage },
-      { path: "users", Component: AdminUsers },
-      { path: "roles", Component: AdminRoles },
+      { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SettingsPage /></RequireRole> },
+      { path: "users", element: <RequireRole roles={["school_admin", "admin"]}><AdminUsers /></RequireRole> },
+      { path: "roles", element: <RequireRole roles={["school_admin", "admin"]}><AdminRoles /></RequireRole> },
     ],
   },
   {

@@ -161,4 +161,13 @@ export const pagePermissions: Record<string, string[]> = {
   "/dashboard/reports": [Permissions.Reports.view],
   "/dashboard/audit-logs": [Permissions.Reports.view],
   "/dashboard/system-health": [Permissions.Settings.view],
+  "/dashboard/settings": [Permissions.Settings.view],
+  "/dashboard/inbox": [Permissions.Messages.view],
+  "/dashboard/notifications": [Permissions.Notifications.view],
+  "/dashboard/staff": [Permissions.Teachers.view],
+  "/dashboard/attendance-links": [Permissions.Attendance.view],
+  "/dashboard/daily-signin": [Permissions.Attendance.view],
+  "/dashboard/report-cards": [Permissions.Grades.view],
+  "/dashboard/bulk-import": [Permissions.Students.create],
+  "/dashboard/teacher/classes": [Permissions.Classes.view],
 };
