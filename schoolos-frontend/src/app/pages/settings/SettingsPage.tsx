@@ -4,6 +4,7 @@ import {
   Building2, BookOpen, Wallet, Bell, Users, Shield,
   CreditCard, AlertTriangle, ChevronDown, Loader2, Info,
 } from "lucide-react";
+import { toast } from "sonner";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { SchoolProfileTab } from "./tabs/SchoolProfileTab";
@@ -40,14 +41,14 @@ type SchoolProfile = {
 };
 
 const tabs = [
-  { key: "profile", label: "School Profile", icon: Building2, roles: ["school_admin", "headmaster"] },
-  { key: "academic", label: "Academic Settings", icon: BookOpen, roles: ["school_admin", "headmaster"] },
-  { key: "fee", label: "Fee Settings", icon: Wallet, roles: ["school_admin"] },
-  { key: "notifications", label: "Notifications", icon: Bell, roles: ["school_admin"] },
-  { key: "users", label: "User Management", icon: Users, roles: ["school_admin"] },
-  { key: "security", label: "Security", icon: Shield, roles: ["school_admin"] },
-  { key: "billing", label: "Billing", icon: CreditCard, roles: ["school_admin"] },
-  { key: "danger", label: "Danger Zone", icon: AlertTriangle, roles: ["school_admin"] },
+  { key: "profile", label: "School Profile", icon: Building2, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "academic", label: "Academic Settings", icon: BookOpen, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "fee", label: "Fee Settings", icon: Wallet, allowedRoles: ["school_admin", "admin", "superadmin", "accountant"] },
+  { key: "notifications", label: "Notifications", icon: Bell, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "users", label: "User Management", icon: Users, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "security", label: "Security", icon: Shield, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "billing", label: "Billing", icon: CreditCard, allowedRoles: ["school_admin", "admin", "superadmin"] },
+  { key: "danger", label: "Danger Zone", icon: AlertTriangle, allowedRoles: ["school_admin", "admin", "superadmin"] },
 ];
 
 export function SettingsPage() {
@@ -64,8 +65,7 @@ export function SettingsPage() {
 
   const blocker = useBlocker(dirty);
 
-  const adminRoles = ["school_admin", "admin"];
-  const visibleTabs = tabs.filter(t => t.roles.includes(role) || adminRoles.includes(role));
+  const visibleTabs = tabs.filter(t => t.allowedRoles.includes(role));
 
   const fetchProfile = useCallback(async () => {
     setLoading(true);
@@ -77,6 +77,17 @@ export function SettingsPage() {
   }, []);
 
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
+
+  useEffect(() => {
+    const currentTab = tabs.find(t => t.key === activeTab);
+    if (currentTab && !currentTab.allowedRoles.includes(role)) {
+      const first = visibleTabs[0];
+      if (first) {
+        setActiveTab(first.key);
+        toast.error("You don't have access to that section.");
+      }
+    }
+  }, [activeTab, role, visibleTabs]);
 
   const handleSave = async (data: Record<string, any>) => {
     setSaving(true);

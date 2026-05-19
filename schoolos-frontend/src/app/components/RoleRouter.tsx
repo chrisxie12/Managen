@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
-import { DashboardHome } from "../pages/DashboardHome";
+import { AdminOverview } from "../pages/dashboard/AdminOverview";
 
 const roleRoutes: Record<string, string> = {
   headmaster: "/dashboard/headmaster",
@@ -16,11 +16,11 @@ export function RoleRouter() {
   if (loading) return null;
 
   if (user?.role === "school_admin" || user?.role === "admin") {
-    return <DashboardHome />;
+    return <AdminOverview />;
   }
 
   const route = user ? roleRoutes[user.role] : null;
   if (route) return <Navigate to={route} replace />;
 
-  return <DashboardHome />;
+  return <AdminOverview />;
 }

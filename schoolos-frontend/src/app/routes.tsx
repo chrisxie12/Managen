@@ -3,6 +3,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
+import { AdminOverview } from "./pages/dashboard/AdminOverview";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { TeacherDashboard } from "./pages/TeacherDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
@@ -93,6 +94,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, Component: RoleRouter },
+      { path: "admin", Component: AdminOverview },
       { path: "headmaster", Component: HeadmasterDashboard },
       { path: "accountant", Component: AccountantDashboard },
       { path: "teacher", Component: TeacherDashboard },
