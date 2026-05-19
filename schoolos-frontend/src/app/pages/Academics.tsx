@@ -6,7 +6,7 @@ import {
   GitBranch, RefreshCw,
 } from "lucide-react";
 import { api } from "../services/api";
-import { TimetableScheduler } from "../TimetableScheduler";
+import { TimetableScheduler } from "./TimetableScheduler";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
