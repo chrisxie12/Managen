@@ -20,12 +20,20 @@ type RoomItem = { id: string; name: string; capacity?: number };
 type SettingsType = { periods_per_day: number; period_duration_minutes: number; start_time: string; days_of_week: string[] };
 type TimetableEntry = { id: string; day: string; period: string; period_number: number; subject: string; teacher: string; class_name: string; room?: string };
 type GeneratedEntry = { id: string; day: string; period: string; period_number: number; subject: string; teacher: string; class_name: string; room?: string };
+type ConflictItem = {
+  type: string;
+  message: string;
+  subjectId?: string;
+  teacherId?: string;
+  subjectName?: string;
+  teacherName?: string;
+};
 
 function LoadingSpinner({ size = 16 }: { size?: number }) {
   return <Loader2 size={size} className="animate-spin" />;
 }
 
-export function TimetableScheduler() {
+export function TimetableScheduler({ embedded = false }: { embedded?: boolean }) {
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [subjects, setSubjects] = useState<SubjectItem[]>([]);
@@ -43,6 +51,8 @@ export function TimetableScheduler() {
   const [editingTeacher, setEditingTeacher] = useState<string | null>(null);
   const [editAvail, setEditAvail] = useState<Record<string, number[]>>({});
   const [genResult, setGenResult] = useState<{ success: boolean; totalRequired: number; totalAssigned: number } | null>(null);
+  const [conflicts, setConflicts] = useState<ConflictItem[]>([]);
+  const [genScore, setGenScore] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -127,21 +137,29 @@ export function TimetableScheduler() {
   const handleGenerate = async () => {
     if (!selectedClass) { toast.error("Select a class first"); return; }
     setGenerating(true); setGenerated(null); setGenResult(null);
+    setConflicts([]); setGenScore(null);
     try {
       const res = await api.post<any>("/api/school/timetable/auto-generate", {
         class_id: selectedClass,
         overwrite: false,
       });
       const result = res.data?.data || {};
-      setGenerated(result.entries || []);
+      const entries = result.timetable || result.entries || [];
+      setGenerated(entries);
+      setConflicts(result.conflicts || []);
+      setGenScore(result.score ?? null);
       setGenResult({
         success: result.success,
         totalRequired: result.totalRequired || 0,
         totalAssigned: result.totalAssigned || 0,
       });
-      if (result.entries?.length > 0) {
-        toast.success(`Generated ${result.entries.length} periods`);
-      } else {
+      if (entries.length > 0) {
+        toast.success(`Generated ${entries.length} periods`);
+      }
+      if (result.conflicts?.length > 0) {
+        toast.warning(`${result.conflicts.length} conflict(s) found`);
+      }
+      if (entries.length === 0 && (!result.conflicts || result.conflicts.length === 0)) {
         toast.error("No periods could be generated. Check constraints.");
       }
     } catch (err: any) { toast.error(err.message || "Generation failed"); } finally { setGenerating(false); }
@@ -151,31 +169,46 @@ export function TimetableScheduler() {
     if (!generated || generated.length === 0) { toast.error("Nothing to save"); return; }
     setSaving(true);
     try {
-      await api.post("/api/school/timetable/auto-generate", {
+      const res = await api.post<any>("/api/school/timetable/auto-generate", {
         class_id: selectedClass,
         overwrite: true,
       });
-      toast.success(`Saved ${generated.length} periods`);
+      const result = res.data?.data || {};
+      const count = result.timetable?.length || result.entries?.length || 0;
+      toast.success(`Saved ${count} periods`);
       setGenerated(null);
       setGenResult(null);
+      setConflicts([]);
+      setGenScore(null);
     } catch (err: any) { toast.error(err.message || "Save failed"); } finally { setSaving(false); }
   };
 
   const handleOverwrite = async () => {
     setGenerating(true); setGenerated(null); setGenResult(null);
+    setConflicts([]); setGenScore(null);
     try {
       const res = await api.post<any>("/api/school/timetable/auto-generate", {
         class_id: selectedClass,
         overwrite: true,
       });
       const result = res.data?.data || {};
-      setGenerated(result.entries || []);
+      const entries = result.timetable || result.entries || [];
+      setGenerated(entries);
+      setConflicts(result.conflicts || []);
+      setGenScore(result.score ?? null);
       setGenResult({
         success: result.success,
         totalRequired: result.totalRequired || 0,
         totalAssigned: result.totalAssigned || 0,
       });
-      toast.success(`Generated and saved ${result.entries?.length || 0} periods`);
+      if (entries.length > 0) {
+        toast.success(`Generated and saved ${entries.length} periods`);
+      } else {
+        toast.error("No periods could be generated. Check constraints.");
+      }
+      if (result.conflicts?.length > 0) {
+        toast.warning(`${result.conflicts.length} conflict(s) found. Check constraints.`);
+      }
     } catch (err: any) { toast.error(err.message || "Generation failed"); } finally { setGenerating(false); }
   };
 
@@ -245,13 +278,15 @@ export function TimetableScheduler() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>Timetable Scheduler</h1>
-          <p className="text-sm" style={{ color: MUTED }}>Automatically generate class timetables</p>
+    <div className={embedded ? "space-y-4" : "max-w-6xl mx-auto space-y-6"}>
+      {!embedded && (
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>Timetable Scheduler</h1>
+            <p className="text-sm" style={{ color: MUTED }}>Automatically generate class timetables</p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-end gap-4 flex-wrap">
@@ -280,6 +315,21 @@ export function TimetableScheduler() {
           </div>
         </div>
       </div>
+
+      {selectedClass && subjects.length > 0 && settings && (() => {
+        const totalSlots = (settings.days_of_week?.length || 5) * (settings.periods_per_day || 8);
+        const requiredPeriods = subjects.reduce((sum: number, s: SubjectItem) => sum + (s.periods_per_week || 2), 0);
+        if (requiredPeriods > totalSlots) {
+          return (
+            <div className="flex items-center gap-2 p-3 rounded-xl text-xs"
+              style={{ background: "rgba(245,158,11,0.1)", color: "#92400E", border: "1px solid rgba(245,158,11,0.2)" }}>
+              <AlertCircle size={14} />
+              Warning: {requiredPeriods} periods required but only {totalSlots} slots available ({settings.days_of_week?.length || 5} days × {settings.periods_per_day || 8} periods). Reduce periods per week or increase periods per day.
+            </div>
+          );
+        }
+        return null;
+      })()}
 
       {constraintsLoading && (
         <div className="flex items-center justify-center py-10">
@@ -391,6 +441,12 @@ export function TimetableScheduler() {
                       <AlertCircle size={11} /> Partial
                     </span>
                   )}
+                  {genScore !== null && (
+                    <span className="text-xs px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(99,102,241,0.1)", color: "#4338CA" }}>
+                      Score: {genScore}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs" style={{ color: MUTED }}>
@@ -405,6 +461,28 @@ export function TimetableScheduler() {
                 </div>
               </div>
               {renderGrid(generated)}
+            </div>
+          )}
+
+          {conflicts.length > 0 && (
+            <div className="p-5 rounded-2xl mt-4" style={{ background: "white", border: "1px solid rgba(239,68,68,0.2)" }}>
+              <h2 className="font-semibold text-sm mb-3 flex items-center gap-1.5" style={{ color: "#DC2626" }}>
+                <AlertCircle size={14} />
+                Conflict Report ({conflicts.length})
+              </h2>
+              <div className="space-y-2">
+                {conflicts.map((c, i) => (
+                  <div key={i} className="flex items-start gap-2 py-1.5 px-3 rounded-lg text-xs"
+                    style={{ background: "rgba(239,68,68,0.05)" }}>
+                    <span className="shrink-0 px-1.5 py-0.5 rounded font-medium whitespace-nowrap"
+                      style={{ background: "rgba(239,68,68,0.15)", color: "#DC2626" }}>
+                      {c.type === 'no_valid_slot' ? 'NO SLOT' :
+                       c.type === 'max_attempts_exceeded' ? 'TIMEOUT' : c.type.toUpperCase()}
+                    </span>
+                    <span style={{ color: PLUM }}>{c.message}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
