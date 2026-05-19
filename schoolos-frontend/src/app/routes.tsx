@@ -37,6 +37,7 @@ import { Reports } from "./pages/Reports";
 import { AuditLogs } from "./pages/AuditLogs";
 import { SystemHealth } from "./pages/SystemHealth";
 import { SchoolSettings } from "./pages/dashboard/settings/SchoolSettings";
+import { AdminProfile } from "./pages/dashboard/profile/AdminProfile";
 import { SuperAdminLayout } from "./pages/SuperAdminLayout";
 import { SuperAdminDashboard } from "./pages/SuperAdminDashboard";
 import { SuperAdminSchools } from "./pages/SuperAdminSchools";
@@ -125,6 +126,7 @@ export const router = createBrowserRouter([
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
       { path: "system-health", Component: SystemHealth },
+      { path: "profile", Component: AdminProfile },
       { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SchoolSettings /></RequireRole> },
       { path: "users", element: <RequireRole roles={["school_admin", "admin"]}><AdminUsers /></RequireRole> },
       { path: "roles", element: <RequireRole roles={["school_admin", "admin"]}><AdminRoles /></RequireRole> },
