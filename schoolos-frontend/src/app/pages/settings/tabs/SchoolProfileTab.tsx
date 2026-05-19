@@ -131,10 +131,13 @@ export function SchoolProfileTab() {
       if (res.data) {
         toast.success("School profile updated!");
       } else {
-        toast.error("Failed to update school profile");
+        const msg = res.error || "Failed to update school profile";
+        console.error("Save error response:", res);
+        toast.error(msg);
       }
-    } catch {
-      toast.error("Failed to update school profile");
+    } catch (err: any) {
+      console.error("Save threw:", err);
+      toast.error(err?.message || "Failed to update school profile");
     } finally {
       setSaving(false);
     }
