@@ -82,6 +82,21 @@ export const api = {
     return handleResponse<T>(response);
   },
 
+  patch: async <T>(endpoint: string, body?: any, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      ...defaultFetchInit,
+      ...options,
+      method: 'PATCH',
+      credentials: options.credentials ?? defaultFetchInit.credentials,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return handleResponse<T>(response);
+  },
+
   delete: async <T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
