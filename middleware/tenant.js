@@ -16,6 +16,11 @@ const extractSubdomain = (host) => {
         return null;
     }
 
+    // Skip platform-assigned hostnames (DigitalOcean App Platform, etc.)
+    if (cleanHost.includes('ondigitalocean.app') || cleanHost.includes('herokuapp.com')) {
+        return null;
+    }
+
     const parts = cleanHost.split('.');
     if (parts.length < 2) return null;
 
