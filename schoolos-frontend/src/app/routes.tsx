@@ -16,6 +16,7 @@ import { Students } from "./pages/Students";
 import { StudentsEnhanced } from "./pages/StudentsEnhanced";
 import { AttendanceLinks } from "./pages/AttendanceLinks";
 import { ReportCards } from "./pages/ReportCards";
+import { GradebookGrid } from "./pages/dashboard/gradebook/GradebookGrid";
 import { BulkImport } from "./pages/BulkImport";
 import { StaffDirectory } from "./pages/StaffDirectory";
 import { DailySignIn } from "./pages/DailySignIn";
@@ -120,6 +121,7 @@ export const router = createBrowserRouter([
       { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
       { path: "finance", Component: Finance },
+      { path: "gradebook", Component: GradebookGrid },
       { path: "reports", Component: Reports },
       { path: "audit-logs", Component: AuditLogs },
       { path: "fees", Component: FeePayment },

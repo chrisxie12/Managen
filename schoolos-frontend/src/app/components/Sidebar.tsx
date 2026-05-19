@@ -43,7 +43,7 @@ const navSections: NavSection[] = [
     items: [
       { icon: School, label: "Classes & Tiers", path: "/dashboard/classes" },
       { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
-      { icon: NotebookPen, label: "Gradebook & SBA", path: "/dashboard/gradebook", future: true },
+      { icon: NotebookPen, label: "Gradebook & SBA", path: "/dashboard/gradebook" },
       { icon: FileSpreadsheet, label: "Terminal Report Cards", path: "/dashboard/reports", future: true },
     ],
   },

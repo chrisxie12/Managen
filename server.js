@@ -154,6 +154,7 @@ app.use('/api/school/health', tenantMiddleware, healthRoutes);
 app.use('/api/school/settings', tenantMiddleware, settingsRoutes);
 app.use('/api/school/features', tenantMiddleware, featureRoutes);
 app.use('/api/user', tenantMiddleware, userRoutes);
+app.use('/api/grades', tenantMiddleware, require('./routes/grades'));
 
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
