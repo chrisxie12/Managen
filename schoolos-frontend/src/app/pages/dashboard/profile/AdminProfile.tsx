@@ -26,6 +26,7 @@ function AdminProfile() {
   const [phone, setPhone] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
   const [savingPersonal, setSavingPersonal] = useState(false);
 
   const [currentPassword, setCurrentPassword] = useState("");
@@ -88,7 +89,11 @@ function AdminProfile() {
     }
     setAvatarFile(file);
     const reader = new FileReader();
-    reader.onload = (ev) => setAvatarUrl(ev.target?.result as string);
+    reader.onload = (ev) => {
+      const dataUri = ev.target?.result as string;
+      setAvatarUrl(dataUri);
+      setAvatarDataUri(dataUri);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -98,10 +103,11 @@ function AdminProfile() {
     setSavingPersonal(true);
     try {
       let newAvatarUrl = avatarUrl;
-      if (avatarFile) {
-        const fd = new FormData();
-        fd.append("avatar", avatarFile);
-        const uploadRes = await api.upload<any>("/api/user/upload-avatar", fd);
+      if (avatarDataUri) {
+        const uploadRes = await api.post<any>("/api/user/upload-avatar", {
+          userId: user.id,
+          imageDataUri: avatarDataUri,
+        });
         newAvatarUrl = uploadRes.data?.avatar_url || avatarUrl;
       }
       const res = await api.put<any>(`/api/school/users/${user.id}`, {
