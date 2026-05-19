@@ -3,9 +3,10 @@ import {
   BookOpen, Plus, X, Loader2, Search, Users, School,
   Trash2, Check, AlertCircle, Clock, Star, UserCheck,
   Briefcase, Layers, CalendarDays, AlertTriangle, UserPlus,
-  GitBranch,
+  GitBranch, RefreshCw,
 } from "lucide-react";
 import { api } from "../services/api";
+import { TimetableScheduler } from "../TimetableScheduler";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -866,6 +867,7 @@ function TimetableTab({ setError, setSuccess }: { setError: (s: string) => void;
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
+  const [showAutoGenerate, setShowAutoGenerate] = useState(false);
   const [form, setForm] = useState({ day: "Monday", period: "", subject: "", teacher: "", class_name: "", room: "" });
 
   const load = useCallback(async () => {
@@ -941,6 +943,21 @@ function TimetableTab({ setError, setSuccess }: { setError: (s: string) => void;
         style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
         <Plus size={14} /> Add Period
       </button>
+      <button onClick={() => setShowAutoGenerate(!showAutoGenerate)}
+        className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold active:scale-95 transition-transform mb-4 ml-2"
+        style={{ 
+          background: showAutoGenerate ? "rgba(56,25,50,0.1)" : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
+          color: showAutoGenerate ? PLUM : MILK 
+        }}>
+        <RefreshCw size={14} />
+        {showAutoGenerate ? "Close Generator" : "Generate Automatically"}
+      </button>
+
+      {showAutoGenerate && (
+        <div className="mb-6 p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <TimetableScheduler embedded />
+        </div>
+      )}
 
       {entries.length === 0 ? (
         <EmptyState icon={Clock} title="No timetable entries yet" desc="Add periods to build the schedule" />
