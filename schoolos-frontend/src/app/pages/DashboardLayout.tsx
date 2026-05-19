@@ -1,46 +1,17 @@
+import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { GraduationCap, Users, BellRing, MessageSquare, Wallet,
-  Bell, LogOut, Settings, HelpCircle, BookOpen, Search,
-  Shield, UserPlus, CalendarCheck, ClipboardCheck, BarChart3, Activity, School, Mail,
-  MapPin, FileText, Upload, Clock, Briefcase, Percent, CreditCard, Calendar,
+import {
+  Bell, Search, Menu,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
-import { pagePermissions } from "../utils/permissions";
+import { Sidebar } from "../components/Sidebar";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
-const SIDEBAR_BG = "#F9F1E7";
 const MUTED = "#7D6077";
-
-const allNavItems = [
-  { icon: GraduationCap, label: "Dashboard", path: "/dashboard" },
-  { icon: School, label: "My Classes", path: "/dashboard/teacher/classes" },
-  { icon: Mail, label: "Inbox", path: "/dashboard/inbox" },
-  { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
-  { icon: Shield, label: "Roles & Permissions", path: "/dashboard/roles" },
-  { icon: UserPlus, label: "Users", path: "/dashboard/users" },
-  { icon: Users, label: "Students", path: "/dashboard/students" },
-  { icon: Briefcase, label: "Staff Directory", path: "/dashboard/staff" },
-  { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
-  { icon: MapPin, label: "Geo Attendance", path: "/dashboard/attendance-links" },
-  { icon: Clock, label: "Daily Sign In/Out", path: "/dashboard/daily-signin" },
-  { icon: Percent, label: "Weighted Gradebook", path: "/dashboard/weighted-gradebook" },
-  { icon: Calendar, label: "Timetable Scheduler", path: "/dashboard/timetable-scheduler" },
-  { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
-  { icon: ClipboardCheck, label: "Assessments", path: "/dashboard/assessments" },
-  { icon: FileText, label: "Report Cards", path: "/dashboard/report-cards" },
-  { icon: Upload, label: "Bulk Import", path: "/dashboard/bulk-import" },
-  { icon: BookOpen, label: "Academics", path: "/dashboard/academics" },
-  { icon: Wallet, label: "Finance", path: "/dashboard/finance" },
-  { icon: CreditCard, label: "Pay Fees", path: "/dashboard/fees" },
-  { icon: BellRing, label: "Fee Reminders", path: "/dashboard/fee-reminders" },
-  { icon: MessageSquare, label: "Communication", path: "/dashboard/communication" },
-  { icon: Activity, label: "System Health", path: "/dashboard/system-health" },
-  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
-];
 
 const roleLabels: Record<string, string> = {
   school_admin: "Administrator",
@@ -52,111 +23,69 @@ const roleLabels: Record<string, string> = {
   parent: "Parent",
 };
 
+const topLevelPaths: Record<string, string> = {
+  "/dashboard/admin": "Dashboard",
+  "/dashboard/students": "Students",
+  "/dashboard/staff": "Teachers & Staff",
+  "/dashboard/parents": "Guardians",
+  "/dashboard/classes": "Classes & Tiers",
+  "/dashboard/attendance": "Attendance",
+  "/dashboard/gradebook": "Gradebook & SBA",
+  "/dashboard/reports": "Terminal Report Cards",
+  "/dashboard/fees": "Fee Collections",
+  "/dashboard/invoices": "Invoices & Accounts",
+  "/dashboard/communication": "Broadcast & Notice Board",
+  "/dashboard/settings": "School Settings",
+  "/dashboard/roles": "Security & Roles",
+  "/dashboard/profile": "My Profile",
+  "/dashboard/notifications": "Notifications",
+};
+
 export function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school, logout } = useAuth();
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
 
-  const userPerms = user?.permissions || [];
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const role = user?.role || "";
-
-  // Permission-driven nav filtering
-  const navItems = allNavItems.filter((item) => {
-    const required = pagePermissions[item.path];
-    if (!required) return true;
-    if (userPerms.length > 0) return required.some((p) => userPerms.includes(p));
-    return role === "school_admin" || role === "admin";
-  });
-
   const roleLabel = roleLabels[role] || "Administrator";
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "SA";
 
-  const isActive = (path: string) =>
-    path === "/dashboard"
+  const pageTitle = Object.entries(topLevelPaths).find(
+    ([path]) => path === "/dashboard"
       ? location.pathname === "/dashboard"
-      : location.pathname.startsWith(path);
+      : location.pathname.startsWith(path),
+  )?.[1] || "Dashboard";
 
   const handleLogout = async () => {
     await logout();
     navigate("/");
   };
 
-  const SidebarContent = () => (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 px-5 py-6 cursor-pointer" onClick={() => navigate("/")}>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
-          <GraduationCap size={17} color={MILK} />
-        </div>
-        <div>
-          <div style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>Managen</div>
-          <div style={{ color: MUTED, fontSize: "0.68rem" }}>{school?.name || "Dashboard"}</div>
-        </div>
-      </div>
-
-      <div className="mx-4 mb-4" style={{ height: 1, background: `rgba(56,25,50,0.07)` }} />
-
-      <div className="flex-1 px-3 flex flex-col gap-1">
-        <p className="px-3 mb-2 uppercase tracking-widest" style={{ color: MUTED, fontSize: "0.65rem" }}>Main Menu</p>
-        {navItems.map((item) => {
-          const active = isActive(item.path);
-          return (
-            <button key={item.path} onClick={() => { navigate(item.path); }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left transition-all active:scale-95"
-              style={{ background: active ? PLUM : "transparent", color: active ? MILK : PLUM_LIGHT }}>
-              <item.icon size={17} />
-              <span style={{ fontSize: "0.9rem", fontWeight: active ? 600 : 400 }}>{item.label}</span>
-            </button>
-          );
-        })}
-
-        <div className="mt-6 mb-2">
-          <p className="px-3 mb-2 uppercase tracking-widest" style={{ color: MUTED, fontSize: "0.65rem" }}>Support</p>
-          {[{ icon: HelpCircle, label: "Help & Support", path: "mailto:support@getschoolos.me" }].map((item) => (
-            <button key={item.label}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left hover:opacity-70 transition-opacity"
-              style={{ color: MUTED }}>
-              <item.icon size={16} />
-              <span style={{ fontSize: "0.88rem" }}>{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mx-3 mb-4 p-3 rounded-2xl flex items-center gap-3"
-        style={{ background: "rgba(56,25,50,0.05)", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
-          <span style={{ color: MILK, fontSize: "0.8rem", fontWeight: 700 }}>{initials}</span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <div style={{ color: PLUM, fontSize: "0.82rem", fontWeight: 600 }} className="truncate">{user?.fullName || "User"}</div>
-          <div style={{ color: MUTED, fontSize: "0.72rem" }}>{roleLabel}</div>
-        </div>
-        <button onClick={handleLogout} className="hover:opacity-70 transition-opacity">
-          <LogOut size={15} color={MUTED} />
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: MILK }}>
-      <aside className="flex flex-col w-60 flex-shrink-0 overflow-y-auto"
-        style={{ background: SIDEBAR_BG, borderRight: "1px solid rgba(56,25,50,0.07)" }}>
-        <SidebarContent />
-      </aside>
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
+      />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+        <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"
           style={{ background: "rgba(255,243,230,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setMobileOpen(true)} className="lg:hidden">
+              <Menu size={20} color={PLUM} />
+            </button>
             <div>
               <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }}>
-                {navItems.find((n) => isActive(n.path))?.label || "Dashboard"}
+                {pageTitle}
               </h1>
               <p style={{ color: MUTED, fontSize: "0.75rem" }}>Term 2, 2025/2026 Academic Year</p>
             </div>
@@ -174,7 +103,7 @@ export function DashboardLayout() {
               style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
               <Bell size={16} color={PLUM_LIGHT} />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-xl flex items-center justify-center text-xs font-bold"
+                <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
                   style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
               )}
             </button>
@@ -186,7 +115,7 @@ export function DashboardLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
           <SetupChecklist />
           <Outlet />
         </main>
