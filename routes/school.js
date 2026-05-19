@@ -2243,7 +2243,7 @@ router.get('/', protect, async (req, res) => {
 router.patch('/', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
-        const allowed = ['name','motto','school_type','year_established','registration_number','email','phone','website','address','city','region','country','logo_url','primary_color'];
+        const allowed = ['name','motto','school_type','year_established','registration_number','email','phone','website','address','city','region','country','logo_url','primary_color','timezone'];
         const updateData = settingsFields(req, allowed);
         const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
         if (error) return res.status(500).json({ error: error.message });

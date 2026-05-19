@@ -28,6 +28,16 @@ const SCHOOL_TYPES = [
   { value: "university", label: "University" },
 ];
 
+const TIMEZONES = [
+  "Africa/Accra", "Africa/Abidjan", "Africa/Cairo", "Africa/Casablanca",
+  "Africa/Dar_es_Salaam", "Africa/Johannesburg", "Africa/Khartoum",
+  "Africa/Lagos", "Africa/Nairobi", "Africa/Tripoli",
+  "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
+  "Europe/London", "Europe/Paris", "Europe/Berlin", "Europe/Moscow",
+  "Asia/Dubai", "Asia/Kolkata", "Asia/Singapore", "Asia/Tokyo",
+  "Australia/Sydney", "Pacific/Auckland",
+];
+
 const PRESET_COLORS = [
   "#6366f1", "#3b82f6", "#10b981", "#ef4444",
   "#f59e0b", "#ec4899", "#14b8a6", "#1e293b",
@@ -59,7 +69,7 @@ function FormField({ label, required, error, children }: { label: string; requir
 const INITIAL_FORM = {
   name: "", motto: "", school_type: "", year_established: "", registration_number: "",
   email: "", phone: "+233", website: "", address: "", city: "", region: "", country: "Ghana",
-  logo_url: "", primary_color: PLUM,
+  logo_url: "", primary_color: PLUM, timezone: "Africa/Accra",
 };
 
 export function SchoolProfileTab() {
@@ -88,6 +98,7 @@ export function SchoolProfileTab() {
             city: d.city || "", region: d.region || "",
             country: d.country || "Ghana",
             logo_url: d.logo_url || "", primary_color: d.primary_color || PLUM,
+            timezone: d.timezone || "Africa/Accra",
           });
         }
       } catch {
@@ -259,6 +270,19 @@ export function SchoolProfileTab() {
                 <Input value={form.country || "Ghana"} onChange={set("country")}
                   className="h-9 text-sm rounded-xl"
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              </FormField>
+              <FormField label="Timezone">
+                <Select value={form.timezone || "Africa/Accra"} onValueChange={setSelect("timezone")}>
+                  <SelectTrigger className="h-9 text-xs rounded-xl"
+                    style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                    <SelectValue placeholder="Select timezone..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONES.map((tz) => (
+                      <SelectItem key={tz} value={tz} className="text-xs font-mono">{tz}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormField>
             </div>
             <FormField label="School Address" required error={errors.address}>

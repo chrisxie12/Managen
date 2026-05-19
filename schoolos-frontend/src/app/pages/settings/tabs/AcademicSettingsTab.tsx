@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Save, Loader2, Plus, Trash2, ArrowUp, ArrowDown, Check, X, BookOpen } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, ArrowUp, ArrowDown, Check, X, BookOpen, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";
@@ -92,6 +92,14 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
   const [editingScaleId, setEditingScaleId] = useState<string | null>(null);
   const [editScaleName, setEditScaleName] = useState("");
 
+  const [assessmentTypes, setAssessmentTypes] = useState<any[]>([]);
+  const [newAssessmentTypeName, setNewAssessmentTypeName] = useState("");
+  const [newAssessmentTypeWeight, setNewAssessmentTypeWeight] = useState(50);
+  const [creatingAssessmentType, setCreatingAssessmentType] = useState(false);
+  const [editingAssessmentTypeId, setEditingAssessmentTypeId] = useState<string | null>(null);
+  const [editAssessmentTypeData, setEditAssessmentTypeData] = useState({ name: "", weight: 50, is_active: true });
+  const [deletingAssessmentTypeId, setDeletingAssessmentTypeId] = useState<string | null>(null);
+
   useEffect(() => {
     if (profile) {
       const cs = profile.class_settings || { levels: 3, naming_convention: "Year-based", custom_prefix: "", max_students: 40 };
@@ -117,6 +125,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
     fetchClasses();
     fetchSubjects();
     fetchGradingScales();
+    fetchAssessmentTypes();
   }, []);
 
   const fetchTerms = async () => {
@@ -268,6 +277,55 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
       toast.error(err?.message || "Failed to delete grading scale");
     } finally {
       setDeletingScaleId(null);
+    }
+  };
+
+  const fetchAssessmentTypes = async () => {
+    try {
+      const res = await api.get<any>("/api/school/assessment-types");
+      const list = res.data?.data?.types || res.data?.types || (Array.isArray(res.data) ? res.data : []);
+      setAssessmentTypes(list);
+    } catch { /* ignore */ }
+  };
+
+  const handleCreateAssessmentType = async () => {
+    if (!newAssessmentTypeName.trim()) return;
+    setCreatingAssessmentType(true);
+    try {
+      await api.post("/api/school/assessment-types", { name: newAssessmentTypeName.trim(), weight: newAssessmentTypeWeight, is_active: true });
+      toast.success("Assessment type created");
+      setNewAssessmentTypeName("");
+      setNewAssessmentTypeWeight(50);
+      fetchAssessmentTypes();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to create assessment type");
+    } finally {
+      setCreatingAssessmentType(false);
+    }
+  };
+
+  const handleUpdateAssessmentType = async (id: string) => {
+    if (!editAssessmentTypeData.name.trim()) return;
+    try {
+      await api.put(`/api/school/assessment-types/${id}`, editAssessmentTypeData);
+      toast.success("Assessment type updated");
+      setEditingAssessmentTypeId(null);
+      fetchAssessmentTypes();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update assessment type");
+    }
+  };
+
+  const handleDeleteAssessmentType = async (id: string) => {
+    setDeletingAssessmentTypeId(id);
+    try {
+      await api.delete(`/api/school/assessment-types/${id}`);
+      toast.success("Assessment type deleted");
+      fetchAssessmentTypes();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete assessment type");
+    } finally {
+      setDeletingAssessmentTypeId(null);
     }
   };
 
@@ -805,6 +863,128 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
             })}
           </div>
         </FormField>
+      </SectionCard>
+
+      <SectionCard title="Assessment Types" desc="Configure weighted assessment categories for grading">
+        {loadingSubjects ? (
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+        ) : (<>
+          <div className="overflow-x-auto mb-3">
+            <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr className="text-left" style={{ color: MUTED }}>
+                  <th className="pb-2 pr-3 font-medium">Name</th>
+                  <th className="pb-2 pr-3 font-medium">Weight (%)</th>
+                  <th className="pb-2 pr-3 font-medium">Active</th>
+                  <th className="pb-2 font-medium w-16" />
+                </tr>
+              </thead>
+              <tbody>
+                {assessmentTypes.length === 0 ? (
+                  <tr><td colSpan={4} className="py-4 text-center" style={{ color: MUTED }}>No assessment types yet.</td></tr>
+                ) : assessmentTypes.map((at: any) => {
+                  const isEditing = editingAssessmentTypeId === at.id;
+                  return (
+                    <tr key={at.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Input value={editAssessmentTypeData.name}
+                            onChange={(e) => setEditAssessmentTypeData((p) => ({ ...p, name: e.target.value }))}
+                            className="h-8 text-xs rounded-xl min-w-[120px]"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span className="font-medium" style={{ color: PLUM }}>{at.name}</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Input type="number" min={0} max={100} value={editAssessmentTypeData.weight}
+                            onChange={(e) => setEditAssessmentTypeData((p) => ({ ...p, weight: Number(e.target.value) }))}
+                            className="h-8 text-xs rounded-xl w-20"
+                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        ) : (
+                          <span style={{ color: PLUM }}>{at.weight}%</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 pr-3">
+                        {isEditing ? (
+                          <Switch checked={editAssessmentTypeData.is_active}
+                            onCheckedChange={(v) => setEditAssessmentTypeData((p) => ({ ...p, is_active: v }))} />
+                        ) : (
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                            at.is_active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                          }`}>
+                            {at.is_active ? "Active" : "Inactive"}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-2.5">
+                        {isEditing ? (
+                          <div className="flex gap-1">
+                            <button onClick={() => handleUpdateAssessmentType(at.id)}
+                              className="p-1.5 rounded-lg" style={{ background: "rgba(16,185,129,0.1)" }}>
+                              <Check size={13} color="#16A34A" />
+                            </button>
+                            <button onClick={() => { setEditingAssessmentTypeId(null); }}
+                              className="p-1.5 rounded-lg" style={{ background: "rgba(239,68,68,0.08)" }}>
+                              <X size={13} color="#EF4444" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex gap-1">
+                            {!isReadOnly && (
+                              <button onClick={() => {
+                                setEditingAssessmentTypeId(at.id);
+                                setEditAssessmentTypeData({ name: at.name, weight: at.weight, is_active: at.is_active ?? true });
+                              }}
+                                className="p-1.5 rounded-lg transition-colors"
+                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                <Pencil size={13} color={PLUM} />
+                              </button>
+                            )}
+                            {!isReadOnly && (
+                              <button onClick={() => handleDeleteAssessmentType(at.id)}
+                                disabled={deletingAssessmentTypeId === at.id}
+                                className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
+                                style={{ background: "rgba(239,68,68,0.08)" }}>
+                                {deletingAssessmentTypeId === at.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} color="#EF4444" />}
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {!isReadOnly && (
+            <div className="flex gap-2 items-end">
+              <div className="flex-1">
+                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>New Assessment Type</label>
+                <Input value={newAssessmentTypeName}
+                  onChange={(e) => setNewAssessmentTypeName(e.target.value)}
+                  placeholder="e.g. Midterm Exam"
+                  className="h-9 text-sm rounded-xl"
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              </div>
+              <div className="w-24">
+                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Weight %</label>
+                <Input type="number" min={0} max={100} value={newAssessmentTypeWeight}
+                  onChange={(e) => setNewAssessmentTypeWeight(Number(e.target.value))}
+                  className="h-9 text-sm rounded-xl"
+                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              </div>
+              <Button onClick={handleCreateAssessmentType}
+                disabled={creatingAssessmentType || !newAssessmentTypeName.trim()}
+                className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                {creatingAssessmentType ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
+                Add
+              </Button>
+            </div>
+          )}
+        </>)}
       </SectionCard>
 
       {!isReadOnly && (
