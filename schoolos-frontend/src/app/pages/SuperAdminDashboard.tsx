@@ -279,7 +279,7 @@ export function SuperAdminDashboard() {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${BORDER}` }}>
               <Search size={13} color={MUTED} />
-              <input placeholder="Search schools..." className="bg-transparent outline-none text-xs flex-1 min-w-[140px]" style={{ color: "#94a3b8" }} />
+              <input placeholder="Search schools..." className="bg-transparent outline-none text-xs flex-1 min-w-0" style={{ color: "#94a3b8" }} />
             </div>
           </div>
         </div>
