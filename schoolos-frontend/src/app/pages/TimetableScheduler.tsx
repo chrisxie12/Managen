@@ -288,13 +288,13 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
         </div>
       )}
 
-      <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-end gap-4 flex-wrap">
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-medium mb-1.5" style={{ color: NAVY_LIGHT }}>Class</label>
             <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select a class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -338,7 +338,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
       )}
 
       {!constraintsLoading && selectedClass && subjects.length === 0 && (
-        <div className="p-10 rounded-2xl text-center" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-10 rounded-2xl text-center" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <BookOpen size={32} className="mx-auto mb-2" style={{ color: MUTED }} />
           <p className="text-sm font-medium" style={{ color: NAVY_LIGHT }}>No subjects assigned to this class</p>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Add subjects via Academics page first</p>
@@ -347,7 +347,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
 
       {!constraintsLoading && selectedClass && subjects.length > 0 && (
         <>
-          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <h2 className="font-semibold text-sm mb-3" style={{ color: NAVY }}>
               <BookOpen size={14} className="inline mr-1.5" />
               Subjects & Periods per Week
@@ -365,18 +365,18 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                   <div className="flex items-center gap-1">
                     <button onClick={() => updatePeriods(cs.id, (cs.periods_per_week || 2) - 1)}
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold active:scale-90"
-                      style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>−</button>
+                      style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>−</button>
                     <span className="w-8 text-center text-sm font-bold" style={{ color: NAVY }}>{cs.periods_per_week || 2}</span>
                     <button onClick={() => updatePeriods(cs.id, (cs.periods_per_week || 2) + 1)}
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold active:scale-90"
-                      style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>+</button>
+                      style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>+</button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
                 <Users size={14} className="inline mr-1.5" />
@@ -384,7 +384,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
               </h2>
               <button onClick={() => setShowAvailEditor(!showAvailEditor)}
                 className="text-xs font-medium active:scale-95 transition-transform px-3 py-1 rounded-lg"
-                style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+                style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
                 {showAvailEditor ? "Done" : "Edit"}
               </button>
             </div>
@@ -394,7 +394,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                   onClick={() => showAvailEditor && openAvailEditor(t)}
                   className="px-3 py-1.5 rounded-xl text-xs cursor-pointer transition-all"
                   style={{
-                    background: showAvailEditor ? "rgba(99,102,241,0.1)" : "rgba(56,25,50,0.05)",
+                    background: showAvailEditor ? "rgba(99,102,241,0.1)" : "rgba(10,36,114,0.05)",
                     color: NAVY,
                     border: showAvailEditor ? "1px solid rgba(99,102,241,0.3)" : "none",
                   }}>
@@ -404,7 +404,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
                 <MapPin size={14} className="inline mr-1.5" />
@@ -425,7 +425,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
           </div>
 
           {generated && genResult && (
-            <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
@@ -487,7 +487,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
           )}
 
           {existingEntries.length > 0 && (
-            <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <button onClick={() => setShowExisting(!showExisting)}
                 className="flex items-center gap-1.5 text-sm font-semibold mb-2"
                 style={{ color: NAVY }}>
@@ -524,7 +524,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                         style={{
                           background: (editAvail[day] || []).includes(pn) ? NAVY : CREAM,
                           color: (editAvail[day] || []).includes(pn) ? CREAM : NAVY,
-                          border: `1px solid ${(editAvail[day] || []).includes(pn) ? NAVY : 'rgba(56,25,50,0.1)'}`,
+                          border: `1px solid ${(editAvail[day] || []).includes(pn) ? NAVY : 'rgba(10,36,114,0.1)'}`,
                         }}>
                         {pn}
                       </button>

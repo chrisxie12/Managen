@@ -57,7 +57,7 @@ export function ParentChild() {
           value={selected?.id || ""}
           onChange={(e) => setSelected(children.find((c) => c.id === e.target.value) || null)}
           className="w-full p-3 rounded-2xl text-sm font-medium"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
         >
           {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
@@ -98,7 +98,7 @@ export function ParentChild() {
 
 function InfoRow({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Icon size={16} className="shrink-0" color={NAVY_LIGHT} />
       <div className="min-w-0">
         <p className="text-[10px] font-medium" style={{ color: MUTED }}>{label}</p>

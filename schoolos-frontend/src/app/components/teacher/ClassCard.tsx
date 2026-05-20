@@ -11,7 +11,7 @@ export function ClassCard({ c, onClick }: { c: TeacherClass; onClick: () => void
     <div
       onClick={onClick}
       className="p-5 rounded-[24px] cursor-pointer hover:scale-[1.02] transition-all active:scale-[0.98]"
-      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}
+      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${NAVY}15` }}>

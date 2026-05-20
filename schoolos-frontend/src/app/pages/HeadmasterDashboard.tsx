@@ -76,7 +76,7 @@ export function HeadmasterDashboard() {
           />
         </DashboardCard>
       ) : (
-        <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="text-center p-8">
             <FileSpreadsheet size={40} color={MUTED} className="mx-auto mb-4" />
             <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Academic Performance</p>
@@ -87,9 +87,9 @@ export function HeadmasterDashboard() {
 
       <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: `linear-gradient(135deg, ${NAVY}, #0C2D8A)` }}>
         <div className="text-center p-8">
-          <GraduationCap size={32} color="rgba(255,243,230,0.6)" className="mx-auto mb-3" />
+          <GraduationCap size={32} color="rgba(248,249,250,0.6)" className="mx-auto mb-3" />
           <p style={{ color: "#F8F9FA", fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Pending Approvals</p>
-          <p style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.85rem" }}>
+          <p style={{ color: "rgba(248,249,250,0.6)", fontSize: "0.85rem" }}>
             {d.pendingApprovals > 0
               ? `${d.pendingApprovals} assessment${d.pendingApprovals > 1 ? "s" : ""} awaiting your review.`
               : "No pending approvals. All assessments have been reviewed."}

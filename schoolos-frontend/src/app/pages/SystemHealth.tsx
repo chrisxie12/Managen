@@ -97,7 +97,7 @@ function ServiceCard({ name, check }: { name: string; check: ServiceCheck }) {
 
   return (
     <div className="p-4 rounded-2xl flex items-center justify-between"
-      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: sconfig.bg }}>
           <Icon size={18} color={sconfig.color} />
@@ -203,7 +203,7 @@ export function SystemHealth() {
             { label: "Down", count: s.down, color: "#EF4444", icon: X },
             { label: "Unconfigured", count: s.unconfigured, color: "#6B7280", icon: AlertCircle },
           ].filter(g => g.count > 0).map(g => (
-            <div key={g.label} className="flex items-center gap-2 px-4 py-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div key={g.label} className="flex items-center gap-2 px-4 py-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <g.icon size={16} color={g.color} />
               <span className="text-sm font-semibold" style={{ color: g.color }}>{g.count}</span>
               <span className="text-xs" style={{ color: MUTED }}>{g.label}</span>
@@ -227,7 +227,7 @@ export function SystemHealth() {
           </button>
           {serverExpanded && (
             <div className="p-4 rounded-2xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 text-xs"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               {[
                 { label: "Uptime", value: data.checks.server.uptime || "—" },
                 { label: "Platform", value: data.checks.server.platform || "—" },
@@ -244,7 +244,7 @@ export function SystemHealth() {
                 { label: "Node Version", value: data.checks.server.nodeVersion || "—" },
                 { label: "Start Time", value: data.checks.server.startTime ? formatDate(data.checks.server.startTime) : "—" },
               ].map(({ label, value }) => (
-                <div key={label} className="p-2 rounded-xl" style={{ background: "rgba(56,25,50,0.03)" }}>
+                <div key={label} className="p-2 rounded-xl" style={{ background: "rgba(10,36,114,0.03)" }}>
                   <span className="block font-medium" style={{ color: MUTED }}>{label}</span>
                   <span style={{ color: NAVY }}>{value}</span>
                 </div>
@@ -258,22 +258,22 @@ export function SystemHealth() {
         <div className="mb-8">
           <h3 className="text-sm font-semibold mb-3" style={{ color: NAVY }}>Notification Delivery (7 days)</h3>
           <div className="flex flex-wrap gap-3">
-            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Total Sent</p>
               <p className="text-lg font-bold" style={{ color: NAVY }}>{data.notifications.sent}</p>
             </div>
-            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Failed</p>
               <p className="text-lg font-bold" style={{ color: "#EF4444" }}>{data.notifications.failed}</p>
             </div>
-            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Success Rate</p>
               <p className="text-lg font-bold" style={{ color: data.notifications.rate >= 90 ? "#10B981" : data.notifications.rate >= 70 ? "#F59E0B" : "#EF4444" }}>
                 {data.notifications.rate}%
               </p>
             </div>
             {Object.entries(data.notifications.byChannel).map(([ch, st]) => (
-              <div key={ch} className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              <div key={ch} className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                 <p className="text-xs" style={{ color: MUTED }}>{ch}</p>
                 <p className="text-lg font-bold" style={{ color: NAVY }}>{st.sent}/{st.total}</p>
               </div>

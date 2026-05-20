@@ -22,7 +22,7 @@ const MUTED = "#6B7280";
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <h3 className="font-bold mb-4" style={{ color: NAVY, fontFamily: "'Playfair Display', serif", fontSize: "0.95rem" }}>{title}</h3>
       {children}
     </div>
@@ -113,7 +113,7 @@ export function StudentDetails() {
   return (
     <div className="space-y-5">
       <div className="flex items-start gap-4 mb-2">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl shrink-0 mt-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl shrink-0 mt-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
           <ArrowLeft size={16} color={NAVY} />
         </button>
         <UploadButton
@@ -135,7 +135,7 @@ export function StudentDetails() {
             style={{
               background: tab === t.key ? NAVY : "white",
               color: tab === t.key ? CREAM : NAVY_LIGHT,
-              border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+              border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
             }}>
             <t.icon size={14} /> {t.label}
           </button>

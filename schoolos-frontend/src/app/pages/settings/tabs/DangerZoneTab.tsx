@@ -62,7 +62,7 @@ function DangerAction({
           onChange={(e) => onConfirmChange(e.target.value)}
           placeholder={confirmLabel}
           className="h-9 text-xs rounded-xl flex-1"
-          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+          style={{ borderColor: "rgba(10,36,114,0.12)" }}
         />
         <Button
           onClick={onAction}
@@ -85,7 +85,7 @@ function DangerAction({
             onChange={(e) => onPasswordChange?.(e.target.value)}
             placeholder="Enter your current password"
             className="h-9 text-xs rounded-xl w-full"
-            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+            style={{ borderColor: "rgba(10,36,114,0.12)" }}
           />
         </div>
       )}

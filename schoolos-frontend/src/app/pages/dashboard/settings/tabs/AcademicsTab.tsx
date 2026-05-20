@@ -10,7 +10,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -77,7 +77,7 @@ export function AcademicsTab({ role }: Props) {
             </div>
             <Switch checked={standardsCurriculum} onCheckedChange={setStandardsCurriculum} disabled={isReadOnly} />
           </div>
-          <div className="border-t pt-4 flex items-center justify-between" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+          <div className="border-t pt-4 flex items-center justify-between" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
             <div>
               <p className="text-sm font-medium" style={{ color: NAVY }}>Publish Class Positions on Terminal Reports</p>
               <p className="text-xs mt-0.5" style={{ color: MUTED }}>Include ranked class positions in end-of-term report cards</p>

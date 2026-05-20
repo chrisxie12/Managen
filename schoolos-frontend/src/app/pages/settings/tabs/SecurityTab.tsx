@@ -15,7 +15,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -51,7 +51,7 @@ function PasswordField({ value, onChange, show, onToggle, placeholder, disabled 
         disabled={disabled}
         type={show ? "text" : "password"}
         className="h-9 text-sm rounded-xl w-full pr-9"
-        style={{ borderColor: "rgba(56,25,50,0.12)" }}
+        style={{ borderColor: "rgba(10,36,114,0.12)" }}
         placeholder={placeholder}
       />
       <button type="button" onClick={onToggle}
@@ -92,7 +92,7 @@ function PasswordStrengthBar({ password }: { password: string }) {
 
   return (
     <div className="mt-1.5">
-      <div className="h-1.5 rounded-full w-full" style={{ background: "rgba(56,25,50,0.08)" }}>
+      <div className="h-1.5 rounded-full w-full" style={{ background: "rgba(10,36,114,0.08)" }}>
         <div className="h-1.5 rounded-full transition-all duration-300" style={{ width, background: color }} />
       </div>
       {strength !== "none" && (
@@ -448,7 +448,7 @@ export function SecurityTab({ role }: Props) {
                 <p className="text-xs" style={{ color: MUTED }}>
                   Status: <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
                     style={{
-                      background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(56,25,50,0.06)",
+                      background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(10,36,114,0.06)",
                       color: twoFAEnabled ? "#10B981" : MUTED,
                     }}>
                     {twoFAEnabled ? "Enabled" : "Not Enabled"}
@@ -464,10 +464,10 @@ export function SecurityTab({ role }: Props) {
             )}
           </div>
           {showBackupCodes && (
-            <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(56,25,50,0.04)" }}>
+            <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(10,36,114,0.04)" }}>
               <p className="text-xs font-medium mb-2" style={{ color: NAVY }}>Backup Codes</p>
               <p className="text-xs mb-2" style={{ color: MUTED }}>Save these codes in a secure place. You can use them to log in if you lose access to your authenticator app.</p>
-              <div className="p-2 rounded-lg mb-2 font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              <div className="p-2 rounded-lg mb-2 font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 {backupCodes}
               </div>
               <Button onClick={handleDownloadCodes} className="text-xs rounded-xl h-8 px-3" style={{ background: NAVY_LIGHT }}>
@@ -496,7 +496,7 @@ export function SecurityTab({ role }: Props) {
                 </thead>
                 <tbody>
                   {sessions.map((session) => (
-                    <tr key={session.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={session.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3">
                         <span className="font-medium" style={{ color: NAVY }}>{session.device}</span>
                         {session.is_current && (
@@ -545,18 +545,18 @@ export function SecurityTab({ role }: Props) {
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>From</label>
               <Input type="date" value={auditDateFrom}
                 onChange={(e) => setAuditDateFrom(e.target.value)}
-                className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="flex-1">
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>To</label>
               <Input type="date" value={auditDateTo}
                 onChange={(e) => setAuditDateTo(e.target.value)}
-                className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="w-full sm:w-40">
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Status</label>
               <Select value={auditStatusFilter} onValueChange={setAuditStatusFilter}>
-                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -586,7 +586,7 @@ export function SecurityTab({ role }: Props) {
                 </thead>
                 <tbody>
                   {loginHistory.map((entry, i) => (
-                    <tr key={i} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={i} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.timestamp}</td>
                       <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.ip}</td>
                       <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.device}</td>
@@ -680,17 +680,17 @@ export function SecurityTab({ role }: Props) {
             <FormField label="Password Expiry (days)">
               <Input type="number" min={0} value={passwordExpiryDays}
                 onChange={(e) => setPasswordExpiryDays(Number(e.target.value))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </FormField>
             <FormField label="Max Login Attempts">
               <Input type="number" min={1} value={maxLoginAttempts}
                 onChange={(e) => setMaxLoginAttempts(Number(e.target.value))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </FormField>
             <FormField label="Lockout Duration (minutes)">
               <Input type="number" min={1} value={lockoutDurationMinutes}
                 onChange={(e) => setLockoutDurationMinutes(Number(e.target.value))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </FormField>
           </div>
           <div className="flex justify-end mt-3">
@@ -717,7 +717,7 @@ export function SecurityTab({ role }: Props) {
             </p>
             <div className="flex justify-center mb-4">
               <div className="w-48 h-48 rounded-xl flex items-center justify-center"
-                style={{ background: "rgba(56,25,50,0.04)", border: "2px dashed rgba(56,25,50,0.15)" }}>
+                style={{ background: "rgba(10,36,114,0.04)", border: "2px dashed rgba(10,36,114,0.15)" }}>
                 <Smartphone size={48} color={NAVY_LIGHT} />
               </div>
             </div>
@@ -734,7 +734,7 @@ export function SecurityTab({ role }: Props) {
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 placeholder="Enter 6-digit code"
                 className="h-9 text-sm rounded-xl text-center tracking-[0.3em]"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}
                 maxLength={6}
               />
             </div>

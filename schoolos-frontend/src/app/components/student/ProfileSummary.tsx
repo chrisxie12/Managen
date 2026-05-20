@@ -10,7 +10,7 @@ export function ProfileSummary({ student }: { student: StudentProfile }) {
   const initials = student.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
 
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div className="flex items-center gap-4 mb-4">
         <div className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {initials}

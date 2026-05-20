@@ -143,7 +143,7 @@ export function SettingsPage() {
             <div className="flex gap-2 justify-end">
               <button onClick={() => blocker.reset?.()}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Stay</button>
+                style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>Stay</button>
               <button onClick={() => blocker.proceed?.()}
                 className="px-4 py-2 rounded-xl text-xs font-medium text-white"
                 style={{ background: NAVY }}>Leave</button>
@@ -154,7 +154,7 @@ export function SettingsPage() {
 
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-[280px] flex-shrink-0 p-4 gap-1"
-        style={{ background: "#F9F1E7", borderRight: "1px solid rgba(56,25,50,0.07)" }}>
+        style={{ background: "#F9F1E7", borderRight: "1px solid rgba(10,36,114,0.07)" }}>
         <h2 className="text-sm font-bold mb-3 px-3" style={{ color: NAVY }}>Settings</h2>
         {visibleTabs.map(tab => {
           const active = activeTab === tab.key;
@@ -174,13 +174,13 @@ export function SettingsPage() {
         <div className="relative">
           <button onClick={() => setMobileOpen(!mobileOpen)}
             className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-sm font-medium"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
             {visibleTabs.find(t => t.key === activeTab)?.label || "Settings"}
             <ChevronDown size={16} />
           </button>
           {mobileOpen && (
             <div className="absolute top-full left-0 right-0 mt-1 rounded-xl overflow-hidden z-10 shadow-lg"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
               {visibleTabs.map(tab => (
                 <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOpen(false); setDirty(false); }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm"

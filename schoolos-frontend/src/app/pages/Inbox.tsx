@@ -37,7 +37,7 @@ export function Inbox() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         {view !== "inbox" ? (
-          <button onClick={() => { setView("inbox"); setSelected(null); }} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          <button onClick={() => { setView("inbox"); setSelected(null); }} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <ArrowLeft size={14} /> Back
           </button>
         ) : (
@@ -58,7 +58,7 @@ export function Inbox() {
       {view === "compose" && <ComposeMessage onSent={() => { setView("inbox"); load(); }} />}
 
       {view === "detail" && selected && (
-        <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="mb-4">
             <p className="text-lg font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>{selected.message.subject}</p>
             <p className="text-sm" style={{ color: MUTED }}>{new Date(selected.message.created_at).toLocaleString()}</p>

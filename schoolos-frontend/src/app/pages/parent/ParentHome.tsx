@@ -85,7 +85,7 @@ export function ParentHome() {
             value={selectedChild?.id || ""}
             onChange={(e) => setSelectedChild(children.find((c) => c.id === e.target.value) || null)}
             className="w-full p-3 rounded-2xl text-sm font-medium appearance-none cursor-pointer"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+            style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
           >
             {children.map((c) => <option key={c.id} value={c.id}>{c.name} — {c.class_name}</option>)}
           </select>
@@ -96,7 +96,7 @@ export function ParentHome() {
       {selectedChild && (
         <>
           {/* Attendance Calendar */}
-          <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: NAVY }}>
               <CalendarCheck size={16} /> Attendance — {now.toLocaleString("default", { month: "long" })}
             </h3>
@@ -135,7 +135,7 @@ export function ParentHome() {
 
           {/* Upcoming Events */}
           {events.length > 0 && (
-            <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: NAVY }}>
                 <CalendarDays size={16} /> Upcoming Events
               </h3>
@@ -181,13 +181,13 @@ export function ParentHome() {
           {/* Quick links */}
           <div className="grid grid-cols-2 gap-3">
             <button onClick={() => navigate(`/parent/fees?child=${selectedChild.id}`)}
-              className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <span className="text-xl">💰</span>
               <p className="text-sm font-semibold mt-2" style={{ color: NAVY }}>Fee Status</p>
               <p className="text-[11px]" style={{ color: MUTED }}>View balance & pay</p>
             </button>
             <button onClick={() => navigate(`/parent/reports?child=${selectedChild.id}`)}
-              className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <span className="text-xl">📊</span>
               <p className="text-sm font-semibold mt-2" style={{ color: NAVY }}>Report Cards</p>
               <p className="text-[11px]" style={{ color: MUTED }}>View term results</p>

@@ -50,7 +50,7 @@ const ROLE_OPTIONS = ["Headmaster", "Accountant", "Teacher", "Parent"];
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -467,7 +467,7 @@ export function UserManagementTab({ role }: Props) {
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 className="h-9 text-sm rounded-xl pr-8"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}
               />
               {inviteEmail && (
                 <button
@@ -483,7 +483,7 @@ export function UserManagementTab({ role }: Props) {
             <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Role</label>
             <Select value={inviteRole} onValueChange={setInviteRole}>
               <SelectTrigger className="h-9 text-xs rounded-xl"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select role..." />
               </SelectTrigger>
               <SelectContent>
@@ -526,7 +526,7 @@ export function UserManagementTab({ role }: Props) {
                 return (
                   <div key={inv.id}
                     className="flex items-center justify-between px-3 py-2 rounded-xl text-xs"
-                    style={{ background: "rgba(56,25,50,0.04)" }}
+                    style={{ background: "rgba(10,36,114,0.04)" }}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Mail size={14} color={MUTED} className="flex-shrink-0" />
@@ -540,7 +540,7 @@ export function UserManagementTab({ role }: Props) {
                         onClick={() => handleResendInvite(inv.id)}
                         disabled={resendingId === inv.id}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-50"
-                        style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
+                        style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}
                       >
                         {resendingId === inv.id ? "..." : "Resend"}
                       </button>
@@ -570,7 +570,7 @@ export function UserManagementTab({ role }: Props) {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="h-9 text-sm rounded-xl pl-9 pr-8"
-              style={{ borderColor: "rgba(56,25,50,0.12)" }}
+              style={{ borderColor: "rgba(10,36,114,0.12)" }}
             />
             {searchInput && (
               <button
@@ -584,7 +584,7 @@ export function UserManagementTab({ role }: Props) {
           <div className="w-full sm:w-40">
             <Select value={filterRole} onValueChange={(v) => { setFilterRole(v); setPage(1); }}>
               <SelectTrigger className="h-9 text-xs rounded-xl"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="All roles" />
               </SelectTrigger>
               <SelectContent>
@@ -598,7 +598,7 @@ export function UserManagementTab({ role }: Props) {
           <div className="w-full sm:w-36">
             <Select value={filterStatus} onValueChange={(v) => { setFilterStatus(v); setPage(1); }}>
               <SelectTrigger className="h-9 text-xs rounded-xl"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
@@ -612,7 +612,7 @@ export function UserManagementTab({ role }: Props) {
 
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 mb-3 px-3 py-2 rounded-xl"
-            style={{ background: "rgba(56,25,50,0.06)" }}>
+            style={{ background: "rgba(10,36,114,0.06)" }}>
             <span className="text-xs font-medium" style={{ color: NAVY }}>
               {selectedIds.size} selected
             </span>
@@ -628,7 +628,7 @@ export function UserManagementTab({ role }: Props) {
             <button
               onClick={handleExportSelected}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
-              style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
+              style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}
             >
               <Download size={12} />
               Export Selected (CSV)
@@ -672,7 +672,7 @@ export function UserManagementTab({ role }: Props) {
                   return (
                     <tr key={user.id}
                       className="border-t"
-                      style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+                      style={{ borderColor: "rgba(10,36,114,0.06)" }}>
                       <td className="py-3 pr-2">
                         <input
                           type="checkbox"
@@ -700,7 +700,7 @@ export function UserManagementTab({ role }: Props) {
                           disabled={isUpdatingRole}
                         >
                           <SelectTrigger className="h-7 text-xs rounded-lg min-w-[120px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -730,7 +730,7 @@ export function UserManagementTab({ role }: Props) {
                             onClick={() => handleToggleStatus(user.id, user.status)}
                             disabled={togglingStatusId === user.id}
                             className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
-                            style={{ background: "rgba(56,25,50,0.06)" }}
+                            style={{ background: "rgba(10,36,114,0.06)" }}
                             title={user.status === "active" ? "Suspend user" : "Activate user"}
                           >
                             {togglingStatusId === user.id ? (
@@ -745,7 +745,7 @@ export function UserManagementTab({ role }: Props) {
                             onClick={() => handleResetPassword(user.id)}
                             disabled={resettingPwId === user.id}
                             className="p-1.5 rounded-lg transition-colors disabled:opacity-50"
-                            style={{ background: "rgba(56,25,50,0.06)" }}
+                            style={{ background: "rgba(10,36,114,0.06)" }}
                             title="Reset password"
                           >
                             {resettingPwId === user.id ? (
@@ -779,7 +779,7 @@ export function UserManagementTab({ role }: Props) {
 
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-4 pt-3"
-                style={{ borderTop: "1px solid rgba(56,25,50,0.06)" }}>
+                style={{ borderTop: "1px solid rgba(10,36,114,0.06)" }}>
                 <span className="text-xs" style={{ color: MUTED }}>
                   Page {page} of {totalPages} ({total} users)
                 </span>
@@ -788,7 +788,7 @@ export function UserManagementTab({ role }: Props) {
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page <= 1}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
-                    style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
+                    style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}
                   >
                     Previous
                   </button>
@@ -796,7 +796,7 @@ export function UserManagementTab({ role }: Props) {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page >= totalPages}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
-                    style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
+                    style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}
                   >
                     Next
                   </button>
@@ -818,7 +818,7 @@ export function UserManagementTab({ role }: Props) {
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Select Role</label>
               <Select value={selectedRoleId} onValueChange={handleRoleSelect}>
                 <SelectTrigger className="h-9 text-xs rounded-xl w-full sm:w-64"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue placeholder="Choose a role..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -829,10 +829,10 @@ export function UserManagementTab({ role }: Props) {
               </Select>
             </div>
             {selectedRole && (
-              <div className="border-t pt-4" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+              <div className="border-t pt-4" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                 {selectedRole.is_system ? (
                   <div className="flex items-center gap-2 px-3 py-3 rounded-xl text-xs"
-                    style={{ background: "rgba(56,25,50,0.04)", color: MUTED }}>
+                    style={{ background: "rgba(10,36,114,0.04)", color: MUTED }}>
                     <Shield size={14} />
                     System role - permissions managed by system
                   </div>
@@ -860,7 +860,7 @@ export function UserManagementTab({ role }: Props) {
                                       key={perm.id}
                                       className="flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-xs"
                                       style={{
-                                        background: isChecked ? "rgba(56,25,50,0.06)" : "transparent",
+                                        background: isChecked ? "rgba(10,36,114,0.06)" : "transparent",
                                         color: NAVY,
                                       }}
                                     >

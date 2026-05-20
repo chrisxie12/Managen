@@ -193,7 +193,7 @@ export function AuthPage() {
           >
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ background: "rgba(255,243,230,0.15)" }}
+              style={{ background: "rgba(248,249,250,0.15)" }}
             >
               <GraduationCap size={20} color={CREAM} />
             </div>
@@ -225,7 +225,7 @@ export function AuthPage() {
             </h2>
             <p
               style={{
-                color: "rgba(255,243,230,0.7)",
+                color: "rgba(248,249,250,0.7)",
                 fontSize: "1rem",
                 lineHeight: 1.75,
                 marginBottom: "2rem",
@@ -245,7 +245,7 @@ export function AuthPage() {
                   />
                   <span
                     style={{
-                      color: "rgba(255,243,230,0.85)",
+                      color: "rgba(248,249,250,0.85)",
                       fontSize: "0.9rem",
                     }}
                   >
@@ -267,7 +267,7 @@ export function AuthPage() {
           >
             <p
               style={{
-                color: "rgba(255,243,230,0.9)",
+                color: "rgba(248,249,250,0.9)",
                 fontSize: "0.9rem",
                 lineHeight: 1.7,
                 fontStyle: "italic",
@@ -295,7 +295,7 @@ export function AuthPage() {
                 </div>
                 <div
                   style={{
-                    color: "rgba(255,243,230,0.6)",
+                    color: "rgba(248,249,250,0.6)",
                     fontSize: "0.75rem",
                   }}
                 >
@@ -349,8 +349,8 @@ export function AuthPage() {
           <div
             className="flex p-1 rounded-full mb-8"
             style={{
-              background: "rgba(56,25,50,0.06)",
-              border: `1px solid rgba(56,25,50,0.08)`,
+              background: "rgba(10,36,114,0.06)",
+              border: `1px solid rgba(10,36,114,0.08)`,
             }}
           >
             {(["login", "signup", "superadmin"] as const).map((m) => (
@@ -363,7 +363,7 @@ export function AuthPage() {
                   color: mode === m ? CREAM : MUTED,
                   fontWeight: mode === m ? 600 : 400,
                   boxShadow:
-                    mode === m ? "0 4px 14px rgba(56,25,50,0.25)" : "none",
+                    mode === m ? "0 4px 14px rgba(10,36,114,0.25)" : "none",
                   fontSize: m === "superadmin" ? "0.75rem" : "0.85rem",
                 }}
               >
@@ -413,7 +413,7 @@ export function AuthPage() {
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
                     onChange={(e) => setField("email", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                    style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                 </div>
                 <div className="mt-4">
                   <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
@@ -424,7 +424,7 @@ export function AuthPage() {
                     <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
                       onChange={(e) => setField("subdomain", e.target.value)}
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                      style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                      style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   </div>
                 </div>
               </div>
@@ -452,7 +452,7 @@ export function AuthPage() {
                   <input type={showPassword ? "text" : "password"} placeholder="New password (min 6 chars)"
                     value={form.password} onChange={(e) => setField("password", e.target.value)} required minLength={6}
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                    style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2">
                     {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
@@ -492,7 +492,7 @@ export function AuthPage() {
                   <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
                     onChange={(e) => setField("subdomain", e.target.value)} required
                     className="w-full pl-10 pr-28 py-3.5 rounded-2xl outline-none text-sm text-ellipsis"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                    style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold whitespace-nowrap" style={{ color: MUTED }}>.getschoolos.me</span>
                 </div>
               </div>
@@ -506,7 +506,7 @@ export function AuthPage() {
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
                     onChange={(e) => setField("email", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                    style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                 </div>
               </div>
 
@@ -519,7 +519,7 @@ export function AuthPage() {
                   <input type={showPassword ? "text" : "password"} placeholder="••••••••••" value={form.password}
                     onChange={(e) => setField("password", e.target.value)} required
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
+                    style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2">
                     {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
@@ -561,7 +561,7 @@ export function AuthPage() {
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                       style={{
                         background: "white",
-                        border: `1.5px solid rgba(56,25,50,0.12)`,
+                        border: `1.5px solid rgba(10,36,114,0.12)`,
                         color: NAVY,
                       }}
                     />
@@ -594,7 +594,7 @@ export function AuthPage() {
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                       style={{
                         background: "white",
-                        border: `1.5px solid rgba(56,25,50,0.12)`,
+                        border: `1.5px solid rgba(10,36,114,0.12)`,
                         color: NAVY,
                       }}
                     />
@@ -631,7 +631,7 @@ export function AuthPage() {
                   className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                   style={{
                     background: "white",
-                    border: `1.5px solid rgba(56,25,50,0.12)`,
+                    border: `1.5px solid rgba(10,36,114,0.12)`,
                     color: NAVY,
                   }}
                 />
@@ -665,7 +665,7 @@ export function AuthPage() {
                   className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
                   style={{
                     background: "white",
-                    border: `1.5px solid rgba(56,25,50,0.12)`,
+                    border: `1.5px solid rgba(10,36,114,0.12)`,
                     color: NAVY,
                   }}
                 />
@@ -693,12 +693,12 @@ export function AuthPage() {
               className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform"
               style={{
                 background: loading
-                  ? "rgba(56,25,50,0.5)"
+                  ? "rgba(10,36,114,0.5)"
                   : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`,
                 color: CREAM,
                 fontSize: "0.95rem",
                 fontWeight: 600,
-                boxShadow: "0 8px 24px rgba(56,25,50,0.25)",
+                boxShadow: "0 8px 24px rgba(10,36,114,0.25)",
               }}
             >
               {loading ? (

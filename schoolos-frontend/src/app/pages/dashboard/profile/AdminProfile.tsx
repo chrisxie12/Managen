@@ -168,7 +168,7 @@ function AdminProfile() {
       </div>
 
       {/* ─── Section 1: Personal Details ─── */}
-      <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+      <Card className="border rounded-2xl" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
         <CardHeader>
           <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>Personal Details</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>Update your name, contact information, and profile photo</CardDescription>
@@ -176,7 +176,7 @@ function AdminProfile() {
         <CardContent className="space-y-5">
           <div className="flex items-center gap-5">
             <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
-              <Avatar className="w-20 h-20 rounded-2xl" style={{ border: "3px solid rgba(56,25,50,0.1)" }}>
+              <Avatar className="w-20 h-20 rounded-2xl" style={{ border: "3px solid rgba(10,36,114,0.1)" }}>
                 <AvatarImage src={avatarUrl} alt={fullName} />
                 <AvatarFallback className="text-sm font-bold rounded-2xl" style={{ background: NAVY, color: "#F8F9FA" }}>
                   {initials}
@@ -199,17 +199,17 @@ function AdminProfile() {
             <div className="space-y-1.5">
               <Label className="text-xs font-medium" style={{ color: NAVY }}>Full Name</Label>
               <Input value={fullName} onChange={(e) => setFullName(e.target.value)}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs font-medium" style={{ color: NAVY }}>Email</Label>
               <Input value={user?.email || ""} disabled readOnly
-                className="h-9 text-sm rounded-xl opacity-60" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl opacity-60" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs font-medium" style={{ color: NAVY }}>Phone Number</Label>
               <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ""))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="+233 XX XXX XXXX" />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="+233 XX XXX XXXX" />
             </div>
           </div>
 
@@ -224,7 +224,7 @@ function AdminProfile() {
       </Card>
 
       {/* ─── Section 2: Account Security ─── */}
-      <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+      <Card className="border rounded-2xl" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
         <CardHeader>
           <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>Account Security</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>Change your password and review security settings</CardDescription>
@@ -249,7 +249,7 @@ function AdminProfile() {
                 <Input value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
                   type={showCurrent ? "text" : "password"}
                   className="h-9 text-sm rounded-xl w-full pr-9"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Enter current password" />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Enter current password" />
                 <button type="button" onClick={() => setShowCurrent(!showCurrent)}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                   {showCurrent ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -263,7 +263,7 @@ function AdminProfile() {
                 <Input value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
                   type={showNew ? "text" : "password"}
                   className="h-9 text-sm rounded-xl w-full pr-9"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Min 8 characters" />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Min 8 characters" />
                 <button type="button" onClick={() => setShowNew(!showNew)}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                   {showNew ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -276,7 +276,7 @@ function AdminProfile() {
                 <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                   type={showConfirm ? "text" : "password"}
                   className="h-9 text-sm rounded-xl w-full pr-9"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Re-enter new password" />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Re-enter new password" />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                   {showConfirm ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -296,7 +296,7 @@ function AdminProfile() {
       </Card>
 
       {/* ─── Section 3: App Preferences ─── */}
-      <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+      <Card className="border rounded-2xl" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
         <CardHeader>
           <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>App Preferences</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>

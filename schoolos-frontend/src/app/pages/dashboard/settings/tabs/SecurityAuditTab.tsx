@@ -15,7 +15,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -243,13 +243,13 @@ export function SecurityAuditTab({ role }: Props) {
             <Switch checked={requireSpecial} onCheckedChange={setRequireSpecial} />
           </div>
           <FormField label="Password Expiry (days)">
-            <Input type="number" min={0} value={passwordExpiryDays} onChange={(e) => setPasswordExpiryDays(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input type="number" min={0} value={passwordExpiryDays} onChange={(e) => setPasswordExpiryDays(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Max Login Attempts">
-            <Input type="number" min={1} value={maxLoginAttempts} onChange={(e) => setMaxLoginAttempts(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input type="number" min={1} value={maxLoginAttempts} onChange={(e) => setMaxLoginAttempts(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Lockout Duration (minutes)">
-            <Input type="number" min={1} value={lockoutDurationMinutes} onChange={(e) => setLockoutDurationMinutes(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input type="number" min={1} value={lockoutDurationMinutes} onChange={(e) => setLockoutDurationMinutes(Number(e.target.value))} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
         <div className="flex justify-end mt-3">
@@ -267,7 +267,7 @@ export function SecurityAuditTab({ role }: Props) {
             <div className="relative">
               <Input value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
                 type={showCurrent ? "text" : "password"} className="h-9 text-sm rounded-xl w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Enter current password" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Enter current password" />
               <button type="button" onClick={() => setShowCurrent(!showCurrent)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showCurrent ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -279,7 +279,7 @@ export function SecurityAuditTab({ role }: Props) {
             <div className="relative">
               <Input value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
                 type={showNew ? "text" : "password"} className="h-9 text-sm rounded-xl w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Min 8 characters" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Min 8 characters" />
               <button type="button" onClick={() => setShowNew(!showNew)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showNew ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -290,7 +290,7 @@ export function SecurityAuditTab({ role }: Props) {
             <div className="relative">
               <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                 type={showConfirm ? "text" : "password"} className="h-9 text-sm rounded-xl w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Re-enter new password" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Re-enter new password" />
               <button type="button" onClick={() => setShowConfirm(!showConfirm)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showConfirm ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -314,7 +314,7 @@ export function SecurityAuditTab({ role }: Props) {
             <div>
               <p className="text-xs font-medium" style={{ color: NAVY }}>Authenticator App</p>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
-                style={{ background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(56,25,50,0.06)", color: twoFAEnabled ? "#10B981" : MUTED }}>
+                style={{ background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(10,36,114,0.06)", color: twoFAEnabled ? "#10B981" : MUTED }}>
                 {twoFAEnabled ? "Enabled" : "Not Enabled"}
               </span>
             </div>
@@ -326,10 +326,10 @@ export function SecurityAuditTab({ role }: Props) {
           )}
         </div>
         {showBackupCodes && (
-          <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(56,25,50,0.04)" }}>
+          <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(10,36,114,0.04)" }}>
             <p className="text-xs font-medium mb-1" style={{ color: NAVY }}>Backup Codes</p>
             <p className="text-xs mb-2" style={{ color: MUTED }}>Store these securely. Each code can be used once if you lose access to your authenticator.</p>
-            <div className="p-2 rounded-lg font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            <div className="p-2 rounded-lg font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               {backupCodes}
             </div>
             <Button onClick={() => { const b = new Blob([backupCodes.replace(/, /g, "\n")], { type: "text/plain" }); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "backup-codes.txt"; a.click(); }}
@@ -357,7 +357,7 @@ export function SecurityAuditTab({ role }: Props) {
               </thead>
               <tbody>
                 {sessions.map((session: any) => (
-                  <tr key={session.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                  <tr key={session.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                     <td className="py-2.5 pr-3">
                       <span className="font-medium" style={{ color: NAVY }}>{session.device || session.browser || "Unknown"}</span>
                       {session.is_current && (
@@ -411,7 +411,7 @@ export function SecurityAuditTab({ role }: Props) {
                 </thead>
                 <tbody>
                   {auditLogs.map((entry) => (
-                    <tr key={entry.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={entry.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3 whitespace-nowrap" style={{ color: NAVY }}>
                         {new Date(entry.created_at).toLocaleString()}
                       </td>
@@ -424,15 +424,15 @@ export function SecurityAuditTab({ role }: Props) {
               </table>
             </div>
             {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-4 pt-3 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+              <div className="flex items-center justify-between mt-4 pt-3 border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                 <p className="text-[11px]" style={{ color: MUTED }}>Page {auditPage} of {totalPages} ({auditTotal} entries)</p>
                 <div className="flex gap-2">
                   <button onClick={() => setAuditPage(p => Math.max(1, p - 1))} disabled={auditPage <= 1}
                     className="px-3 py-1.5 rounded-xl text-xs font-medium disabled:opacity-30 transition-colors"
-                    style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Previous</button>
+                    style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>Previous</button>
                   <button onClick={() => setAuditPage(p => Math.min(totalPages, p + 1))} disabled={auditPage >= totalPages}
                     className="px-3 py-1.5 rounded-xl text-xs font-medium disabled:opacity-30 transition-colors"
-                    style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Next</button>
+                    style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>Next</button>
                 </div>
               </div>
             )}
@@ -447,7 +447,7 @@ export function SecurityAuditTab({ role }: Props) {
             <h3 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Setup Two-Factor Authentication</h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>Scan the QR code with your authenticator app.</p>
             <div className="flex justify-center mb-4">
-              <div className="w-48 h-48 rounded-xl flex items-center justify-center" style={{ background: "rgba(56,25,50,0.04)", border: "2px dashed rgba(56,25,50,0.15)" }}>
+              <div className="w-48 h-48 rounded-xl flex items-center justify-center" style={{ background: "rgba(10,36,114,0.04)", border: "2px dashed rgba(10,36,114,0.15)" }}>
                 <Smartphone size={48} color={NAVY_LIGHT} />
               </div>
             </div>
@@ -455,7 +455,7 @@ export function SecurityAuditTab({ role }: Props) {
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Verification Code</label>
               <Input value={verificationCode} onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 placeholder="Enter 6-digit code" className="h-9 text-sm rounded-xl text-center tracking-[0.3em]" maxLength={6}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="flex justify-end gap-3">
               <Button onClick={() => { setShow2FAModal(false); setVerificationCode(""); }} variant="outline" className="text-xs rounded-xl h-9 px-4">Cancel</Button>

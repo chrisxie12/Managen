@@ -114,7 +114,7 @@ export function BulkImport() {
         {step !== "select" && (
           <button onClick={reset}
             className="px-4 py-2 rounded-xl text-sm"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
             Start New Import
           </button>
         )}
@@ -128,7 +128,7 @@ export function BulkImport() {
                 className="p-5 rounded-xl text-left transition-all active:scale-95"
                 style={{
                   background: entityType === et.value ? NAVY : "white",
-                  border: `1px solid ${entityType === et.value ? NAVY : "rgba(56,25,50,0.1)"}`,
+                  border: `1px solid ${entityType === et.value ? NAVY : "rgba(10,36,114,0.1)"}`,
                   color: entityType === et.value ? CREAM : NAVY,
                 }}>
                 <et.icon size={24} className="mb-2" />
@@ -138,9 +138,9 @@ export function BulkImport() {
             ))}
           </div>
 
-          <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <label className="flex flex-col items-center justify-center p-8 rounded-xl cursor-pointer"
-              style={{ border: "2px dashed rgba(56,25,50,0.15)", background: CREAM }}>
+              style={{ border: "2px dashed rgba(10,36,114,0.15)", background: CREAM }}>
               <Upload size={32} color={MUTED} className="mb-3" />
               <p className="font-medium text-sm mb-1" style={{ color: NAVY }}>
                 {file ? file.name : "Click to upload spreadsheet"}
@@ -171,26 +171,26 @@ export function BulkImport() {
       {step === "preview" && preview && (
         <div className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Entity Type</p>
               <p className="font-semibold" style={{ color: NAVY }}>{entityType}</p>
             </div>
-            <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Total Rows</p>
               <p className="font-semibold" style={{ color: NAVY }}>{preview.totalRows}</p>
             </div>
-            <div className="p-4 rounded-xl" style={{ background: preview.errors.length > 0 ? "#FEF2F2" : "white", border: `1px solid ${preview.errors.length > 0 ? "#FECACA" : "rgba(56,25,50,0.07)"}` }}>
+            <div className="p-4 rounded-xl" style={{ background: preview.errors.length > 0 ? "#FEF2F2" : "white", border: `1px solid ${preview.errors.length > 0 ? "#FECACA" : "rgba(10,36,114,0.07)"}` }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Validation Errors</p>
               <p className="font-semibold" style={{ color: preview.errors.length > 0 ? "#EF4444" : NAVY }}>{preview.errors.length}</p>
             </div>
           </div>
 
-          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: NAVY }}>Preview (First 5 Rows)</h3>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[500px]">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                     {preview.requiredColumns.map(col => (
                       <th key={col} className="px-4 py-3 font-medium">{col}</th>
                     ))}
@@ -198,7 +198,7 @@ export function BulkImport() {
                 </thead>
                 <tbody>
                   {preview.preview.map((row, i) => (
-                    <tr key={i} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                    <tr key={i} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                       {preview.requiredColumns.map(col => (
                         <td key={col} className="px-4 py-3" style={{ color: NAVY }}>{row[col] || "—"}</td>
                       ))}
@@ -233,7 +233,7 @@ export function BulkImport() {
             </button>
             <button onClick={reset}
               className="px-5 py-2.5 rounded-xl text-sm"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               Cancel
             </button>
           </div>

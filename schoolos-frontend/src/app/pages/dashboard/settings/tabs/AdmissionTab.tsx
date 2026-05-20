@@ -10,7 +10,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -131,12 +131,12 @@ export function AdmissionTab({ role }: Props) {
             </thead>
             <tbody>
               {docs.map((doc) => (
-                <tr key={doc.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                <tr key={doc.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                   <td className="py-2 pr-3">
                     <Input value={doc.name} onChange={(e) => updateDocName(doc.id, e.target.value)}
                       disabled={isReadOnly}
                       className="h-8 text-xs rounded-xl min-w-[160px]"
-                      style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Document name" />
+                      style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Document name" />
                   </td>
                   <td className="py-2 pr-3 text-center">
                     <input type="checkbox" checked={doc.mandatory}
@@ -164,7 +164,7 @@ export function AdmissionTab({ role }: Props) {
         </div>
         {!isReadOnly && (
           <button onClick={addDoc} className="mt-3 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-            style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+            style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
             <Plus size={14} /> Add Document Type
           </button>
         )}
@@ -179,13 +179,13 @@ export function AdmissionTab({ role }: Props) {
             <Input type="number" min={1} max={99999} value={maxApplicationsPerTerm}
               onChange={(e) => setMaxApplicationsPerTerm(Math.max(1, Number(e.target.value) || 1))}
               disabled={isReadOnly}
-              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Max Students Per Grade/Class">
             <Input type="number" min={1} max={999} value={maxStudentsPerGrade}
               onChange={(e) => setMaxStudentsPerGrade(Math.max(1, Number(e.target.value) || 1))}
               disabled={isReadOnly}
-              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
       </SectionCard>

@@ -40,7 +40,7 @@ function MetricCard({
     <Wrapper
       onClick={onClick}
       className={`p-5 rounded-[24px] ${onClick ? "cursor-pointer active:scale-[0.98] transition-all" : ""}`}
-      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}
+      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: `${color}15` }}>
@@ -116,7 +116,7 @@ export function AdminOverview() {
           style={{
             background: editMode ? NAVY : "white",
             color: editMode ? CREAM : MUTED,
-            border: editMode ? "none" : "1px solid rgba(56,25,50,0.1)",
+            border: editMode ? "none" : "1px solid rgba(10,36,114,0.1)",
           }}
         >
           {editMode ? "Done" : "Customize"}
@@ -124,7 +124,7 @@ export function AdminOverview() {
       </div>
 
       {editMode && (
-        <div className="p-4 rounded-xl flex flex-wrap gap-2" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-4 rounded-xl flex flex-wrap gap-2" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           {widgets.map((w) => (
             <button
               key={w.id}
@@ -133,7 +133,7 @@ export function AdminOverview() {
               style={{
                 background: w.visible ? `${NAVY}12` : "transparent",
                 color: NAVY,
-                border: `1px solid ${w.visible ? `${NAVY}30` : "rgba(56,25,50,0.1)"}`,
+                border: `1px solid ${w.visible ? `${NAVY}30` : "rgba(10,36,114,0.1)"}`,
                 opacity: w.visible ? 1 : 0.5,
               }}
             >
@@ -198,11 +198,11 @@ export function AdminOverview() {
         )}
 
         {visibleWidgets.find((w) => w.id === "school-glance") && (
-          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
+          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(10,36,114,0.2)" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
               {dash?.stats?.totalStudents ? "School at a Glance" : "Welcome!"}
             </h3>
-            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
+            <p style={{ color: "rgba(248,249,250,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
               {dash?.stats?.totalStudents
                 ? `${dash.stats.totalStudents} learners · ${dash.stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
                 : "Start by adding learners and configuring your school profile."}
@@ -214,7 +214,7 @@ export function AdminOverview() {
               ].map((item) => (
                 <button key={item.label} onClick={() => navigate(item.path)}
                   className="w-full py-2.5 rounded-full text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
-                  style={{ background: "rgba(255,243,230,0.12)", color: CREAM, border: "1px solid rgba(255,243,230,0.2)" }}>
+                  style={{ background: "rgba(248,249,250,0.12)", color: CREAM, border: "1px solid rgba(248,249,250,0.2)" }}>
                   {item.label} <ArrowRight size={11} />
                 </button>
               ))}

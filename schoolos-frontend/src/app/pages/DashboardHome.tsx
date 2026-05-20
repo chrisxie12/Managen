@@ -198,10 +198,10 @@ export function DashboardHome() {
                     <stop offset="95%" stopColor={NAVY} stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.05)" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `GHS ${(v / 100).toFixed(0)}`} />
-                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, "Revenue"]} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, "Revenue"]} />
                 <Area type="monotone" dataKey="amount" stroke={NAVY} strokeWidth={2.5} fill="url(#revGrad)" />
               </AreaChart>
             </ResponsiveContainer>
@@ -220,7 +220,7 @@ export function DashboardHome() {
                   <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
                     {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 8, fontSize: 11 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, ""]} />
+                  <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", borderRadius: 8, fontSize: 11 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, ""]} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-2">
@@ -261,10 +261,10 @@ export function DashboardHome() {
         {attendanceTrend.length > 0 ? (
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={attendanceTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.05)" />
               <XAxis dataKey="date" tick={{ fontSize: 10, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: string) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric" })} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
-              <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Attendance"]} labelFormatter={(v: string) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })} />
+              <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Attendance"]} labelFormatter={(v: string) => new Date(v).toLocaleDateString("en", { month: "short", day: "numeric", year: "numeric" })} />
               <Line type="monotone" dataKey="rate" stroke="#6366F1" strokeWidth={2.5} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -285,10 +285,10 @@ export function DashboardHome() {
           {classComparison.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={classComparison}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.05)" />
                 <XAxis dataKey="class_name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
-                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Average"]} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Average"]} />
                 <Bar dataKey="rate" fill={NAVY} radius={[6, 6, 0, 0]} cursor="pointer"
                   onClick={(data) => {
                     if (data?.payload?.class_id) {
@@ -348,22 +348,22 @@ export function DashboardHome() {
 
       {/* ─── PHASE 5: Replaced Activity Feed + Quick Actions ────── */}
       <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+        <div className="lg:col-span-2 p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
           <SectionHeader title="Recent Activity" />
           <ActivityFeed items={activityItems} />
         </div>
 
         <div className="flex flex-col gap-5">
-          <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+          <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
             <SectionHeader title="Quick Actions" />
             <QuickActions items={quickActions} />
           </div>
 
-          <div className="p-5 rounded-[24px] flex-1" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
+          <div className="p-5 rounded-[24px] flex-1" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(10,36,114,0.2)" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#F8F9FA", fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
               {totalStudents > 0 ? "School Overview" : "Welcome!"}
             </h3>
-            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
+            <p style={{ color: "rgba(248,249,250,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
               {totalStudents > 0
                 ? `${totalStudents} students · ${totalStaff} staff · ${collectionRate}% collection rate`
                 : "Start by adding students and setting up fees. Use the Quick Actions above to get started."}
@@ -375,7 +375,7 @@ export function DashboardHome() {
               ].map((item) => (
                 <button key={item.label} onClick={() => navigate(item.path)}
                   className="w-full py-2 rounded-full text-xs flex items-center justify-center gap-1 active:scale-95 transition-transform"
-                  style={{ background: "rgba(255,243,230,0.12)", color: "#F8F9FA", border: "1px solid rgba(255,243,230,0.2)" }}>
+                  style={{ background: "rgba(248,249,250,0.12)", color: "#F8F9FA", border: "1px solid rgba(248,249,250,0.2)" }}>
                   {item.label} <ArrowRight size={11} />
                 </button>
               ))}

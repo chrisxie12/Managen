@@ -28,7 +28,7 @@ const DEFAULT_GRADE_BOUNDARIES = [
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -479,7 +479,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           <FormField label="Academic Year" error={errors.academic_year}>
             <Select value={form.academic_year || ""} onValueChange={setSelect("academic_year")} disabled={isReadOnly}>
               <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select year..." />
               </SelectTrigger>
               <SelectContent>
@@ -492,7 +492,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           <FormField label="Current Term" error={errors.current_term}>
             <Select value={form.current_term || ""} onValueChange={setSelect("current_term")} disabled={isReadOnly}>
               <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select term..." />
               </SelectTrigger>
               <SelectContent>
@@ -505,22 +505,22 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           <FormField label="Term Start Date" error={errors.term_start_date}>
             <Input type="date" value={form.term_start_date || ""} onChange={set("term_start_date")} disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Term End Date" error={errors.term_end_date}>
             <Input type="date" value={form.term_end_date || ""} onChange={set("term_end_date")} disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Next Term Resume Date (optional)">
             <Input type="date" value={form.resume_date || ""} onChange={set("resume_date")} disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
         {daysRemaining !== null && (
           <div className="mt-3 px-3 py-2 rounded-xl text-xs font-medium inline-block"
-            style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
+            style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>
             {daysRemaining} days remaining in term
           </div>
         )}
@@ -547,12 +547,12 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                 {academicTerms.map((term: any) => {
                   const isEditing = editingTermId === term.id;
                   return (
-                    <tr key={term.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={term.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3">
                         {isEditing ? (
                           <Input value={editTermData.name} onChange={(e) => setEditTermData((p) => ({ ...p, name: e.target.value }))}
                             className="h-8 text-xs rounded-xl min-w-[100px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span className="font-medium" style={{ color: NAVY }}>{term.name}</span>
                         )}
@@ -561,7 +561,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                         {isEditing ? (
                           <Input type="date" value={editTermData.start_date} onChange={(e) => setEditTermData((p) => ({ ...p, start_date: e.target.value }))}
                             className="h-8 text-xs rounded-xl w-[130px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span style={{ color: NAVY }}>{term.start_date}</span>
                         )}
@@ -570,7 +570,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                         {isEditing ? (
                           <Input type="date" value={editTermData.end_date} onChange={(e) => setEditTermData((p) => ({ ...p, end_date: e.target.value }))}
                             className="h-8 text-xs rounded-xl w-[130px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span style={{ color: NAVY }}>{term.end_date}</span>
                         )}
@@ -615,7 +615,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                                 setEditTermData({ name: term.name, start_date: term.start_date, end_date: term.end_date });
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
-                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                style={{ background: "rgba(10,36,114,0.06)" }}>
                                 <Pencil size={13} color={NAVY} />
                               </button>
                             )}
@@ -644,7 +644,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           <FormField label="Grading Type" error={errors.grading_system}>
             <Select value={form.grading_system || ""} onValueChange={setSelect("grading_system")} disabled={isReadOnly}>
               <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select grading..." />
               </SelectTrigger>
               <SelectContent>
@@ -657,7 +657,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           <FormField label="Pass Mark" error={errors.pass_mark}>
             <Input type="number" value={form.pass_mark ?? ""} onChange={set("pass_mark")} disabled={isReadOnly} min={0} max={100}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
 
@@ -680,19 +680,19 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                       <Input value={row.grade} onChange={(e) => updateBoundary(i, "grade", e.target.value)}
                         disabled={isReadOnly}
                         className="h-8 text-xs rounded-xl w-16"
-                        style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                     </td>
                     <td className="pb-2 pr-2">
                       <Input type="number" value={row.min} onChange={(e) => updateBoundary(i, "min", e.target.value)}
                         disabled={isReadOnly} min={0} max={100}
                         className="h-8 text-xs rounded-xl w-20"
-                        style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                     </td>
                     <td className="pb-2 pr-2">
                       <Input type="number" value={row.max} onChange={(e) => updateBoundary(i, "max", e.target.value)}
                         disabled={isReadOnly} min={0} max={100}
                         className="h-8 text-xs rounded-xl w-20"
-                        style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                        style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                     </td>
                     <td className="pb-2">
                       {!isReadOnly && (form.grade_boundaries || []).length > 1 && (
@@ -710,7 +710,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           {!isReadOnly && (
             <button type="button" onClick={addBoundary}
               className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-              style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+              style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
               <Plus size={14} /> Add Grade Boundary
             </button>
           )}
@@ -734,12 +734,12 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                   {gradingScales.length === 0 ? (
                     <tr><td colSpan={2} className="py-4 text-center" style={{ color: MUTED }}>No grading scales yet.</td></tr>
                   ) : gradingScales.map((scale: any) => (
-                    <tr key={scale.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={scale.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3">
                         {editingScaleId === scale.id ? (
                           <Input value={editScaleName} onChange={(e) => setEditScaleName(e.target.value)}
                             className="h-8 text-xs rounded-xl"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span className="font-medium" style={{ color: NAVY }}>{scale.name}</span>
                         )}
@@ -764,7 +764,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                               {!isReadOnly && (
                                 <button onClick={() => { setEditingScaleId(scale.id); setEditScaleName(scale.name); }}
                                   className="text-xs font-medium px-2 py-1 rounded-lg transition-colors"
-                                  style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+                                  style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
                                   Edit
                                 </button>
                               )}
@@ -792,7 +792,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                   <Input value={newScaleName} onChange={(e) => setNewScaleName(e.target.value)}
                     placeholder="e.g. Main Grading Scale"
                     className="h-9 text-sm rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                 </div>
                 <Button onClick={handleCreateScale} disabled={creatingScale || !newScaleName.trim()}
                   className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
@@ -811,13 +811,13 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
             <Input type="number" value={form.class_settings?.levels ?? 3}
               onChange={setClassSetting("levels")} disabled={isReadOnly} min={1} max={20}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Class Naming Convention">
             <Select value={form.class_settings?.naming_convention || "Year-based"}
               onValueChange={setClassSelect("naming_convention")} disabled={isReadOnly}>
               <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select naming..." />
               </SelectTrigger>
               <SelectContent>
@@ -832,14 +832,14 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
               <Input value={form.class_settings?.custom_prefix || ""}
                 onChange={setClassSetting("custom_prefix")} disabled={isReadOnly}
                 className={`h-9 text-sm rounded-xl ${disabledClass}`}
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="e.g. Grade" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="e.g. Grade" />
             </FormField>
           )}
           <FormField label="Maximum Students Per Class">
             <Input type="number" value={form.class_settings?.max_students ?? 40}
               onChange={setClassSetting("max_students")} disabled={isReadOnly} min={1} max={200}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
 
@@ -850,7 +850,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
               {classes.map((cls: any, index: number) => (
                 <div key={cls.id}
                   className="flex items-center justify-between px-3 py-2 rounded-xl text-xs"
-                  style={{ background: "rgba(56,25,50,0.04)" }}>
+                  style={{ background: "rgba(10,36,114,0.04)" }}>
                   <span className="font-medium" style={{ color: NAVY }}>{cls.name}</span>
                   {!isReadOnly && (
                     <div className="flex gap-1">
@@ -875,7 +875,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         <FormField label="Select Class">
           <Select value={selectedClassForSubjects} onValueChange={setSelectedClassForSubjects} disabled={isReadOnly}>
             <SelectTrigger className={`h-9 text-xs rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+              style={{ borderColor: "rgba(10,36,114,0.12)" }}>
               <SelectValue placeholder="Choose a class..." />
             </SelectTrigger>
             <SelectContent>
@@ -900,7 +900,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                     <label key={subj.id}
                       className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs cursor-pointer transition-colors ${isReadOnly ? "opacity-60 cursor-not-allowed" : ""}`}
                       style={{
-                        background: assigned ? "rgba(16,185,129,0.08)" : "rgba(56,25,50,0.04)",
+                        background: assigned ? "rgba(16,185,129,0.08)" : "rgba(10,36,114,0.04)",
                         border: assigned ? "1px solid rgba(16,185,129,0.2)" : "1px solid transparent",
                       }}>
                       <input type="checkbox" checked={assigned}
@@ -926,13 +926,13 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
             <Input type="time" value={form.attendance_settings?.cutoff_time || "08:00"}
               onChange={setAttendance("cutoff_time")} disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Mark Late After (minutes)">
             <Input type="number" value={form.attendance_settings?.late_threshold_minutes ?? 30}
               onChange={setAttendance("late_threshold_minutes")} disabled={isReadOnly} min={0} max={120}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
 
@@ -974,13 +974,13 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                 ) : assessmentTypes.map((at: any) => {
                   const isEditing = editingAssessmentTypeId === at.id;
                   return (
-                    <tr key={at.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={at.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-3">
                         {isEditing ? (
                           <Input value={editAssessmentTypeData.name}
                             onChange={(e) => setEditAssessmentTypeData((p) => ({ ...p, name: e.target.value }))}
                             className="h-8 text-xs rounded-xl min-w-[120px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span className="font-medium" style={{ color: NAVY }}>{at.name}</span>
                         )}
@@ -990,7 +990,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                           <Input type="number" min={0} max={100} value={editAssessmentTypeData.weight}
                             onChange={(e) => setEditAssessmentTypeData((p) => ({ ...p, weight: Number(e.target.value) }))}
                             className="h-8 text-xs rounded-xl w-20"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span style={{ color: NAVY }}>{at.weight}%</span>
                         )}
@@ -1027,7 +1027,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                                 setEditAssessmentTypeData({ name: at.name, weight: at.weight, is_active: at.is_active ?? true });
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
-                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                style={{ background: "rgba(10,36,114,0.06)" }}>
                                 <Pencil size={13} color={NAVY} />
                               </button>
                             )}
@@ -1056,14 +1056,14 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                   onChange={(e) => setNewAssessmentTypeName(e.target.value)}
                   placeholder="e.g. Midterm Exam"
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </div>
               <div className="w-24">
                 <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Weight %</label>
                 <Input type="number" min={0} max={100} value={newAssessmentTypeWeight}
                   onChange={(e) => setNewAssessmentTypeWeight(Number(e.target.value))}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </div>
               <Button onClick={handleCreateAssessmentType}
                 disabled={creatingAssessmentType || !newAssessmentTypeName.trim()}

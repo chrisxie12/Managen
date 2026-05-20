@@ -149,7 +149,7 @@ export function DataTable<T extends Record<string, unknown>>({
         {searchable && onSearch && (
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 min-w-[200px]"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}
+            style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}
           >
             <Search size={14} color={MUTED} />
             <input
@@ -172,7 +172,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={handleExport}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT }}
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY_LIGHT }}
             >
               <Download size={13} /> Export CSV
             </button>
@@ -182,7 +182,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={() => setShowColumnMenu(!showColumnMenu)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT }}
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY_LIGHT }}
             >
               <Columns size={13} /> Columns
             </button>
@@ -191,7 +191,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 <div className="fixed inset-0 z-40" onClick={() => setShowColumnMenu(false)} />
                 <div
                   className="absolute right-0 top-full mt-1 z-50 w-52 rounded-xl overflow-hidden shadow-lg"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}
+                  style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}
                 >
                   {columns.map((col) => {
                     const prefs = getColumnPrefs(tableKey);
@@ -242,7 +242,7 @@ export function DataTable<T extends Record<string, unknown>>({
       {/* Table Container */}
       <div
         className="rounded-xl overflow-hidden relative"
-        style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}
+        style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}
       >
         {/* Scroll Hint */}
         {scrollHint && !isMobile && (
@@ -274,7 +274,7 @@ export function DataTable<T extends Record<string, unknown>>({
               <thead>
                 <tr
                   className="text-left text-xs uppercase tracking-wider"
-                  style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}
+                  style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}
                 >
                   {bulkActions && (
                     <th className="px-4 py-3 w-10">
@@ -322,7 +322,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       key={id}
                       className={`text-sm transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
                       style={{
-                        borderBottom: "1px solid rgba(56,25,50,0.05)",
+                        borderBottom: "1px solid rgba(10,36,114,0.05)",
                         background: isSelected ? `${NAVY}06` : "transparent",
                       }}
                       onClick={() => onRowClick?.(row)}
@@ -368,9 +368,9 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => action.onClick(Array.from(selectedIds))}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95"
                 style={{
-                  background: action.variant === "danger" ? "rgba(239,68,68,0.2)" : "rgba(255,243,230,0.15)",
+                  background: action.variant === "danger" ? "rgba(239,68,68,0.2)" : "rgba(248,249,250,0.15)",
                   color: action.variant === "danger" ? "#EF4444" : CREAM,
-                  border: `1px solid ${action.variant === "danger" ? "rgba(239,68,68,0.3)" : "rgba(255,243,230,0.2)"}`,
+                  border: `1px solid ${action.variant === "danger" ? "rgba(239,68,68,0.3)" : "rgba(248,249,250,0.2)"}`,
                 }}
               >
                 {action.icon || <Trash2 size={12} />}
@@ -380,7 +380,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={() => setSelectedIds(new Set())}
               className="ml-auto px-2 py-1 rounded text-xs"
-              style={{ color: "rgba(255,243,230,0.6)" }}
+              style={{ color: "rgba(248,249,250,0.6)" }}
             >
               Clear
             </button>
@@ -391,7 +391,7 @@ export function DataTable<T extends Record<string, unknown>>({
         {totalPages > 1 && (
           <div
             className="flex items-center justify-between px-4 py-3 text-sm"
-            style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}
+            style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}
           >
             <span style={{ color: MUTED }}>
               {total} record{total !== 1 ? "s" : ""}
@@ -401,7 +401,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1}
                 className="p-1.5 rounded-lg disabled:opacity-30"
-                style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}
+                style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}
               >
                 <ChevronLeft size={14} />
               </button>
@@ -412,7 +412,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages}
                 className="p-1.5 rounded-lg disabled:opacity-30"
-                style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}
+                style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}
               >
                 <ChevronRight size={14} />
               </button>

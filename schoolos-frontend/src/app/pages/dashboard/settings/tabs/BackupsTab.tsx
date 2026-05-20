@@ -13,7 +13,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -104,7 +104,7 @@ export function BackupsTab({ role }: Props) {
           <div className="flex-1 max-w-xs">
             <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Frequency</label>
             <Select value={schedule} onValueChange={setSchedule} disabled={isReadOnly}>
-              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

@@ -66,7 +66,7 @@ const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+  <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
     <Icon size={36} color={MUTED} className="mx-auto mb-2" />
     <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -76,7 +76,7 @@ const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; des
 const MetricCard = ({ icon: Icon, label, value, sub, color }: {
   icon: any; label: string; value: string | number; sub?: string; color?: string;
 }) => (
-  <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+  <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
     <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
     <div className="flex items-center gap-3 mb-2">
       <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
@@ -94,7 +94,7 @@ const MetricCard = ({ icon: Icon, label, value, sub, color }: {
 const ChartCard = ({ title, subtitle, children }: {
   title: string; subtitle?: string; children: React.ReactNode;
 }) => (
-  <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+  <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
     <div className="mb-4">
       <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
       {subtitle && <p className="text-xs" style={{ color: MUTED }}>{subtitle}</p>}
@@ -113,7 +113,7 @@ type FilterBarProps = {
 
 function FilterBar({ dateFrom, setDateFrom, dateTo, setDateTo, children, onExport, exportLabel }: FilterBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Calendar size={14} color={MUTED} />
       <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
         className="w-[140px] h-9 text-xs" />
@@ -124,7 +124,7 @@ function FilterBar({ dateFrom, setDateFrom, dateTo, setDateTo, children, onExpor
       <div className="ml-auto" />
       {onExport && (
         <Button variant="outline" size="sm" onClick={onExport}
-          className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
+          className="rounded-full text-xs h-9" style={{ borderColor: "rgba(10,36,114,0.15)", color: NAVY }}>
           <Download size={13} className="mr-1" /> {exportLabel || "Export CSV"}
         </Button>
       )}
@@ -355,7 +355,7 @@ function AcademicPerformanceTab() {
   return (
     <div>
       {error && <AlertBanner type="error" message={error} onClose={() => setError("")} />}
-      <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <Select value={termFilter} onValueChange={setTermFilter}>
           <SelectTrigger className="w-[160px] h-9 text-xs"><SelectValue placeholder="Select term" /></SelectTrigger>
           <SelectContent>
@@ -388,7 +388,7 @@ function AcademicPerformanceTab() {
                 {data.subjectBreakdown.map((sb: any, i: number) => (
                   <div key={sb.subject_id} className="flex items-center gap-3">
                     <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: NAVY }}>{sb.subject_name}</span>
-                    <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
+                    <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(10,36,114,0.06)" }}>
                       <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(sb.avgRate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                     </div>
                     <span className="text-xs font-medium w-10 text-right shrink-0" style={{ color: MUTED }}>{sb.avgRate}%</span>
@@ -484,7 +484,7 @@ function ClassComparisonTab() {
   return (
     <div>
       {error && <AlertBanner type="error" message={error} onClose={() => setError("")} />}
-      <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <Select value={termFilter} onValueChange={setTermFilter}>
           <SelectTrigger className="w-[160px] h-9 text-xs"><SelectValue placeholder="Select term" /></SelectTrigger>
           <SelectContent>
@@ -505,10 +505,10 @@ function ClassComparisonTab() {
           <ChartCard title="Class Comparison" subtitle="Average performance by class">
             <ResponsiveContainer width="100%" height={Math.max(180, (data.records.length || 1) * 45)}>
               <BarChart data={data.records} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" horizontal={false} />
                 <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
                 <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                   formatter={(value: number) => [`${value}%`, "Avg Score"]} />
                 <Bar dataKey="avgRate" radius={[0, 4, 4, 0]}>
                   {data.records.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -582,7 +582,7 @@ function SubjectPerformanceTab() {
   return (
     <div>
       {error && <AlertBanner type="error" message={error} onClose={() => setError("")} />}
-      <div className="flex items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="flex items-center gap-3 mb-6 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <Select value={termFilter} onValueChange={setTermFilter}>
           <SelectTrigger className="w-[160px] h-9 text-xs"><SelectValue placeholder="Select term" /></SelectTrigger>
           <SelectContent>
@@ -605,7 +605,7 @@ function SubjectPerformanceTab() {
               {data.records.map((sb: any, i: number) => (
                 <div key={sb.subject_id} className="flex items-center gap-3">
                   <span className="text-xs font-medium w-28 truncate shrink-0" style={{ color: NAVY }}>{sb.subject_name}</span>
-                  <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
+                  <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(10,36,114,0.06)" }}>
                     <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(sb.avgRate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                   </div>
                   <span className="text-xs font-medium w-10 text-right shrink-0" style={{ color: MUTED }}>{sb.avgRate}%</span>
@@ -691,10 +691,10 @@ function FeeCollectionTab() {
             <ChartCard title="Monthly Collection Trend">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={data.monthly} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" />
                   <XAxis dataKey="month" tick={{ fontSize: 9, fill: MUTED }} />
                   <YAxis tick={{ fontSize: 10, fill: MUTED }} tickFormatter={(v) => `GHS ${(v / 100).toFixed(0)}`} />
-                  <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                     formatter={(value: number) => [formatCedi(value), "Collected"]} />
                   <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
                     {data.monthly.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -708,7 +708,7 @@ function FeeCollectionTab() {
             <ChartCard title="Collection by Method">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {data.byMethod.map((m: any) => (
-                  <div key={m.method} className="p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)" }}>
+                  <div key={m.method} className="p-3 rounded-xl text-center" style={{ background: "rgba(10,36,114,0.03)" }}>
                     <p className="text-lg font-bold" style={{ color: NAVY }}>{formatCedi(m.amount)}</p>
                     <p className="text-xs" style={{ color: MUTED }}>{m.method} ({m.count})</p>
                   </div>
@@ -858,10 +858,10 @@ function AdmissionsTab() {
             <ChartCard title="Enrollment Trend" subtitle="New students by month">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={data.monthly} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" />
                   <XAxis dataKey="month" tick={{ fontSize: 9, fill: MUTED }} />
                   <YAxis tick={{ fontSize: 10, fill: MUTED }} allowDecimals={false} />
-                  <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                  <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                     formatter={(value: number) => [value, "New Students"]} />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {data.monthly.map((_: any, i: number) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -875,7 +875,7 @@ function AdmissionsTab() {
             <ChartCard title="Students by Class">
               <ResponsiveContainer width="100%" height={Math.max(150, (data.byClass.length || 1) * 35)}>
                 <BarChart data={data.byClass} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" horizontal={false} />
                   <XAxis type="number" tick={{ fontSize: 10, fill: MUTED }} allowDecimals={false} />
                   <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "none" }}
@@ -959,13 +959,13 @@ function IncidentsTab() {
           {s.byType?.length > 0 && (
             <div className="grid gap-4 sm:grid-cols-3 mb-6">
               {s.byType.map((t: any) => (
-                <div key={t.type} className="p-4 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
+                <div key={t.type} className="p-4 rounded-xl text-center" style={{ background: "rgba(10,36,114,0.03)", border: "1px solid rgba(10,36,114,0.07)" }}>
                   <p className="text-2xl font-bold" style={{ color: NAVY }}>{t.count}</p>
                   <p className="text-xs" style={{ color: MUTED }}>{t.type}</p>
                 </div>
               ))}
               {s.bySeverity?.map((sev: any) => (
-                <div key={sev.severity} className="p-4 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
+                <div key={sev.severity} className="p-4 rounded-xl text-center" style={{ background: "rgba(10,36,114,0.03)", border: "1px solid rgba(10,36,114,0.07)" }}>
                   <p className="text-2xl font-bold" style={{ color: NAVY }}>{sev.count}</p>
                   <p className="text-xs" style={{ color: MUTED }}>{sev.severity}</p>
                 </div>
@@ -1075,7 +1075,7 @@ function ActivityTab() {
             <ChartCard title="Activity by Resource">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
                 {s.byResource.map((r: any) => (
-                  <div key={r.resource} className="p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)" }}>
+                  <div key={r.resource} className="p-3 rounded-xl text-center" style={{ background: "rgba(10,36,114,0.03)" }}>
                     <p className="text-lg font-bold" style={{ color: NAVY }}>{r.count}</p>
                     <p className="text-xs" style={{ color: MUTED }}>{r.resource}</p>
                   </div>
@@ -1126,7 +1126,7 @@ export function Reports() {
       </div>
 
       <Tabs defaultValue="attendance" className="w-full">
-        <TabsList style={{ background: "rgba(56,25,50,0.05)", borderRadius: 12 }} className="flex-wrap h-auto p-1">
+        <TabsList style={{ background: "rgba(10,36,114,0.05)", borderRadius: 12 }} className="flex-wrap h-auto p-1">
           <TabsTrigger value="attendance" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Attendance</TabsTrigger>
           <TabsTrigger value="staff-attendance" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Staff Attendance</TabsTrigger>
           <TabsTrigger value="academic" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Academic</TabsTrigger>

@@ -23,7 +23,7 @@ export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loadin
       {cards.map(c => {
         const gradeColor = c.average >= 80 ? "#10B981" : c.average >= 60 ? "#6366F1" : c.average >= 40 ? "#F59E0B" : "#EF4444";
         return (
-          <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center justify-between mb-2">
               <p className="font-semibold text-sm" style={{ color: NAVY }}>
                 {c.term?.name || "Term"} {c.session?.name ? `(${c.session.name})` : ""}

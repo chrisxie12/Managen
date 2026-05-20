@@ -72,7 +72,7 @@ export function ParentReports() {
           value={selected?.id || ""}
           onChange={(e) => setSelected(children.find((c) => c.id === e.target.value) || null)}
           className="w-full p-3 rounded-2xl text-sm font-medium"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
         >
           {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
@@ -93,7 +93,7 @@ export function ParentReports() {
 
           <div className="space-y-3">
             {reportCards.map((card) => (
-              <div key={card.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              <div key={card.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <div>
                     <span className="text-sm font-semibold" style={{ color: NAVY }}>{card.term?.name || "Term"}</span>

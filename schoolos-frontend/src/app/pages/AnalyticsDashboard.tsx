@@ -41,7 +41,7 @@ function MetricCard({ icon: Icon, label, value, sub, trend, color }: {
   icon: any; label: string; value: string | number; sub?: string; trend?: "up" | "down"; color?: string;
 }) {
   return (
-    <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
       <div className="flex items-center gap-3 mb-2">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
@@ -67,7 +67,7 @@ function ChartCard({ title, subtitle, children, action }: {
   title: string; subtitle?: string; children: React.ReactNode; action?: React.ReactNode;
 }) {
   return (
-    <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
@@ -86,7 +86,7 @@ function LoadingSpinner({ height = 48 }: { height?: number }) {
 
 function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
-    <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+    <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
       <Icon size={36} color={MUTED} className="mx-auto mb-2" />
       <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
       <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -183,7 +183,7 @@ export function AnalyticsDashboard() {
         </div>
         <select value={selectedTermId} onChange={(e) => setSelectedTermId(e.target.value)}
           className="px-4 py-2.5 rounded-xl outline-none text-sm min-w-[160px]"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}{t.is_current ? " (Current)" : ""}</option>)}
         </select>
       </div>
@@ -212,12 +212,12 @@ export function AnalyticsDashboard() {
               {attTrend.length === 0 ? <EmptyState icon={TrendingUp} title="No attendance data" desc="Mark attendance to see trends" /> : (
                 <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={attTrend} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" />
                     <XAxis dataKey="date" tickFormatter={(d) => new Date(d).toLocaleDateString("en", { month: "short", day: "numeric" })}
                       tick={{ fontSize: 10, fill: MUTED }} interval="preserveStartEnd" />
                     <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
                     <Tooltip
-                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                       labelFormatter={(d) => new Date(d).toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" })}
                       formatter={(value: number) => [`${value}%`, "Attendance"]} />
                     <Line type="monotone" dataKey="rate" stroke="#10B981" strokeWidth={2.5} dot={false}
@@ -232,11 +232,11 @@ export function AnalyticsDashboard() {
               {perfTrend.length === 0 ? <EmptyState icon={Star} title="No performance data" desc="Create assessments and enter scores" /> : (
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={perfTrend} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" />
                     <XAxis dataKey="name" tick={{ fontSize: 9, fill: MUTED }} interval={0} angle={-20} textAnchor="end" height={50} />
                     <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
                     <Tooltip
-                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                       formatter={(value: number) => [`${value}%`, "Avg Score"]} />
                     <Bar dataKey="rate" radius={[4, 4, 0, 0]}>
                       {perfTrend.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -255,7 +255,7 @@ export function AnalyticsDashboard() {
                   {subjectComp.map((s, i) => (
                     <div key={s.subject_id} className="flex items-center gap-3">
                       <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: NAVY }}>{s.subject_name}</span>
-                      <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
+                      <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(10,36,114,0.06)" }}>
                         <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(s.rate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                       </div>
                       <span className="text-xs font-medium w-12 text-right shrink-0" style={{ color: MUTED }}>{s.rate}%</span>
@@ -269,11 +269,11 @@ export function AnalyticsDashboard() {
               {classComp.length === 0 ? <EmptyState icon={School} title="No class data" desc="Assign students to classes and enter scores" /> : (
                 <ResponsiveContainer width="100%" height={Math.max(180, classComp.length * 40)}>
                   <BarChart data={classComp} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" horizontal={false} />
                     <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
                     <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
                     <Tooltip
-                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                      contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                       formatter={(value: number) => [`${value}%`, "Avg Score"]} />
                     <Bar dataKey="rate" radius={[0, 4, 4, 0]}>
                       {classComp.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -327,7 +327,7 @@ export function AnalyticsDashboard() {
                   ) : (
                     <div className="space-y-2 max-h-64 overflow-y-auto">
                       {riskData.openInterventions.slice(0, 10).map(i => (
-                        <div key={i.id} className="p-3 rounded-xl text-sm" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.07)" }}>
+                        <div key={i.id} className="p-3 rounded-xl text-sm" style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.07)" }}>
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-medium text-xs" style={{ color: NAVY }}>{i.student?.name || "Unknown"}</span>
                             <div className="flex gap-1">

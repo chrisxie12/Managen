@@ -66,7 +66,7 @@ function PaymentMethodSelector({
           style={{
             background: value === m.id ? NAVY : "white",
             color: value === m.id ? "white" : NAVY,
-            border: value === m.id ? `2px solid ${NAVY}` : "2px solid rgba(56,25,50,0.1)",
+            border: value === m.id ? `2px solid ${NAVY}` : "2px solid rgba(10,36,114,0.1)",
           }}
         >
           <m.icon size={20} />
@@ -95,10 +95,10 @@ function InvoiceRow({
       className="p-4 rounded-xl flex items-center gap-4"
       style={{
         background: "white",
-        border: "1px solid rgba(56,25,50,0.07)",
+        border: "1px solid rgba(10,36,114,0.07)",
       }}
     >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "rgba(56,25,50,0.05)" }}>
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "rgba(10,36,114,0.05)" }}>
         <Receipt size={18} style={{ color: NAVY }} />
       </div>
       <div className="flex-1 min-w-0">
@@ -309,7 +309,7 @@ export function FeePayment() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(56,25,50,0.08)" }}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(10,36,114,0.08)" }}>
           <Wallet size={20} style={{ color: NAVY }} />
         </div>
         <div>
@@ -330,7 +330,7 @@ export function FeePayment() {
               style={{
                 background: activeTab === child.id ? NAVY : "white",
                 color: activeTab === child.id ? "white" : NAVY,
-                border: activeTab === child.id ? "none" : "1px solid rgba(56,25,50,0.12)",
+                border: activeTab === child.id ? "none" : "1px solid rgba(10,36,114,0.12)",
               }}
             >
               {child.name}

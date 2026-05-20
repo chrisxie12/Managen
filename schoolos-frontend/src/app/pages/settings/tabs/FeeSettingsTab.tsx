@@ -36,7 +36,7 @@ const PAYMENT_OPTIONS = [
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -322,7 +322,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                   />
                 </div>
                 {opt.key === "paystack" && selected && (
-                  <div className="ml-4 pl-3 border-l-2 mt-2 mb-2 space-y-3" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+                  <div className="ml-4 pl-3 border-l-2 mt-2 mb-2 space-y-3" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
                     <FormField label="Paystack Public Key">
                       <div className="relative">
                         <Input
@@ -331,7 +331,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                           disabled={isReadOnly}
                           type={showPaystackPub ? "text" : "password"}
                           className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-                          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                          style={{ borderColor: "rgba(10,36,114,0.12)" }}
                           placeholder="pk_..." />
                         <button type="button" onClick={() => setShowPaystackPub(!showPaystackPub)}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70" tabIndex={-1}>
@@ -347,7 +347,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                           disabled={isReadOnly}
                           type={showPaystackSec ? "text" : "password"}
                           className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-                          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                          style={{ borderColor: "rgba(10,36,114,0.12)" }}
                           placeholder="sk_..." />
                         <button type="button" onClick={() => setShowPaystackSec(!showPaystackSec)}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70" tabIndex={-1}>
@@ -365,7 +365,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                   </div>
                 )}
                 {opt.key === "flutterwave" && selected && (
-                  <div className="ml-4 pl-3 border-l-2 mt-2 mb-2 space-y-3" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+                  <div className="ml-4 pl-3 border-l-2 mt-2 mb-2 space-y-3" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
                     <FormField label="Flutterwave Public Key">
                       <div className="relative">
                         <Input
@@ -374,7 +374,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                           disabled={isReadOnly}
                           type={showFlutterwavePub ? "text" : "password"}
                           className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-                          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                          style={{ borderColor: "rgba(10,36,114,0.12)" }}
                           placeholder="FLWPUBK-..." />
                         <button type="button" onClick={() => setShowFlutterwavePub(!showFlutterwavePub)}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70" tabIndex={-1}>
@@ -390,7 +390,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                           disabled={isReadOnly}
                           type={showFlutterwaveSec ? "text" : "password"}
                           className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-                          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                          style={{ borderColor: "rgba(10,36,114,0.12)" }}
                           placeholder="FLWSECK-..." />
                         <button type="button" onClick={() => setShowFlutterwaveSec(!showFlutterwaveSec)}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70" tabIndex={-1}>
@@ -406,7 +406,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                           disabled={isReadOnly}
                           type={showFlutterwaveEnc ? "text" : "password"}
                           className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-                          style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                          style={{ borderColor: "rgba(10,36,114,0.12)" }}
                           placeholder="FLWSECK-..." />
                         <button type="button" onClick={() => setShowFlutterwaveEnc(!showFlutterwaveEnc)}
                           className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70" tabIndex={-1}>
@@ -444,13 +444,13 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                 ) : feeStructures.map((fs: any) => {
                   const isEditing = editingFeeStructureId === fs.id;
                   return (
-                    <tr key={fs.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={fs.id} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2 pr-2" style={{ color: NAVY }}>{fs.class?.name || "—"}</td>
                       <td className="py-2 pr-2">
                         {isEditing ? (
                           <Input value={editFeeData.name} onChange={(e) => setEditFeeData((p) => ({ ...p, name: e.target.value }))}
                             className="h-8 text-xs rounded-xl min-w-[120px]"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span style={{ color: NAVY }}>{fs.name}</span>
                         )}
@@ -459,7 +459,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                         {isEditing ? (
                           <Input type="number" value={editFeeData.amount} onChange={(e) => setEditFeeData((p) => ({ ...p, amount: Number(e.target.value) }))}
                             className="h-8 text-xs rounded-xl w-24"
-                            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                         ) : (
                           <span style={{ color: NAVY }}>{fs.amount}</span>
                         )}
@@ -468,7 +468,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                         {isEditing ? (
                           <Select value={editFeeData.frequency} onValueChange={(v) => setEditFeeData((p) => ({ ...p, frequency: v }))}>
                             <SelectTrigger className="h-8 text-xs rounded-xl w-24"
-                              style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                              style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -508,7 +508,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                                 setEditFeeData({ name: fs.name, amount: fs.amount, frequency: fs.frequency, is_mandatory: fs.is_mandatory || false });
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
-                                style={{ background: "rgba(56,25,50,0.06)" }}>
+                                style={{ background: "rgba(10,36,114,0.06)" }}>
                                 <Pencil size={13} color={NAVY} />
                               </button>
                             )}
@@ -536,7 +536,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Class</label>
               <Select value={newFeeStructure.class_id} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, class_id: v }))}>
                 <SelectTrigger className="h-9 text-xs rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue placeholder="Select class..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -551,19 +551,19 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               <Input value={newFeeStructure.name} onChange={(e) => setNewFeeStructure((p) => ({ ...p, name: e.target.value }))}
                 placeholder="Fee name"
                 className="h-9 text-sm rounded-xl"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Amount</label>
               <Input type="number" value={newFeeStructure.amount} onChange={(e) => setNewFeeStructure((p) => ({ ...p, amount: Number(e.target.value) }))}
                 className="h-9 text-sm rounded-xl"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Frequency</label>
               <Select value={newFeeStructure.frequency} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, frequency: v }))}>
                 <SelectTrigger className="h-9 text-xs rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -603,7 +603,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                       onChange={(e) => updateCategory(i, "name", e.target.value)}
                       disabled={isReadOnly}
                       className="h-8 text-xs rounded-xl min-w-[130px]"
-                      style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                      style={{ borderColor: "rgba(10,36,114,0.12)" }}
                       placeholder="Category name" />
                   </td>
                   <td className="pb-2 pr-2">
@@ -614,7 +614,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                       disabled={isReadOnly}
                       min={0}
                       className="h-8 text-xs rounded-xl w-24"
-                      style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                      style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                   </td>
                   <td className="pb-2 pr-2">
                     <Select
@@ -622,7 +622,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                       onValueChange={(v) => updateCategory(i, "frequency", v)}
                       disabled={isReadOnly}>
                       <SelectTrigger className="h-8 text-xs rounded-xl w-24"
-                        style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                        style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -654,7 +654,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
         {!isReadOnly && (
           <button type="button" onClick={addCategory}
             className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-            style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+            style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
             <Plus size={14} /> Add Custom Category
           </button>
         )}
@@ -678,7 +678,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               min={0}
               max={365}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Maximum Late Fee">
             <Input
@@ -688,7 +688,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               disabled={isReadOnly}
               min={0}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
         <FormField label="Late Fee Type">
@@ -715,7 +715,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             disabled={isReadOnly}
             min={0}
             className={`h-9 text-sm rounded-xl max-w-[200px] ${disabledClass}`}
-            style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         </FormField>
       </SectionCard>
 
@@ -741,7 +741,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               onChange={setReceipt("prefix")}
               disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
         </div>
         <FormField label="Receipt Footer Message">
@@ -751,11 +751,11 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             disabled={isReadOnly}
             rows={3}
             className={`text-sm rounded-xl resize-none ${disabledClass}`}
-            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+            style={{ borderColor: "rgba(10,36,114,0.12)" }}
             placeholder="Thank you for your payment..." />
         </FormField>
 
-        <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between mb-3">
             <label className="text-xs font-medium" style={{ color: NAVY }}>Enable Automatic Payment Reminders</label>
             <Switch
@@ -795,9 +795,9 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                         disabled={isReadOnly}
                         className="px-3 py-1.5 text-xs font-medium rounded-xl transition-all active:scale-95 disabled:cursor-not-allowed"
                         style={{
-                          background: selected ? NAVY : "rgba(56,25,50,0.06)",
+                          background: selected ? NAVY : "rgba(10,36,114,0.06)",
                           color: selected ? "white" : NAVY,
-                          border: selected ? "none" : "1px solid rgba(56,25,50,0.12)",
+                          border: selected ? "none" : "1px solid rgba(10,36,114,0.12)",
                         }}>
                         {day} {day === 1 ? "day" : "days"}
                       </button>
@@ -819,7 +819,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                   }}
                   disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl max-w-[200px] ${disabledClass}`}
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
             </div>
           )}

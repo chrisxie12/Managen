@@ -71,7 +71,7 @@ export function AttendanceLinks() {
               style={{
                 background: tab === t.key ? NAVY : "white",
                 color: tab === t.key ? CREAM : NAVY_LIGHT,
-                border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
             </button>
@@ -125,7 +125,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
 
   return (
     <div className="space-y-6">
-      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Generate New Attendance Link</h3>
 
         <div className="grid gap-4 sm:grid-cols-2 mb-4">
@@ -133,7 +133,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Expires In (minutes)</label>
             <select value={expiry} onChange={(e) => setExpiry(Number(e.target.value))}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value={15}>15 minutes</option>
               <option value={30}>30 minutes</option>
               <option value={60}>1 hour</option>
@@ -146,7 +146,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Target Group</label>
             <select value={group} onChange={(e) => setGroup(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="all">All Staff</option>
               <option value="teachers">Teachers Only</option>
               <option value="non_teaching">Non-Teaching Staff Only</option>
@@ -184,7 +184,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
         </div>
       )}
 
-      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-start gap-3">
           <MapPin size={20} color={NAVY} className="mt-0.5" />
           <div>
@@ -217,7 +217,7 @@ function LinksTab() {
   if (loading) return <LoadingSpinner height={200} />;
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       {links.length === 0 ? (
         <div className="text-center py-12">
           <Link2 size={40} color={MUTED} className="mx-auto mb-3" />
@@ -228,7 +228,7 @@ function LinksTab() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                 <th className="px-4 py-3 font-medium">Code</th>
                 <th className="px-4 py-3 font-medium">Target</th>
                 <th className="px-4 py-3 font-medium">Expires</th>
@@ -238,7 +238,7 @@ function LinksTab() {
             </thead>
             <tbody>
               {links.map(link => (
-                <tr key={link.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                <tr key={link.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                   <td className="px-4 py-3">
                     <code className="text-xs px-2 py-1 rounded" style={{ background: CREAM, color: NAVY }}>
                       {link.link_code.slice(0, 16)}...
@@ -280,7 +280,7 @@ function RecordsTab() {
   if (loading) return <LoadingSpinner height={200} />;
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       {records.length === 0 ? (
         <div className="text-center py-12">
           <MapPin size={40} color={MUTED} className="mx-auto mb-3" />
@@ -291,7 +291,7 @@ function RecordsTab() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                 <th className="px-4 py-3 font-medium">Staff</th>
                 <th className="px-4 py-3 font-medium">Time</th>
                 <th className="px-4 py-3 font-medium">Location</th>
@@ -300,7 +300,7 @@ function RecordsTab() {
             </thead>
             <tbody>
               {records.map(r => (
-                <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"

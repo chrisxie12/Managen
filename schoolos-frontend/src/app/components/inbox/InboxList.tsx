@@ -30,7 +30,7 @@ export function InboxList({ messages, loading, onSelect }: { messages: InboxMess
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-xs" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+      <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-xs" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
         <Search size={14} color={MUTED} />
         <input placeholder="Search messages..." value={search} onChange={(e) => setSearch(e.target.value)}
           className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -43,7 +43,7 @@ export function InboxList({ messages, loading, onSelect }: { messages: InboxMess
       ) : filtered.map(m => (
         <div key={m.id} onClick={() => onSelect(m)}
           className="p-4 rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
-          style={{ background: m.status !== "read" ? CREAM : "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          style={{ background: m.status !== "read" ? CREAM : "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="flex items-start gap-3">
             <div className="mt-0.5">
               {m.status !== "read" ? <Mail size={16} color={NAVY} /> : <MailOpen size={16} color={MUTED} />}

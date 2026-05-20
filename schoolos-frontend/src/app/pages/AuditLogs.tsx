@@ -135,7 +135,7 @@ const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+  <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
     <Icon size={40} color={MUTED} className="mx-auto mb-3" />
     <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -155,7 +155,7 @@ const maskIp = (ip: string | null) => {
 };
 
 const DetailRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
-  <div className="flex items-start gap-3 py-2 border-b" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+  <div className="flex items-start gap-3 py-2 border-b" style={{ borderColor: "rgba(10,36,114,0.06)" }}>
     <span className="text-xs font-medium shrink-0 w-28" style={{ color: MUTED }}>{label}</span>
     <span className="text-sm" style={{ color: NAVY }}>{value}</span>
   </div>
@@ -185,17 +185,17 @@ const MetadataBlock = ({ data }: { data: Record<string, any> | null }) => {
         );
       })}
       {data.body && (
-        <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+        <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(10,36,114,0.06)" }}>
           <span className="text-xs font-semibold block mb-1" style={{ color: NAVY }}>Request Body:</span>
-          <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(56,25,50,0.03)", color: MUTED, maxHeight: 120 }}>
+          <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(10,36,114,0.03)", color: MUTED, maxHeight: 120 }}>
             {JSON.stringify(data.body, null, 2)}
           </pre>
         </div>
       )}
       {data.response && (
-        <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+        <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(10,36,114,0.06)" }}>
           <span className="text-xs font-semibold block mb-1" style={{ color: NAVY }}>Response:</span>
-          <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(56,25,50,0.03)", color: MUTED, maxHeight: 120 }}>
+          <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(10,36,114,0.03)", color: MUTED, maxHeight: 120 }}>
             {JSON.stringify(data.response, null, 2)}
           </pre>
         </div>
@@ -248,7 +248,7 @@ const DetailDrawer = ({ log, open, onClose }: { log: AuditLog | null; open: bool
   return (
     <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-        <SheetHeader className="pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.08)" }}>
+        <SheetHeader className="pb-4 border-b" style={{ borderColor: "rgba(10,36,114,0.08)" }}>
           <SheetTitle className="text-lg font-bold" style={{ color: NAVY }}>
             Audit Log Detail
           </SheetTitle>
@@ -491,12 +491,12 @@ export function AuditLogs() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 h-9 text-xs rounded-xl"
-            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+            style={{ borderColor: "rgba(10,36,114,0.12)" }}
           />
         </div>
 
         <Select value={actionFilter} onValueChange={setActionFilter}>
-          <SelectTrigger className="w-[130px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+          <SelectTrigger className="w-[130px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
             <SelectValue placeholder="All Actions" />
           </SelectTrigger>
           <SelectContent>
@@ -508,7 +508,7 @@ export function AuditLogs() {
         </Select>
 
         <Select value={resourceFilter} onValueChange={setResourceFilter}>
-          <SelectTrigger className="w-[140px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+          <SelectTrigger className="w-[140px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
             <SelectValue placeholder="All Entities" />
           </SelectTrigger>
           <SelectContent>
@@ -520,7 +520,7 @@ export function AuditLogs() {
         </Select>
 
         <Select value={severityFilter} onValueChange={setSeverityFilter}>
-          <SelectTrigger className="w-[120px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+          <SelectTrigger className="w-[120px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
             <SelectValue placeholder="All Severity" />
           </SelectTrigger>
           <SelectContent>
@@ -539,7 +539,7 @@ export function AuditLogs() {
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             className="pl-9 h-9 text-xs rounded-xl w-[150px]"
-            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+            style={{ borderColor: "rgba(10,36,114,0.12)" }}
             placeholder="From"
           />
         </div>
@@ -550,7 +550,7 @@ export function AuditLogs() {
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
             className="pl-9 h-9 text-xs rounded-xl w-[150px]"
-            style={{ borderColor: "rgba(56,25,50,0.12)" }}
+            style={{ borderColor: "rgba(10,36,114,0.12)" }}
             placeholder="To"
           />
         </div>
@@ -568,7 +568,7 @@ export function AuditLogs() {
         <EmptyState icon={Shield} title="No audit logs found" desc={hasActiveFilters ? "Try adjusting your filters." : "Audit events will appear here as actions are performed in the system."} />
       ) : (
         <>
-          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(56,25,50,0.07)", background: "white" }}>
+          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(10,36,114,0.07)", background: "white" }}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -585,7 +585,7 @@ export function AuditLogs() {
                 {logs.map((log) => (
                   <TableRow
                     key={log.id}
-                    className="cursor-pointer hover:bg-[rgba(56,25,50,0.02)]"
+                    className="cursor-pointer hover:bg-[rgba(10,36,114,0.02)]"
                     onClick={() => openDetail(log)}
                   >
                     <TableCell className="text-xs" style={{ color: NAVY }}>

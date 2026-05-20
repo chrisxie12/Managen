@@ -37,7 +37,7 @@ const FEATURES: { name: string; starter: string; growth: string; enterprise: str
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -131,7 +131,7 @@ export function BillingTab({ profile, role }: Props) {
       <SectionCard title="Current Plan" desc="Your subscription plan and billing status">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="rounded-xl p-3" style={{ background: "rgba(56,25,50,0.06)" }}>
+            <div className="rounded-xl p-3" style={{ background: "rgba(10,36,114,0.06)" }}>
               <CreditCard size={22} color={NAVY} />
             </div>
             <div>
@@ -172,7 +172,7 @@ export function BillingTab({ profile, role }: Props) {
             <tbody>
               {FEATURES.map((feat) => {
                 return (
-                  <tr key={feat.name} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                  <tr key={feat.name} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                     <td className="py-2.5 pr-4 font-medium" style={{ color: NAVY }}>{feat.name}</td>
                     {(["starter", "growth", "enterprise"] as const).map((p) => {
                       const isActivePlan = planKey === p;
@@ -180,7 +180,7 @@ export function BillingTab({ profile, role }: Props) {
                         <td key={p} className={`py-2.5 pr-4 ${isActivePlan ? "rounded-lg" : ""}`}
                           style={{
                             color: isActivePlan ? NAVY : MUTED,
-                            background: isActivePlan ? "rgba(56,25,50,0.04)" : "transparent",
+                            background: isActivePlan ? "rgba(10,36,114,0.04)" : "transparent",
                             fontWeight: isActivePlan ? 600 : 400,
                           }}>
                           {feat[p]}
@@ -218,7 +218,7 @@ export function BillingTab({ profile, role }: Props) {
                 </thead>
                 <tbody>
                   {history.map((entry, idx) => (
-                    <tr key={idx} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                    <tr key={idx} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                       <td className="py-2.5 pr-4 whitespace-nowrap" style={{ color: NAVY }}>
                         {formatDate(entry.date)}
                       </td>
@@ -270,7 +270,7 @@ export function BillingTab({ profile, role }: Props) {
       <SectionCard title="Payment Method" desc="How you pay for your subscription">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl p-3" style={{ background: "rgba(56,25,50,0.06)" }}>
+            <div className="rounded-xl p-3" style={{ background: "rgba(10,36,114,0.06)" }}>
               <CreditCard size={20} color={MUTED} />
             </div>
             <div>
@@ -317,8 +317,8 @@ export function BillingTab({ profile, role }: Props) {
                 <div key={p}
                   className={`flex items-center justify-between p-3 rounded-xl ${planKey === p ? "ring-2" : ""}`}
                   style={{
-                    background: planKey === p ? "rgba(56,25,50,0.04)" : "white",
-                    border: "1px solid rgba(56,25,50,0.1)",
+                    background: planKey === p ? "rgba(10,36,114,0.04)" : "white",
+                    border: "1px solid rgba(10,36,114,0.1)",
                     ringColor: planKey === p ? NAVY : "transparent",
                   }}>
                   <div>
@@ -332,7 +332,7 @@ export function BillingTab({ profile, role }: Props) {
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowUpgradeModal(false)}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
+                style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>
                 Cancel
               </button>
               <a href="mailto:support@getschoolos.me?subject=Plan%20Upgrade%20Request"
@@ -361,27 +361,27 @@ export function BillingTab({ profile, role }: Props) {
                 <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Card Number</label>
                 <Input placeholder="4242 4242 4242 4242" disabled
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Expiry</label>
                   <Input placeholder="MM/YY" disabled
                     className="h-9 text-sm rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                 </div>
                 <div>
                   <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>CVC</label>
                   <Input placeholder="123" disabled
                     className="h-9 text-sm rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }} />
                 </div>
               </div>
             </div>
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowPaymentModal(false)}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
+                style={{ background: "rgba(10,36,114,0.06)", color: NAVY }}>
                 Cancel
               </button>
               <a href="mailto:support@getschoolos.me?subject=Payment%20Method%20Update"

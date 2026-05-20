@@ -52,7 +52,7 @@ export function QuickActions() {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1rem", marginBottom: "1rem" }}>
         Quick Actions
       </h3>

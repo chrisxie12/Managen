@@ -43,16 +43,16 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
   const totalPages = Math.max(1, Math.ceil(total / limit));
   if (totalPages <= 1) return null;
   return (
-    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}>
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
         <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -102,7 +102,7 @@ export function DailySignIn() {
               style={{
                 background: tab === t.key ? NAVY : "white",
                 color: tab === t.key ? CREAM : NAVY_LIGHT,
-                border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
             </button>
@@ -189,7 +189,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="p-6 rounded-xl text-center" style={{
           background: alreadySignedIn ? "#D1FAE5" : signInActive ? "white" : "#F3F4F6",
-          border: `1px solid ${alreadySignedIn ? "#A7F3D0" : signInActive ? NAVY : "rgba(56,25,50,0.07)"}`,
+          border: `1px solid ${alreadySignedIn ? "#A7F3D0" : signInActive ? NAVY : "rgba(10,36,114,0.07)"}`,
         }}>
           <LogIn size={32} className="mx-auto mb-3" style={{ color: alreadySignedIn ? "#065F46" : signInActive ? NAVY : MUTED }} />
           <h3 className="font-semibold text-sm mb-1" style={{ color: NAVY }}>Sign In</h3>
@@ -217,7 +217,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
 
         <div className="p-6 rounded-xl text-center" style={{
           background: alreadySignedOut ? "#D1FAE5" : signOutActive ? "white" : "#F3F4F6",
-          border: `1px solid ${alreadySignedOut ? "#A7F3D0" : signOutActive ? NAVY : "rgba(56,25,50,0.07)"}`,
+          border: `1px solid ${alreadySignedOut ? "#A7F3D0" : signOutActive ? NAVY : "rgba(10,36,114,0.07)"}`,
         }}>
           <LogOut size={32} className="mx-auto mb-3" style={{ color: alreadySignedOut ? "#065F46" : signOutActive ? NAVY : MUTED }} />
           <h3 className="font-semibold text-sm mb-1" style={{ color: NAVY }}>Sign Out</h3>
@@ -245,7 +245,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
       </div>
 
       {todayRecord && (
-        <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <h3 className="font-semibold text-sm mb-2" style={{ color: NAVY }}>Today's Attendance</h3>
           <div className="flex items-center gap-4 text-sm" style={{ color: MUTED }}>
             <span>Date: {todayRecord.date}</span>
@@ -286,10 +286,10 @@ function AllRecordsTab() {
     <div>
       <div className="flex gap-3 mb-4">
         <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
       </div>
 
-      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         {loading ? <LoadingSpinner height={200} /> : records.length === 0 ? (
           <div className="text-center py-12">
             <Calendar size={40} color={MUTED} className="mx-auto mb-3" />
@@ -300,7 +300,7 @@ function AllRecordsTab() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                     <th className="px-4 py-3 font-medium">Staff</th>
                     <th className="px-4 py-3 font-medium">Department</th>
                     <th className="px-4 py-3 font-medium">Sign In</th>
@@ -310,7 +310,7 @@ function AllRecordsTab() {
                 </thead>
                 <tbody>
                   {records.map(r => (
-                    <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                    <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
@@ -396,11 +396,11 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                 <th className="px-4 py-3 font-medium">Staff</th>
                 <th className="px-4 py-3 font-medium">Date</th>
                 <th className="px-4 py-3 font-medium">Sign In</th>
@@ -410,7 +410,7 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
             </thead>
             <tbody>
               {records.map(r => (
-                <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                   <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{r.user?.name || "—"}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{r.date}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{r.sign_in_time ? new Date(r.sign_in_time).toLocaleTimeString() : "—"}</td>
@@ -440,19 +440,19 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Sign In Time</label>
                 <input type="datetime-local" value={signInTime} onChange={(e) => setSignInTime(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                  style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Sign Out Time</label>
                 <input type="datetime-local" value={signOutTime} onChange={(e) => setSignOutTime(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                  style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Reason for Override *</label>
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm resize-none"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+                  style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
                   placeholder="Explain why this override is necessary..." />
               </div>
               <div className="flex gap-2">
@@ -463,7 +463,7 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
                 </button>
                 <button onClick={() => setSelectedRecord(null)}
                   className="px-4 py-2.5 rounded-xl text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                  style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
                   Cancel
                 </button>
               </div>

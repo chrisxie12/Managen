@@ -90,7 +90,7 @@ const DEFAULT_SMS_TEMPLATES = Object.fromEntries(
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -393,7 +393,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
         disabled={isReadOnly}
         type={show ? "text" : "password"}
         className={`h-9 text-sm rounded-xl w-full pr-9 ${disabledClass}`}
-        style={{ borderColor: "rgba(56,25,50,0.12)" }}
+        style={{ borderColor: "rgba(10,36,114,0.12)" }}
         placeholder={placeholder}
       />
       <button type="button" onClick={toggleShow}
@@ -408,7 +408,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
       {/* CHANNELS */}
       <SectionCard title="Notification Channels" desc="Enable and configure notification delivery channels">
 
-        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <MessageSquare size={15} color={MUTED} />
@@ -421,7 +421,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             />
           </div>
           {channels.whatsapp?.enabled && (
-            <div className="ml-6 pl-3 border-l-2 mt-2" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+            <div className="ml-6 pl-3 border-l-2 mt-2" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
               <FormField label="Twilio WhatsApp Number">
                 {renderMaskedInput(
                   channels.whatsapp?.twilio_whatsapp_number || "",
@@ -435,7 +435,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           )}
         </div>
 
-        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Smartphone size={15} color={MUTED} />
@@ -448,7 +448,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             />
           </div>
           {channels.sms?.enabled && (
-            <div className="ml-6 pl-3 border-l-2 mt-2 space-y-3" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+            <div className="ml-6 pl-3 border-l-2 mt-2 space-y-3" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
               <FormField label="Africa's Talking API Key">
                 {renderMaskedInput(
                   channels.sms?.africastalking?.api_key || "",
@@ -480,7 +480,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           )}
         </div>
 
-        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Mail size={15} color={MUTED} />
@@ -493,14 +493,14 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             />
           </div>
           {channels.email?.enabled && (
-            <div className="ml-6 pl-3 border-l-2 mt-2 space-y-3" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+            <div className="ml-6 pl-3 border-l-2 mt-2 space-y-3" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
               <FormField label="From Email">
                 <Input
                   value={channels.email?.from_email || ""}
                   onChange={setChannelField("email", "from_email")}
                   disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }}
                   placeholder="noreply@school.com"
                 />
               </FormField>
@@ -510,7 +510,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                   onChange={setChannelField("email", "from_name")}
                   disabled={isReadOnly}
                   className={`h-9 text-sm rounded-xl ${disabledClass}`}
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }}
                   placeholder="School Name"
                 />
               </FormField>
@@ -518,7 +518,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           )}
         </div>
 
-        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+        <div className="mb-4 pb-4 border-b" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Bell size={15} color={MUTED} />
@@ -531,7 +531,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             />
           </div>
           {channels.push?.enabled && (
-            <div className="ml-6 pl-3 border-l-2 mt-2" style={{ borderColor: "rgba(56,25,50,0.1)" }}>
+            <div className="ml-6 pl-3 border-l-2 mt-2" style={{ borderColor: "rgba(10,36,114,0.1)" }}>
               <p className="text-xs" style={{ color: MUTED }}>
                 Push notifications are sent to the mobile app. Configure push notification settings in the mobile app configuration.
               </p>
@@ -570,7 +570,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             </thead>
             <tbody>
               {TRIGGER_EVENTS.map((evt) => (
-                <tr key={evt.slug} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                <tr key={evt.slug} className="border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                   <td className="py-2.5 pr-3 text-xs font-medium" style={{ color: NAVY }}>{evt.label}</td>
                   {TRIGGER_CHANNELS.map((ch) => {
                     const enabled = ch.key === "in_app" ? true : (triggers[evt.slug] || []).includes(ch.key);
@@ -609,9 +609,9 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                   disabled={isReadOnly}
                   className="px-3 py-1.5 text-xs font-medium rounded-xl transition-all active:scale-95 disabled:cursor-not-allowed"
                   style={{
-                    background: selected ? NAVY : "rgba(56,25,50,0.06)",
+                    background: selected ? NAVY : "rgba(10,36,114,0.06)",
                     color: selected ? "white" : NAVY,
-                    border: selected ? "none" : "1px solid rgba(56,25,50,0.12)",
+                    border: selected ? "none" : "1px solid rgba(10,36,114,0.12)",
                   }}
                 >
                   {day} {day === 1 ? "day" : "days"}
@@ -628,7 +628,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
               onChange={setScheduleField("reminder_time")}
               disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }}
+              style={{ borderColor: "rgba(10,36,114,0.12)" }}
             />
           </FormField>
           <FormField label="Attendance Alert Time">
@@ -638,7 +638,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
               onChange={setScheduleField("attendance_alert_time")}
               disabled={isReadOnly}
               className={`h-9 text-sm rounded-xl ${disabledClass}`}
-              style={{ borderColor: "rgba(56,25,50,0.12)" }}
+              style={{ borderColor: "rgba(10,36,114,0.12)" }}
             />
           </FormField>
         </div>
@@ -651,7 +651,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           const tpl = templates[evt.slug] || DEFAULT_EMAIL_TEMPLATES[evt.slug];
           const isOpen = expandedEmailTemplate === evt.slug;
           return (
-            <div key={evt.slug} className="mb-2 border rounded-xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+            <div key={evt.slug} className="mb-2 border rounded-xl" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
               <button
                 type="button"
                 onClick={() => setExpandedEmailTemplate(isOpen ? null : evt.slug)}
@@ -662,14 +662,14 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                 <ChevronDown size={14} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               {isOpen && (
-                <div className="px-3 pb-3 space-y-2 border-t pt-2" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                <div className="px-3 pb-3 space-y-2 border-t pt-2" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                   <FormField label="Subject">
                     <Input
                       value={tpl?.subject || ""}
                       onChange={setEmailTemplateField(evt.slug, "subject")}
                       disabled={isReadOnly}
                       className={`h-9 text-sm rounded-xl ${disabledClass}`}
-                      style={{ borderColor: "rgba(56,25,50,0.12)" }}
+                      style={{ borderColor: "rgba(10,36,114,0.12)" }}
                     />
                   </FormField>
                   <FormField label="Body">
@@ -679,7 +679,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                       disabled={isReadOnly}
                       rows={4}
                       className={`w-full text-sm rounded-xl p-2.5 resize-y ${disabledClass}`}
-                      style={{ border: "1px solid rgba(56,25,50,0.12)" }}
+                      style={{ border: "1px solid rgba(10,36,114,0.12)" }}
                     />
                     <p className="text-xs mt-1" style={{ color: MUTED }}>
                       {"Available variables: {{student_name}}, {{school_name}}, {{term_name}}, {{amount}}, {{date}}, {{subject}}, {{announcement_title}}"}
@@ -689,7 +689,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                     onClick={() => resetEmailTemplate(evt.slug)}
                     disabled={isReadOnly}
                     className="text-xs rounded-xl h-8 px-3"
-                    style={{ background: "transparent", color: MUTED, border: "1px solid rgba(56,25,50,0.12)" }}
+                    style={{ background: "transparent", color: MUTED, border: "1px solid rgba(10,36,114,0.12)" }}
                   >
                     Reset to Default
                   </Button>
@@ -707,7 +707,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           const tpl = templates[evt.slug] || DEFAULT_SMS_TEMPLATES[evt.slug];
           const isOpen = expandedSmsTemplate === evt.slug;
           return (
-            <div key={evt.slug} className="mb-2 border rounded-xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+            <div key={evt.slug} className="mb-2 border rounded-xl" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
               <button
                 type="button"
                 onClick={() => setExpandedSmsTemplate(isOpen ? null : evt.slug)}
@@ -718,7 +718,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                 <ChevronDown size={14} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               {isOpen && (
-                <div className="px-3 pb-3 space-y-2 border-t pt-2" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+                <div className="px-3 pb-3 space-y-2 border-t pt-2" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                   <FormField label="Message">
                     <textarea
                       value={tpl?.message || ""}
@@ -726,7 +726,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                       disabled={isReadOnly}
                       rows={3}
                       className={`w-full text-sm rounded-xl p-2.5 resize-y ${disabledClass}`}
-                      style={{ border: "1px solid rgba(56,25,50,0.12)" }}
+                      style={{ border: "1px solid rgba(10,36,114,0.12)" }}
                     />
                     <p className="text-xs mt-1" style={{ color: MUTED }}>
                       {"Available variables: {{student_name}}, {{school_name}}, {{term_name}}, {{amount}}, {{date}}, {{subject}}, {{announcement_title}}"}
@@ -736,7 +736,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                     onClick={() => resetSmsTemplate(evt.slug)}
                     disabled={isReadOnly}
                     className="text-xs rounded-xl h-8 px-3"
-                    style={{ background: "transparent", color: MUTED, border: "1px solid rgba(56,25,50,0.12)" }}
+                    style={{ background: "transparent", color: MUTED, border: "1px solid rgba(10,36,114,0.12)" }}
                   >
                     Reset to Default
                   </Button>

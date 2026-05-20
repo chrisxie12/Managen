@@ -108,7 +108,7 @@ export function NotificationsPage() {
             style={{
               background: filterTab === c.key ? NAVY : "white",
               color: filterTab === c.key ? CREAM : NAVY_LIGHT,
-              border: filterTab === c.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+              border: filterTab === c.key ? "none" : "1px solid rgba(10,36,114,0.1)",
             }}
           >
             <c.icon size={13} /> {c.label}
@@ -120,7 +120,7 @@ export function NotificationsPage() {
           style={{
             background: showUnread ? NAVY : "transparent",
             color: showUnread ? "white" : MUTED,
-            border: "1px solid rgba(56,25,50,0.1)",
+            border: "1px solid rgba(10,36,114,0.1)",
           }}
         >
           Unread only
@@ -153,9 +153,9 @@ export function NotificationsPage() {
                 onClick={() => !n.is_read && markAsRead(n.id)}
                 className="p-3 rounded-xl flex items-start gap-3 transition-all duration-150 cursor-pointer"
                 style={{
-                  background: n.is_read ? "white" : "rgba(56,25,50,0.03)",
+                  background: n.is_read ? "white" : "rgba(10,36,114,0.03)",
                   border: n.is_read
-                    ? "1px solid rgba(56,25,50,0.07)"
+                    ? "1px solid rgba(10,36,114,0.07)"
                     : `1px solid ${NAVY}22`,
                   opacity: n.is_read ? 0.7 : 1,
                 }}
@@ -206,7 +206,7 @@ export function NotificationsPage() {
               <div
                 key={log.id}
                 className="p-2 rounded text-xs flex items-center gap-2"
-                style={{ background: "white", border: "1px solid rgba(56,25,50,0.05)" }}
+                style={{ background: "white", border: "1px solid rgba(10,36,114,0.05)" }}
               >
                 {log.status === "sent" ? (
                   <CheckCircle2 size={10} color="#10B981" />

@@ -56,13 +56,13 @@ export function ComposeMessage({ onSent }: { onSent: () => void }) {
         <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Subject</label>
         <input value={subject} onChange={e => setSubject(e.target.value)}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm" placeholder="Subject..."
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
       </div>
       <div>
         <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Message</label>
         <textarea value={body} onChange={e => setBody(e.target.value)} rows={5}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm resize-none" placeholder="Write your message..."
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
       </div>
       <button onClick={send} disabled={sending || !body.trim()}
         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"

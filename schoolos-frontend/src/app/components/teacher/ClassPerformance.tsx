@@ -68,7 +68,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 180 }}>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name} {t.is_current ? "(Current)" : ""}</option>)}
         </select>
       </div>
@@ -81,7 +81,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center gap-2 mb-4">
               <Trophy size={18} color="#10B981" />
               <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Top Performers</h3>
@@ -109,7 +109,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
             )}
           </div>
 
-          <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center gap-2 mb-4">
               <TrendingDown size={18} color="#EF4444" />
               <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Needs Improvement</h3>

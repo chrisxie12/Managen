@@ -72,13 +72,13 @@ export function NotificationList({ notifications, loading }: { notifications: No
             style={{
               background: category === c.key ? NAVY : "white",
               color: category === c.key ? CREAM : NAVY_LIGHT,
-              border: category === c.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+              border: category === c.key ? "none" : "1px solid rgba(10,36,114,0.1)",
             }}>
             <c.icon size={13} /> {c.label}
           </button>
         ))}
         <select value={timeRange} onChange={e => setTimeRange(e.target.value)}
-          className="ml-auto px-3 py-1.5 rounded-xl text-xs outline-none" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="ml-auto px-3 py-1.5 rounded-xl text-xs outline-none" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="all">All time</option>
           <option value="7d">Last 7 days</option>
           <option value="30d">Last 30 days</option>
@@ -99,7 +99,7 @@ export function NotificationList({ notifications, loading }: { notifications: No
       ) : (
         <div className="space-y-2">
           {filtered.map(n => (
-            <div key={n.id} className="p-3 rounded-xl flex items-start gap-3" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div key={n.id} className="p-3 rounded-xl flex items-start gap-3" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <div className="mt-0.5">{statusIcon(n.status)}</div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">

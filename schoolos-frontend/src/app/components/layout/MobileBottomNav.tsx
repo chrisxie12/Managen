@@ -27,9 +27,9 @@ export function MobileBottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-40 lg:hidden flex items-center justify-around px-2 pb-2 pt-1"
       style={{
-        background: "rgba(255,243,230,0.95)",
+        background: "rgba(248,249,250,0.95)",
         backdropFilter: "blur(20px)",
-        borderTop: "1px solid rgba(56,25,50,0.07)",
+        borderTop: "1px solid rgba(10,36,114,0.07)",
       }}
     >
       {NAV_ITEMS.map((item) => {

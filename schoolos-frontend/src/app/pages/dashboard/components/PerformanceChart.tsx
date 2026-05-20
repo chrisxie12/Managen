@@ -74,7 +74,7 @@ export function PerformanceChart() {
 
   if (loading) {
     return (
-      <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+      <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
@@ -89,7 +89,7 @@ export function PerformanceChart() {
   }
 
   return (
-    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
@@ -102,11 +102,11 @@ export function PerformanceChart() {
       {data.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data} barGap={4} barCategoryGap="20%">
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.05)" vertical={false} />
             <XAxis dataKey="class_name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
             <Tooltip
-              contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }}
+              contentStyle={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", borderRadius: 12, fontSize: 12 }}
               formatter={(value: number, name: string) => [`${value}%`, LABELS[name] || name]}
             />
             <Legend
@@ -124,7 +124,7 @@ export function PerformanceChart() {
           <p style={{ fontSize: "0.85rem" }}>Competency data will appear once assessments are graded this term.</p>
         </div>
       )}
-      <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
+      <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t" style={{ borderColor: "rgba(10,36,114,0.06)" }}>
         {Object.entries(LABELS).map(([key, label]) => (
           <div key={key} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-sm" style={{ background: COLORS[key as keyof typeof COLORS] }} />

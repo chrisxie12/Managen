@@ -152,7 +152,7 @@ export function AdminRoles() {
         </button>
       </div>
 
-      <div className="mb-4 flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
+      <div className="mb-4 flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 300 }}>
         <Search size={14} color={MUTED} />
         <input placeholder="Search roles..." value={search} onChange={(e) => setSearch(e.target.value)}
           className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -160,14 +160,14 @@ export function AdminRoles() {
 
       <div className="grid gap-4">
         {filteredRoles.length === 0 ? (
-          <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <Shield size={40} color={MUTED} className="mx-auto mb-3" />
             <p className="font-semibold" style={{ color: NAVY }}>No roles found</p>
             <p className="text-sm mt-1" style={{ color: MUTED }}>Create your first role to get started</p>
           </div>
         ) : filteredRoles.map(role => (
-          <div key={role.id} className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
-            <div className="flex items-center justify-between p-4" style={{ borderBottom: editingRole === role.id ? "none" : "1px solid rgba(56,25,50,0.07)" }}>
+          <div key={role.id} className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 2px 12px rgba(10,36,114,0.04)" }}>
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: editingRole === role.id ? "none" : "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: role.is_system ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)" }}>
                   <Shield size={18} color={role.is_system ? "#6366F1" : "#10B981"} />
@@ -204,7 +204,7 @@ export function AdminRoles() {
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-sm font-semibold" style={{ color: NAVY }}>Permissions for {role.label}</h4>
                   <div className="flex gap-2">
-                    <button onClick={() => setEditingRole(null)} className="px-3 py-1.5 rounded-lg text-xs" style={{ border: "1px solid rgba(56,25,50,0.15)", color: MUTED }}>
+                    <button onClick={() => setEditingRole(null)} className="px-3 py-1.5 rounded-lg text-xs" style={{ border: "1px solid rgba(10,36,114,0.15)", color: MUTED }}>
                       Cancel
                     </button>
                     <button onClick={saveRolePermissions} disabled={saving}
@@ -218,11 +218,11 @@ export function AdminRoles() {
 
                 <div className="space-y-2 max-h-[400px] overflow-y-auto">
                   {permissions.map(({ module, permissions: modPerms }) => (
-                    <div key={module} className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                    <div key={module} className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                       <button
                         onClick={() => setExpandedModules(prev => ({ ...prev, [module]: !prev[module] }))}
                         className="w-full flex items-center justify-between p-3 text-left active:scale-[0.99] transition-transform"
-                        style={{ background: "rgba(56,25,50,0.03)" }}>
+                        style={{ background: "rgba(10,36,114,0.03)" }}>
                         <div className="flex items-center gap-2">
                           {expandedModules[module] ? <ChevronDown size={14} color={MUTED} /> : <ChevronRight size={14} color={MUTED} />}
                           <span className="text-sm font-medium capitalize" style={{ color: NAVY }}>{module}</span>
@@ -230,7 +230,7 @@ export function AdminRoles() {
                         <div className="flex items-center gap-2">
                           <span className="text-xs" style={{ color: MUTED }}>{modPerms.filter(p => selectedPerms.includes(p.id)).length}/{modPerms.length}</span>
                           <button onClick={(e) => { e.stopPropagation(); toggleModule(module, modPerms); }}
-                            className="px-2 py-0.5 rounded text-xs" style={{ background: "rgba(56,25,50,0.06)", color: NAVY_LIGHT }}>
+                            className="px-2 py-0.5 rounded text-xs" style={{ background: "rgba(10,36,114,0.06)", color: NAVY_LIGHT }}>
                             Toggle all
                           </button>
                         </div>
@@ -241,8 +241,8 @@ export function AdminRoles() {
                             <button key={perm.id} onClick={() => togglePermission(perm.id)}
                               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-left transition-all active:scale-95"
                               style={{
-                                background: selectedPerms.includes(perm.id) ? "rgba(56,25,50,0.08)" : "transparent",
-                                border: `1px solid ${selectedPerms.includes(perm.id) ? "rgba(56,25,50,0.2)" : "rgba(56,25,50,0.07)"}`,
+                                background: selectedPerms.includes(perm.id) ? "rgba(10,36,114,0.08)" : "transparent",
+                                border: `1px solid ${selectedPerms.includes(perm.id) ? "rgba(10,36,114,0.2)" : "rgba(10,36,114,0.07)"}`,
                                 color: selectedPerms.includes(perm.id) ? NAVY : NAVY_LIGHT,
                               }}>
                               {selectedPerms.includes(perm.id) ? <Check size={11} /> : <div className="w-[11px]" />}
@@ -261,16 +261,16 @@ export function AdminRoles() {
       </div>
 
       {showCreate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(56,25,50,0.6)", backdropFilter: "blur(4px)" }}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(10,36,114,0.6)", backdropFilter: "blur(4px)" }}
           onMouseDown={(e) => e.target === e.currentTarget && setShowCreate(false)}>
-          <div className="w-full max-w-md rounded-[32px] p-8" style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }}
+          <div className="w-full max-w-md rounded-[32px] p-8" style={{ background: "white", boxShadow: "0 32px 80px rgba(10,36,114,0.3)" }}
             onMouseDown={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>Create Role</h2>
                 <p className="text-sm" style={{ color: MUTED }}>Add a custom role for your school</p>
               </div>
-              <button onClick={() => setShowCreate(false)} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
+              <button onClick={() => setShowCreate(false)} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(10,36,114,0.06)" }}>
                 <X size={16} color={MUTED} />
               </button>
             </div>
@@ -279,21 +279,21 @@ export function AdminRoles() {
                 <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Role Name</label>
                 <input value={newRole.name} onChange={(e) => setNewRole(p => ({ ...p, name: e.target.value.toLowerCase().replace(/[^a-z_]/g, "") }))}
                   placeholder="e.g. vice_principal"
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
                 <p className="text-xs mt-1" style={{ color: MUTED }}>Lowercase letters and underscores only</p>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Display Label</label>
                 <input value={newRole.label} onChange={(e) => setNewRole(p => ({ ...p, label: e.target.value }))}
                   placeholder="e.g. Vice Principal"
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description</label>
                 <textarea value={newRole.description} onChange={(e) => setNewRole(p => ({ ...p, description: e.target.value }))}
                   placeholder="What does this role do?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm resize-none" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm resize-none" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
               </div>
               <button onClick={createRole} disabled={saving || !newRole.name || !newRole.label}
                 className="w-full py-3 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm font-semibold"

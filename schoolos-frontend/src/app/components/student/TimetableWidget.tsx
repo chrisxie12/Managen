@@ -29,7 +29,7 @@ export function TimetableWidget({ entries, loading }: { entries: TimetableEntry[
   }
 
   return (
-    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(10,36,114,0.07)" }}>
       <table className="w-full text-sm">
         <thead>
           <tr style={{ background: CREAM }}>
@@ -39,7 +39,7 @@ export function TimetableWidget({ entries, loading }: { entries: TimetableEntry[
         </thead>
         <tbody>
           {periods.map(period => (
-            <tr key={period} style={{ borderTop: "1px solid rgba(56,25,50,0.05)" }}>
+            <tr key={period} style={{ borderTop: "1px solid rgba(10,36,114,0.05)" }}>
               <td className="px-2 py-1.5 text-xs font-medium" style={{ color: MUTED }}>{period}</td>
               {DAYS.map(day => {
                 const entry = entries.find(e => e.day === day && e.period === period);

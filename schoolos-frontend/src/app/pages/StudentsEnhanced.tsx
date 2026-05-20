@@ -110,13 +110,13 @@ export function StudentsEnhanced() {
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={view} onChange={(e) => { setView(e.target.value); setSelectedClass(""); }}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
           <option value="overall">Overall View</option>
           <option value="by_class">By Class</option>
         </select>
         {view === "by_class" && (
           <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-            className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
+            className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 180 }}>
             <option value="">All Classes</option>
             {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
           </select>

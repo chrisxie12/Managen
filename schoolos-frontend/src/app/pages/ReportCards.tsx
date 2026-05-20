@@ -53,7 +53,7 @@ export function ReportCards() {
               style={{
                 background: tab === t.key ? NAVY : "white",
                 color: tab === t.key ? CREAM : NAVY_LIGHT,
-                border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
             </button>
@@ -105,7 +105,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
 
   return (
     <div className="space-y-6">
-      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Upload Word Template</h3>
         <p className="text-xs mb-4" style={{ color: MUTED }}>
           Upload a .docx file with placeholders: {`{{student_name}}, {{roll_no}}, {{class}}, {{term}}, {{subject_scores}}, {{total_score}}, {{percentage}}, {{grade}}, {{remark}}`}
@@ -113,7 +113,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
 
         <div className="flex items-center gap-3 mb-4">
           <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl cursor-pointer text-sm"
-            style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <Upload size={15} />
             <span>{file ? file.name : "Choose .docx file"}</span>
             <input type="file" accept=".docx" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
@@ -127,7 +127,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
         </div>
       </div>
 
-      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: NAVY }}>Uploaded Templates</h3>
         {templates.length === 0 ? (
           <div className="text-center py-8">
@@ -138,7 +138,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
           <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">Name</th>
                   <th className="px-4 py-3 font-medium">File</th>
                   <th className="px-4 py-3 font-medium">Uploaded</th>
@@ -146,7 +146,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
               </thead>
               <tbody>
                 {templates.map(t => (
-                  <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{t.name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{t.file_name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{new Date(t.created_at).toLocaleDateString()}</td>
@@ -207,7 +207,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
 
   return (
     <div className="space-y-6">
-      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Generate Report Cards</h3>
 
         <div className="grid gap-4 sm:grid-cols-3 mb-4">
@@ -215,7 +215,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Template</label>
             <select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select template...</option>
               {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -224,7 +224,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Class</label>
             <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -233,7 +233,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Term</label>
             <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select term...</option>
               {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -303,7 +303,7 @@ function ViewCardsTab() {
         </button>
       )}
 
-      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         {cards.length === 0 ? (
           <div className="text-center py-12">
             <FileDown size={40} color={MUTED} className="mx-auto mb-3" />
@@ -314,7 +314,7 @@ function ViewCardsTab() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">Student</th>
                   <th className="px-4 py-3 font-medium">Admission No.</th>
                   <th className="px-4 py-3 font-medium">Term</th>
@@ -324,7 +324,7 @@ function ViewCardsTab() {
               </thead>
               <tbody>
                 {cards.map(card => (
-                  <tr key={card.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={card.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{card.student?.name || "—"}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{card.student?.admission_no || "—"}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{card.term?.name || "—"}</td>

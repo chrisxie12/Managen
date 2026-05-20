@@ -12,7 +12,7 @@ interface SkeletonLoaderProps {
 
 function CardSkeleton() {
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-start justify-between mb-4">
         <Skeleton className="w-11 h-11 rounded-2xl" />
       </div>
@@ -24,7 +24,7 @@ function CardSkeleton() {
 
 function MetricSkeleton() {
   return (
-    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Skeleton className="w-11 h-11 rounded-2xl mb-4" />
       <Skeleton className="h-8 w-20 mb-1" />
       <Skeleton className="h-3 w-36" />
@@ -34,8 +34,8 @@ function MetricSkeleton() {
 
 function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <div className="p-4 border-b" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+    <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
+      <div className="p-4 border-b" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
         <div className="flex gap-8">
           {[1, 2, 3, 4, 5].map((i) => (
             <Skeleton key={i} className="h-4 w-24" />
@@ -46,7 +46,7 @@ function TableSkeleton({ rows = 5 }: { rows?: number }) {
         <div
           key={i}
           className="flex gap-8 p-4"
-          style={{ borderBottom: i < rows - 1 ? "1px solid rgba(56,25,50,0.05)" : "none" }}
+          style={{ borderBottom: i < rows - 1 ? "1px solid rgba(10,36,114,0.05)" : "none" }}
         >
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-4 w-20" />
@@ -74,7 +74,7 @@ function FormSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Skeleton className="h-5 w-32 mb-4" />
       <div className="flex items-end gap-2 h-40">
         {[1, 2, 3, 4, 5, 6, 7].map((i) => (

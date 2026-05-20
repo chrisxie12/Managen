@@ -94,7 +94,7 @@ const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+  <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
     <Icon size={36} color={MUTED} className="mx-auto mb-2" />
     <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -104,7 +104,7 @@ const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; des
 const MetricCard = ({ icon: Icon, label, value, sub, color }: {
   icon: any; label: string; value: string | number; sub?: string; color?: string;
 }) => (
-  <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+  <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
     <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
     <div className="flex items-center gap-3 mb-2">
       <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
@@ -122,7 +122,7 @@ const MetricCard = ({ icon: Icon, label, value, sub, color }: {
 const ChartCard = ({ title, subtitle, children, action }: {
   title: string; subtitle?: string; children: React.ReactNode; action?: React.ReactNode;
 }) => (
-  <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+  <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
     <div className="flex items-center justify-between mb-4">
       <div>
         <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
@@ -234,11 +234,11 @@ function OverviewTab() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => handleExport("invoices")}
-            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(10,36,114,0.15)", color: NAVY }}>
             <Download size={13} className="mr-1" /> Invoices CSV
           </Button>
           <Button variant="outline" size="sm" onClick={() => handleExport("payments")}
-            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(10,36,114,0.15)", color: NAVY }}>
             <Download size={13} className="mr-1" /> Payments CSV
           </Button>
         </div>
@@ -281,11 +281,11 @@ function OverviewTab() {
           ) : (
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={monthly} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(10,36,114,0.06)" />
                 <XAxis dataKey="label" tick={{ fontSize: 9, fill: MUTED }} interval={Math.max(1, Math.floor(monthly.length / 6))} />
                 <YAxis tick={{ fontSize: 10, fill: MUTED }} tickFormatter={(v) => `GHS ${(v / 100).toFixed(0)}`} />
                 <Tooltip
-                  contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
+                  contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                   formatter={(value: number) => [formatCedi(value), "Collected"]}
                   labelFormatter={(l) => `Month: ${l}`} />
                 <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
@@ -325,7 +325,7 @@ function OverviewTab() {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {paymentBreakdown.map(item => (
                   <div key={item.status} className="flex items-center justify-between p-2 rounded-lg"
-                    style={{ background: "rgba(56,25,50,0.03)" }}>
+                    style={{ background: "rgba(10,36,114,0.03)" }}>
                     <span style={{ color: MUTED }}>{item.status}</span>
                     <span className="font-medium" style={{ color: NAVY }}>{formatCedi(item.amount)} ({item.count})</span>
                   </div>
@@ -1170,7 +1170,7 @@ export function Finance() {
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList style={{ background: "rgba(56,25,50,0.05)", borderRadius: 12 }} className="flex-wrap h-auto p-1">
+        <TabsList style={{ background: "rgba(10,36,114,0.05)", borderRadius: 12 }} className="flex-wrap h-auto p-1">
           <TabsTrigger value="overview" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Overview</TabsTrigger>
           <TabsTrigger value="fee-structures" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Fee Structures</TabsTrigger>
           <TabsTrigger value="invoices" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm">Invoices</TabsTrigger>

@@ -139,7 +139,7 @@ export function TeacherClassManagement() {
       {view === "detail" && selectedClass && (
         <>
           <div className="flex items-center gap-3 mb-2">
-            <button onClick={closeClass} className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+            <button onClick={closeClass} className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
               <ArrowLeft size={16} color={NAVY} />
             </button>
             <div>
@@ -159,7 +159,7 @@ export function TeacherClassManagement() {
                 style={{
                   background: detailTab === tab.key ? NAVY : "white",
                   color: detailTab === tab.key ? CREAM : NAVY_LIGHT,
-                  border: detailTab === tab.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                  border: detailTab === tab.key ? "none" : "1px solid rgba(10,36,114,0.1)",
                 }}>
                 <tab.icon size={14} /> {tab.label}
               </button>

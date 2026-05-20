@@ -94,7 +94,7 @@ export function PaymentVerify() {
               style={{
                 background: "white",
                 color: NAVY,
-                border: "1px solid rgba(56,25,50,0.15)",
+                border: "1px solid rgba(10,36,114,0.15)",
               }}
             >
               <ArrowLeft size={16} />

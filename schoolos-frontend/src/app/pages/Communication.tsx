@@ -105,7 +105,7 @@ const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+  <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
     <Icon size={40} color={MUTED} className="mx-auto mb-3" />
     <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -118,7 +118,7 @@ const formatDate = (iso: string | null) => {
 };
 
 const MetricCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color?: string }) => (
-  <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", minWidth: 140 }}>
+  <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", minWidth: 140 }}>
     <div className="flex items-center gap-2 mb-1">
       <Icon size={14} color={color || MUTED} />
       <span className="text-xs" style={{ color: MUTED }}>{label}</span>
@@ -221,7 +221,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
         <div>
           <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
           <Select value={form.channel} onValueChange={(v) => update("channel", v)}>
-            <SelectTrigger className="h-10 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+            <SelectTrigger className="h-10 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -238,7 +238,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
             update("template_id", v);
             if (t) applyTemplate(t);
           }}>
-            <SelectTrigger className="h-10 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+            <SelectTrigger className="h-10 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
               <SelectValue placeholder="None" />
             </SelectTrigger>
             <SelectContent>
@@ -255,7 +255,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
         <div className="mb-4">
           <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Subject</label>
           <Input value={form.subject} onChange={e => update("subject", e.target.value)}
-            className="h-10 text-sm rounded-xl" placeholder="Email subject..." style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            className="h-10 text-sm rounded-xl" placeholder="Email subject..." style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         </div>
       )}
 
@@ -263,19 +263,19 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
         <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Message Body</label>
         <Textarea value={form.body} onChange={e => update("body", e.target.value)} rows={6}
           className="text-sm rounded-xl resize-y" placeholder="Type your message..."
-          style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+          style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         {form.channel === "sms" && (
           <p className="text-xs mt-1" style={{ color: MUTED }}>{form.body.length} characters (~{Math.ceil(form.body.length / 160)} SMS segments)</p>
         )}
       </div>
 
-      <div className="mb-4 p-4 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="mb-4 p-4 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px solid rgba(10,36,114,0.07)" }}>
         <p className="text-xs font-semibold mb-3" style={{ color: NAVY }}>Recipients</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs mb-1 block" style={{ color: MUTED }}>Target By</label>
             <Select value={form.targetType} onValueChange={(v) => update("targetType", v)}>
-              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select group..." />
               </SelectTrigger>
               <SelectContent>
@@ -288,7 +288,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
             <div>
               <label className="text-xs mb-1 block" style={{ color: MUTED }}>Class</label>
               <Select value={form.targetValue} onValueChange={(v) => update("targetValue", v)}>
-                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue placeholder="Select class..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -305,7 +305,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
             <label className="text-xs mb-1 block" style={{ color: MUTED }}>Email addresses or phone numbers (one per line)</label>
             <Textarea value={form.customRecipients} onChange={e => update("customRecipients", e.target.value)} rows={3}
               className="text-xs rounded-xl resize-none" placeholder="parent@example.com&#10;+233501234567"
-              style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+              style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </div>
         )}
         {form.targetType === "class" && form.targetValue && (
@@ -326,7 +326,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
         {form.schedule && (
           <Input type="datetime-local" value={form.scheduled_at}
             onChange={e => update("scheduled_at", e.target.value)}
-            className="h-9 text-xs rounded-xl flex-1 max-w-xs" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            className="h-9 text-xs rounded-xl flex-1 max-w-xs" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         )}
       </div>
 
@@ -391,7 +391,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
                 <p className="text-lg font-bold text-yellow-700">{msg.recipientSummary.pending}</p>
                 <p className="text-xs text-yellow-600">Pending</p>
               </div>
-              <div className="flex-1 p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.05)" }}>
+              <div className="flex-1 p-3 rounded-xl text-center" style={{ background: "rgba(10,36,114,0.05)" }}>
                 <p className="text-lg font-bold" style={{ color: NAVY }}>{msg.recipientSummary.total}</p>
                 <p className="text-xs" style={{ color: MUTED }}>Total</p>
               </div>
@@ -406,7 +406,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
 
           <div className="mb-4">
             <p className="text-xs font-medium mb-1" style={{ color: MUTED }}>Body</p>
-            <div className="text-sm p-3 rounded-xl whitespace-pre-wrap" style={{ background: "rgba(56,25,50,0.03)", color: NAVY, border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="text-sm p-3 rounded-xl whitespace-pre-wrap" style={{ background: "rgba(10,36,114,0.03)", color: NAVY, border: "1px solid rgba(10,36,114,0.07)" }}>
               {msg.body}
             </div>
           </div>
@@ -417,7 +417,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
               <div className="space-y-1 max-h-64 overflow-y-auto">
                 {msg.recipients.map(r => (
                   <div key={r.id} className="flex items-center justify-between p-2 rounded-lg text-xs"
-                    style={{ background: "rgba(56,25,50,0.02)", border: "1px solid rgba(56,25,50,0.06)" }}>
+                    style={{ background: "rgba(10,36,114,0.02)", border: "1px solid rgba(10,36,114,0.06)" }}>
                     <div>
                       <span style={{ color: NAVY }}>{r.recipient_name || r.recipient_contact || "—"}</span>
                       <span className="ml-2" style={{ color: MUTED }}>({r.recipient_type})</span>
@@ -486,10 +486,10 @@ function MessagesTab() {
         <div className="relative flex-1 max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: MUTED }} />
           <Input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search messages..."
-            className="pl-9 h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            className="pl-9 h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[120px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+          <SelectTrigger className="w-[120px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -513,7 +513,7 @@ function MessagesTab() {
         <EmptyState icon={MessageSquare} title="No messages yet" desc="Sent messages and scheduled broadcasts will appear here." />
       ) : (
         <>
-          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(56,25,50,0.07)", background: "white" }}>
+          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(10,36,114,0.07)", background: "white" }}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -530,7 +530,7 @@ function MessagesTab() {
                   const ChIcon = channelIcons[m.channel] || MessageSquare;
                   const sum = m.recipientSummary;
                   return (
-                    <TableRow key={m.id} className="cursor-pointer hover:bg-[rgba(56,25,50,0.02)]" onClick={() => openDetail(m)}>
+                    <TableRow key={m.id} className="cursor-pointer hover:bg-[rgba(10,36,114,0.02)]" onClick={() => openDetail(m)}>
                       <TableCell className="text-xs font-medium" style={{ color: NAVY }}>{m.subject}</TableCell>
                       <TableCell><Badge variant="outline" className="flex items-center gap-1 text-xs w-fit"><ChIcon size={11} /> {channelLabels[m.channel]}</Badge></TableCell>
                       <TableCell><StatusBadge status={m.status} /></TableCell>
@@ -620,7 +620,7 @@ function TemplatesTab() {
           <Plus size={14} className="mr-1" /> New Template
         </Button>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-[140px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+          <SelectTrigger className="w-[140px] h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -639,7 +639,7 @@ function TemplatesTab() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {templates.map(t => (
-            <div key={t.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div key={t.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <p className="text-sm font-semibold" style={{ color: NAVY }}>{t.name}</p>
@@ -670,13 +670,13 @@ function TemplatesTab() {
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Name</label>
               <Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
                 <Select value={form.channel} onValueChange={v => setForm(p => ({ ...p, channel: v }))}>
-                  <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -690,7 +690,7 @@ function TemplatesTab() {
               <div>
                 <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Category</label>
                 <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
-                  <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                  <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -706,12 +706,12 @@ function TemplatesTab() {
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Subject (for email)</label>
               <Input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Body</label>
               <Textarea value={form.body} onChange={e => setForm(p => ({ ...p, body: e.target.value }))} rows={5}
-                className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
           </div>
           <DialogFooter>
@@ -779,7 +779,7 @@ function AnnouncementsTab() {
         <div className="space-y-3">
           {announcements.map(a => (
             <div key={a.id} className="p-4 rounded-2xl flex items-start justify-between"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="text-sm font-semibold" style={{ color: NAVY }}>{a.title}</p>
@@ -814,12 +814,12 @@ function AnnouncementsTab() {
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Title</label>
               <Input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
               <Select value={form.channel} onValueChange={v => setForm(p => ({ ...p, channel: v }))}>
-                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -833,7 +833,7 @@ function AnnouncementsTab() {
             <div>
               <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Body</label>
               <Textarea value={form.body} onChange={e => setForm(p => ({ ...p, body: e.target.value }))} rows={5}
-                className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </div>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.schedule} onChange={e => setForm(p => ({ ...p, schedule: e.target.checked }))}
@@ -843,7 +843,7 @@ function AnnouncementsTab() {
             {form.schedule && (
               <Input type="datetime-local" value={form.scheduled_at}
                 onChange={e => setForm(p => ({ ...p, scheduled_at: e.target.value }))}
-                className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             )}
           </div>
           <DialogFooter>
@@ -890,9 +890,9 @@ export function Communication() {
         </div>
       )}
 
-      <div className="rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <Tabs defaultValue="compose" className="p-1">
-          <TabsList className="mx-4 mt-3 mb-2 flex-wrap h-auto gap-1" style={{ background: "rgba(56,25,50,0.03)" }}>
+          <TabsList className="mx-4 mt-3 mb-2 flex-wrap h-auto gap-1" style={{ background: "rgba(10,36,114,0.03)" }}>
             <TabsTrigger value="compose" className="text-xs rounded-lg data-[state=active]:bg-white">
               <Send size={14} className="mr-1" /> Compose
             </TabsTrigger>

@@ -62,7 +62,7 @@ export function ParentLayout() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: CREAM, fontFamily: "'DM Sans', sans-serif" }}>
       <header className="flex items-center justify-between px-4 py-3 sticky top-0 z-30"
-        style={{ background: "rgba(255,243,230,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+        style={{ background: "rgba(248,249,250,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: NAVY, color: CREAM }}>S</div>
           <div>
@@ -76,7 +76,7 @@ export function ParentLayout() {
               Install
             </button>
           )}
-          <button onClick={() => logout()} className="p-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
+          <button onClick={() => logout()} className="p-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}>
             <LogOut size={15} color={MUTED} />
           </button>
         </div>
@@ -87,7 +87,7 @@ export function ParentLayout() {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-30 px-2 py-2"
-        style={{ background: "rgba(255,243,230,0.95)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+        style={{ background: "rgba(248,249,250,0.95)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center justify-around max-w-lg mx-auto">
           {NAV_ITEMS.map((item) => {
             const isActive = location.pathname === item.path;

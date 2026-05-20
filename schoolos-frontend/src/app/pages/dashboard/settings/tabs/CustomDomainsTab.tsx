@@ -11,7 +11,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -22,7 +22,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 type ValidationStatus = "pending_dns" | "validating_ssl" | "active" | "failed" | "not_configured";
 
 const STATUS_CONFIG: Record<ValidationStatus, { label: string; color: string; bg: string }> = {
-  not_configured: { label: "Not Configured", color: MUTED, bg: "rgba(56,25,50,0.06)" },
+  not_configured: { label: "Not Configured", color: MUTED, bg: "rgba(10,36,114,0.06)" },
   pending_dns: { label: "Pending DNS", color: "#D97706", bg: "rgba(217,119,6,0.1)" },
   validating_ssl: { label: "Validating SSL", color: "#2563EB", bg: "rgba(37,99,235,0.1)" },
   active: { label: "Active", color: "#10B981", bg: "rgba(16,185,129,0.1)" },
@@ -130,7 +130,7 @@ export function CustomDomainsTab({ role }: Props) {
             <Input value={domain} onChange={(e) => setDomain(e.target.value)}
               disabled={isReadOnly}
               className="h-9 text-sm rounded-xl w-full"
-              style={{ borderColor: "rgba(56,25,50,0.12)" }}
+              style={{ borderColor: "rgba(10,36,114,0.12)" }}
               placeholder="portal.myschool.com" />
           </div>
           {!isReadOnly && (

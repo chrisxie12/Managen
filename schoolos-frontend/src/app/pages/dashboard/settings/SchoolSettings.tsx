@@ -41,7 +41,7 @@ export function SchoolSettings() {
       <TabsList
         orientation="vertical"
         className="hidden lg:flex flex-col w-[240px] flex-shrink-0 p-4 gap-1 h-fit rounded-2xl bg-transparent"
-        style={{ background: "#F9F1E7", borderRight: "1px solid rgba(56,25,50,0.07)" }}
+        style={{ background: "#F9F1E7", borderRight: "1px solid rgba(10,36,114,0.07)" }}
       >
         <h2 className="text-sm font-bold mb-3 px-3" style={{ color: NAVY }}>School Settings</h2>
         {tabs.map(tab => (
@@ -63,7 +63,7 @@ export function SchoolSettings() {
       {/* Mobile scrollable horizontal tabs bar */}
       <div className="lg:hidden w-full pt-4 px-4 pb-0">
         <TabsList className="flex-nowrap overflow-x-auto gap-1 p-1 w-full rounded-2xl bg-transparent"
-          style={{ border: "1px solid rgba(56,25,50,0.07)" }}>
+          style={{ border: "1px solid rgba(10,36,114,0.07)" }}>
           {tabs.map(tab => (
             <TabsTrigger key={tab.key} value={tab.key}
               className="whitespace-nowrap px-3 py-1.5 text-xs rounded-xl shrink-0 data-[state=active]:scale-100"

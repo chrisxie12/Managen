@@ -49,11 +49,11 @@ export function ClassTimetable({ className }: { className: string }) {
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
               <th className="px-4 py-3 font-medium">Period</th>
               {DAYS.map(day => (
                 <th key={day} className="px-4 py-3 font-medium">{day.slice(0, 3)}</th>
@@ -62,7 +62,7 @@ export function ClassTimetable({ className }: { className: string }) {
           </thead>
           <tbody>
             {periods.map(period => (
-              <tr key={period} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+              <tr key={period} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                 <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>Period {period}</td>
                 {DAYS.map(day => {
                   const entry = getEntry(day, period);

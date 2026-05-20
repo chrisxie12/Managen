@@ -60,7 +60,7 @@ export function ClassAnnouncement({ className }: { className: string; classId: s
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Announcement title..."
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
         />
       </div>
       <div>
@@ -71,7 +71,7 @@ export function ClassAnnouncement({ className }: { className: string; classId: s
           placeholder="Write your announcement..."
           rows={4}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm resize-none"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
         />
       </div>
       <button

@@ -73,7 +73,7 @@ export function ClassAttendance({ className, students }: { className: string; st
 
       <div className="flex items-center gap-3 flex-wrap">
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-          className="px-4 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          className="px-4 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
         <div className="flex gap-2 flex-wrap">
           {summary.filter(s => s.count > 0).map(s => (
             <span key={s.label} className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: `${s.color}15`, color: s.color }}>
@@ -89,17 +89,17 @@ export function ClassAttendance({ className, students }: { className: string; st
         </button>
       </div>
 
-      <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <table className="w-full">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
               <th className="px-4 py-3 font-medium">Student</th>
               {STATUS_OPTIONS.map(s => <th key={s.value} className="px-2 py-3 text-center font-medium">{s.value}</th>)}
             </tr>
           </thead>
           <tbody>
             {students.map(student => (
-              <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+              <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
@@ -114,7 +114,7 @@ export function ClassAttendance({ className, students }: { className: string; st
                       className="w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90"
                       style={{
                         background: attendance[student.id] === s.value ? s.bg : "transparent",
-                        border: `1.5px solid ${attendance[student.id] === s.value ? s.color : "rgba(56,25,50,0.12)"}`,
+                        border: `1.5px solid ${attendance[student.id] === s.value ? s.color : "rgba(10,36,114,0.12)"}`,
                       }}>
                       <s.icon size={13} color={attendance[student.id] === s.value ? s.color : MUTED} />
                     </button>

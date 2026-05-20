@@ -219,30 +219,15 @@ class FeatureService {
 
             const fullHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
                 body { font-family: 'Times New Roman', serif; padding: 40px; color: #333; }
-                .header { text-align: center; border-bottom: 2px solid #381932; padding-bottom: 20px; margin-bottom: 20px; }
-                .header h1 { color: #381932; margin: 0; font-size: 24px; }
-                .header p { margin: 4px 0; color: #666; }
-                .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                .info-table td { padding: 6px 12px; border: 1px solid #ddd; }
-                .info-table td:first-child { font-weight: 600; background: #f9f1e7; width: 150px; }
-                .scores-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                .scores-table th { background: #381932; color: white; padding: 8px 12px; text-align: left; }
-                .scores-table td { padding: 6px 12px; border: 1px solid #ddd; }
-                .scores-table tr:nth-child(even) { background: #f9f1e7; }
-                .summary { display: flex; gap: 20px; margin-top: 20px; }
-                .summary-item { flex: 1; text-align: center; padding: 15px; border-radius: 8px; background: #f9f1e7; }
-                .summary-item .label { font-size: 12px; color: #666; text-transform: uppercase; }
-                .summary-item .value { font-size: 22px; font-weight: 700; color: #381932; }
-                .remark { margin-top: 20px; padding: 15px; border-radius: 8px; background: #f0fdf4; border: 1px solid #86efac; }
-            </style></head><body><div class="header">
-                <h1>REPORT CARD</h1>
-                <p>Academic Year - ${termData?.name || ''}</p>
-            </div>
-            <table class="info-table"><tr><td>Student Name</td><td>${placeholders.student_name}</td></tr>
-            <tr><td>Roll No</td><td>${placeholders.roll_no}</td></tr>
-            <tr><td>Class</td><td>${placeholders.class}</td></tr>
-            <tr><td>Term</td><td>${placeholders.term}</td></tr></table>
-            <h3 style="color:#381932;">Subject Scores</h3>
+                .header { text-align: center; border-bottom: 2px solid #0A2472; padding-bottom: 20px; margin-bottom: 20px; }
+
+                .header h1 { color: #0A2472; margin: 0; font-size: 24px; }
+
+                .scores-table th { background: #0A2472; color: white; padding: 8px 12px; text-align: left; }
+
+                .summary-item .value { font-size: 22px; font-weight: 700; color: #0A2472; }
+
+            <h3 style="color:#0A2472;">Subject Scores</h3>
             <table class="scores-table"><thead><tr><th>Subject</th><th>Score</th><th>Percentage</th></tr></thead>
             <tbody>${subjectScoresHtml}</tbody></table>
             <div class="summary">

@@ -87,7 +87,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
         value={selectedClass}
         onChange={(e) => { setSelectedClass(e.target.value); loadStudents(e.target.value); }}
         className="w-full mb-3 p-2.5 rounded-xl text-sm outline-none"
-        style={{ background: "#F8F9FA", color: NAVY, border: "1px solid rgba(56,25,50,0.1)" }}
+        style={{ background: "#F8F9FA", color: NAVY, border: "1px solid rgba(10,36,114,0.1)" }}
       >
         <option value="">Select a class...</option>
         {classes.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
@@ -109,7 +109,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
                   {s.admission_no && <p className="text-xs" style={{ color: MUTED }}>{s.admission_no}</p>}
                 </div>
               </div>
-              <button onClick={() => toggleStatus(s.id)} className="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap active:scale-95 transition-transform" style={{ background: attendance[s.id] ? `${statusColor(attendance[s.id])}18` : "rgba(56,25,50,0.05)", color: attendance[s.id] ? statusColor(attendance[s.id]) : MUTED }}>
+              <button onClick={() => toggleStatus(s.id)} className="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap active:scale-95 transition-transform" style={{ background: attendance[s.id] ? `${statusColor(attendance[s.id])}18` : "rgba(10,36,114,0.05)", color: attendance[s.id] ? statusColor(attendance[s.id]) : MUTED }}>
                 {attendance[s.id] || "Mark"}
               </button>
             </div>

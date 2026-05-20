@@ -68,7 +68,7 @@ export function AccountantDashboard() {
           />
         </DashboardCard>
       ) : (
-        <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="text-center p-8">
             <Receipt size={40} color={MUTED} className="mx-auto mb-4" />
             <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>No Financial Data Yet</p>

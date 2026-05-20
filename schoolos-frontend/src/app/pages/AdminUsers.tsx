@@ -138,18 +138,18 @@ export function AdminUsers() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 300 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search users..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
         <select value={filterRole} onChange={(e) => { setFilterRole(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All roles</option>
           {roles.map(r => <option key={r.id} value={r.name}>{r.label}</option>)}
         </select>
         <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All status</option>
           <option value="active">Active</option>
           <option value="suspended">Suspended</option>
@@ -161,18 +161,18 @@ export function AdminUsers() {
           <Loader2 className="animate-spin" size={32} color={NAVY} />
         </div>
       ) : users.length === 0 ? (
-        <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <Users size={40} color={MUTED} className="mx-auto mb-3" />
           <p className="font-semibold" style={{ color: NAVY }}>No users found</p>
           <p className="text-sm mt-1" style={{ color: MUTED }}>Invite your first staff member to get started</p>
         </div>
       ) : (
         <>
-          <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
+          <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 2px 12px rgba(10,36,114,0.04)" }}>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px]">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                  <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                     <th className="px-4 py-3 font-medium">User</th>
                     <th className="px-4 py-3 font-medium">Role</th>
                     <th className="px-4 py-3 font-medium">Contact</th>
@@ -186,7 +186,7 @@ export function AdminUsers() {
                     const status = getStatus(u);
                     const st = statusColors[status];
                     return (
-                      <tr key={u.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                      <tr key={u.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
@@ -244,12 +244,12 @@ export function AdminUsers() {
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-6">
               <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 Previous
               </button>
               <span className="text-sm px-3" style={{ color: MUTED }}>Page {page} of {totalPages}</span>
               <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 Next
               </button>
             </div>
@@ -258,9 +258,9 @@ export function AdminUsers() {
       )}
 
       {showInvite && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(56,25,50,0.6)", backdropFilter: "blur(4px)" }}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(10,36,114,0.6)", backdropFilter: "blur(4px)" }}
           onMouseDown={(e) => e.target === e.currentTarget && !saving && (setShowInvite(false), setInviteResult(null))}>
-          <div className="w-full max-w-md rounded-[32px] p-8" style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }}
+          <div className="w-full max-w-md rounded-[32px] p-8" style={{ background: "white", boxShadow: "0 32px 80px rgba(10,36,114,0.3)" }}
             onMouseDown={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -271,7 +271,7 @@ export function AdminUsers() {
                   {inviteResult ? "Share the temporary password" : "Add a new staff member to your school"}
                 </p>
               </div>
-              <button onClick={() => { setShowInvite(false); setInviteResult(null); }} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
+              <button onClick={() => { setShowInvite(false); setInviteResult(null); }} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(10,36,114,0.06)" }}>
                 <X size={16} color={MUTED} />
               </button>
             </div>
@@ -285,12 +285,12 @@ export function AdminUsers() {
                     <p className="text-xs mt-1" style={{ color: "#047857" }}>Share this temporary password with them. They'll be asked to change it on first login.</p>
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl mb-4" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)" }}>
+                <div className="p-4 rounded-2xl mb-4" style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)" }}>
                   <p className="text-xs font-medium mb-1" style={{ color: MUTED }}>Temporary Password</p>
                   <div className="flex items-center gap-2">
                     <code className="flex-1 text-sm font-mono font-bold" style={{ color: NAVY }}>{inviteResult.tempPassword}</code>
                     <button onClick={() => { navigator.clipboard.writeText(inviteResult.tempPassword); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
-                      className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ background: "rgba(56,25,50,0.06)" }}>
+                      className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ background: "rgba(10,36,114,0.06)" }}>
                       <Copy size={14} color={NAVY_LIGHT} />
                     </button>
                   </div>
@@ -307,24 +307,24 @@ export function AdminUsers() {
                   <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Full Name</label>
                   <input value={inviteForm.full_name} onChange={(e) => setInviteForm(p => ({ ...p, full_name: e.target.value }))}
                     placeholder="e.g. Kwame Mensah"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Email</label>
                   <input type="email" value={inviteForm.email} onChange={(e) => setInviteForm(p => ({ ...p, email: e.target.value }))}
                     placeholder="staff@yourschool.edu"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Phone (optional)</label>
                   <input value={inviteForm.phone} onChange={(e) => setInviteForm(p => ({ ...p, phone: e.target.value }))}
                     placeholder="+233 24 123 4567"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Role</label>
                   <select value={inviteForm.role_id} onChange={(e) => setInviteForm(p => ({ ...p, role_id: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                     <option value="">Select a role...</option>
                     {roles.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
                   </select>

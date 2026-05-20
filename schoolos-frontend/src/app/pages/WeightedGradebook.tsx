@@ -201,7 +201,7 @@ export function WeightedGradebook() {
             className="px-4 py-2 rounded-xl flex items-center gap-2 text-sm transition-all duration-200"
             style={{
               background: "white",
-              border: "1px solid rgba(56,25,50,0.15)",
+              border: "1px solid rgba(10,36,114,0.15)",
               color: NAVY,
               opacity: fetching || !selectedClass || !selectedTerm ? 0.5 : 1,
             }}
@@ -242,7 +242,7 @@ export function WeightedGradebook() {
             className="w-full px-3 py-2 rounded-xl text-sm"
             style={{
               background: "white",
-              border: "1px solid rgba(56,25,50,0.12)",
+              border: "1px solid rgba(10,36,114,0.12)",
               color: NAVY,
             }}
           >
@@ -262,7 +262,7 @@ export function WeightedGradebook() {
             className="w-full px-3 py-2 rounded-xl text-sm"
             style={{
               background: "white",
-              border: "1px solid rgba(56,25,50,0.12)",
+              border: "1px solid rgba(10,36,114,0.12)",
               color: NAVY,
             }}
           >
@@ -288,7 +288,7 @@ export function WeightedGradebook() {
       )}
 
       {!fetching && gradebookData.length > 0 && (
-        <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: NAVY }}>
@@ -311,11 +311,11 @@ export function WeightedGradebook() {
                       onClick={() => toggleRow(entry.student_id)}
                       className="cursor-pointer transition-all duration-150"
                       style={{
-                        background: idx % 2 === 0 ? "white" : "rgba(56,25,50,0.02)",
+                        background: idx % 2 === 0 ? "white" : "rgba(10,36,114,0.02)",
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "rgba(56,25,50,0.05)")}
+                      onMouseEnter={e => (e.currentTarget.style.background = "rgba(10,36,114,0.05)")}
                       onMouseLeave={e => {
-                        e.currentTarget.style.background = idx % 2 === 0 ? "white" : "rgba(56,25,50,0.02)";
+                        e.currentTarget.style.background = idx % 2 === 0 ? "white" : "rgba(10,36,114,0.02)";
                       }}
                     >
                       <td className="p-3">
@@ -350,7 +350,7 @@ export function WeightedGradebook() {
                     {isExpanded && hasBreakdown && (
                       <tr>
                         <td colSpan={6} className="p-0">
-                          <div className="p-4" style={{ background: "rgba(56,25,50,0.03)" }}>
+                          <div className="p-4" style={{ background: "rgba(10,36,114,0.03)" }}>
                             <h4 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Category Breakdown</h4>
                             <table className="w-full text-xs">
                               <thead>

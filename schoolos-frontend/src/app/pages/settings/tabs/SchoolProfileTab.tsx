@@ -45,7 +45,7 @@ const PRESET_COLORS = [
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -208,17 +208,17 @@ export function SchoolProfileTab() {
               <FormField label="School Name" required error={errors.name}>
                 <Input value={form.name} onChange={set("name")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
               <FormField label="School Motto">
                 <Input value={form.motto || ""} onChange={set("motto")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
               <FormField label="School Type" required error={errors.school_type}>
                 <Select value={form.school_type || ""} onValueChange={setSelect("school_type")}>
                   <SelectTrigger className="h-9 text-xs rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                     <SelectValue placeholder="Select type..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,12 +231,12 @@ export function SchoolProfileTab() {
               <FormField label="Year Established">
                 <Input type="number" value={form.year_established || ""} onChange={set("year_established")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} min={1900} max={new Date().getFullYear()} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} min={1900} max={new Date().getFullYear()} />
               </FormField>
               <FormField label="School Registration Number">
                 <Input value={form.registration_number || ""} onChange={set("registration_number")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
             </div>
           </SectionCard>
@@ -247,7 +247,7 @@ export function SchoolProfileTab() {
               <FormField label="School Email" required error={errors.email}>
                 <Input type="email" value={form.email} onChange={set("email")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
               <FormField label="School Phone" required error={errors.phone}>
                 <div className="relative">
@@ -260,23 +260,23 @@ export function SchoolProfileTab() {
                       if (errors.phone) setErrors((prev) => { const n = { ...prev }; delete n.phone; return n; });
                     }}
                     className="h-9 text-sm rounded-xl pl-12"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="XX XXX XXXX" />
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="XX XXX XXXX" />
                 </div>
               </FormField>
               <FormField label="School Website">
                 <Input type="url" value={form.website || ""} onChange={set("website")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="https://" />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="https://" />
               </FormField>
               <FormField label="City/Town" required error={errors.city}>
                 <Input value={form.city || ""} onChange={set("city")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
               <FormField label="Region" required error={errors.region}>
                 <Select value={form.region || ""} onValueChange={setSelect("region")}>
                   <SelectTrigger className="h-9 text-xs rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                     <SelectValue placeholder="Select region..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -289,12 +289,12 @@ export function SchoolProfileTab() {
               <FormField label="Country">
                 <Input value={form.country || "Ghana"} onChange={set("country")}
                   className="h-9 text-sm rounded-xl"
-                  style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                  style={{ borderColor: "rgba(10,36,114,0.12)" }} />
               </FormField>
               <FormField label="Timezone">
                 <Select value={form.timezone || "Africa/Accra"} onValueChange={setSelect("timezone")}>
                   <SelectTrigger className="h-9 text-xs rounded-xl"
-                    style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+                    style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                     <SelectValue placeholder="Select timezone..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -309,7 +309,7 @@ export function SchoolProfileTab() {
               <Textarea value={form.address || ""} onChange={set("address")}
                 rows={3}
                 className="text-sm rounded-xl resize-none"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </FormField>
           </SectionCard>
 
@@ -325,7 +325,7 @@ export function SchoolProfileTab() {
                 {form.logo_url ? (
                   <img src={form.logo_url} alt="School logo"
                     className="w-[120px] h-[120px] rounded-full object-cover mx-auto"
-                    style={{ border: "3px solid rgba(56,25,50,0.1)" }} />
+                    style={{ border: "3px solid rgba(10,36,114,0.1)" }} />
                 ) : (
                   <div>
                     <Upload size={24} color={MUTED} className="mx-auto mb-2" />
@@ -360,7 +360,7 @@ export function SchoolProfileTab() {
               </div>
               <Input value={form.primary_color || NAVY} onChange={set("primary_color")}
                 className="h-8 text-xs rounded-xl font-mono"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} />
             </FormField>
           </SectionCard>
 
@@ -395,7 +395,7 @@ export function SchoolProfileTab() {
                   </div>
                 </div>
               </div>
-              <div className="p-3 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
+              <div className="p-3 border-t" style={{ borderColor: "rgba(10,36,114,0.07)" }}>
                 <div className="flex gap-3 text-[10px]" style={{ color: MUTED }}>
                   <span className="truncate">{form.email || "email@school.com"}</span>
                   <span className="truncate">{form.phone || "+233 XX XXX XXXX"}</span>

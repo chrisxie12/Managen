@@ -267,10 +267,10 @@ export function LandingPage() {
       {/* NAV */}
       <nav className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
         style={{
-          background: dark ? (scrolled ? "rgba(17,24,39,0.95)" : "rgba(17,24,39,0.5)") : (scrolled ? "white" : "rgba(255,243,230,0.5)"),
+          background: dark ? (scrolled ? "rgba(17,24,39,0.95)" : "rgba(17,24,39,0.5)") : (scrolled ? "white" : "rgba(248,249,250,0.5)"),
           backdropFilter: "blur(20px)",
-          borderBottom: dark ? (scrolled ? "1px solid rgba(55,65,81,0.5)" : "1px solid transparent") : (scrolled ? "1px solid rgba(56,25,50,0.08)" : "1px solid transparent"),
-          boxShadow: scrolled ? (dark ? "0 4px 24px rgba(0,0,0,0.3)" : "0 4px 24px rgba(56,25,50,0.06)") : "none",
+          borderBottom: dark ? (scrolled ? "1px solid rgba(55,65,81,0.5)" : "1px solid transparent") : (scrolled ? "1px solid rgba(10,36,114,0.08)" : "1px solid transparent"),
+          boxShadow: scrolled ? (dark ? "0 4px 24px rgba(0,0,0,0.3)" : "0 4px 24px rgba(10,36,114,0.06)") : "none",
         }}
       >
         <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
@@ -290,7 +290,7 @@ export function LandingPage() {
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <button onClick={() => navigate("/auth")} style={{ color: NAVY, fontSize: "0.9rem" }} className="px-4 py-2 hover:opacity-70">Sign in</button>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, boxShadow: "0 4px 14px rgba(56,25,50,0.3)" }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, boxShadow: "0 4px 14px rgba(10,36,114,0.3)" }}>
               Start Free <ArrowRight size={14} />
             </button>
           </div>
@@ -299,7 +299,7 @@ export function LandingPage() {
           </button>
         </div>
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-96" : "max-h-0"}`}>
-          <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}>
             {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{ color: NAVY_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
             ))}
@@ -353,7 +353,7 @@ export function LandingPage() {
                 />
                 <div className="absolute inset-0 rounded-2xl"
                   style={{ background:
-                    'linear-gradient(135deg, rgba(56,25,50,0.15) 0%, rgba(0,0,0,0.05) 100%)'
+                    'linear-gradient(135deg, rgba(10,36,114,0.15) 0%, rgba(0,0,0,0.05) 100%)'
                   }}
                 />
               </div>
@@ -369,7 +369,7 @@ export function LandingPage() {
       </section>
 
       {/* SCHOOL EMBLEM MARQUEE */}
-      <section className="overflow-hidden py-6 border-y" style={{ borderColor: "rgba(56,25,50,0.06)", background: "white" }}>
+      <section className="overflow-hidden py-6 border-y" style={{ borderColor: "rgba(10,36,114,0.06)", background: "white" }}>
         <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, setIdx) => (
             <div key={setIdx} className="flex items-center gap-12 shrink-0">
@@ -397,11 +397,11 @@ export function LandingPage() {
                 `${countSchools}+`
               )}
             </div>
-            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
+            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
           </div>
           <div className="text-center reveal reveal-2">
             <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
-            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
+            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
           </div>
           <div className="text-center reveal reveal-3">
             <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
@@ -409,7 +409,7 @@ export function LandingPage() {
                 {countCountry}
               </div>
             </div>
-            <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Country Supported</div>
+            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Country Supported</div>
           </div>
         </div>
       </section>
@@ -603,14 +603,14 @@ export function LandingPage() {
       {/* DASHBOARD PREVIEW */}
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(56,25,50,0.25)" }}>
+          <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(10,36,114,0.25)" }}>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div className="reveal">
-                <p className="text-sm uppercase tracking-widest mb-4" style={{ color: "rgba(255,243,230,0.6)" }}>Live Dashboard</p>
+                <p className="text-sm uppercase tracking-widest mb-4" style={{ color: "rgba(248,249,250,0.6)" }}>Live Dashboard</p>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
                   A Command Center for Your Institution
                 </h2>
-                <p style={{ color: "rgba(255,243,230,0.75)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "1.5rem" }}>
+                <p style={{ color: "rgba(248,249,250,0.75)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "1.5rem" }}>
                   Get instant visibility into every corner of your school -- fee collection, attendance rates, pending exam results -- all from a single bento dashboard.
                 </p>
                 <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 600, fontSize: "0.95rem" }}>
@@ -629,7 +629,7 @@ export function LandingPage() {
                       <card.icon size={16} color={card.color} />
                     </div>
                     <div style={{ fontFamily: "'JetBrains Mono', monospace", color: CREAM, fontSize: "1.1rem", fontWeight: 600 }}>{card.value}</div>
-                    <div style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.75rem" }}>{card.label}</div>
+                    <div style={{ color: "rgba(248,249,250,0.6)", fontSize: "0.75rem" }}>{card.label}</div>
                   </div>
                 ))}
               </div>
@@ -662,7 +662,7 @@ export function LandingPage() {
                   />
                   <div className="absolute inset-0"
                     style={{ background:
-                      'linear-gradient(to bottom, transparent 40%, rgba(56,25,50,0.4) 100%)'
+                      'linear-gradient(to bottom, transparent 40%, rgba(10,36,114,0.4) 100%)'
                     }}
                   />
                 </div>
@@ -707,21 +707,21 @@ export function LandingPage() {
           />
           <div className="absolute inset-0"
             style={{ background:
-              'rgba(56,25,50,0.88)'
+              'rgba(10,36,114,0.88)'
             }}
           />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16" data-reveal>
             <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4"
-              style={{ borderColor: 'rgba(255,243,230,0.4)', color: 'rgba(255,243,230,0.8)' }}>
+              style={{ borderColor: 'rgba(248,249,250,0.4)', color: 'rgba(248,249,250,0.8)' }}>
               What schools say
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 text-white">
               Trusted by school leaders
             </h2>
             <p className="mt-3 max-w-2xl mx-auto"
-              style={{ color: 'rgba(255,243,230,0.65)' }}>
+              style={{ color: 'rgba(248,249,250,0.65)' }}>
               Hear from administrators who switched to Managen.
             </p>
           </div>
@@ -735,15 +735,15 @@ export function LandingPage() {
                 }}>
                 <div className="text-amber-400 text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
                 <p className="text-sm mb-6 italic"
-                  style={{ color: 'rgba(255,243,230,0.85)', lineHeight: 1.7 }}>
+                  style={{ color: 'rgba(248,249,250,0.85)', lineHeight: 1.7 }}>
                   {t.quote}
                 </p>
                 <div className="flex items-center gap-3">
                   <InitialsAvatar name={t.name} color={t.avatarColor} />
                   <div>
                     <p className="font-semibold text-sm text-white">{t.name}</p>
-                    <p className="text-xs" style={{ color: 'rgba(255,243,230,0.6)' }}>{t.role}</p>
-                    <p className="text-xs" style={{ color: 'rgba(255,243,230,0.45)' }}>{t.location}</p>
+                    <p className="text-xs" style={{ color: 'rgba(248,249,250,0.6)' }}>{t.role}</p>
+                    <p className="text-xs" style={{ color: 'rgba(248,249,250,0.45)' }}>{t.location}</p>
                   </div>
                 </div>
               </div>
@@ -763,7 +763,7 @@ export function LandingPage() {
             <p className="text-gray-500 mt-3">Start free. Upgrade when you're ready.</p>
           </div>
           <div className="flex justify-center mb-12">
-            <div className="pricing-toggle flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
+            <div className="pricing-toggle flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.10)" }}>
               {(["monthly", "annual"] as const).map((b) => (
                 <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? NAVY : "transparent", color: billing === b ? CREAM : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
               ))}
@@ -778,24 +778,24 @@ export function LandingPage() {
               return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: plan.highlighted ? `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` : "white",
-                border: plan.highlighted ? "none" : "1px solid rgba(56,25,50,0.08)",
-                boxShadow: plan.highlighted ? "0 24px 60px rgba(56,25,50,0.3)" : "0 4px 24px rgba(56,25,50,0.06)",
+                border: plan.highlighted ? "none" : "1px solid rgba(10,36,114,0.08)",
+                boxShadow: plan.highlighted ? "0 24px 60px rgba(10,36,114,0.3)" : "0 4px 24px rgba(10,36,114,0.06)",
                 transform: plan.highlighted ? "scale(1.03)" : "none",
               }}>
                 {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Most Popular</div>}
                 {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Save 20%</div>}
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? CREAM : NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
-                <p style={{ color: plan.highlighted ? "rgba(255,243,230,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
+                <p style={{ color: plan.highlighted ? "rgba(248,249,250,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? CREAM : NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
-                  <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
-                  {billedText && <div style={{ color: plan.highlighted ? "rgba(255,243,230,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
+                  <span style={{ color: plan.highlighted ? "rgba(248,249,250,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
+                  {billedText && <div style={{ color: plan.highlighted ? "rgba(248,249,250,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
                 </div>
                 <div className="space-y-3 mb-8">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-center gap-2.5">
                       <CheckCircle2 size={15} color={plan.highlighted ? "#86efac" : "#10B981"} fill={plan.highlighted ? "rgba(134,239,172,0.2)" : "#D1FAE5"} />
-                      <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.85)" : NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
+                      <span style={{ color: plan.highlighted ? "rgba(248,249,250,0.85)" : NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
                     </div>
                   ))}
                 </div>
@@ -821,7 +821,7 @@ export function LandingPage() {
             {faqs.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className="faq-item rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
+                <div key={i} className="faq-item rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.04)" }}>
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
                     className="w-full flex items-center justify-between p-5 text-left active:scale-[0.99] transition-transform"
@@ -843,19 +843,19 @@ export function LandingPage() {
       {/* CTA BANNER */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(56,25,50,0.3)" }}>
-            <Award size={36} color="rgba(255,243,230,0.7)" className="mx-auto mb-5" />
+          <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.3)" }}>
+            <Award size={36} color="rgba(248,249,250,0.7)" className="mx-auto mb-5" />
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
               Your School Deserves Better Tools
             </h2>
-            <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
+            <p style={{ color: "rgba(248,249,250,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
               Join schools across Ghana who have eliminated spreadsheets forever.
             </p>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
               Get Started Free -- No Credit Card
             </button>
             <div className="mt-4">
-              <button onClick={() => setDemoOpen(true)} className="text-sm underline" style={{ color: "rgba(255,243,230,0.8)" }}>
+              <button onClick={() => setDemoOpen(true)} className="text-sm underline" style={{ color: "rgba(248,249,250,0.8)" }}>
                 Or request a free demo &rarr;
               </button>
             </div>
@@ -948,14 +948,14 @@ export function LandingPage() {
 
       {/* DEMO MODAL */}
       {demoOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay" style={{ background: "rgba(56,25,50,0.6)", backdropFilter: "blur(4px)" }} onClick={() => !sending && setDemoOpen(false)}>
-          <div className="w-full max-w-md rounded-[32px] p-8 modal-content" style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay" style={{ background: "rgba(10,36,114,0.6)", backdropFilter: "blur(4px)" }} onClick={() => !sending && setDemoOpen(false)}>
+          <div className="w-full max-w-md rounded-[32px] p-8 modal-content" style={{ background: "white", boxShadow: "0 32px 80px rgba(10,36,114,0.3)" }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.4rem" }}>Request a Demo</h2>
                 <p style={{ color: MUTED, fontSize: "0.85rem" }}>See Managen in action</p>
               </div>
-              <button onClick={() => !sending && setDemoOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
+              <button onClick={() => !sending && setDemoOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70" style={{ background: "rgba(10,36,114,0.06)" }}>
                 <XCircle size={16} color={MUTED} />
               </button>
             </div>
@@ -963,29 +963,29 @@ export function LandingPage() {
               <div>
                 <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Full Name</label>
                 <input type="text" placeholder="e.g. Kwame Mensah" value={demoForm.name} onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} required />
               </div>
               <div>
                 <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Email</label>
                 <input type="email" placeholder="admin@yourschool.edu" value={demoForm.email} onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} required />
               </div>
               <div>
                 <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>School Name</label>
                 <input type="text" placeholder="e.g. Accra Ridge School" value={demoForm.schoolName} onChange={(e) => setDemoForm({ ...demoForm, schoolName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} required />
               </div>
               <div>
                 <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Country</label>
                 <select value={demoForm.country} onChange={(e) => setDemoForm({ ...demoForm, country: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                   <option value="Ghana">Ghana</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
               <button type="submit" disabled={sending}
                 className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm"
-                style={{ background: sending ? "rgba(56,25,50,0.5)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, fontWeight: 600, boxShadow: "0 8px 24px rgba(56,25,50,0.25)" }}>
+                style={{ background: sending ? "rgba(10,36,114,0.5)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, fontWeight: 600, boxShadow: "0 8px 24px rgba(10,36,114,0.25)" }}>
                 {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "Sending..." : "Send Demo Request"}
               </button>

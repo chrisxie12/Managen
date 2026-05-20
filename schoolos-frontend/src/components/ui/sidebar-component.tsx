@@ -109,7 +109,7 @@ export function ManaGenSidebar() {
       style={{
         width: 240,
         background: SIDEBAR_BG,
-        borderRight: "1px solid rgba(56,25,50,0.07)",
+        borderRight: "1px solid rgba(10,36,114,0.07)",
       }}
     >
       <div className="flex flex-col h-full">
@@ -125,7 +125,7 @@ export function ManaGenSidebar() {
           </div>
         </div>
 
-        <div className="mx-4 mb-4" style={{ height: 1, background: `rgba(56,25,50,0.07)` }} />
+        <div className="mx-4 mb-4" style={{ height: 1, background: `rgba(10,36,114,0.07)` }} />
 
         {/* Recent Items */}
         {recentItems.length > 0 && (
@@ -148,7 +148,7 @@ export function ManaGenSidebar() {
                 </button>
               ))}
             </div>
-            <div className="mx-3 mt-1" style={{ height: 1, background: `rgba(56,25,50,0.07)` }} />
+            <div className="mx-3 mt-1" style={{ height: 1, background: `rgba(10,36,114,0.07)` }} />
           </div>
         )}
 
@@ -184,7 +184,7 @@ export function ManaGenSidebar() {
                         </span>
                         {item.future && (
                           <span className="ml-auto text-[9px] px-1.5 py-0.5 rounded-full"
-                            style={{ background: "rgba(56,25,50,0.08)", color: MUTED }}>
+                            style={{ background: "rgba(10,36,114,0.08)", color: MUTED }}>
                             Soon
                           </span>
                         )}
@@ -210,7 +210,7 @@ export function ManaGenSidebar() {
 
         {/* User footer */}
         <div className="mx-3 mb-4 p-3 rounded-2xl flex items-center gap-3"
-          style={{ background: "rgba(56,25,50,0.05)", border: "1px solid rgba(56,25,50,0.07)" }}>
+          style={{ background: "rgba(10,36,114,0.05)", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
             style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
             <span style={{ color: CREAM, fontSize: "0.8rem", fontWeight: 700 }}>{initials}</span>

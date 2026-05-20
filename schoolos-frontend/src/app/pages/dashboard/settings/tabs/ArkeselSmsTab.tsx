@@ -12,7 +12,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -117,7 +117,7 @@ export function ArkeselSmsTab({ role }: Props) {
               <Input value={apiKey} onChange={(e) => setApiKey(e.target.value)}
                 type={showKey ? "text" : "password"}
                 className="h-9 text-xs rounded-xl font-mono w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Enter Arkesel API key" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Enter Arkesel API key" />
               <button type="button" onClick={() => setShowKey(!showKey)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showKey ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -127,7 +127,7 @@ export function ArkeselSmsTab({ role }: Props) {
           <FormField label="Sender ID" error={senderIdError}>
             <Input value={senderId} onChange={(e) => handleSenderIdChange(e.target.value)}
               className="h-9 text-sm rounded-xl" maxLength={11}
-              style={{ borderColor: senderIdError ? "#EF4444" : "rgba(56,25,50,0.12)" }} placeholder="e.g. MYSCHOOL (max 11 chars)" />
+              style={{ borderColor: senderIdError ? "#EF4444" : "rgba(10,36,114,0.12)" }} placeholder="e.g. MYSCHOOL (max 11 chars)" />
             <p className="text-[10px] mt-0.5" style={{ color: senderIdError ? "#EF4444" : MUTED }}>{senderId.length}/11 characters (letters and numbers only)</p>
           </FormField>
         </div>

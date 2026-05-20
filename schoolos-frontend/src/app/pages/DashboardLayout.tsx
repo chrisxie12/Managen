@@ -142,7 +142,7 @@ function DashboardLayoutInner() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"
-          style={{ background: "rgba(255,243,230,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+          style={{ background: "rgba(248,249,250,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="flex items-center gap-3">
             <button onClick={() => setMobileOpen(true)} className="lg:hidden">
               <Menu size={20} color={NAVY} />
@@ -159,7 +159,7 @@ function DashboardLayoutInner() {
             {installPrompt && (
               <button onClick={handleInstall}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium"
-                style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)", color: NAVY }}>
+                style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", color: NAVY }}>
                 <Download size={13} /> Install App
               </button>
             )}
@@ -169,7 +169,7 @@ function DashboardLayoutInner() {
             <button
               onClick={() => setGlobalSearchOpen(true)}
               className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}
+              style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}
             >
               <Search size={14} color={MUTED} />
               <span style={{ color: MUTED, fontSize: "0.82rem" }}>Search...</span>
@@ -182,7 +182,7 @@ function DashboardLayoutInner() {
             <div className="relative">
               <button onClick={() => setShowNotifDropdown(!showNotifDropdown)}
                 className="relative w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)" }}>
+                style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}>
                 <Bell size={16} color={NAVY_LIGHT} />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
@@ -193,7 +193,7 @@ function DashboardLayoutInner() {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
                   <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl shadow-lg overflow-hidden"
-                    style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+                    style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
                     <div className="p-3 text-center text-sm" style={{ color: MUTED }}>
                       <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }}
                         className="text-xs font-medium" style={{ color: NAVY }}>

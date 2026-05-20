@@ -214,7 +214,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Class</label>
           <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
+            style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select class...</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -223,7 +223,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Subject</label>
           <select value={selectedSubject} onChange={e => setSelectedSubject(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
+            style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select subject...</option>
             {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
@@ -232,7 +232,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Term</label>
           <select value={selectedTerm} onChange={e => setSelectedTerm(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
+            style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select term...</option>
             {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
@@ -248,19 +248,19 @@ export function GradebookGrid() {
 
       {/* Add Assessment Item */}
       {selectedClass && selectedSubject && selectedTerm && (
-        <div className="flex flex-wrap gap-2 mb-4 p-3 rounded-2xl items-center" style={{ background: BG, border: "1px solid rgba(56,25,50,0.08)" }}>
+        <div className="flex flex-wrap gap-2 mb-4 p-3 rounded-2xl items-center" style={{ background: BG, border: "1px solid rgba(10,36,114,0.08)" }}>
           <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: MUTED }}>Add Assessment:</span>
           <input value={newItemName} onChange={e => setNewItemName(e.target.value)} placeholder="e.g. Exercise 1"
             className="rounded-xl px-3 py-1.5 text-sm border flex-1 min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }} />
+            style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }} />
           <select value={newItemType} onChange={e => setNewItemType(e.target.value as "SBA" | "EXAM")}
-            className="rounded-xl px-3 py-1.5 text-sm border" style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
+            className="rounded-xl px-3 py-1.5 text-sm border" style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }}>
             <option value="SBA">SBA (30%)</option>
             <option value="EXAM">Exam (70%)</option>
           </select>
           <input value={newItemMax} onChange={e => setNewItemMax(e.target.value)} placeholder="Max pts"
             type="number" min="1" className="rounded-xl px-3 py-1.5 text-sm border w-20"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }} />
+            style={{ borderColor: "rgba(10,36,114,0.15)", background: "#fff", color: NAVY }} />
           <button onClick={handleAddItem} disabled={addingItem || !newItemName.trim()}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
             style={{ background: NAVY, color: CREAM }}>
@@ -270,7 +270,7 @@ export function GradebookGrid() {
       )}
 
       {/* Grid */}
-      <div className="flex-1 overflow-auto rounded-2xl border" style={{ borderColor: "rgba(56,25,50,0.1)", background: "#fff" }}>
+      <div className="flex-1 overflow-auto rounded-2xl border" style={{ borderColor: "rgba(10,36,114,0.1)", background: "#fff" }}>
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 size={28} className="animate-spin" color={MUTED} /></div>
         ) : !selectedClass || !selectedSubject || !selectedTerm ? (
@@ -396,7 +396,7 @@ export function GradebookGrid() {
                           onBlur={() => handleBlurCommit(row.student.id, item.id)}
                           className="w-full max-w-[60px] mx-auto px-1.5 py-1 rounded-lg text-center text-sm border transition-all"
                           style={{
-                            borderColor: isOver ? "#ef4444" : "rgba(56,25,50,0.12)",
+                            borderColor: isOver ? "#ef4444" : "rgba(10,36,114,0.12)",
                             color: NAVY,
                             background: val ? "#fff" : "rgba(249,241,231,0.5)",
                           }}
@@ -407,7 +407,7 @@ export function GradebookGrid() {
 
                   {sbaItems.length > 0 && examItems.length > 0 && (
                     <td className="px-2 py-2" style={{ background: BG, width: 24 }}>
-                      <div style={{ width: 1, height: "100%", background: "rgba(56,25,50,0.1)", margin: "0 auto" }} />
+                      <div style={{ width: 1, height: "100%", background: "rgba(10,36,114,0.1)", margin: "0 auto" }} />
                     </td>
                   )}
 
@@ -422,7 +422,7 @@ export function GradebookGrid() {
                           onBlur={() => handleBlurCommit(row.student.id, item.id)}
                           className="w-full max-w-[60px] mx-auto px-1.5 py-1 rounded-lg text-center text-sm border transition-all"
                           style={{
-                            borderColor: isOver ? "#ef4444" : "rgba(56,25,50,0.12)",
+                            borderColor: isOver ? "#ef4444" : "rgba(10,36,114,0.12)",
                             color: NAVY,
                             background: val ? "#fff" : "rgba(249,241,231,0.5)",
                           }}
@@ -433,7 +433,7 @@ export function GradebookGrid() {
 
                   {/* Separator */}
                   <td className="sticky right-[268px] z-10 px-1.5 py-2" style={{ background: BG, width: 12 }}>
-                    <div style={{ width: 1, height: "100%", background: "rgba(56,25,50,0.1)", margin: "0 auto" }} />
+                    <div style={{ width: 1, height: "100%", background: "rgba(10,36,114,0.1)", margin: "0 auto" }} />
                   </td>
 
                   {/* SBA Weighted */}

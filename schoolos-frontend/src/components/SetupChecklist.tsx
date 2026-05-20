@@ -74,7 +74,7 @@ export function SetupChecklist() {
   }
 
   return (
-    <div className="mb-4 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
+    <div className="mb-4 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 2px 12px rgba(10,36,114,0.04)" }}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-semibold" style={{ color: NAVY }}>Setup Checklist</p>
         <button onClick={() => setDismissed(true)} className="text-xs" style={{ color: MUTED }}><X size={14} /></button>

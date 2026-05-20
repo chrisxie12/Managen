@@ -34,7 +34,7 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
 
   return (
     <div>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl mb-4 max-w-xs" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+      <div className="flex items-center gap-2 px-3 py-2 rounded-xl mb-4 max-w-xs" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
         <Search size={14} color={MUTED} />
         <input
           placeholder="Search students..."
@@ -44,10 +44,10 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
           style={{ color: NAVY }}
         />
       </div>
-      <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <table className="w-full">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+            <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
               <th className="px-4 py-3 font-medium">#</th>
               <th className="px-4 py-3 font-medium">Student</th>
               <th className="px-4 py-3 font-medium">Admission No.</th>
@@ -57,7 +57,7 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
             {filtered.length === 0 ? (
               <tr><td colSpan={3} className="text-center py-8 text-sm" style={{ color: MUTED }}>No students match your search.</td></tr>
             ) : filtered.map((s, i) => (
-              <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+              <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                 <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">

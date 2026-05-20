@@ -14,7 +14,7 @@ const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -130,7 +130,7 @@ export function PaystackConfigTab({ role }: Props) {
               <Input value={publicKey} onChange={(e) => setPublicKey(e.target.value)}
                 type={showPublic ? "text" : "password"}
                 className="h-9 text-xs rounded-xl font-mono w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="pk_live_..." />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="pk_live_..." />
               <button type="button" onClick={() => setShowPublic(!showPublic)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showPublic ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -142,7 +142,7 @@ export function PaystackConfigTab({ role }: Props) {
               <Input value={secretKey} onChange={(e) => setSecretKey(e.target.value)}
                 type={showSecret ? "text" : "password"}
                 className="h-9 text-xs rounded-xl font-mono w-full pr-9"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="sk_live_..." />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="sk_live_..." />
               <button type="button" onClick={() => setShowSecret(!showSecret)}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 hover:opacity-70">
                 {showSecret ? <EyeOff size={15} color={MUTED} /> : <Eye size={15} color={MUTED} />}
@@ -155,7 +155,7 @@ export function PaystackConfigTab({ role }: Props) {
       <SectionCard title="Transaction Fee Handling" desc="Configure how Paystack transaction fees are managed">
         <FormField label="Transaction Fee Burden">
           <Select value={feeBurden} onValueChange={setFeeBurden} disabled={isReadOnly}>
-            <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+            <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -171,7 +171,7 @@ export function PaystackConfigTab({ role }: Props) {
           {feeItems.map((item, index) => (
             <div key={item.id}
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs"
-              style={{ background: "rgba(56,25,50,0.04)", border: "1px solid rgba(56,25,50,0.06)" }}>
+              style={{ background: "rgba(10,36,114,0.04)", border: "1px solid rgba(10,36,114,0.06)" }}>
               <div className="flex flex-col gap-0.5">
                 <button onClick={() => moveItem(index, "up")} disabled={index === 0 || isReadOnly}
                   className="text-[8px] leading-none hover:opacity-70 disabled:opacity-20" style={{ color: MUTED }}>▲</button>
@@ -183,7 +183,7 @@ export function PaystackConfigTab({ role }: Props) {
               <Input value={item.label} onChange={(e) => updateItemLabel(item.id, e.target.value)}
                 disabled={isReadOnly}
                 className="h-7 text-xs rounded-xl flex-1 min-w-0"
-                style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="Fee item name" />
+                style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="Fee item name" />
               <span className="text-[10px] font-mono shrink-0" style={{ color: MUTED }}>#{index + 1}</span>
               {!isReadOnly && feeItems.length > 1 && (
                 <button onClick={() => removeItem(item.id)} className="p-1 rounded-lg hover:bg-red-50 transition-colors">
@@ -195,7 +195,7 @@ export function PaystackConfigTab({ role }: Props) {
         </div>
         {!isReadOnly && (
           <button onClick={addItem} className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-            style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
+            style={{ color: NAVY, background: "rgba(10,36,114,0.06)" }}>
             <Plus size={14} /> Add Fee Item
           </button>
         )}

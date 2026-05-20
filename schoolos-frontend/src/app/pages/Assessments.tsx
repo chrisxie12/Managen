@@ -50,7 +50,7 @@ function AlertBanner({ type, message, onClose }: { type: "error" | "success"; me
 
 function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color?: string }) {
   return (
-    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-center gap-2 mb-1">
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
@@ -66,7 +66,7 @@ function LoadingSpinner({ height = 48 }: { height?: number }) {
 
 function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
-    <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Icon size={40} color={MUTED} className="mx-auto mb-3" />
       <p className="font-semibold" style={{ color: NAVY }}>{title}</p>
       <p className="text-sm mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -78,13 +78,13 @@ function Modal({ title, onClose, saving, onSave, children, saveLabel = "Save", w
   title: string; onClose: () => void; saving?: boolean; onSave?: () => void; children: React.ReactNode; saveLabel?: string; wide?: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(56,25,50,0.6)", backdropFilter: "blur(4px)" }}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(10,36,114,0.6)", backdropFilter: "blur(4px)" }}
       onMouseDown={(e) => e.target === e.currentTarget && !saving && onClose()}>
-      <div className={`${wide ? "max-w-2xl" : "max-w-md"} w-full rounded-[32px] p-8`} style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }}
+      <div className={`${wide ? "max-w-2xl" : "max-w-md"} w-full rounded-[32px] p-8`} style={{ background: "white", boxShadow: "0 32px 80px rgba(10,36,114,0.3)" }}
         onMouseDown={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>{title}</h2>
-          <button onClick={onClose} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
+          <button onClick={onClose} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(10,36,114,0.06)" }}>
             <X size={16} color={MUTED} />
           </button>
         </div>
@@ -132,7 +132,7 @@ export function Assessments() {
             style={{
               background: tab === t.key ? NAVY : "white",
               color: tab === t.key ? CREAM : NAVY_LIGHT,
-              border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+              border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
             }}>
             <t.icon size={15} /> {t.label}
           </button>
@@ -262,7 +262,7 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Assessment Types</h3>
           <button onClick={() => { setEditTypeId(null); setTypeForm({ name: "", weight: 0, description: "" }); setShowTypeForm(true); }}
@@ -296,7 +296,7 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
         )}
       </div>
 
-      <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Grading Scales</h3>
           <button onClick={() => setShowScaleForm(true)}
@@ -350,15 +350,15 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Type Name</label>
           <input value={typeForm.name} onChange={(e) => setTypeForm(p => ({ ...p, name: e.target.value }))}
             placeholder="e.g. Quiz, Assignment, Exam" className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Weight (%)</label>
           <input type="number" value={typeForm.weight} onChange={(e) => setTypeForm(p => ({ ...p, weight: Number(e.target.value) }))}
             min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description (optional)</label>
           <textarea value={typeForm.description} onChange={(e) => setTypeForm(p => ({ ...p, description: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm" rows={2}
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
         </Modal>
       )}
 
@@ -367,7 +367,7 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Scale Name</label>
           <input value={scaleForm.name} onChange={(e) => setScaleForm(p => ({ ...p, name: e.target.value }))}
             placeholder="e.g. Default A-F, WAEC, BECE" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
         </Modal>
       )}
 
@@ -378,13 +378,13 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Grade</label>
               <input value={ruleForm.grade} onChange={(e) => setRuleForm(p => ({ ...p, grade: e.target.value }))}
                 placeholder="e.g. A" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Points</label>
               <input type="number" value={ruleForm.points} onChange={(e) => setRuleForm(p => ({ ...p, points: Number(e.target.value) }))}
                 min="0" max="5" step="0.1" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -392,19 +392,19 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Min %</label>
               <input type="number" value={ruleForm.min_percent} onChange={(e) => setRuleForm(p => ({ ...p, min_percent: Number(e.target.value) }))}
                 min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Max %</label>
               <input type="number" value={ruleForm.max_percent} onChange={(e) => setRuleForm(p => ({ ...p, max_percent: Number(e.target.value) }))}
                 min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
           </div>
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Remark (optional)</label>
           <input value={ruleForm.remark} onChange={(e) => setRuleForm(p => ({ ...p, remark: e.target.value }))}
             placeholder="e.g. Excellent" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
         </Modal>
       )}
     </div>
@@ -496,21 +496,21 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
           <Plus size={14} /> New Assessment
         </button>
         <select value={filters.class_id} onChange={(e) => setFilters(p => ({ ...p, class_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select value={filters.subject_id} onChange={(e) => setFilters(p => ({ ...p, subject_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All subjects</option>
           {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
         <select value={filters.term_id} onChange={(e) => setFilters(p => ({ ...p, term_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All terms</option>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 min-w-[180px] max-w-[240px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 min-w-[180px] max-w-[240px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -522,7 +522,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map(a => (
-            <div key={a.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div key={a.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-sm" style={{ color: NAVY }}>{a.name}</span>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -540,7 +540,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
                 <span>{a.term?.name}{a.session ? ` · ${a.session.name}` : ""}</span>
                 <span>{new Date(a.date).toLocaleDateString()} · Max: {a.max_score}</span>
               </div>
-              <div className="flex gap-1 mt-2 pt-2" style={{ borderTop: "1px solid rgba(56,25,50,0.06)" }}>
+              <div className="flex gap-1 mt-2 pt-2" style={{ borderTop: "1px solid rgba(10,36,114,0.06)" }}>
                 <button onClick={() => handleDelete(a.id)} className="text-xs px-2 py-1 rounded hover:opacity-70" style={{ color: "#EF4444" }}>Delete</button>
               </div>
             </div>
@@ -555,13 +555,13 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Assessment Name</label>
               <input value={form.name} onChange={(e) => setForm(p => ({ ...p, name: e.target.value }))}
                 placeholder="e.g. End of Term Mathematics Exam" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Class</label>
               <select value={form.class_id} onChange={(e) => setForm(p => ({ ...p, class_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -570,7 +570,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Subject</label>
               <select value={form.subject_id} onChange={(e) => setForm(p => ({ ...p, subject_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
@@ -579,7 +579,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Assessment Type</label>
               <select value={form.assessment_type_id} onChange={(e) => setForm(p => ({ ...p, assessment_type_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {types.map(t => <option key={t.id} value={t.id}>{t.name} ({t.weight}%)</option>)}
               </select>
@@ -588,19 +588,19 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Date</label>
               <input type="date" value={form.date} onChange={(e) => setForm(p => ({ ...p, date: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Max Score</label>
               <input type="number" value={form.max_score} onChange={(e) => setForm(p => ({ ...p, max_score: Number(e.target.value) }))}
                 min="1" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Term</label>
               <select value={form.term_id} onChange={(e) => setForm(p => ({ ...p, term_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
@@ -609,7 +609,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
               <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Session</label>
               <select value={form.session_id} onChange={(e) => setForm(p => ({ ...p, session_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {sessions.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
@@ -618,7 +618,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description (optional)</label>
           <textarea value={form.description} onChange={(e) => setForm(p => ({ ...p, description: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm" rows={2}
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
         </Modal>
       )}
     </>
@@ -693,7 +693,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <select value={selectedAssessmentId} onChange={(e) => setSelectedAssessmentId(e.target.value)}
           className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[250px]"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">Select an assessment...</option>
           {assessments.map(a => (
             <option key={a.id} value={a.id}>{a.name} — {a.class?.name} / {a.subject?.name}</option>
@@ -708,7 +708,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
 
       {selectedAssessmentId && (
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-[240px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-[240px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
             <Search size={14} color={MUTED} />
             <input placeholder="Search student..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -734,11 +734,11 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
       ) : filteredStudents.length === 0 ? (
         <EmptyState icon={Search} title="No matches" desc="No students match your search" />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[400px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">#</th>
                   <th className="px-4 py-3 font-medium">Student</th>
                   <th className="px-4 py-3 font-medium">Admission No.</th>
@@ -747,7 +747,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
               </thead>
               <tbody>
                 {filteredStudents.map((s, i) => (
-                  <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
                     <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{s.name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</td>
@@ -756,7 +756,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
                         value={scores[s.id] ?? ""}
                         onChange={(e) => setScores(prev => ({ ...prev, [s.id]: e.target.value === "" ? null as unknown as number : Number(e.target.value) }))}
                         className="w-24 px-3 py-2 rounded-xl outline-none text-sm"
-                        style={{ background: scores[s.id] !== undefined && scores[s.id] !== null ? "#D1FAE5" : CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+                        style={{ background: scores[s.id] !== undefined && scores[s.id] !== null ? "#D1FAE5" : CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -854,13 +854,13 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
 
   return (
     <div>
-      <div className="p-5 rounded-xl mb-6" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-5 rounded-xl mb-6" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-end gap-4 flex-wrap">
           <div className="flex-1 min-w-[180px]">
             <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Class</label>
             <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -869,7 +869,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
             <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Term</label>
             <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+              style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
               <option value="">Select term...</option>
               {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -877,7 +877,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
           {selectedClass && selectedTerm && (
             <button onClick={loadGradebook} disabled={loading}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 disabled:opacity-50"
-              style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT, background: "white" }}>
+              style={{ border: "1px solid rgba(10,36,114,0.1)", color: NAVY_LIGHT, background: "white" }}>
               <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
               Recalculate
             </button>
@@ -886,7 +886,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
       </div>
 
       {!selectedClass || !selectedTerm ? (
-        <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
+        <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(10,36,114,0.03)", border: "1px dashed rgba(10,36,114,0.1)" }}>
           <Percent size={40} color={MUTED} className="mx-auto mb-3" />
           <p className="font-semibold text-sm" style={{ color: NAVY }}>Select a class and term</p>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Choose a class and term above to view weighted term averages</p>
@@ -896,11 +896,11 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
       ) : students.length === 0 ? (
         <EmptyState icon={Percent} title="No grade data" desc="No assessments or scores for this class and term" />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium w-8"></th>
                   <th className="px-4 py-3 font-medium">#</th>
                   <th className="px-4 py-3 font-medium">Student Name</th>
@@ -917,7 +917,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
                   const breakdown = s.category_breakdown || [];
                   const isGenerating = generating.has(s.student_id);
                   return (
-                    <tr key={s.student_id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                    <tr key={s.student_id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                       <td className="px-4 py-3">
                         <button onClick={() => toggleExpand(s.student_id)}
                           className="p-1 rounded hover:opacity-70 transition-opacity" style={{ color: MUTED }}>
@@ -961,14 +961,14 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
             if (!isExpanded || breakdown.length === 0) return null;
             return (
               <div key={`bd-${s.student_id}`} className="border-t px-4 py-3"
-                style={{ background: "rgba(56,25,50,0.02)", borderColor: "rgba(56,25,50,0.05)" }}>
+                style={{ background: "rgba(10,36,114,0.02)", borderColor: "rgba(10,36,114,0.05)" }}>
                 <p className="text-xs font-semibold mb-2" style={{ color: NAVY }}>
                   {s.student_name} — Category Breakdown
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {breakdown.map((cat, i) => (
                     <div key={i} className="flex-1 min-w-[140px] p-3 rounded-xl"
-                      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                       <p className="text-xs font-medium" style={{ color: NAVY }}>{cat.category_name}</p>
                       <div className="flex items-baseline gap-1 mt-1">
                         <span className="text-lg font-bold" style={{ color: cat.average >= 50 ? "#065F46" : "#EF4444" }}>
@@ -1093,17 +1093,17 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
           <Plus size={14} /> Generate Report Card
         </button>
         <select value={filters.term_id} onChange={(e) => setFilters(p => ({ ...p, term_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All terms</option>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <select value={filters.class_id} onChange={(e) => setFilters(p => ({ ...p, class_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select value={filters.status} onChange={(e) => setFilters(p => ({ ...p, status: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">All status</option>
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -1118,7 +1118,7 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
           {filtered.map(c => {
             const st = statusStyles[c.status] || statusStyles.draft;
             return (
-              <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
@@ -1150,7 +1150,7 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
                   <span>{c.subject_count} subject{c.subject_count !== 1 ? "s" : ""}</span>
                   <span>Score: {c.total_score}/{c.total_max_score}</span>
                 </div>
-                <div className="flex gap-1 mt-2 pt-2" style={{ borderTop: "1px solid rgba(56,25,50,0.06)" }}>
+                <div className="flex gap-1 mt-2 pt-2" style={{ borderTop: "1px solid rgba(10,36,114,0.06)" }}>
                   <button onClick={() => setPreviewCard(c)}
                     className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg font-medium"
                     style={{ background: "rgba(99,102,241,0.1)", color: "#6366F1" }}>
@@ -1182,35 +1182,35 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Class</label>
           <select value={genForm.class_id} onChange={(e) => setGenForm(p => ({ ...p, class_id: e.target.value, student_id: "" }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <option value="">Select class...</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Student</label>
           <select value={genForm.student_id} onChange={(e) => setGenForm(p => ({ ...p, student_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <option value="">Select student...</option>
             {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Term</label>
           <select value={genForm.term_id} onChange={(e) => setGenForm(p => ({ ...p, term_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <option value="">Select term...</option>
             {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Session (optional)</label>
           <select value={genForm.session_id} onChange={(e) => setGenForm(p => ({ ...p, session_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <option value="">Select session...</option>
             {sessions.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Grading Scale (optional)</label>
           <select value={genForm.scale_id} onChange={(e) => setGenForm(p => ({ ...p, scale_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(10,36,114,0.1)", color: NAVY }}>
             <option value="">Default scale</option>
             {scales.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>

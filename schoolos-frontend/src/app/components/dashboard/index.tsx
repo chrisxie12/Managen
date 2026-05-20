@@ -18,7 +18,7 @@ export function LoadingSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div key={i} className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="w-10 h-10 rounded-2xl mb-4 animate-pulse" style={{ background: `${NAVY}10` }} />
           <div className="h-6 w-20 rounded mb-2 animate-pulse" style={{ background: `${NAVY}08` }} />
           <div className="h-3 w-16 rounded animate-pulse" style={{ background: `${NAVY}05` }} />
@@ -47,7 +47,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 
 export function EmptyState({ icon: Icon, title, desc }: { icon: LucideIcon; title: string; desc: string }) {
   return (
-    <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="text-center p-8">
         <Icon size={36} color={MUTED} className="mx-auto mb-3" />
         <p style={{ color: NAVY, fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.3rem" }}>{title}</p>
@@ -77,7 +77,7 @@ export function AlertBanner({ type, message, onClose }: { type: "error" | "succe
 
 export function DashboardCard({ title, action, children, className }: { title: string; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`p-5 rounded-[24px] ${className || ""}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className={`p-5 rounded-[24px] ${className || ""}`} style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div className="flex items-center justify-between mb-4">
         <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
         {action}
@@ -94,7 +94,7 @@ export function StatCard({ icon: Icon, label, value, color, path, badge, onClick
   const handleClick = onClick || (path ? () => nav(path) : undefined);
   return (
     <div onClick={handleClick} className="p-5 rounded-[24px] cursor-pointer hover:scale-[1.02] transition-transform"
-      style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div className="flex items-start justify-between mb-4">
         <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: `${color}15` }}>
           <Icon size={18} color={color} />
@@ -110,7 +110,7 @@ export function StatCard({ icon: Icon, label, value, color, path, badge, onClick
 
 export function KpiCard({ value, label, sub, positive, onClick }: { value: string; label: string; sub?: string; positive?: boolean; onClick?: () => void }) {
   return (
-    <div onClick={onClick} className={`p-5 rounded-[24px] ${onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform' : ''}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div onClick={onClick} className={`p-5 rounded-[24px] ${onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform' : ''}`} style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
       <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
       {sub && (
@@ -136,7 +136,7 @@ export function MiniTable({ headers, rows }: { headers: string[]; rows: (string 
         </thead>
         <tbody>
           {rows.map((row, ri) => (
-            <tr key={ri} className="border-t" style={{ borderColor: "rgba(56,25,50,0.05)" }}>
+            <tr key={ri} className="border-t" style={{ borderColor: "rgba(10,36,114,0.05)" }}>
               {row.map((cell, ci) => (
                 <td key={ci} className="py-2.5 pr-3" style={{ color: NAVY_LIGHT, fontSize: "0.82rem" }}>{cell}</td>
               ))}
@@ -227,7 +227,7 @@ export function ActivityFeed({ items }: { items: { icon: LucideIcon; color: stri
 
 export function ChartCard({ title, subtitle, action, children }: { title: string; subtitle?: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
+    <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>{title}</h3>
@@ -242,7 +242,7 @@ export function ChartCard({ title, subtitle, action, children }: { title: string
 
 export function SummaryCard({ icon: Icon, label, value, sub, color }: { icon: LucideIcon; label: string; value: string | number; sub?: string; color?: string }) {
   return (
-    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-center gap-2 mb-1">
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>

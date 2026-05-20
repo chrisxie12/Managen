@@ -147,11 +147,11 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
         className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
-        style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}
+        style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}
       >
         <div
           className="flex items-center gap-3 px-4 py-3"
-          style={{ borderBottom: "1px solid rgba(56,25,50,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(10,36,114,0.07)" }}
         >
           <Search size={16} color={MUTED} />
           <input
@@ -236,7 +236,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
 
         <div
           className="px-4 py-2 text-xs flex items-center gap-3"
-          style={{ color: MUTED, borderTop: "1px solid rgba(56,25,50,0.07)" }}
+          style={{ color: MUTED, borderTop: "1px solid rgba(10,36,114,0.07)" }}
         >
           <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>↑↓</kbd> Navigate</span>
           <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>ESC</kbd> Close</span>

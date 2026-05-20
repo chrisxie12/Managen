@@ -27,16 +27,16 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
   const totalPages = Math.max(1, Math.ceil(total / limit));
   if (totalPages <= 1) return null;
   return (
-    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}>
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
         <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -150,7 +150,7 @@ export function StaffDirectory() {
               style={{
                 background: tab === t.key ? NAVY : "white",
                 color: tab === t.key ? CREAM : NAVY_LIGHT,
-                border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
             </button>
@@ -162,25 +162,25 @@ export function StaffDirectory() {
         <div>
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <select value={teacherView} onChange={(e) => { setTeacherView(e.target.value); setTeacherDept(""); }}
-              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
               <option value="overall">Overall View</option>
               <option value="by_department">By Department</option>
             </select>
             {teacherView === "by_department" && (
               <select value={teacherDept} onChange={(e) => setTeacherDept(e.target.value)}
-                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
                 <option value="">All Departments</option>
                 {departments.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             )}
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 300 }}>
               <Search size={14} color={MUTED} />
               <input placeholder="Search by name, email, employee ID..." value={teacherSearch} onChange={(e) => setTeacherSearch(e.target.value)}
                 className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
             </div>
           </div>
 
-          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             {teacherLoading ? <LoadingSpinner height={200} /> : teachers.length === 0 ? (
               <div className="text-center py-12">
                 <Users size={40} color={MUTED} className="mx-auto mb-3" />
@@ -191,7 +191,7 @@ export function StaffDirectory() {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[700px]">
                     <thead>
-                      <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                      <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                         <SortHeader label="Name" field="name" currentField={teacherSort} order={teacherOrder} onChange={(f, o) => { setTeacherSort(f); setTeacherOrder(o); }} />
                         <SortHeader label="Employee ID" field="employee_id" currentField={teacherSort} order={teacherOrder} onChange={(f, o) => { setTeacherSort(f); setTeacherOrder(o); }} />
                         <SortHeader label="Email" field="email" currentField={teacherSort} order={teacherOrder} onChange={(f, o) => { setTeacherSort(f); setTeacherOrder(o); }} />
@@ -201,7 +201,7 @@ export function StaffDirectory() {
                     </thead>
                     <tbody>
                       {teachers.map(t => (
-                        <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                        <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
@@ -231,25 +231,25 @@ export function StaffDirectory() {
         <div>
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <select value={staffView} onChange={(e) => { setStaffView(e.target.value); setStaffRole(""); }}
-              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
               <option value="overall">Overall View</option>
               <option value="by_role">By Role</option>
             </select>
             {staffView === "by_role" && (
               <select value={staffRole} onChange={(e) => setStaffRole(e.target.value)}
-                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
                 <option value="">All Roles</option>
                 {roles.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
             )}
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 300 }}>
               <Search size={14} color={MUTED} />
               <input placeholder="Search by name, employee ID, role..." value={staffSearch} onChange={(e) => setStaffSearch(e.target.value)}
                 className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
             </div>
           </div>
 
-          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             {staffLoading ? <LoadingSpinner height={200} /> : staff.length === 0 ? (
               <div className="text-center py-12">
                 <Briefcase size={40} color={MUTED} className="mx-auto mb-3" />
@@ -260,7 +260,7 @@ export function StaffDirectory() {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[700px]">
                     <thead>
-                      <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                      <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                         <SortHeader label="Name" field="name" currentField={staffSort} order={staffOrder} onChange={(f, o) => { setStaffSort(f); setStaffOrder(o); }} />
                         <SortHeader label="Employee ID" field="employee_id" currentField={staffSort} order={staffOrder} onChange={(f, o) => { setStaffSort(f); setStaffOrder(o); }} />
                         <SortHeader label="Role" field="role_title" currentField={staffSort} order={staffOrder} onChange={(f, o) => { setStaffSort(f); setStaffOrder(o); }} />
@@ -269,7 +269,7 @@ export function StaffDirectory() {
                     </thead>
                     <tbody>
                       {staff.map(s => (
-                        <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                        <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"

@@ -80,14 +80,14 @@ export function ParentProfile() {
 
       {/* Contact */}
       <div className="space-y-2">
-        <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <Mail size={16} color={NAVY_LIGHT} />
           <div className="min-w-0">
             <p className="text-[10px] font-medium" style={{ color: MUTED }}>Email</p>
             <p className="text-sm" style={{ color: NAVY }}>{user?.email}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <Phone size={16} color={NAVY_LIGHT} />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-medium" style={{ color: MUTED }}>Phone (for alerts)</p>
@@ -104,7 +104,7 @@ export function ParentProfile() {
       </div>
 
       {/* Notification preferences */}
-      <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+      <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
         <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" style={{ color: NAVY }}>
           <Bell size={15} /> Notification Preferences
         </h3>
@@ -122,7 +122,7 @@ export function ParentProfile() {
               <div
                 onClick={() => item.set(!item.value)}
                 className="w-10 h-6 rounded-full relative cursor-pointer transition-colors"
-                style={{ background: item.value ? "#10B981" : "rgba(56,25,50,0.15)" }}
+                style={{ background: item.value ? "#10B981" : "rgba(10,36,114,0.15)" }}
               >
                 <div className="w-4 h-4 rounded-full bg-white absolute top-1 transition-all shadow-sm"
                   style={{ left: item.value ? "22px" : "4px" }} />
@@ -142,7 +142,7 @@ export function ParentProfile() {
       </button>
 
       <button onClick={() => logout()} className="w-full py-3 rounded-2xl text-sm font-medium" 
-        style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: MUTED }}>
+        style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: MUTED }}>
         Sign Out
       </button>
     </div>

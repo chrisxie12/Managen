@@ -130,7 +130,7 @@ export function ParentFees() {
           value={selected?.id || ""}
           onChange={(e) => setSelected(children.find((c) => c.id === e.target.value) || null)}
           className="w-full p-3 rounded-2xl text-sm font-medium"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}
         >
           {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
@@ -180,7 +180,7 @@ export function ParentFees() {
               {pendingInvoices.map((inv) => {
                 const due = Number(inv.total_amount) - Number(inv.paid_amount);
                 return (
-                  <div key={inv.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                  <div key={inv.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium" style={{ color: NAVY }}>{inv.term?.name || "Term"} Fee</span>
                       <span className="text-xs font-mono font-bold" style={{ color: inv.status === "overdue" ? "#EF4444" : "#F59E0B" }}>
@@ -214,7 +214,7 @@ export function ParentFees() {
               {payments.slice(0, 10).map((p) => {
                 const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobile Money", cash: "Cash", bank_transfer: "Bank Transfer", paystack: "Online" };
                 return (
-                  <div key={p.id} className="p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                  <div key={p.id} className="p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-xs font-medium" style={{ color: NAVY }}>{methodLabel[p.method] || p.method.toUpperCase()}</span>

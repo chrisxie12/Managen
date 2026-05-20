@@ -57,7 +57,7 @@ function AlertBanner({ type, message, onClose }: { type: "error" | "success"; me
 
 function SummaryCard({ icon: Icon, label, value, sub, color }: { icon: any; label: string; value: string | number; sub?: string; color?: string }) {
   return (
-    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <div className="flex items-center gap-2 mb-1">
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
@@ -99,7 +99,7 @@ function LoadingSpinner({ height = 48 }: { height?: number }) {
 
 function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
-    <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <Icon size={40} color={MUTED} className="mx-auto mb-3" />
       <p className="font-semibold" style={{ color: NAVY }}>{title}</p>
       <p className="text-sm mt-1" style={{ color: MUTED }}>{desc}</p>
@@ -111,16 +111,16 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
   const totalPages = Math.max(1, Math.ceil(total / limit));
   if (totalPages <= 1) return null;
   return (
-    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="flex items-center justify-between px-4 py-3 text-sm" style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}>
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
         <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(10,36,114,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -150,7 +150,7 @@ export function Attendance() {
               style={{
                 background: tab === t.key ? NAVY : "white",
                 color: tab === t.key ? CREAM : NAVY_LIGHT,
-                border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
+                border: tab === t.key ? "none" : "1px solid rgba(10,36,114,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
             </button>
@@ -218,7 +218,7 @@ function OverviewTab() {
       </div>
 
       {trends.length > 0 && (
-        <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Daily Trends</h3>
             <div className="flex gap-1.5">
@@ -244,7 +244,7 @@ function OverviewTab() {
       )}
 
       {absentees.length > 0 && (
-        <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle size={16} color="#EF4444" />
             <h3 className="font-semibold text-sm" style={{ color: NAVY }}>
@@ -366,12 +366,12 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 180 }}>
           {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
         </select>
         <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search student..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -389,11 +389,11 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
       ) : students.length === 0 ? (
         <EmptyState icon={UserCheck} title="No students in this class" desc={`Add students to ${selectedClass} first`} />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">Student</th>
                   <th className="px-4 py-3 font-medium">Admission No.</th>
                   {STATUS_OPTIONS.map(s => (
@@ -406,7 +406,7 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                 {filteredStudents.length === 0 ? (
                   <tr><td colSpan={7} className="text-center py-8 text-sm" style={{ color: MUTED }}>No students match search</td></tr>
                 ) : filteredStudents.map(student => (
-                  <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
@@ -423,7 +423,7 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                           className="w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90"
                           style={{
                             background: attendance[student.id] === s.value ? s.bg : "transparent",
-                            border: `1.5px solid ${attendance[student.id] === s.value ? s.color : "rgba(56,25,50,0.12)"}`,
+                            border: `1.5px solid ${attendance[student.id] === s.value ? s.color : "rgba(10,36,114,0.12)"}`,
                           }}>
                           <s.icon size={13} color={attendance[student.id] === s.value ? s.color : MUTED} />
                         </button>
@@ -432,7 +432,7 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                     <td className="px-4 py-3">
                       <input value={notes[student.id] || ""} onChange={(e) => setNotes(prev => ({ ...prev, [student.id]: e.target.value }))}
                         placeholder="Note..."
-                        className="w-24 px-2 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
+                        className="w-24 px-2 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.08)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -506,8 +506,8 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }} />
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search staff..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -525,11 +525,11 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
       ) : filtered.length === 0 ? (
         <EmptyState icon={Users} title="No staff found" desc="Add teachers first" />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">Staff</th>
                   <th className="px-4 py-3 font-medium">Email</th>
                   {STATUS_OPTIONS.map(s => (
@@ -541,7 +541,7 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
               </thead>
               <tbody>
                 {filtered.map(t => (
-                  <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
@@ -558,7 +558,7 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
                           className="w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90"
                           style={{
                             background: attendance[t.id] === s.value ? s.bg : "transparent",
-                            border: `1.5px solid ${attendance[t.id] === s.value ? s.color : "rgba(56,25,50,0.12)"}`,
+                            border: `1.5px solid ${attendance[t.id] === s.value ? s.color : "rgba(10,36,114,0.12)"}`,
                           }}>
                           <s.icon size={13} color={attendance[t.id] === s.value ? s.color : MUTED} />
                         </button>
@@ -566,11 +566,11 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
                     ))}
                     <td className="px-2 py-3">
                       <input type="time" value={checkIn[t.id] || ""} onChange={(e) => setCheckIn(prev => ({ ...prev, [t.id]: e.target.value }))}
-                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
+                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.08)", color: NAVY }} />
                     </td>
                     <td className="px-2 py-3">
                       <input type="time" value={checkOut[t.id] || ""} onChange={(e) => setCheckOut(prev => ({ ...prev, [t.id]: e.target.value }))}
-                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
+                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.08)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -628,16 +628,16 @@ function HistoryTab() {
     <>
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 160 }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
         </select>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 140 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY, minWidth: 140 }}>
           <option value="">All status</option>
           {STATUS_OPTIONS.map(s => <option key={s.value} value={s.value}>{s.value}</option>)}
         </select>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search by name..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
@@ -649,11 +649,11 @@ function HistoryTab() {
       ) : filtered.length === 0 ? (
         <EmptyState icon={Clock} title="No attendance records found" desc={records.length > 0 ? "No records match your search" : "Mark attendance to see records here"} />
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+                <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                   <th className="px-4 py-3 font-medium">Date</th>
                   <th className="px-4 py-3 font-medium">Student</th>
                   <th className="px-4 py-3 font-medium">Class</th>
@@ -665,7 +665,7 @@ function HistoryTab() {
                 {filtered.map(record => {
                   const st = STATUS_OPTIONS.find(s => s.value === record.status) || STATUS_OPTIONS[0];
                   return (
-                    <tr key={record.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                    <tr key={record.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                       <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{new Date(record.date).toLocaleDateString()}</td>
                       <td className="px-4 py-3" style={{ color: NAVY }}>{record.student?.name || "Unknown"}</td>
                       <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{record.class_name}</td>

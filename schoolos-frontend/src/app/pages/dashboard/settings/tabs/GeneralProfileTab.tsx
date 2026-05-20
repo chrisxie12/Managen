@@ -21,7 +21,7 @@ const GHANA_REGIONS = [
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
-    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+    <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
       <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
@@ -165,16 +165,16 @@ export function GeneralProfileTab({ role }: Props) {
       <SectionCard title="School Identity" desc="Basic information including GES registration code">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <FormField label="School Name" required error={errors.name}>
-            <Input value={form.name} onChange={set("name")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input value={form.name} onChange={set("name")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="GES Code / Registration Number">
-            <Input value={form.registration_number || ""} onChange={set("registration_number")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input value={form.registration_number || ""} onChange={set("registration_number")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="School Motto">
-            <Input value={form.motto || ""} onChange={set("motto")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input value={form.motto || ""} onChange={set("motto")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Website">
-            <Input type="url" value={form.website || ""} onChange={set("website")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="https://" />
+            <Input type="url" value={form.website || ""} onChange={set("website")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="https://" />
           </FormField>
         </div>
       </SectionCard>
@@ -182,7 +182,7 @@ export function GeneralProfileTab({ role }: Props) {
       <SectionCard title="Contact Information">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <FormField label="Email" required error={errors.email}>
-            <Input type="email" value={form.email} onChange={set("email")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input type="email" value={form.email} onChange={set("email")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Phone" required error={errors.phone}>
             <div className="relative">
@@ -193,15 +193,15 @@ export function GeneralProfileTab({ role }: Props) {
                   setForm((prev: Record<string, any>) => ({ ...prev, phone: "+233" + val }));
                   if (errors.phone) setErrors((prev) => { const n = { ...prev }; delete n.phone; return n; });
                 }}
-                className="h-9 text-sm rounded-xl pl-12" style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="XX XXX XXXX" />
+                className="h-9 text-sm rounded-xl pl-12" style={{ borderColor: "rgba(10,36,114,0.12)" }} placeholder="XX XXX XXXX" />
             </div>
           </FormField>
           <FormField label="City/Town" required error={errors.city}>
-            <Input value={form.city || ""} onChange={set("city")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+            <Input value={form.city || ""} onChange={set("city")} className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
           </FormField>
           <FormField label="Region" required error={errors.region}>
             <Select value={form.region || ""} onValueChange={setSelect("region")}>
-              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
+              <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(10,36,114,0.12)" }}>
                 <SelectValue placeholder="Select region..." />
               </SelectTrigger>
               <SelectContent>
@@ -211,7 +211,7 @@ export function GeneralProfileTab({ role }: Props) {
           </FormField>
         </div>
         <FormField label="Address" required error={errors.address}>
-          <Textarea value={form.address || ""} onChange={set("address")} rows={3} className="text-sm rounded-xl resize-none" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
+          <Textarea value={form.address || ""} onChange={set("address")} rows={3} className="text-sm rounded-xl resize-none" style={{ borderColor: "rgba(10,36,114,0.12)" }} />
         </FormField>
       </SectionCard>
 
@@ -222,7 +222,7 @@ export function GeneralProfileTab({ role }: Props) {
               className="border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors hover:border-purple-400"
               style={{ borderColor: "rgba(99,102,241,0.2)" }}>
               {form.logo_url ? (
-                <img src={form.logo_url} alt="Logo" className="w-[120px] h-[120px] rounded-full object-cover mx-auto" style={{ border: "3px solid rgba(56,25,50,0.1)" }} />
+                <img src={form.logo_url} alt="Logo" className="w-[120px] h-[120px] rounded-full object-cover mx-auto" style={{ border: "3px solid rgba(10,36,114,0.1)" }} />
               ) : (
                 <div>
                   <Upload size={24} color={MUTED} className="mx-auto mb-2" />
@@ -239,7 +239,7 @@ export function GeneralProfileTab({ role }: Props) {
               className="border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors hover:border-purple-400"
               style={{ borderColor: "rgba(99,102,241,0.2)" }}>
               {form.favicon_url ? (
-                <img src={form.favicon_url} alt="Favicon" className="w-12 h-12 object-contain mx-auto" style={{ border: "2px solid rgba(56,25,50,0.1)", borderRadius: 8 }} />
+                <img src={form.favicon_url} alt="Favicon" className="w-12 h-12 object-contain mx-auto" style={{ border: "2px solid rgba(10,36,114,0.1)", borderRadius: 8 }} />
               ) : (
                 <div>
                   <Upload size={24} color={MUTED} className="mx-auto mb-2" />

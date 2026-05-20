@@ -98,7 +98,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
 
       <div className="flex items-center gap-3 flex-wrap">
         <select value={selectedAssessment} onChange={(e) => setSelectedAssessment(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[200px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[200px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           <option value="">Select an assessment...</option>
           {assessments.map(a => (
             <option key={a.id} value={a.id}>
@@ -122,10 +122,10 @@ export function ClassGrades({ classId, students }: { classId: string; className:
       </div>
 
       {selectedAssessment && (
-        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
           <table className="w-full">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
+              <tr className="text-left text-xs uppercase tracking-wider" style={{ color: MUTED, borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
                 <th className="px-4 py-3 font-medium">#</th>
                 <th className="px-4 py-3 font-medium">Student</th>
                 <th className="px-4 py-3 font-medium">Score / {selected?.max_score || "?"}</th>
@@ -136,7 +136,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
               {students.map((student, i) => {
                 const existing = existingScores.find(s => s.student_id === student.id);
                 return (
-                  <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
+                  <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
                     <td className="px-4 py-3">
                       <span className="font-medium" style={{ color: NAVY }}>{student.name}</span>
@@ -150,7 +150,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
                         onChange={(e) => setScores(prev => ({ ...prev, [student.id]: e.target.value }))}
                         placeholder="—"
                         className="w-20 px-2 py-1.5 rounded-lg text-sm outline-none"
-                        style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }}
+                        style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.08)", color: NAVY }}
                       />
                     </td>
                     <td className="px-4 py-3">
