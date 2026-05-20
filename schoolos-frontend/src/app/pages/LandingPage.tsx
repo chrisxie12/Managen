@@ -167,10 +167,10 @@ export function LandingPage() {
 
 
   const schoolTypes = [
-    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", gradient: "linear-gradient(135deg, #059669, #34D399)" },
-    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100", gradient: "linear-gradient(135deg, #2563EB, #60A5FA)" },
-    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100", gradient: "linear-gradient(135deg, #D97706, #FBBF24)" },
-    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom", gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` },
+    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` },
+    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], example: "Accra Academy, Mfantsipim School", gradient: `linear-gradient(135deg, ${NAVY_LIGHT}, ${NAVY})` },
+    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], example: "Ghana International School, Lincoln Community School", gradient: `linear-gradient(135deg, ${NAVY}, #0C1A3A)` },
+    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], example: "Adeyemi Group of Schools, Sapphire Education Group", gradient: `linear-gradient(135deg, ${CHARCOAL}, ${NAVY_DARK})` },
   ];
 
   return (
@@ -454,7 +454,7 @@ export function LandingPage() {
             <div className="md:col-span-2 rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: AMBER_LIGHT, color: NAVY }}>
                     <Award className="size-3" /> NaCCA Compliant
                   </span>
                   <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Continuous Assessment Core</h3>
@@ -485,8 +485,8 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-white border border-slate-100 px-4 py-2.5">
                   <span className="text-xs font-medium text-slate-500">Final Grade</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold" style={{ background: AMBER_LIGHT, color: NAVY }}>
+                    <span className="w-2 h-2 rounded-full" style={{ background: AMBER }} />
                     EE — Exceeding Expectations
                   </span>
                 </div>
@@ -495,7 +495,7 @@ export function LandingPage() {
 
             {/* Card 2: Instant MoMo Rails (1 col) */}
             <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 w-fit">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <Wallet className="size-3" /> Payments
               </span>
               <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Instant MoMo Rails</h3>
@@ -529,7 +529,7 @@ export function LandingPage() {
 
             {/* Card 3: Arkesel Automated SMS (1 col) */}
             <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-fit">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <MessageSquare className="size-3" /> Communications
               </span>
               <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Arkesel Automated SMS</h3>
@@ -625,19 +625,19 @@ export function LandingPage() {
                   <s.icon size={56} className="text-white opacity-30" />
                 </div>
                 <div className="p-6">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor} -mt-8 relative z-10 shadow-md border-2 border-white`}>
-                    <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: NAVY } : {}} />
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 -mt-8 relative z-10 shadow-md border-2 border-white" style={{ background: AMBER_LIGHT }}>
+                    <s.icon size={24} style={{ color: NAVY }} />
                   </div>
                   <h3 className="font-bold text-lg mb-2" style={{ color: NAVY }}>{s.title}</h3>
                   <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {s.pills.map((pill) => (
-                      <span key={pill} className={`text-xs rounded-full px-2 py-0.5 ${s.pillBg} ${s.pillText}`}>{pill}</span>
+                      <span key={pill} className="text-xs rounded-full px-2 py-0.5" style={{ background: AMBER_LIGHT, color: NAVY }}>{pill}</span>
                     ))}
                   </div>
                   <div className="text-xs" style={{ color: "#9CA3AF" }}>
                     <p>{s.example}</p>
-                    <p>{s.example2}</p>
+                    {s.example2 && <p>{s.example2}</p>}
                   </div>
                 </div>
               </div>
