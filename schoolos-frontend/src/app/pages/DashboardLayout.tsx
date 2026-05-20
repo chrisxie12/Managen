@@ -5,6 +5,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
+import { HeadmasterDashboardV2 } from "./HeadmasterDashboardV2";
+import { AccountantDashboardV2 } from "./AccountantDashboardV2";
+import { TeacherDashboardV2 } from "./TeacherDashboardV2";
 import { ManaGenSidebar } from "../../components/ui/sidebar-component";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
@@ -215,7 +218,18 @@ function DashboardLayoutInner() {
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
           <SetupChecklist />
           <Breadcrumbs />
-          <Outlet />
+          {(() => {
+            // Route to role-specific V2 dashboard
+            if (user?.role === "school_admin" || user?.role === "headmaster") {
+              return <HeadmasterDashboardV2 />;
+            } else if (user?.role === "accountant") {
+              return <AccountantDashboardV2 />;
+            } else if (user?.role === "teacher") {
+              return <TeacherDashboardV2 />;
+            }
+            // Fallback to old routing for other roles
+            return <Outlet />;
+          })()}
         </main>
       </div>
 

@@ -246,6 +246,11 @@ app.get('/health', async (req, res) => {
     }
 });
 
+// ─── Public Routes (no auth required) ─────────────────────────
+const publicHealthRoutes = require('./routes/publicHealth');
+app.use('/status', publicHealthRoutes);      // /status/live, /status/ready, /status/status (UptimeRobot)
+app.use('/health', publicHealthRoutes);      // /health/status, /health/live, /health/ready (synonyms)
+
 // ─── Public Routes ────────────────────────────────────────────
 app.use('/api/onboard', onboardRoutes);
 app.use('/api/superadmin', superAdminRoutes);
