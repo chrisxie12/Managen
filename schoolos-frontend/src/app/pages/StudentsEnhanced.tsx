@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Plus, GraduationCap } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { api } from "../services/api";
 import { DataTable, type Column } from "../components/ui/DataTable";
-import { toast } from "sonner";
+import { useStudents, useClasses } from "../hooks/useStudents";
 
 const PLUM = "#381932";
 const MILK = "#FFF3E6";
@@ -15,16 +17,11 @@ type Student = {
   created_at: string;
 };
 
-type ClassOption = { id?: string; name: string };
-
 const ITEMS_PER_PAGE = 50;
 
 export function StudentsEnhanced() {
   const navigate = useNavigate();
-  const [students, setStudents] = useState<Student[]>([]);
-  const [total, setTotal] = useState(0);
-  const [classes, setClasses] = useState<ClassOption[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [view, setView] = useState("overall");
   const [selectedClass, setSelectedClass] = useState("");
   const [search, setSearch] = useState("");
@@ -32,30 +29,27 @@ export function StudentsEnhanced() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (view === "by_class" && selectedClass) params.set("className", selectedClass);
-      if (search) params.set("search", search);
-      params.set("sortBy", sortBy);
-      params.set("sortOrder", sortOrder);
-      params.set("page", String(page));
-      params.set("limit", String(ITEMS_PER_PAGE));
-      const res = await api.get<{ data: { students: Student[]; total: number } }>(`/api/school/features/students?${params}`);
-      setStudents(res.data?.data?.students || []);
-      setTotal(res.data?.data?.total || 0);
-    } catch { /* ignore */ } finally { setLoading(false); }
-  }, [view, selectedClass, search, sortBy, sortOrder, page]);
-
-  useEffect(() => { load(); }, [load]);
   useEffect(() => { setPage(1); }, [search, view, selectedClass]);
 
-  useEffect(() => {
-    api.get<{ data: { classes: ClassOption[] } }>("/api/school/classes")
-      .then(res => setClasses(res.data?.data?.classes || []))
-      .catch(() => {});
-  }, []);
+  const { data: studentsData, isLoading } = useStudents({ view, selectedClass, search, sortBy, sortOrder, page });
+  const { data: classes = [] } = useClasses();
+
+  const students = studentsData?.students ?? [];
+  const total = studentsData?.total ?? 0;
+
+  const deleteMutation = useMutation({
+    mutationFn: async (ids: string[]) => {
+      await api.post("/api/school/students/bulk-delete", { ids });
+    },
+    onSuccess: (_data, ids) => {
+      toast.success(`${ids.length} student(s) deleted`);
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to delete");
+    },
+  });
 
   const columns: Column<Student>[] = [
     {
@@ -73,19 +67,19 @@ export function StudentsEnhanced() {
       ),
     },
     { key: "admission_no", label: "Roll No", sortable: true,
-      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</span>,
+      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.admission_no || "\u2014"}</span>,
     },
     { key: "class_name", label: "Class", sortable: true,
       render: (s) => <span className="px-2 py-0.5 rounded text-xs" style={{ background: MILK, color: PLUM }}>{s.class_name}</span>,
     },
     { key: "gender", label: "Gender", hideable: true,
-      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.gender || "—"}</span>,
+      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.gender || "\u2014"}</span>,
     },
     { key: "parent_name", label: "Parent", hideable: true,
-      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.parent_name || "—"}</span>,
+      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.parent_name || "\u2014"}</span>,
     },
     { key: "parent_phone", label: "Parent Phone", hideable: true,
-      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.parent_phone || "—"}</span>,
+      render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.parent_phone || "\u2014"}</span>,
     },
     { key: "created_at", label: "Date Added", sortable: true, hideable: true,
       render: (s) => <span className="text-xs" style={{ color: MUTED }}>{new Date(s.created_at).toLocaleDateString()}</span>,
@@ -140,7 +134,7 @@ export function StudentsEnhanced() {
         sortBy={sortBy}
         sortOrder={sortOrder}
         onSort={(f, o) => { setSortBy(f); setSortOrder(o); }}
-        loading={loading}
+        loading={isLoading}
         searchable
         searchValue={search}
         onSearch={setSearch}
@@ -152,15 +146,7 @@ export function StudentsEnhanced() {
           {
             label: "Delete Selected",
             variant: "danger",
-            onClick: async (ids) => {
-              try {
-                await api.post("/api/school/students/bulk-delete", { ids });
-                toast.success(`${ids.length} student(s) deleted`);
-                load();
-              } catch (err: any) {
-                toast.error(err.message || "Failed to delete");
-              }
-            },
+            onClick: async (ids) => { deleteMutation.mutate(ids); },
           },
         ]}
         emptyState={

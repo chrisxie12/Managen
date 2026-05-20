@@ -1,0 +1,19 @@
+# ─── Node.js Integration ────────────────────────────────────────────
+# Traces are sent via dd-trace to localhost:8126.
+# This conf enables log collection from the Node.js process.
+init_config:
+
+instances:
+  - host: localhost
+    port: 8126
+    tags:
+      - service:schoolos-backend
+
+logs:
+  - type: file
+    path: /var/log/schoolos/app.log
+    service: schoolos-backend
+    source: nodejs
+    sourcecategory: sourcecode
+    tags:
+      - env:${DD_ENV}

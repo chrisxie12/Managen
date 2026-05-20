@@ -75,9 +75,10 @@ class HealthService {
     if (!isRedisConfigured()) return { status: 'unconfigured', detail: 'Redis not available' };
     const start = Date.now();
     try {
-      const { trialQueue } = require('../jobs/trialQueue');
-      if (!trialQueue) return { status: 'unconfigured', latency: msSince(start), detail: 'Queue not initialized' };
-      const counts = await trialQueue.getJobCounts();
+      const { getTrialQueue } = require('../jobs/trialQueue');
+      const queue = getTrialQueue();
+      if (!queue) return { status: 'unconfigured', latency: msSince(start), detail: 'Queue not initialized' };
+      const counts = await queue.getJobCounts();
       return {
         status: 'healthy',
         latency: msSince(start),

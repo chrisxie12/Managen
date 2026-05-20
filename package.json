@@ -22,13 +22,16 @@
   },
   "dependencies": {
     "@clerk/backend": "^3.4.9",
+    "@sentry/node": "^10.53.1",
     "@supabase/supabase-js": "^2.105.1",
+    "@upstash/redis": "^1.38.0",
     "archiver": "^8.0.0",
     "axios": "^1.4.0",
     "bcryptjs": "^3.0.3",
     "bullmq": "^5.76.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "dd-trace": "^5.103.0",
     "docx-templates": "^4.15.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
@@ -38,6 +41,7 @@
     "mammoth": "^1.12.0",
     "multer": "1.4.5-lts.2",
     "nodemailer": "^8.0.7",
+    "openai": "^6.38.0",
     "puppeteer": "^25.0.4",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0",
@@ -48,7 +52,13 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "msgpackr-extract"
+      "msgpackr-extract",
+      "@datadog/native-appsec",
+      "@datadog/native-iast-taint-tracking",
+      "@datadog/native-metrics",
+      "@datadog/pprof",
+      "dd-trace",
+      "@sentry/cli"
     ],
     "ignoredBuiltDependencies": []
   },

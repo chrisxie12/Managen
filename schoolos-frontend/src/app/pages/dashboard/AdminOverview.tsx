@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   CalendarCheck, Wallet, MessageSquare, ClipboardCheck,
-  ArrowRight, Loader2, TrendingUp, TrendingDown, GripVertical, EyeOff,
+  ArrowRight, TrendingUp, TrendingDown, GripVertical, EyeOff,
 } from "lucide-react";
-import { api } from "../../services/api";
+import { useDashboardStats } from "../../hooks/useDashboardStats";
+import { useAuth } from "../../contexts/AuthContext";
+import { useRealtime } from "../../hooks/useRealtime";
 import { PerformanceChart } from "./components/PerformanceChart";
 import { QuickActions } from "./components/QuickActions";
+import { LiveIndicator } from "../../components/ui/LiveIndicator";
 import { useUserPreferences } from "../../contexts/UserPreferencesContext";
 import { SkeletonLoader } from "../../components/ui/SkeletonLoader";
 
@@ -15,38 +18,6 @@ const PLUM_LIGHT = "#512b4a";
 const MILK = "#FFF3E6";
 const MUTED = "#7D6077";
 
-interface DashboardStats {
-  totalStudents: number;
-  totalTeachers: number;
-  totalStaff: number;
-  attendanceRate: number | string;
-  teachingStaff: number;
-}
-
-interface FinanceSummary {
-  totalBilled: number;
-  totalPaid: number;
-  totalCollected: number;
-  totalOutstanding: number;
-  overdueCount: number;
-}
-
-interface SmsBalance {
-  balance: number;
-  low_balance_threshold: number;
-}
-
-interface PendingAssessment {
-  id: string;
-  status: string;
-}
-
-interface TermInfo {
-  id: string;
-  name: string;
-  is_current: boolean;
-}
-
 function MetricCard({
   icon: Icon,
   label,
@@ -54,7 +25,6 @@ function MetricCard({
   sub,
   trend,
   color,
-  loading,
   onClick,
 }: {
   icon: typeof CalendarCheck;
@@ -63,7 +33,6 @@ function MetricCard({
   sub?: string;
   trend?: { direction: "up" | "down"; text: string };
   color: string;
-  loading?: boolean;
   onClick?: () => void;
 }) {
   const Wrapper = onClick ? "button" : "div";
@@ -78,30 +47,21 @@ function MetricCard({
           <Icon size={20} color={color} />
         </div>
       </div>
-      {loading ? (
-        <div className="space-y-2">
-          <div className="h-7 w-24 rounded animate-pulse" style={{ background: `${PLUM}08` }} />
-          <div className="h-3 w-32 rounded animate-pulse" style={{ background: `${PLUM}05` }} />
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.25rem" }}>
+        {value}
+      </div>
+      <div style={{ color: MUTED, fontSize: "0.75rem", marginBottom: trend ? "0.3rem" : 0 }}>{label}</div>
+      {trend && (
+        <div className="flex items-center gap-1 mt-1" style={{ color: trend.direction === "up" ? "#10B981" : "#EF4444", fontSize: "0.72rem" }}>
+          {trend.direction === "up" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+          {trend.text}
         </div>
-      ) : (
-        <>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.25rem" }}>
-            {value}
-          </div>
-          <div style={{ color: MUTED, fontSize: "0.75rem", marginBottom: trend ? "0.3rem" : 0 }}>{label}</div>
-          {trend && (
-            <div className="flex items-center gap-1 mt-1" style={{ color: trend.direction === "up" ? "#10B981" : "#EF4444", fontSize: "0.72rem" }}>
-              {trend.direction === "up" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-              {trend.text}
-            </div>
-          )}
-          {sub && (
-            <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-              style={{ background: `${color}12`, color }}>
-              {sub}
-            </div>
-          )}
-        </>
+      )}
+      {sub && (
+        <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
+          style={{ background: `${color}12`, color }}>
+          {sub}
+        </div>
       )}
     </Wrapper>
   );
@@ -109,63 +69,22 @@ function MetricCard({
 
 export function AdminOverview() {
   const navigate = useNavigate();
+  const { user, school } = useAuth();
   const { preferences, updateDashboardWidgets } = useUserPreferences();
-  const [loading, setLoading] = useState(true);
+  const { data: dash, isLoading } = useDashboardStats();
   const [editMode, setEditMode] = useState(false);
-
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [finance, setFinance] = useState<FinanceSummary | null>(null);
-  const [smsBalance, setSmsBalance] = useState<SmsBalance | null>(null);
-  const [pendingAssessments, setPendingAssessments] = useState<PendingAssessment[]>([]);
-  const [currentTerm, setCurrentTerm] = useState<TermInfo | null>(null);
+  const { connected } = useRealtime({ schoolId: school?.id || school?.slug || "", userId: user?.id || "" });
 
   const widgets = preferences.dashboardLayout.widgets;
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [dashRes, finRes, termsRes, smsRes, assessRes] = await Promise.all([
-          api.get<DashboardStats>("/api/school/dashboard"),
-          api.get<FinanceSummary>("/api/school/finance/summary"),
-          api.get<{ terms: TermInfo[] }>("/api/school/terms"),
-          api.get<SmsBalance>("/api/school/settings/kv/sms_balance").catch(() => null),
-          api.get<{ types: any[] }>("/api/school/assessment-types").catch(() => null),
-        ]);
-
-        if (dashRes.data) setStats(dashRes.data);
-        if (finRes.data) setFinance(finRes.data);
-
-        const terms = termsRes.data?.terms || [];
-        const current = terms.find((t) => t.is_current);
-        if (current) setCurrentTerm(current);
-
-        if (smsRes?.data) {
-          const bal = smsRes.data;
-          setSmsBalance(typeof bal === "number" ? { balance: bal, low_balance_threshold: 100 } : bal);
-        }
-
-        if (assessRes?.data) {
-          const types = assessRes.data?.types || [];
-          setPendingAssessments(
-            types.filter((t: any) => t.status === "pending" || t.is_active === false)
-          );
-        }
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
-
-  const attendanceRate = stats?.attendanceRate ?? 0;
-  const totalCollected = finance?.totalCollected ?? 0;
-  const totalBilled = finance?.totalBilled ?? 0;
+  const attendanceRate = dash?.stats?.attendanceRate ?? 0;
+  const totalCollected = dash?.finance?.totalCollected ?? 0;
+  const totalBilled = dash?.finance?.totalBilled ?? 0;
   const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
-  const smsBal = smsBalance?.balance ?? 0;
-  const lowThreshold = smsBalance?.low_balance_threshold ?? 100;
+  const smsBal = dash?.smsBalance?.balance ?? 0;
+  const lowThreshold = dash?.smsBalance?.low_balance_threshold ?? 100;
   const isLowBalance = smsBal < lowThreshold;
-  const pendingCount = pendingAssessments.length;
+  const pendingCount = dash?.pendingCount ?? 0;
 
   const toggleWidget = (widgetId: string) => {
     updateDashboardWidgets(
@@ -179,12 +98,15 @@ export function AdminOverview() {
     <div className="space-y-6 overflow-x-hidden">
       <div className="flex items-start justify-between">
         <div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.35rem", fontWeight: 700 }}>
-            School Overview
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.35rem", fontWeight: 700 }}>
+              School Overview
+            </h1>
+            <LiveIndicator connected={connected} />
+          </div>
           <p style={{ color: MUTED, fontSize: "0.82rem" }}>
-            {currentTerm
-              ? `${currentTerm.name} · ${new Date().getFullYear()}/${new Date().getFullYear() + 1}`
+            {dash?.currentTerm
+              ? `${dash.currentTerm.name} · ${new Date().getFullYear()}/${new Date().getFullYear() + 1}`
               : "Welcome to the new term"}
           </p>
         </div>
@@ -222,10 +144,9 @@ export function AdminOverview() {
         </div>
       )}
 
-      {/* Metrics Widget */}
       {visibleWidgets.find((w) => w.id === "metrics") && (
         <>
-          {loading ? (
+          {isLoading ? (
             <SkeletonLoader variant="metric" count={4} />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -233,7 +154,7 @@ export function AdminOverview() {
                 icon={CalendarCheck}
                 label="Today's Attendance"
                 value={`${attendanceRate}%`}
-                trend={{ direction: Number(attendanceRate) >= 75 ? "up" : "down", text: `${stats?.totalStudents ?? 0} students` }}
+                trend={{ direction: Number(attendanceRate) >= 75 ? "up" : "down", text: `${dash?.stats?.totalStudents ?? 0} students` }}
                 color="#6366F1"
                 onClick={() => navigate("/dashboard/attendance")}
               />
@@ -265,27 +186,25 @@ export function AdminOverview() {
         </>
       )}
 
-      {/* Chart Widget */}
       {visibleWidgets.find((w) => w.id === "chart") && (
-        loading ? <SkeletonLoader variant="chart" /> : <PerformanceChart />
+        isLoading ? <SkeletonLoader variant="chart" /> : <PerformanceChart />
       )}
 
-      {/* Quick Actions & School at a Glance Widgets */}
       <div className="grid lg:grid-cols-3 gap-6">
         {visibleWidgets.find((w) => w.id === "quick-actions") && (
           <div className="lg:col-span-2">
-            {loading ? <SkeletonLoader variant="card" count={1} /> : <QuickActions />}
+            {isLoading ? <SkeletonLoader variant="card" count={1} /> : <QuickActions />}
           </div>
         )}
 
         {visibleWidgets.find((w) => w.id === "school-glance") && (
           <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
-              {stats?.totalStudents ? "School at a Glance" : "Welcome!"}
+              {dash?.stats?.totalStudents ? "School at a Glance" : "Welcome!"}
             </h3>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
-              {stats?.totalStudents
-                ? `${stats.totalStudents} learners · ${stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
+              {dash?.stats?.totalStudents
+                ? `${dash.stats.totalStudents} learners · ${dash.stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
                 : "Start by adding learners and configuring your school profile."}
             </p>
             <div className="space-y-2 mt-auto">

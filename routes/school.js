@@ -7,6 +7,8 @@ const multer   = require('multer');
 const supabase = require('../config/db');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
+const uploadStorage = require('../config/storage');
+const fileUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
@@ -1854,6 +1856,48 @@ router.get('/report-cards/status/:jobId',
     }
 );
 
+// ─── WhatsApp Conversation History ───────────────────────────
+router.get('/whatsapp/conversations', protect, requirePermission('communications.view'), async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { phone, student_id, page = 1, limit = 50 } = req.query;
+        let query = supabase.from('whatsapp_conversations').select('*', { count: 'exact' }).eq('school_id', schoolId);
+        if (phone) query = query.eq('parent_phone', phone);
+        if (student_id) query = query.eq('student_id', student_id);
+        const offset = (Math.max(1, Number(page)) - 1) * Math.min(100, Number(limit));
+        const { data, count, error } = await query.order('created_at', { ascending: false }).range(offset, offset + Math.min(100, Number(limit)) - 1);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { conversations: data || [], total: count, page: Number(page) } });
+    } catch (err) { return res.status(500).json({ error: 'Error fetching conversations.' }); }
+});
+
+// ─── Push Notification Subscriptions ─────────────────────────
+router.post('/push/subscribe', protect, async (req, res) => {
+    try {
+        const { subscription } = req.body;
+        if (!subscription) return res.status(400).json({ error: 'Subscription object required.' });
+        const { error } = await supabase.from('push_subscriptions').upsert({
+            user_id: req.user.userId,
+            school_id: req.tenant.id,
+            subscription,
+            user_agent: req.headers['user-agent'],
+        }, { onConflict: 'user_id,school_id' });
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { message: 'Subscribed.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error saving subscription.' }); }
+});
+
+router.delete('/push/unsubscribe', protect, async (req, res) => {
+    try {
+        const { error } = await supabase.from('push_subscriptions')
+            .delete()
+            .eq('user_id', req.user.userId)
+            .eq('school_id', req.tenant.id);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { message: 'Unsubscribed.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error removing subscription.' }); }
+});
+
 module.exports = router;
 module.exports.protect = protect;
 
@@ -2610,4 +2654,85 @@ router.put('/settings/deactivate', protect, async (req, res) => {
         await supabase.from('schools').update({ is_active: false }).eq('id', schoolId);
         return res.json({ data: { message: 'School deactivated. Contact support to reactivate.' } });
     } catch (err) { return res.status(500).json({ error: 'Error deactivating school.' }); }
+});
+
+router.get('/search', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { q } = req.query;
+        if (!q || q.length < 2) return res.json({ data: { students: [], classes: [] } });
+        const term = `%${q}%`;
+        const [studentsRes, classesRes] = await Promise.all([
+            supabase.from('students').select('id, first_name, last_name, class_id, class:classes(name)').eq('school_id', schoolId).or(`first_name.ilike.${term},last_name.ilike.${term}`).limit(10),
+            supabase.from('classes').select('id, name').eq('school_id', schoolId).ilike('name', term).limit(5)
+        ]);
+        const students = (studentsRes.data || []).map(s => ({
+            id: s.id, name: `${s.first_name} ${s.last_name}`, class_name: s.class?.name || '', path: `/dashboard/students/${s.id}`
+        }));
+        const classes = (classesRes.data || []).map(c => ({ id: c.id, name: c.name, path: `/dashboard/students?classId=${c.id}` }));
+        return res.json({ data: { students, classes } });
+    } catch (err) { return res.status(500).json({ error: 'Error performing search.' }); }
+});
+
+// ===== FILE UPLOADS (Supabase Storage) =====
+
+router.post('/upload', protect, fileUpload.single('file'), async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { bucket } = req.body;
+        const file = req.file;
+
+        if (!file) return res.status(400).json({ error: 'No file provided.' });
+        if (!bucket) return res.status(400).json({ error: 'Bucket name required.' });
+
+        // Virus scan placeholder — integrate ClamAV here via clamscan or similar
+        // Example: const { isInfected } = await scanWithClamAV(file.buffer);
+        // if (isInfected) return res.status(400).json({ error: 'File rejected by virus scan.' });
+
+        const result = await uploadStorage.uploadFile(bucket, file, schoolId);
+        return res.json({ data: result });
+    } catch (err) {
+        return res.status(400).json({ error: err.message || 'Upload failed.' });
+    }
+});
+
+router.delete('/upload', protect, async (req, res) => {
+    try {
+        const { bucket, path } = req.body;
+        if (!bucket || !path) return res.status(400).json({ error: 'Bucket and path are required.' });
+        if (!path.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
+        await uploadStorage.deleteFile(bucket, path);
+        return res.json({ data: { message: 'File deleted.' } });
+    } catch (err) {
+        return res.status(400).json({ error: err.message || 'Delete failed.' });
+    }
+});
+
+router.get('/storage/signed-url', protect, async (req, res) => {
+    try {
+        const { bucket, path } = req.query;
+        if (!bucket || !path) return res.status(400).json({ error: 'Bucket and path query params required.' });
+        if (!path.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
+        const signedUrl = await uploadStorage.generateSignedUrl(bucket, path, 3600);
+        return res.json({ data: { url: signedUrl } });
+    } catch (err) {
+        return res.status(400).json({ error: err.message || 'Failed to generate signed URL.' });
+    }
+});
+
+router.patch('/students/:id/avatar', protect, async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { id } = req.params;
+        const { avatar_url } = req.body;
+
+        const { data: student } = await supabase.from('students').select('id').eq('id', id).eq('school_id', schoolId).single();
+        if (!student) return res.status(404).json({ error: 'Student not found.' });
+
+        const { error } = await supabase.from('students').update({ avatar_url }).eq('id', id).eq('school_id', schoolId);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { message: 'Avatar updated.' } });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error updating avatar.' });
+    }
 });

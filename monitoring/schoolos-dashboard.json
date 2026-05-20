@@ -1,0 +1,220 @@
+{
+  "title": "SchoolOS — API & Infrastructure",
+  "description": "Monitors SchoolOS backend: request rate, error rate, response times, Redis queue health, and slow endpoints.",
+  "layout_type": "free",
+  "notify_list": [],
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "production"
+    },
+    {
+      "name": "route",
+      "prefix": "route",
+      "default": "*"
+    }
+  ],
+  "widgets": [
+    {
+      "id": 1,
+      "definition": {
+        "type": "timeseries",
+        "title": "Request Rate",
+        "requests": [
+          {
+            "q": "sum:schoolos.api.requests{$env} by {route}.as_rate()",
+            "display_type": "bars",
+            "style": { "palette": "dog_classic", "line_type": "solid", "line_width": "normal" },
+            "metadata": [
+              { "expression": "sum:schoolos.api.requests{$env} by {route}.as_rate()" }
+            ]
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "auto", "max": "auto" },
+        "markers": []
+      },
+      "layout": { "x": 0, "y": 0, "width": 8, "height": 4 }
+    },
+    {
+      "id": 2,
+      "definition": {
+        "type": "timeseries",
+        "title": "Error Rate (% of total requests)",
+        "requests": [
+          {
+            "q": "sum:schoolos.api.requests{$env,status_group:5xx} by {route}.as_rate() / sum:schoolos.api.requests{$env} by {route}.as_rate() * 100",
+            "display_type": "line",
+            "style": { "palette": "warm", "line_type": "solid", "line_width": "normal" }
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "0", "max": "100" },
+        "markers": [
+          { "value": "y > 1", "label": ">1% error rate", "type": "error dashed" }
+        ]
+      },
+      "layout": { "x": 8, "y": 0, "width": 8, "height": 4 }
+    },
+    {
+      "id": 3,
+      "definition": {
+        "type": "timeseries",
+        "title": "Average Response Time (ms)",
+        "requests": [
+          {
+            "q": "avg:schoolos.api.response_time{$env} by {route}",
+            "display_type": "line",
+            "style": { "palette": "cool", "line_type": "solid", "line_width": "normal" }
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "auto", "max": "auto" },
+        "markers": [
+          { "value": "y > 2000", "label": ">2s threshold", "type": "error dashed" }
+        ]
+      },
+      "layout": { "x": 0, "y": 4, "width": 8, "height": 4 }
+    },
+    {
+      "id": 4,
+      "definition": {
+        "type": "timeseries",
+        "title": "P95 Response Time by Route",
+        "requests": [
+          {
+            "q": "p95:schoolos.api.response_time{$env} by {route}",
+            "display_type": "line",
+            "style": { "palette": "purple", "line_type": "solid", "line_width": "normal" }
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "auto", "max": "auto" }
+      },
+      "layout": { "x": 8, "y": 4, "width": 8, "height": 4 }
+    },
+    {
+      "id": 5,
+      "definition": {
+        "type": "timeseries",
+        "title": "Redis Queue Depth — Trial Expiration",
+        "requests": [
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:trial-expiration,type:waiting}",
+            "display_type": "line",
+            "style": { "palette": "dog_classic", "line_type": "solid", "line_width": "normal" },
+            "name": "waiting"
+          },
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:trial-expiration,type:active}",
+            "display_type": "line",
+            "style": { "palette": "dog_classic", "line_type": "dash", "line_width": "normal" },
+            "name": "active"
+          },
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:trial-expiration,type:failed}",
+            "display_type": "line",
+            "style": { "palette": "warm", "line_type": "solid", "line_width": "normal" },
+            "name": "failed"
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "auto", "max": "auto" }
+      },
+      "layout": { "x": 0, "y": 8, "width": 8, "height": 4 }
+    },
+    {
+      "id": 6,
+      "definition": {
+        "type": "timeseries",
+        "title": "Redis Queue Depth — Report Card Generation",
+        "requests": [
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:report-card-generation,type:waiting}",
+            "display_type": "line",
+            "style": { "palette": "dog_classic", "line_type": "solid", "line_width": "normal" },
+            "name": "waiting"
+          },
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:report-card-generation,type:active}",
+            "display_type": "line",
+            "style": { "palette": "dog_classic", "line_type": "dash", "line_width": "normal" },
+            "name": "active"
+          },
+          {
+            "q": "avg:schoolos.redis.queue_depth{$env,queue:report-card-generation,type:failed}",
+            "display_type": "line",
+            "style": { "palette": "warm", "line_type": "solid", "line_width": "normal" },
+            "name": "failed"
+          }
+        ],
+        "yaxis": { "scale": "linear", "min": "auto", "max": "auto" }
+      },
+      "layout": { "x": 8, "y": 8, "width": 8, "height": 4 }
+    },
+    {
+      "id": 7,
+      "definition": {
+        "type": "toplist",
+        "title": "Top 5 Slowest Endpoints (Avg ms)",
+        "requests": [
+          {
+            "q": "top(avg:schoolos.api.response_time{$env} by {route}, 5, 'max', 'desc')",
+            "style": { "palette": "dog_classic" }
+          }
+        ]
+      },
+      "layout": { "x": 0, "y": 12, "width": 8, "height": 4 }
+    },
+    {
+      "id": 8,
+      "definition": {
+        "type": "query_value",
+        "title": "DB Query Time (P99)",
+        "requests": [
+          {
+            "q": "p99:schoolos.db.query_time{$env}",
+            "aggregator": "avg",
+            "conditional_formats": [
+              { "comparator": ">", "value": 2000, "palette": "white_on_red" },
+              { "comparator": ">", "value": 500, "palette": "white_on_yellow" },
+              { "comparator": "<=", "value": 500, "palette": "white_on_green" }
+            ]
+          }
+        ],
+        "autoscale": true,
+        "custom_unit": "ms"
+      },
+      "layout": { "x": 8, "y": 12, "width": 4, "height": 4 }
+    },
+    {
+      "id": 9,
+      "definition": {
+        "type": "query_value",
+        "title": "Slow Queries (>1s count)",
+        "requests": [
+          {
+            "q": "sum:schoolos.db.slow_query{$env}",
+            "aggregator": "avg",
+            "conditional_formats": [
+              { "comparator": ">", "value": 10, "palette": "white_on_red" },
+              { "comparator": ">", "value": 1, "palette": "white_on_yellow" },
+              { "comparator": "<=", "value": 1, "palette": "white_on_green" }
+            ]
+          }
+        ],
+        "autoscale": true
+      },
+      "layout": { "x": 12, "y": 12, "width": 4, "height": 4 }
+    },
+    {
+      "id": 10,
+      "definition": {
+        "type": "manage_status",
+        "title": "Monitors Overview",
+        "summary_type": "monitors",
+        "sort": "status,asc",
+        "count": 10,
+        "query": "tag:service:schoolos-backend",
+        "display_format": "list"
+      },
+      "layout": { "x": 0, "y": 16, "width": 16, "height": 4 }
+    }
+  ]
+}

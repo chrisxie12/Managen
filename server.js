@@ -1,4 +1,23 @@
 require('dotenv').config();
+
+// Datadog APM — must be loaded before any other module (express, ioredis, etc.)
+if (process.env.DD_ENABLED) {
+  require('./config/datadog');
+}
+
+const Sentry = require('@sentry/node');
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    integrations: [
+      Sentry.httpIntegration({ tracing: true }),
+      Sentry.expressIntegration(),
+    ],
+    tracesSampleRate: 1.0,
+  });
+}
+
 const express  = require('express');
 const cors     = require('cors');
 const cookieParser = require('cookie-parser');
@@ -23,6 +42,17 @@ const userRoutes          = require('./routes/users');
 
 const app = express();
 app.set('trust proxy', 1);
+
+if (process.env.SENTRY_DSN) {
+  app.use(Sentry.Handlers.requestHandler({ transaction: true }));
+  app.use(Sentry.Handlers.tracingHandler());
+}
+
+// Datadog custom metrics
+if (process.env.DD_ENABLED) {
+  const { datadogMiddleware } = require('./middleware/datadog');
+  app.use(datadogMiddleware);
+}
 
 const defaultOrigins = [
     'http://localhost:3000',
@@ -53,6 +83,79 @@ app.post('/webhooks/paystack', express.raw({ type: 'application/json' }), async 
 
 app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, res) => {
     res.status(501).json({ error: 'Stripe webhooks not configured.' });
+});
+
+// ─── WhatsApp Webhook ─────────────────────────────────────────
+app.post('/webhooks/whatsapp', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+        const whatsappAIService = require('./services/whatsappAIService');
+        const body = JSON.parse(req.body.toString('utf8'));
+
+        // Meta/WhatsApp Business API verification
+        if (body.hub?.mode === 'subscribe' && body.hub?.verify_token === process.env.WHATSAPP_VERIFY_TOKEN) {
+            return res.status(200).send(body.hub.challenge);
+        }
+
+        // Incoming message
+        const entry = body.entry?.[0];
+        const change = entry?.changes?.[0];
+        const msg = change?.value?.messages?.[0];
+        const metadata = change?.value?.metadata;
+        if (!msg || !metadata) return res.sendStatus(200);
+
+        const parentPhone = msg.from;
+        const phoneNumberId = metadata.phone_number_id;
+
+        // Resolve school from phone number (configured per school)
+        const { data: school } = await require('./config/db').from('schools')
+            .select('id, slug')
+            .eq('whatsapp_phone', metadata.display_phone_number || phoneNumberId)
+            .maybeSingle();
+        if (!school) return res.status(200).json({ error: 'School not found.' });
+
+        let messageText = '';
+        let audioUrl = null;
+
+        if (msg.type === 'text') messageText = msg.text?.body || '';
+        else if (msg.type === 'audio') {
+            audioUrl = msg.audio?.media_url || '';
+            // Download audio to Supabase Storage
+            if (audioUrl) {
+                const token = process.env.WHATSAPP_ACCESS_TOKEN;
+                const audioRes = await fetch(audioUrl, { headers: { Authorization: `Bearer ${token}` } });
+                const audioBuffer = Buffer.from(await audioRes.arrayBuffer());
+                const storageFile = require('./config/storage');
+                const result = await storageFile.uploadFile('documents', {
+                    originalname: `voice-${Date.now()}.ogg`,
+                    mimetype: 'audio/ogg',
+                    buffer: audioBuffer,
+                    size: audioBuffer.length,
+                }, school.id);
+                audioUrl = result.url;
+            }
+        } else if (msg.type === 'image') {
+            messageText = msg.image?.caption || '[Image received]';
+        }
+
+        if (messageText || audioUrl) {
+            const reply = await whatsappAIService.processIncomingMessage(school.id, parentPhone, messageText, null, audioUrl);
+            // Send reply via WhatsApp Business API
+            await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messaging_product: 'whatsapp',
+                    to: parentPhone,
+                    text: { body: reply },
+                }),
+            });
+        }
+
+        res.sendStatus(200);
+    } catch (err) {
+        console.error('WhatsApp webhook error:', err.message);
+        res.sendStatus(200);
+    }
 });
 
 // ─── Global Middleware ────────────────────────────────────────
@@ -119,19 +222,28 @@ app.get('/', (req, res) => {
 app.get('/health', async (req, res) => {
     try {
         const healthService = require('./services/healthService');
-        const db = await healthService.checkDatabase();
-        const server = healthService.checkServer();
+        const [db, server, redis, queue] = await Promise.all([
+            healthService.checkDatabase(),
+            healthService.checkServer(),
+            healthService.checkRedis(),
+            healthService.checkQueue(),
+        ]);
+        const allHealthy = [db, redis, queue].every(c => c.status === 'healthy' || c.status === 'unconfigured');
         res.json({
+            status: allHealthy ? 'ok' : 'degraded',
             data: {
-                status: db.status === 'healthy' ? 'ok' : 'degraded',
+                status: allHealthy ? 'ok' : 'degraded',
                 db: db.status === 'healthy',
+                redis: redis.status,
+                queue: queue.status === 'healthy' ? true : queue.status,
                 uptime: server.uptime,
                 memory: server.memory.heapUsed,
                 timestamp: Date.now(),
             },
-            status: db.status === 'healthy' ? 'ok' : 'degraded',
+            checks: { db, redis, queue },
         });
-    } catch {
+    } catch (err) {
+        console.error('Health check error:', err);
         res.json({ status: 'ok', data: { status: 'ok', db: true, timestamp: Date.now() } });
     }
 });
@@ -156,12 +268,66 @@ app.use('/api/school/features', tenantMiddleware, featureRoutes);
 app.use('/api/user', tenantMiddleware, userRoutes);
 app.use('/api/grades', tenantMiddleware, require('./routes/grades'));
 
+// ─── Health / Queues Endpoint ──────────────────────────────────
+app.get('/health/queues', async (req, res) => {
+    try {
+        const { getTrialQueue } = require('./jobs/trialQueue');
+        const { getReportCardQueue } = require('./jobs/reportCardQueue');
+
+        const trialQ = getTrialQueue();
+        const reportQ = getReportCardQueue();
+
+        const getCounts = async (q) => {
+            if (!q) return null;
+            try {
+                const counts = await q.getJobCounts();
+                const jobs = await q.getJobs(['waiting', 'active', 'completed', 'failed', 'delayed'], 0, 100);
+                const latestFailed = jobs
+                    .filter(j => j.failedReason)
+                    .slice(0, 5)
+                    .map(j => ({ jobId: j.id, name: j.name, failedReason: j.failedReason, timestamp: j.finishedOn }));
+                return { counts, latestFailed };
+            } catch {
+                return null;
+            }
+        };
+
+        const [trial, report] = await Promise.all([getCounts(trialQ), getCounts(reportQ)]);
+
+        res.json({
+            data: {
+                timestamp: new Date().toISOString(),
+                queues: {
+                    'trial-expiration': {
+                        name: 'trial-expiration',
+                        status: trial ? 'healthy' : 'unconfigured',
+                        ...trial?.counts,
+                        latestFailed: trial?.latestFailed || [],
+                    },
+                    'report-card-generation': {
+                        name: 'report-card-generation',
+                        status: report ? 'healthy' : 'unconfigured',
+                        ...report?.counts,
+                        latestFailed: report?.latestFailed || [],
+                    },
+                },
+            },
+        });
+    } catch (err) {
+        console.error('Health queues error:', err);
+        res.status(500).json({ error: 'Failed to retrieve queue health.' });
+    }
+});
+
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
     res.status(404).json({ error: `Route ${req.originalUrl} not found.` });
 });
 
 // ─── Global Error Handler ─────────────────────────────────────
+if (process.env.SENTRY_DSN) {
+  app.use(Sentry.Handlers.errorHandler());
+}
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     const statusCode = err.statusCode || 500;
@@ -173,28 +339,55 @@ app.use((err, req, res, next) => {
 // ─── Start Server ─────────────────────────────────────────────
 if (require.main === module) {
     const PORT = process.env.PORT || 5000;
-    
-    // Initialize background jobs (gracefully handle Redis unavailability)
+
     const initializeQueues = async () => {
         try {
-            const { scheduleTrialCheck } = require('./jobs/trialQueue');
-            await scheduleTrialCheck();
+            const { initializeTrialQueue } = require('./jobs/trialQueue');
+            const { queue: tq, worker: tw } = await initializeTrialQueue();
+            if (tq && tw) {
+                const { getTrialQueue } = require('./jobs/trialQueue');
+                const q = getTrialQueue();
+                if (q) {
+                    const existing = await q.getRepeatableJobs();
+                    const scheduled = existing.some(j => j.name === 'check-trials');
+                    if (!scheduled) {
+                        await q.add('check-trials', {}, { repeat: { pattern: '0 0 * * *' }, removeOnComplete: true });
+                        console.log('[TrialQueue] Daily check scheduled (cron: 0 0 * * *)');
+                    } else {
+                        console.log('[TrialQueue] Daily check already scheduled');
+                    }
+                }
+            }
         } catch (err) {
-            console.warn('⚠️  Trial queue initialization error (non-fatal):', err.message);
+            console.warn('[TrialQueue] Initialization error (non-fatal):', err.message);
         }
+
         try {
-            const { initializeQueue } = require('./services/queueService');
-            await initializeQueue();
+            const { initializeReportCardQueue } = require('./jobs/reportCardQueue');
+            await initializeReportCardQueue();
         } catch (err) {
-            console.warn('⚠️  Report card queue initialization error (non-fatal):', err.message);
+            console.warn('[ReportCardQueue] Initialization error (non-fatal):', err.message);
+        }
+
+        // Start Datadog queue depth gauge reporting
+        if (process.env.DD_ENABLED) {
+            try {
+                const { reportQueueGauges } = require('./middleware/datadog');
+                const { getTrialQueue } = require('./jobs/trialQueue');
+                const { getReportCardQueue } = require('./jobs/reportCardQueue');
+                reportQueueGauges(getTrialQueue, getReportCardQueue);
+                console.log('[Datadog] Queue depth gauge reporting started (30s interval)');
+            } catch (err) {
+                console.warn('[Datadog] Queue gauge init error (non-fatal):', err.message);
+            }
         }
     };
 
     app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
-        console.log(`📋 Health check: http://localhost:${PORT}/health`);
-        
-        // Initialize queues after server starts
+        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Health: http://localhost:${PORT}/health`);
+        console.log(`Queues: http://localhost:${PORT}/health/queues`);
+
         initializeQueues();
     });
 }

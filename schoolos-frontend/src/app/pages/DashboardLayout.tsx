@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Bell, Search, Menu,
+  Bell, Search, Menu, Download,
 } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
 import { Sidebar } from "../components/Sidebar";
 import { SetupChecklist } from "../../components/SetupChecklist";
@@ -13,6 +14,9 @@ import { MobileBottomNav } from "../components/layout/MobileBottomNav";
 import { GlobalSearch } from "../components/layout/GlobalSearch";
 import { CommandPalette } from "../components/CommandPalette";
 import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { processSyncQueue, addToSyncQueue } from "../lib/offlineSync";
+import { api } from "../services/api";
+import type { SyncItem } from "../lib/offlineSync";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -58,8 +62,61 @@ function DashboardLayoutInner() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   useKeyboardShortcuts();
+
+  // PWA install prompt
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  // Offline sync on reconnect
+  useEffect(() => {
+    const syncOffline = async () => {
+      if (!navigator.onLine) return;
+      setSyncing(true);
+      try {
+        const result = await processSyncQueue(async (item: SyncItem) => {
+          if (item.type === "attendance") {
+            await api.post("/api/school/attendance/batch", item.payload);
+          } else if (item.type === "fee-payment") {
+            await api.post("/api/school/fees/payments", item.payload);
+          }
+        }, (completed, total) => {
+          toast.loading(`Syncing offline data... ${completed}/${total}`, { id: "offline-sync" });
+        });
+        if (result.synced > 0) {
+          toast.success(`Synced ${result.synced} item${result.synced > 1 ? "s" : ""}`, { id: "offline-sync", duration: 3000 });
+        } else {
+          toast.dismiss("offline-sync");
+        }
+        if (result.failed > 0) {
+          toast.error(`${result.failed} item${result.failed > 1 ? "s" : ""} failed to sync`);
+        }
+      } catch {
+        toast.dismiss("offline-sync");
+      } finally {
+        setSyncing(false);
+      }
+    };
+
+    window.addEventListener("online", syncOffline);
+    syncOffline();
+    return () => window.removeEventListener("online", syncOffline);
+  }, []);
+
+  const handleInstall = () => {
+    if (!installPrompt) return;
+    (installPrompt as any).prompt();
+    (installPrompt as any).userChoice.then(() => setInstallPrompt(null));
+  };
 
   const role = user?.role || "";
   const roleLabel = roleLabels[role] || "Administrator";
@@ -104,6 +161,16 @@ function DashboardLayoutInner() {
           </div>
 
           <div className="flex items-center gap-3">
+            {installPrompt && (
+              <button onClick={handleInstall}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium"
+                style={{ background: "white", border: "1px solid rgba(56,25,50,0.08)", color: PLUM }}>
+                <Download size={13} /> Install App
+              </button>
+            )}
+            {syncing && (
+              <span className="text-[11px] text-muted-foreground animate-pulse">Syncing...</span>
+            )}
             <button
               onClick={() => setGlobalSearchOpen(true)}
               className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95"

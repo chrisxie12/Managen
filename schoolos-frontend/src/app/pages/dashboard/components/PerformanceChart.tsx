@@ -53,12 +53,12 @@ export function PerformanceChart() {
           const raw = res.data || [];
           setData(
             raw.length > 0
-              ? raw.map((d: any) => ({
+              ? raw.filter((d: any) => d.ee != null || d.me != null || d.ae != null || d.b != null).map((d: any) => ({
                   class_name: d.class_name || d.className || `Class`,
-                  ee: d.ee ?? Math.round(d.rate * 0.35),
-                  me: d.me ?? Math.round(d.rate * 0.40),
-                  ae: d.ae ?? Math.round(d.rate * 0.18),
-                  b: d.b ?? Math.round(d.rate * 0.07),
+                  ee: d.ee ?? 0,
+                  me: d.me ?? 0,
+                  ae: d.ae ?? 0,
+                  b: d.b ?? 0,
                 }))
               : []
           );

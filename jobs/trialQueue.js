@@ -1,82 +1,155 @@
 const { Queue, Worker } = require('bullmq');
 const redis = require('../config/redis');
+const supabase = require('../config/db');
+const { getPlanConfig, suspendSchool } = require('../services/provisionService');
 
 let trialQueue = null;
 let trialWorker = null;
+const LOG_PREFIX = '[TrialQueue]';
 
-/**
- * Initialize the trial check queue
- * Returns null if Redis is not configured or unavailable
- */
+const log = (msg, data) => {
+  const ts = new Date().toISOString();
+  if (data) console.log(`${ts} ${LOG_PREFIX} ${msg}`, data);
+  else console.log(`${ts} ${LOG_PREFIX} ${msg}`);
+};
+
+const logWarn = (msg, err) => {
+  const ts = new Date().toISOString();
+  console.warn(`${ts} ${LOG_PREFIX} ${msg}`, err?.message || err);
+};
+
+const logError = (msg, err) => {
+  const ts = new Date().toISOString();
+  console.error(`${ts} ${LOG_PREFIX} ${msg}`, err?.message || err, err?.stack || '');
+};
+
 const initializeTrialQueue = async () => {
   try {
-    // Skip if REDIS_URL is not set
     if (!redis.isRedisConfigured()) {
-      console.log('ℹ️  REDIS_URL not configured. Skipping trial queue initialization.');
+      log('REDIS_URL not configured. Skipping trial queue initialization.');
       return { queue: null, worker: null };
     }
 
-    // Create queue with Redis connection
-    const queue = new Queue('trial-expiration', {
+    log('Creating queue...');
+
+    trialQueue = new Queue('trial-expiration', {
       connection: redis,
       defaultJobOptions: {
         attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 2000,
-        },
+        backoff: { type: 'exponential', delay: 2000 },
         removeOnComplete: true,
+        removeOnFail: false,
       },
     });
 
-    // Test Redis connection
+    trialQueue.on('waiting', (jobId) => log(`Job ${jobId} is waiting`));
+    trialQueue.on('progress', (jobId, progress) => log(`Job ${jobId} progress: ${progress}%`));
+
     try {
-      await queue.client.ping();
-      console.log('✅ Trial queue initialized successfully (Redis connected)');
+      await trialQueue.client.ping();
+      log('Connected to Redis. Queue ready.');
+      const counts = await trialQueue.getJobCounts();
+      log('Initial queue counts:', counts);
     } catch (err) {
-      console.warn('⚠️  Trial queue creation failed - Redis unavailable:', err.message);
+      logWarn('Queue creation failed — Redis unavailable:', err);
+      trialQueue = null;
       return { queue: null, worker: null };
     }
 
-    // Create worker for processing trial expiration checks
-    const worker = new Worker(
+    trialWorker = new Worker(
       'trial-expiration',
       async (job) => {
-        console.log(`Processing trial expiration check job: ${job.id}`);
-        // Placeholder for trial check logic
-        return { success: true, jobId: job.id };
+        log(`Processing job ${job.id} (attempt ${job.attemptsMade + 1})`);
+
+        const { data: trialSchools, error } = await supabase
+          .from('schools')
+          .select('id, name, slug, plan, created_at')
+          .eq('plan', 'trial')
+          .eq('is_active', true);
+
+        if (error) {
+          logError('Failed to fetch trial schools:', error);
+          return { processed: 0, error: error.message };
+        }
+
+        const trialDays = getPlanConfig('trial').durationDays;
+        const now = Date.now();
+        const results = [];
+        let deactivated = 0;
+        let reminders = 0;
+
+        for (const school of trialSchools || []) {
+          const createdMs = new Date(school.created_at).getTime();
+          const daysSince = Math.floor((now - createdMs) / (1000 * 60 * 60 * 24));
+          const daysLeft = trialDays - daysSince;
+
+          if (daysLeft <= 0) {
+            try {
+              await suspendSchool(school.id);
+              results.push({ schoolId: school.id, slug: school.slug, action: 'deactivated' });
+              deactivated++;
+              log(`Trial expired — deactivated school: ${school.slug}`);
+            } catch (e) {
+              results.push({ schoolId: school.id, slug: school.slug, action: 'error', error: e.message });
+              logError(`Failed to deactivate ${school.slug}:`, e);
+            }
+          } else {
+            results.push({ schoolId: school.id, slug: school.slug, action: daysLeft <= 3 ? 'reminder_due' : 'ok', daysLeft });
+            if (daysLeft <= 3) reminders++;
+          }
+        }
+
+        const summary = { total: trialSchools?.length || 0, deactivated, reminders };
+        log(`Job ${job.id} complete:`, summary);
+        return { processed: summary.total, results };
       },
       {
         connection: redis,
         concurrency: 1,
+        lockDuration: 120000,
       }
     );
 
-    worker.on('failed', (job, err) => {
-      console.error(`Trial queue job ${job.id} failed:`, err.message);
+    trialWorker.on('completed', (job, returnValue) => {
+      log(`Job ${job.id} completed successfully:`, returnValue);
     });
 
-    worker.on('error', (err) => {
-      console.error('Trial queue worker error:', err.message);
+    trialWorker.on('failed', (job, err) => {
+      logError(`Job ${job.id} failed after ${job.attemptsMade} attempts:`, err);
     });
 
-    return { queue, worker };
+    trialWorker.on('error', (err) => {
+      logError('Worker error:', err);
+    });
+
+    trialWorker.on('active', (job) => {
+      log(`Worker started job ${job.id}`);
+    });
+
+    trialWorker.on('drained', () => {
+      log('Queue drained — no more pending jobs');
+    });
+
+    trialWorker.on('paused', () => log('Worker paused'));
+    trialWorker.on('resumed', () => log('Worker resumed'));
+    trialWorker.on('closing', (msg) => log('Worker closing:', msg));
+
+    const counts = await trialQueue.getJobCounts();
+    log('Trial queue initialized. Current counts:', counts);
+
+    return { queue: trialQueue, worker: trialWorker };
   } catch (err) {
-    console.warn('⚠️  Failed to initialize trial queue:', err.message);
+    logError('Failed to initialize trial queue:', err);
     return { queue: null, worker: null };
   }
 };
 
-/**
- * Schedule a trial expiration check
- * Only works if Redis is available
- */
 const scheduleTrialCheck = async () => {
   try {
     const { queue, worker } = await initializeTrialQueue();
 
     if (!queue || !worker) {
-      console.warn('⚠️  Trial queue unavailable. Trial expiration checks will not run.');
+      logWarn('Trial queue unavailable. Expiration checks will not run.');
       trialQueue = null;
       trialWorker = null;
       return;
@@ -85,31 +158,34 @@ const scheduleTrialCheck = async () => {
     trialQueue = queue;
     trialWorker = worker;
 
-    // Example: Schedule recurring job (optional, can be customized)
-    // await queue.add('check-trials', {}, { repeat: { pattern: '0 0 * * *' } });
-
-    console.log('✅ Trial check scheduler initialized');
+    const existingJobs = await trialQueue.getRepeatableJobs();
+    const alreadyScheduled = existingJobs.some(j => j.name === 'check-trials');
+    if (!alreadyScheduled) {
+      await trialQueue.add(
+        'check-trials',
+        {},
+        { repeat: { pattern: '0 0 * * *' }, removeOnComplete: true }
+      );
+      log('Daily trial check scheduled (cron: 0 0 * * *)');
+    } else {
+      log('Daily trial check already scheduled');
+    }
   } catch (err) {
-    console.error('Error scheduling trial check:', err.message);
+    logError('Error scheduling trial check:', err);
     trialQueue = null;
     trialWorker = null;
   }
 };
 
-/**
- * Gracefully close queue and worker connections
- */
+const getTrialQueue = () => trialQueue;
+
 const closeTrialQueue = async () => {
   try {
-    if (trialWorker) {
-      await trialWorker.close();
-    }
-    if (trialQueue) {
-      await trialQueue.close();
-    }
-    console.log('✅ Trial queue connections closed');
+    if (trialWorker) await trialWorker.close();
+    if (trialQueue) await trialQueue.close();
+    log('Connections closed');
   } catch (err) {
-    console.warn('⚠️  Error closing trial queue:', err.message);
+    logWarn('Error closing connections:', err);
   }
 };
 
@@ -119,4 +195,5 @@ module.exports = {
   scheduleTrialCheck,
   closeTrialQueue,
   initializeTrialQueue,
+  getTrialQueue,
 };

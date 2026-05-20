@@ -1,0 +1,129 @@
+{
+  "description": "SchoolOS alert rules. Import via Datadog API or UI (Monitors → New Monitor → From JSON).",
+  "alerts": [
+    {
+      "name": "SchoolOS — High Error Rate",
+      "type": "metric alert",
+      "query": "sum:schoolos.api.requests{service:schoolos-backend,status_group:5xx}.as_rate() / sum:schoolos.api.requests{service:schoolos-backend}.as_rate() * 100 > 1",
+      "message": "{{#is_alert}}🔥 Error rate on {{service.name}} exceeded 1% (current: {{value}}%).{{/is_alert}}\n{{#is_recovery}}✅ Error rate returned below 1%.{{/is_recovery}}\n\n@slack-schoolos-alerts",
+      "tags": ["service:schoolos-backend", "severity:critical"],
+      "options": {
+        "thresholds": {
+          "critical": 1,
+          "warning": 0.5
+        },
+        "notify_audit": false,
+        "locked": false,
+        "timeout_h": 0,
+        "new_host_delay": 300,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 30,
+        "escalation_message": "",
+        "no_data_timeframe": null,
+        "include_tags": false,
+        "silenced": {}
+      },
+      "priority": 1
+    },
+    {
+      "name": "SchoolOS — High Response Time",
+      "type": "metric alert",
+      "query": "avg:schoolos.api.response_time{service:schoolos-backend} by {route} > 2000",
+      "message": "{{#is_alert}}🐌 Route {{route.name}} averaged {{value}}ms response time (threshold: 2s).{{/is_alert}}\n{{#is_recovery}}✅ Route {{route.name}} response time recovered ({{value}}ms).{{/is_recovery}}\n\n@slack-schoolos-alerts",
+      "tags": ["service:schoolos-backend", "severity:warning"],
+      "options": {
+        "thresholds": {
+          "critical": 2000,
+          "warning": 1000
+        },
+        "notify_audit": false,
+        "locked": false,
+        "timeout_h": 0,
+        "new_host_delay": 300,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 30,
+        "escalation_message": "",
+        "no_data_timeframe": null,
+        "include_tags": true,
+        "silenced": {}
+      },
+      "priority": 2
+    },
+    {
+      "name": "SchoolOS — Queue Backlog (Trial Expiration)",
+      "type": "metric alert",
+      "query": "avg:schoolos.redis.queue_depth{service:schoolos-backend,queue:trial-expiration,type:waiting} > 50",
+      "message": "{{#is_alert}}⚠️ Trial expiration queue has {{value}} waiting jobs (threshold: 50).{{/is_alert}}\n{{#is_recovery}}✅ Trial expiration queue backlog cleared.{{/is_recovery}}\n\n@slack-schoolos-alerts",
+      "tags": ["service:schoolos-backend", "queue:trial-expiration", "severity:warning"],
+      "options": {
+        "thresholds": {
+          "critical": 50,
+          "warning": 20
+        },
+        "notify_audit": false,
+        "locked": false,
+        "timeout_h": 0,
+        "new_host_delay": 300,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 60,
+        "escalation_message": "",
+        "no_data_timeframe": null,
+        "include_tags": true,
+        "silenced": {}
+      },
+      "priority": 3
+    },
+    {
+      "name": "SchoolOS — Slow Database Query",
+      "type": "metric alert",
+      "query": "avg:schoolos.db.query_time{service:schoolos-backend} by {query} > 3000",
+      "message": "{{#is_alert}}🐌 Slow DB query detected: {{query.name}} averaged {{value}}ms (threshold: 3s).{{/is_alert}}\n{{#is_recovery}}✅ DB query {{query.name}} recovered.{{/is_recovery}}\n\n@slack-schoolos-alerts",
+      "tags": ["service:schoolos-backend", "severity:warning"],
+      "options": {
+        "thresholds": {
+          "critical": 3000,
+          "warning": 1000
+        },
+        "notify_audit": false,
+        "locked": false,
+        "timeout_h": 0,
+        "new_host_delay": 300,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 30,
+        "escalation_message": "",
+        "no_data_timeframe": null,
+        "include_tags": true,
+        "silenced": {}
+      },
+      "priority": 2
+    },
+    {
+      "name": "SchoolOS — Host Down",
+      "type": "metric alert",
+      "query": "avg:system.cpu.user{service:schoolos-backend}.last(5m) < 0.1",
+      "message": "{{#is_alert}}🛑 SchoolOS backend host may be down — CPU < 0.1% for 5 min.{{/is_alert}}\n{{#is_recovery}}✅ Host is back.{{/is_recovery}}\n\n@pagerduty-schoolos\n@slack-schoolos-alerts",
+      "tags": ["service:schoolos-backend", "severity:critical"],
+      "options": {
+        "thresholds": {
+          "critical": 0.1
+        },
+        "notify_audit": false,
+        "locked": false,
+        "timeout_h": 0,
+        "new_host_delay": 300,
+        "require_full_window": true,
+        "notify_no_data": true,
+        "no_data_timeframe": 10,
+        "renotify_interval": 10,
+        "escalation_message": "",
+        "include_tags": false,
+        "silenced": {}
+      },
+      "priority": 1
+    }
+  ]
+}

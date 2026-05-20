@@ -1,13 +1,9 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Loader2, Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "../../../services/api";
-
-type ClassItem = { id: string; name: string };
-type Subject = { id: string; name: string; code?: string };
-type Term = { id: string; name: string };
-type Student = { id: string; admission_number?: string; roll_number?: string; first_name: string; last_name: string };
-type AssessmentItem = { id: string; school_id: string; class_id: string; subject_id: string; term_id: string; assessment_type: "SBA" | "EXAM"; name: string; max_points: number; sort_order: number };
+import { useMetaData, useGradebookData, type AssessmentItem, type StudentBasic } from "../../../hooks/useGradebook";
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -27,11 +23,9 @@ function getGradeBand(pct: number) {
 }
 
 export function GradebookGrid() {
-  const [classes, setClasses] = useState<ClassItem[]>([]);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [terms, setTerms] = useState<Term[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
+  const queryClient = useQueryClient();
   const [items, setItems] = useState<AssessmentItem[]>([]);
+  const [students, setStudents] = useState<StudentBasic[]>([]);
   const [scores, setScores] = useState<Record<string, Record<string, string>>>({});
   const [dirty, setDirty] = useState(false);
 
@@ -39,54 +33,36 @@ export function GradebookGrid() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedTerm, setSelectedTerm] = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [addingItem, setAddingItem] = useState(false);
-
+  const [saving, setSaving] = useState(false);
   const [newItemName, setNewItemName] = useState("");
   const [newItemType, setNewItemType] = useState<"SBA" | "EXAM">("SBA");
   const [newItemMax, setNewItemMax] = useState("100");
-  const loadMeta = useCallback(async () => {
-    try {
-      const [clsRes, subRes, termRes] = await Promise.all([
-        api.get<{ data: ClassItem[] }>("/api/school/classes"),
-        api.get<{ data: Subject[] }>("/api/school/subjects"),
-        api.get<{ data: Term[] }>("/api/school/terms"),
-      ]);
-      setClasses(clsRes.data || []);
-      setSubjects(subRes.data || []);
-      setTerms(termRes.data || []);
-    } catch { /* ignore */ }
-  }, []);
 
-  const loadGradebook = useCallback(async () => {
-    if (!selectedClass || !selectedSubject || !selectedTerm) return;
-    setLoading(true);
-    try {
-      const [itemsRes, scoresRes, studentsRes] = await Promise.all([
-        api.get<{ data: AssessmentItem[] }>(`/api/grades/items?class_id=${selectedClass}&subject_id=${selectedSubject}&term_id=${selectedTerm}`),
-        api.get<{ data: any[] }>(`/api/grades/scores?class_id=${selectedClass}&subject_id=${selectedSubject}&term_id=${selectedTerm}`),
-        api.get<{ data: Student[] }>(`/api/school/students?class_id=${selectedClass}`),
-      ]);
-      setItems(itemsRes.data || []);
-      setStudents(studentsRes.data || []);
+  const { data: meta } = useMetaData();
+  const classes = meta?.classes ?? [];
+  const subjects = meta?.subjects ?? [];
+  const terms = meta?.terms ?? [];
 
-      const scoreMap: Record<string, Record<string, string>> = {};
-      (scoresRes.data || []).forEach((s: any) => {
-        if (!scoreMap[s.student_id]) scoreMap[s.student_id] = {};
-        scoreMap[s.student_id][s.assessment_item_id] = String(s.score_achieved);
-      });
-      setScores(scoreMap);
-      setDirty(false);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to load gradebook");
-    } finally {
-      setLoading(false);
+  const { data: gb, isLoading, refetch: refetchGradebook } = useGradebookData(selectedClass, selectedSubject, selectedTerm);
+  const loading = isLoading;
+  useEffect(() => {
+    if (gb && !dirty) {
+      setItems(gb.items);
+      setStudents(gb.students);
+      setScores(gb.scores);
+    } else if (gb && dirty) {
+      setStudents(gb.students);
+      const merged = { ...scores };
+      for (const [sid, itemScores] of Object.entries(gb.scores)) {
+        if (!merged[sid]) merged[sid] = {};
+        for (const [itemId, val] of Object.entries(itemScores)) {
+          if (!merged[sid][itemId]) merged[sid][itemId] = val;
+        }
+      }
+      setScores((prev) => (Object.keys(prev).length > 0 ? prev : gb.scores));
     }
-  }, [selectedClass, selectedSubject, selectedTerm]);
-
-  useEffect(() => { loadMeta(); }, [loadMeta]);
-  useEffect(() => { loadGradebook(); }, [loadGradebook]);
+  }, [gb]);
 
   const sbaItems = useMemo(() => items.filter(i => i.assessment_type === "SBA"), [items]);
   const examItems = useMemo(() => items.filter(i => i.assessment_type === "EXAM"), [items]);
@@ -262,7 +238,7 @@ export function GradebookGrid() {
           </select>
         </div>
 
-        <button onClick={loadGradebook} disabled={!selectedClass || !selectedSubject || !selectedTerm}
+        <button onClick={() => refetchGradebook()} disabled={!selectedClass || !selectedSubject || !selectedTerm}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
           style={{ background: PLUM, color: MILK }}>
           <Loader2 size={14} className={loading ? "animate-spin" : "hidden"} />

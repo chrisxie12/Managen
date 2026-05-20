@@ -10,6 +10,12 @@ import { StudentDashboard } from "./pages/StudentDashboard";
 import { StudentDetails } from "./pages/StudentDetails";
 import { ParentDashboard } from "./pages/ParentDashboard";
 import { ParentChildDetails } from "./pages/ParentChildDetails";
+import { ParentLayout } from "./pages/parent/ParentLayout";
+import { ParentHome } from "./pages/parent/ParentHome";
+import { ParentChild } from "./pages/parent/ParentChild";
+import { ParentFees } from "./pages/parent/ParentFees";
+import { ParentReports } from "./pages/parent/ParentReports";
+import { ParentProfile } from "./pages/parent/ParentProfile";
 import { Inbox } from "./pages/Inbox";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { Students } from "./pages/Students";
@@ -49,6 +55,7 @@ import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import { RequireRole } from "../components/RequireRole";
 import ManagenFlow from "./components/ManagenFlow";
 import { AuthGuard } from "../components/AuthGuard";
+import { ParentGuard } from "../components/ParentGuard";
 import { OnboardingGuard } from "../components/OnboardingGuard";
 import { ProfileGuard } from "../components/ProfileGuard";
 import { Onboarding } from "./pages/Onboarding";
@@ -132,6 +139,23 @@ export const router = createBrowserRouter([
       { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SchoolSettings /></RequireRole> },
       { path: "users", element: <RequireRole roles={["school_admin", "admin"]}><AdminUsers /></RequireRole> },
       { path: "roles", element: <RequireRole roles={["school_admin", "admin"]}><AdminRoles /></RequireRole> },
+    ],
+  },
+  {
+    path: "/parent",
+    element: (
+      <AuthGuard>
+        <ParentGuard>
+          <ParentLayout />
+        </ParentGuard>
+      </AuthGuard>
+    ),
+    children: [
+      { index: true, Component: ParentHome },
+      { path: "child", Component: ParentChild },
+      { path: "fees", Component: ParentFees },
+      { path: "reports", Component: ParentReports },
+      { path: "profile", Component: ParentProfile },
     ],
   },
   {

@@ -5,6 +5,8 @@
  * Dev: Vite proxy (vite.config.ts) forwards /api/* → backend.
  * Prod: VITE_API_BASE_URL must be set at build time (DigitalOcean env var).
  */
+import * as Sentry from "@sentry/react";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export interface ApiResponse<T = any> {
@@ -30,8 +32,11 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     throw new Error('Invalid response from server');
   }
   if (!response.ok) {
-    throw new Error(json.error || json.message || 'Something went wrong');
+    const errMsg = json.error || json.message || 'Something went wrong';
+    Sentry.addBreadcrumb({ category: 'api', message: `${response.status} ${response.url}`, level: 'error' });
+    throw new Error(errMsg);
   }
+  Sentry.addBreadcrumb({ category: 'api', message: `${response.status} ${response.url}`, level: 'info' });
   return json;
 }
 

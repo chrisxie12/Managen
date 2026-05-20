@@ -9,6 +9,7 @@ export type StudentProfile = {
   parent_phone?: string;
   parent_email?: string;
   address?: string;
+  avatar_url?: string;
 };
 
 export type AttendanceRecord = {

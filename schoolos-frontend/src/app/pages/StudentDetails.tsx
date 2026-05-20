@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ArrowLeft, CalendarCheck, FileSpreadsheet, BarChart3, Calendar,
-  Wallet, AlertTriangle, Bell, Loader2, AlertCircle,
+  Wallet, AlertTriangle, Bell, Loader2, AlertCircle, User,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { api } from "../services/api";
 import { AttendanceHistory } from "../components/student/AttendanceHistory";
 import { ReportCardView } from "../components/student/ReportCardView";
@@ -11,6 +12,7 @@ import { TimetableWidget } from "../components/student/TimetableWidget";
 import { FeeStatus } from "../components/student/FeeStatus";
 import { InterventionNotes } from "../components/student/InterventionNotes";
 import { StudentAnnouncements } from "../components/student/StudentAnnouncements";
+import { UploadButton } from "../components/ui/UploadButton";
 import type { StudentProfile, AttendanceRecord, ReportCard, TimetableEntry, Invoice, Intervention } from "../components/student/types";
 
 const PLUM = "#381932";
@@ -52,6 +54,7 @@ export function StudentDetails() {
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
 
   useEffect(() => {
     if (!id) return;
@@ -68,6 +71,7 @@ export function StudentDetails() {
 
         const studentData = studRes.data?.student;
         setStudent(studentData || null);
+        setAvatarUrl(studentData?.avatar_url);
         setAttendance(attRes.data?.records || []);
         setReportCards(cardsRes.data?.reportCards || []);
         const allTt: TimetableEntry[] = ttRes.data?.timetable || [];
@@ -81,6 +85,17 @@ export function StudentDetails() {
       }
     };
     load();
+  }, [id]);
+
+  const handleAvatarUpload = useCallback(async (result: { url: string; path: string }) => {
+    if (!id) return;
+    try {
+      await api.patch(`/api/school/students/${id}/avatar`, { avatar_url: result.url });
+      setAvatarUrl(result.url);
+      toast.success("Photo updated");
+    } catch {
+      toast.error("Failed to save photo URL");
+    }
   }, [id]);
 
   if (loading) {
@@ -97,12 +112,18 @@ export function StudentDetails() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-3 mb-2">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
+      <div className="flex items-start gap-4 mb-2">
+        <button onClick={() => navigate(-1)} className="p-2 rounded-xl shrink-0 mt-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
           <ArrowLeft size={16} color={PLUM} />
         </button>
-        <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{student?.name || "Student"}</h2>
+        <UploadButton
+          bucket="student-photos"
+          currentUrl={avatarUrl}
+          onUploadComplete={handleAvatarUpload}
+          onError={(msg) => toast.error(msg)}
+        />
+        <div className="min-w-0">
+          <h2 className="text-xl font-bold truncate" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{student?.name || "Student"}</h2>
           <p className="text-sm" style={{ color: MUTED }}>{student?.class_name}{student?.admission_no ? ` · ${student.admission_no}` : ""}</p>
         </div>
       </div>
