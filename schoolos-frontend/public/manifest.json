@@ -1,7 +1,7 @@
 {
-  "name": "SchoolOS",
-  "short_name": "SchoolOS",
-  "description": "School management platform for Ghanaian schools",
+  "name": "Managen",
+  "short_name": "Managen",
+  "description": "All-in-one school management system built for Ghanaian schools",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#FFF3E6",

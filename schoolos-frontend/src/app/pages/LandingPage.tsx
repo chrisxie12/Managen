@@ -4,14 +4,15 @@ import {
   ArrowRight, BookOpen, BarChart3, MessageSquare,
   CheckCircle2, GraduationCap, Wallet, Bell, Menu, X,
   Zap, Clock, Award, XCircle, Send, Building2, Loader2,
-  ChevronDown, Mail, MapPin, Globe, Linkedin, Twitter,
-  Facebook, Youtube, Phone, Sun, Moon,
+  ChevronDown, Mail, MapPin, Globe, Phone, Sun, Moon,
 } from "lucide-react";
 import { api } from "../services/api";
 import { toast } from "sonner";
 import { SadexLogo } from '../components/SadexLogo';
 import { RoiCalculator } from './public/components/RoiCalculator';
 import { EducationBackground } from '../components/ui/education-background';
+import heroImg from '../../assets/hero.png';
+import appLogo from '../../assets/app-logo.png';
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -36,15 +37,6 @@ const faqs = [
   { q: "Can I get a live demo before committing?", a: "Absolutely. Click on Request Demo on this page and our team will schedule a personalised walkthrough of the platform for your school." },
 ];
 
-const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
-  const initials = name.replace(/^(Mr|Mrs|Ms|Dr|Prof)\.?\s+/i, "").split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase();
-  return (
-    <div style={{ backgroundColor: color }} className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-      {initials}
-    </div>
-  );
-};
-
 export function LandingPage() {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -60,7 +52,6 @@ export function LandingPage() {
   const statsRef = useRef<HTMLDivElement>(null);
   const [countSchools, setCountSchools] = useState(0);
   const [countUptime, setCountUptime] = useState(0);
-  const [countCountry, setCountCountry] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
@@ -144,7 +135,6 @@ export function LandingPage() {
 
   useEffect(() => {
     if (!statsVisible) return;
-    animateCount(setCountCountry, 1, 800);
     animateCount(setCountUptime, 997, 2000);
   }, [statsVisible]);
 
@@ -173,17 +163,10 @@ export function LandingPage() {
 
 
   const schoolTypes = [
-    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", photo: "https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&q=80" },
-    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100", photo: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80" },
-    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100", photo: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80" },
-    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom", photo: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80" },
-  ];
-
-  const testimonials = [
-    { quote: "Managen replaced three different tools we were using. Fee collection alone saves us hours every week - and parents actually get their receipts on WhatsApp now.", name: "Mrs. Abena Asante", role: "Headmistress, Sunrise Academy", location: "Accra, Ghana", avatarColor: "#7C3AED" },
-    { quote: "The WhatsApp reports changed everything. Parents used to call us constantly asking about fees. Now they get automatic updates and the calls stopped completely.", name: "Ms. Efua Mensah", role: "Administrator, Cape Coast Academy", location: "Cape Coast, Ghana", avatarColor: "#10B981" },
-    { quote: "We tried two other platforms before Managen. Nothing came close. The fee tracking and WhatsApp reports alone justified the switch.", name: "Mr. Kofi Boateng", role: "Headmaster, Kumasi Prep School", location: "Kumasi, Ghana", avatarColor: "#0EA5E9" },
-    { quote: "Running three campuses from one dashboard seemed impossible before Managen. Now it is just how we work.", name: "Mrs. Akosua Darkwa", role: "Director, Darkwa Group of Schools", location: "Takoradi, Ghana", avatarColor: "#F59E0B" },
+    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", gradient: "linear-gradient(135deg, #059669, #34D399)" },
+    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100", gradient: "linear-gradient(135deg, #2563EB, #60A5FA)" },
+    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100", gradient: "linear-gradient(135deg, #D97706, #FBBF24)" },
+    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom", gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` },
   ];
 
   return (
@@ -275,14 +258,12 @@ export function LandingPage() {
       >
         <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
-              <GraduationCap size={18} color={CREAM} />
-            </div>
+            <img src={appLogo} alt="Managen" className="w-9 h-9 rounded-xl object-cover" />
             <span style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: NAVY_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
+            {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "School Types", href: "#school-types" }, { label: "FAQ", href: "#faq" }, { label: "Contact", href: "#contact" }].map((item) => (
+              <a key={item.label} href={item.href} style={{ color: NAVY_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item.label}</a>
             ))}
           </div>
           <div className="hidden md:flex items-center gap-3">
@@ -300,8 +281,8 @@ export function LandingPage() {
         </div>
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-96" : "max-h-0"}`}>
           <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(10,36,114,0.07)" }}>
-            {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: NAVY_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
+            {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "School Types", href: "#school-types" }, { label: "FAQ", href: "#faq" }, { label: "Contact", href: "#contact" }].map((item) => (
+              <a key={item.label} href={item.href} style={{ color: NAVY_LIGHT }} onClick={() => setMobileOpen(false)}>{item.label}</a>
             ))}
             <button onClick={() => navigate("/auth")} style={{ color: NAVY }} className="text-left">Sign in</button>
             <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm active:scale-95 w-fit" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>Start Free Trial</button>
@@ -320,14 +301,14 @@ export function LandingPage() {
                 </div>
               </div>
               <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: NAVY }}>
-                Run Your Entire<br />School Smarter.
+                The All-in-One School Management<br />System Built for Ghana
               </h1>
               <p className="reveal reveal-2 text-gray-600 max-w-lg mt-4" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>
-                From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos.
+                From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos. Trusted by 50+ schools across Ghana.
               </p>
               <div className="reveal reveal-3 mt-8 flex gap-4 flex-wrap">
                 <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: NAVY, color: "white" }}>
-                  Start Free Trial <ArrowRight size={16} />
+                  Start Free Trial -- No Credit Card Needed <ArrowRight size={16} />
                 </button>
                 <button onClick={() => setDemoOpen(true)} className="request-demo-btn px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
                   Request Demo
@@ -346,7 +327,7 @@ export function LandingPage() {
             <div className="relative hidden lg:block">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '480px' }}>
                 <img
-                  src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80"
+                  src={heroImg}
                   alt="Students in a Ghanaian classroom"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -356,12 +337,6 @@ export function LandingPage() {
                     'linear-gradient(135deg, rgba(10,36,114,0.15) 0%, rgba(0,0,0,0.05) 100%)'
                   }}
                 />
-              </div>
-              <div className="stat-card absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3">
-                <p className="text-sm font-semibold" style={{ color: NAVY }}>&#x2713; GHS 24,800 fees collected this term</p>
-              </div>
-              <div className="stat-card absolute -top-4 -right-4 bg-white rounded-xl shadow-lg px-4 py-3">
-                <p className="text-sm font-semibold text-green-600">&#x1F4C8; 94.2% attendance rate</p>
               </div>
             </div>
           </div>
@@ -388,7 +363,7 @@ export function LandingPage() {
 
       {/* STATS */}
       <section className="py-14" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }} ref={statsRef}>
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 gap-8">
+        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 gap-8">
           <div className="text-center reveal reveal-1">
             <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
               {stats.schools === null ? (
@@ -397,19 +372,11 @@ export function LandingPage() {
                 `${countSchools}+`
               )}
             </div>
-            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
+            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Schools Active Across Ghana</div>
           </div>
           <div className="text-center reveal reveal-2">
             <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
-            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
-          </div>
-          <div className="text-center reveal reveal-3">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
-              <div style={{ opacity: statsVisible ? 1 : 0, transition: "opacity 0.8s ease" }}>
-                {countCountry}
-              </div>
-            </div>
-            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Country Supported</div>
+            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Guaranteed Uptime</div>
           </div>
         </div>
       </section>
@@ -639,7 +606,7 @@ export function LandingPage() {
       </section>
 
       {/* SCHOOL TYPES */}
-      <section id="testimonials" className="py-24 px-6 bg-white">
+      <section id="school-types" className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
             <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
@@ -653,18 +620,9 @@ export function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal data-stagger="true">
             {schoolTypes.map((s) => (
               <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition bg-white overflow-hidden">
-                <div className="h-36 overflow-hidden relative">
-                  <img
-                    src={s.photo}
-                    alt={s.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0"
-                    style={{ background:
-                      'linear-gradient(to bottom, transparent 40%, rgba(10,36,114,0.4) 100%)'
-                    }}
-                  />
+                <div className="h-36 overflow-hidden relative flex items-center justify-center"
+                  style={{ background: s.gradient }}>
+                  <s.icon size={56} className="text-white opacity-30" />
                 </div>
                 <div className="p-6">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor} -mt-8 relative z-10 shadow-md border-2 border-white`}>
@@ -694,60 +652,44 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section id="testimonials-quotes" className="py-24 px-6 relative overflow-hidden">
-        {/* Background photo with overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=1200&q=80"
-            alt=""
-            className="w-full h-full object-cover"
-            loading="lazy"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0"
-            style={{ background:
-              'rgba(10,36,114,0.88)'
-            }}
-          />
-        </div>
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16" data-reveal>
+      {/* SOCIAL PROOF */}
+      <section className="py-24 px-6" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }}>
+        <div className="max-w-7xl mx-auto text-center">
+          <div data-reveal>
             <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4"
               style={{ borderColor: 'rgba(248,249,250,0.4)', color: 'rgba(248,249,250,0.8)' }}>
-              What schools say
+              Growing fast
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 text-white">
-              Trusted by school leaders
+              Join schools across Ghana transforming their operations
             </h2>
-            <p className="mt-3 max-w-2xl mx-auto"
-              style={{ color: 'rgba(248,249,250,0.65)' }}>
-              Hear from administrators who switched to Managen.
+            <p className="mt-3 max-w-2xl mx-auto" style={{ color: 'rgba(248,249,250,0.65)' }}>
+              From primary schools to large school groups, Managen is the platform Ghanaian educators trust.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6" data-reveal data-stagger="true">
-            {testimonials.map((t) => (
-              <div key={t.name} className="rounded-2xl p-6"
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16" data-reveal data-stagger="true">
+            {[
+              { icon: GraduationCap, count: "12+", label: "Primary Schools" },
+              { icon: BookOpen, count: "18+", label: "JHS & SHS" },
+              { icon: Globe, count: "5+", label: "International Schools" },
+              { icon: Building2, count: "3+", label: "School Groups" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl p-6"
                 style={{
                   background: 'rgba(255,255,255,0.08)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid rgba(255,255,255,0.12)'
                 }}>
-                <div className="text-amber-400 text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
-                <p className="text-sm mb-6 italic"
-                  style={{ color: 'rgba(248,249,250,0.85)', lineHeight: 1.7 }}>
-                  {t.quote}
-                </p>
-                <div className="flex items-center gap-3">
-                  <InitialsAvatar name={t.name} color={t.avatarColor} />
-                  <div>
-                    <p className="font-semibold text-sm text-white">{t.name}</p>
-                    <p className="text-xs" style={{ color: 'rgba(248,249,250,0.6)' }}>{t.role}</p>
-                    <p className="text-xs" style={{ color: 'rgba(248,249,250,0.45)' }}>{t.location}</p>
-                  </div>
-                </div>
+                <item.icon size={32} className="text-white mx-auto mb-3 opacity-70" />
+                <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2rem", fontWeight: 700 }}>{item.count}</div>
+                <div style={{ color: 'rgba(248,249,250,0.6)', fontSize: "0.85rem" }}>{item.label}</div>
               </div>
             ))}
+          </div>
+          <div className="mt-12" data-reveal>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-8 py-4 rounded-full font-semibold active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontSize: "1rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
+              Join Them -- Start Free Trial <ArrowRight size={16} className="inline ml-1" />
+            </button>
           </div>
         </div>
       </section>
@@ -777,29 +719,28 @@ export function LandingPage() {
               const billedText = isAnnual ? (plan as any).annualBilled || "" : "";
               return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
-                background: plan.highlighted ? `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` : "white",
-                border: plan.highlighted ? "none" : "1px solid rgba(10,36,114,0.08)",
-                boxShadow: plan.highlighted ? "0 24px 60px rgba(10,36,114,0.3)" : "0 4px 24px rgba(10,36,114,0.06)",
-                transform: plan.highlighted ? "scale(1.03)" : "none",
+                background: "white",
+                border: plan.highlighted ? "2px solid #F59E0B" : "1px solid rgba(10,36,114,0.08)",
+                boxShadow: plan.highlighted ? "0 24px 60px rgba(245,158,11,0.15)" : "0 4px 24px rgba(10,36,114,0.06)",
               }}>
-                {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Most Popular</div>}
-                {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Save 20%</div>}
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? CREAM : NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
-                <p style={{ color: plan.highlighted ? "rgba(248,249,250,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
+                {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Most Popular</div>}
+                {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Save 20%</div>}
+                <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
+                <p style={{ color: MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? CREAM : NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
-                  <span style={{ color: plan.highlighted ? "rgba(248,249,250,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
-                  {billedText && <div style={{ color: plan.highlighted ? "rgba(248,249,250,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
+                  <span style={{ color: MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
+                  {billedText && <div style={{ color: MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
                 </div>
                 <div className="space-y-3 mb-8">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-center gap-2.5">
-                      <CheckCircle2 size={15} color={plan.highlighted ? "#86efac" : "#10B981"} fill={plan.highlighted ? "rgba(134,239,172,0.2)" : "#D1FAE5"} />
-                      <span style={{ color: plan.highlighted ? "rgba(248,249,250,0.85)" : NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
+                      <CheckCircle2 size={15} color="#10B981" fill="#D1FAE5" />
+                      <span style={{ color: NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? CREAM : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: plan.highlighted ? NAVY : CREAM, fontWeight: 600 }}>{plan.cta}</button>
+                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? "linear-gradient(135deg, #F59E0B, #D97706)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: "white", fontWeight: 600 }}>{plan.cta}</button>
               </div>
               );
             })}
@@ -882,15 +823,7 @@ export function LandingPage() {
             </div>
           </div>
           <hr className="border-gray-100 mb-8" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold text-gray-900 text-sm mb-4">Company</h4>
-              <div className="flex flex-col gap-2.5">
-                {["About", "Blog", "Careers", "Press"].map((link) => (
-                  <span key={link} className="text-sm cursor-default opacity-50" style={{ color: MUTED }}>{link}</span>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             <div>
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Product</h4>
               <div className="flex flex-col gap-2.5">
@@ -903,10 +836,8 @@ export function LandingPage() {
               <h4 className="font-semibold text-gray-900 text-sm mb-4">Contact</h4>
               <div className="flex flex-col gap-3">
                 {[
-                  { icon: Mail, text: "support@schoolos.me" },
-                  { icon: Phone, text: "WhatsApp: wa.me/233XXXXXXXXX" },
+                  { icon: Mail, text: "support@getschoolos.me" },
                   { icon: MapPin, text: "Accra, Ghana" },
-                  { icon: MessageSquare, text: "WhatsApp Support" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-2.5">
                     <item.icon size={15} color={NAVY} className="flex-shrink-0" />
@@ -920,27 +851,18 @@ export function LandingPage() {
                 <Globe size={13} />
                 Ghana
               </div>
-              <div className="flex gap-2">
-                {[
-                  { icon: Linkedin, href: "#" },
-                  { icon: Twitter, href: "#" },
-                  { icon: Facebook, href: "#" },
-                  { icon: Youtube, href: "#" },
-                ].map((s) => (
-                  <a key={s.icon.name} href={s.href} className="rounded-full border border-gray-200 p-2 hover:bg-gray-50 transition-colors">
-                    <s.icon size={16} className="text-gray-500" />
-                  </a>
-                ))}
-              </div>
+              <p className="text-xs text-gray-400 leading-relaxed">
+                Built by SADEX Innovations.<br />
+                Accra, Ghana.
+              </p>
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-gray-400">&copy; 2025 Managen. All rights reserved.</span>
+            <span className="text-xs text-gray-400">&copy; 2026 Managen. All rights reserved.</span>
             <span className="text-xs text-gray-400">Made for African schools &#x1F30D;</span>
             <div className="flex gap-4 text-xs text-gray-400">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Cookies</a>
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
             </div>
           </div>
         </div>
