@@ -10,6 +10,13 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
+    "@capacitor/ios": "^8.3.4",
+    "@capacitor/push-notifications": "^8.1.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
+    "@capgo/capacitor-native-biometric": "^8.4.5",
     "@clerk/react": "^6.6.4",
     "@popperjs/core": "2.11.8",
     "@radix-ui/react-accordion": "1.2.3",
@@ -68,6 +75,7 @@
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.3.4",
     "@sentry/vite-plugin": "5.3.0",
     "@tailwindcss/vite": "4.1.12",
     "@testing-library/jest-dom": "^6.9.1",
@@ -98,6 +106,8 @@
     "overrides": {
       "vite": "6.3.5"
     },
-    "onlyBuiltDependencies": ["@sentry/cli"]
+    "onlyBuiltDependencies": [
+      "@sentry/cli"
+    ]
   }
 }
