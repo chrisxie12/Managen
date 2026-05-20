@@ -187,8 +187,9 @@ export function LandingPage() {
   ];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#F8F9FA] text-[#0A2472]'}`}>
+    <>
       <EducationBackground />
+      <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 relative z-0 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-transparent text-[#0A2472]'}`}>
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -993,5 +994,6 @@ export function LandingPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
