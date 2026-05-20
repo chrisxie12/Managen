@@ -49,7 +49,7 @@ export default defineConfig({
       ],
     },
   }),
-  process.env.VITE_SENTRY_DSN ? sentryVitePlugin({
+  (typeof process !== 'undefined' && process.env?.VITE_SENTRY_DSN) ? sentryVitePlugin({
     org: process.env.SENTRY_ORG || 'schoolos',
     project: process.env.SENTRY_PROJECT || 'frontend',
     authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -62,7 +62,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: process.env.VITE_SENTRY_DSN ? 'hidden' : false,
+    sourcemap: (typeof process !== 'undefined' && process.env?.VITE_SENTRY_DSN) ? 'hidden' : false,
   },
   server: {
     proxy: {
