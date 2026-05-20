@@ -49,10 +49,10 @@ export default defineConfig({
       ],
     },
   }),
-  import.meta.env.VITE_SENTRY_DSN ? sentryVitePlugin({
-    org: import.meta.env.SENTRY_ORG || 'schoolos',
-    project: import.meta.env.SENTRY_PROJECT || 'frontend',
-    authToken: import.meta.env.SENTRY_AUTH_TOKEN,
+  process?.env?.VITE_SENTRY_DSN ? sentryVitePlugin({
+    org: process?.env?.SENTRY_ORG || 'schoolos',
+    project: process?.env?.SENTRY_PROJECT || 'frontend',
+    authToken: process?.env?.SENTRY_AUTH_TOKEN,
     telemetry: false,
   }) : null,].filter(Boolean),
   resolve: {
@@ -62,7 +62,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: import.meta.env.VITE_SENTRY_DSN ? 'hidden' : false,
+    sourcemap: process?.env?.VITE_SENTRY_DSN ? 'hidden' : false,
   },
   server: {
     proxy: {
