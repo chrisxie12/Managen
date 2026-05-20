@@ -11,6 +11,7 @@ import { api } from "../services/api";
 import { toast } from "sonner";
 import { SadexLogo } from '../components/SadexLogo';
 import { RoiCalculator } from './public/components/RoiCalculator';
+import { EducationBackground } from '../components/ui/education-background';
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -187,6 +188,7 @@ export function LandingPage() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#F8F9FA] text-[#0A2472]'}`}>
+      <EducationBackground />
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
