@@ -6,10 +6,10 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type AssessmentType = { id: string; name: string; weight: number; description?: string };
 type GradingScale = { id: string; name: string; is_default: boolean };
@@ -55,20 +55,20 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: st
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
       </div>
-      <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+      <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
     </div>
   );
 }
 
 function LoadingSpinner({ height = 48 }: { height?: number }) {
-  return <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+  return <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
 }
 
 function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
     <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
       <Icon size={40} color={MUTED} className="mx-auto mb-3" />
-      <p className="font-semibold" style={{ color: PLUM }}>{title}</p>
+      <p className="font-semibold" style={{ color: NAVY }}>{title}</p>
       <p className="text-sm mt-1" style={{ color: MUTED }}>{desc}</p>
     </div>
   );
@@ -83,7 +83,7 @@ function Modal({ title, onClose, saving, onSave, children, saveLabel = "Save", w
       <div className={`${wide ? "max-w-2xl" : "max-w-md"} w-full rounded-[32px] p-8`} style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }}
         onMouseDown={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>{title}</h2>
+          <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>{title}</h2>
           <button onClick={onClose} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
             <X size={16} color={MUTED} />
           </button>
@@ -92,7 +92,7 @@ function Modal({ title, onClose, saving, onSave, children, saveLabel = "Save", w
         {onSave && (
           <button onClick={onSave} disabled={saving}
             className="w-full py-3 rounded-full flex items-center justify-center gap-2 mt-6 active:scale-95 transition-transform text-sm font-semibold"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
             {saving ? "Saving..." : saveLabel}
           </button>
@@ -121,7 +121,7 @@ export function Assessments() {
       {success && <AlertBanner type="success" message={success} onClose={() => setSuccess("")} />}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Assessments & Grading</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Assessments & Grading</h2>
           <p className="text-sm" style={{ color: MUTED }}>Create assessments, enter scores, and generate report cards</p>
         </div>
       </div>
@@ -130,8 +130,8 @@ export function Assessments() {
           <button key={t.key} onClick={() => setTab(t.key)}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all"
             style={{
-              background: tab === t.key ? PLUM : "white",
-              color: tab === t.key ? MILK : PLUM_LIGHT,
+              background: tab === t.key ? NAVY : "white",
+              color: tab === t.key ? CREAM : NAVY_LIGHT,
               border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
             }}>
             <t.icon size={15} /> {t.label}
@@ -264,10 +264,10 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
     <div className="grid gap-6 lg:grid-cols-2">
       <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-sm" style={{ color: PLUM }}>Assessment Types</h3>
+          <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Assessment Types</h3>
           <button onClick={() => { setEditTypeId(null); setTypeForm({ name: "", weight: 0, description: "" }); setShowTypeForm(true); }}
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             <Plus size={12} /> Add
           </button>
         </div>
@@ -277,9 +277,9 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
         ) : (
           <div className="space-y-2">
             {types.map(t => (
-              <div key={t.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: MILK }}>
+              <div key={t.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: CREAM }}>
                 <div className="flex items-center gap-3">
-                  <span className="font-medium text-sm" style={{ color: PLUM }}>{t.name}</span>
+                  <span className="font-medium text-sm" style={{ color: NAVY }}>{t.name}</span>
                   <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: "rgba(99,102,241,0.1)", color: "#6366F1" }}>
                     {t.weight}%
                   </span>
@@ -298,10 +298,10 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
 
       <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-sm" style={{ color: PLUM }}>Grading Scales</h3>
+          <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Grading Scales</h3>
           <button onClick={() => setShowScaleForm(true)}
             className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             <Plus size={12} /> Add
           </button>
         </div>
@@ -311,10 +311,10 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
           <div className="space-y-3">
             {scales.map(s => (
               <div key={s.id} className={`p-3 rounded-lg cursor-pointer ${selectedScaleId === s.id ? "ring-2" : ""}`}
-                style={{ background: MILK }}
+                style={{ background: CREAM }}
                 onClick={() => setSelectedScaleId(s.id)}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-sm" style={{ color: PLUM }}>{s.name}</span>
+                  <span className="font-medium text-sm" style={{ color: NAVY }}>{s.name}</span>
                   <button onClick={(e) => { e.stopPropagation(); handleDeleteScale(s.id); }} className="p-1 rounded hover:opacity-70" style={{ color: MUTED }}>
                     <X size={12} />
                   </button>
@@ -323,14 +323,14 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
                   <div className="mt-2">
                     <button onClick={() => setShowRuleForm(true)}
                       className="text-xs font-medium px-2 py-1 rounded-lg mb-2"
-                      style={{ background: PLUM, color: MILK }}>+ Add Grade</button>
+                      style={{ background: NAVY, color: CREAM }}>+ Add Grade</button>
                     {rules.length === 0 ? (
                       <p className="text-xs" style={{ color: MUTED }}>No grade boundaries yet</p>
                     ) : (
                       <div className="space-y-1">
                         {rules.map(r => (
                           <div key={r.id} className="flex items-center justify-between text-xs px-2 py-1 rounded" style={{ background: "white" }}>
-                            <span className="font-bold" style={{ color: PLUM }}>{r.grade}</span>
+                            <span className="font-bold" style={{ color: NAVY }}>{r.grade}</span>
                             <span style={{ color: MUTED }}>{r.min_percent}% – {r.max_percent}% ({r.points} pts)</span>
                             <button onClick={() => handleDeleteRule(r.id)} className="hover:opacity-70" style={{ color: MUTED }}><X size={10} /></button>
                           </div>
@@ -347,27 +347,27 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
 
       {showTypeForm && (
         <Modal title={editTypeId ? "Edit Assessment Type" : "Add Assessment Type"} onClose={() => setShowTypeForm(false)} saving={saving} onSave={handleSaveType}>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Type Name</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Type Name</label>
           <input value={typeForm.name} onChange={(e) => setTypeForm(p => ({ ...p, name: e.target.value }))}
             placeholder="e.g. Quiz, Assignment, Exam" className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Weight (%)</label>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Weight (%)</label>
           <input type="number" value={typeForm.weight} onChange={(e) => setTypeForm(p => ({ ...p, weight: Number(e.target.value) }))}
             min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Description (optional)</label>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description (optional)</label>
           <textarea value={typeForm.description} onChange={(e) => setTypeForm(p => ({ ...p, description: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm" rows={2}
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
         </Modal>
       )}
 
       {showScaleForm && (
         <Modal title="Add Grading Scale" onClose={() => setShowScaleForm(false)} saving={saving} onSave={handleSaveScale}>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Scale Name</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Scale Name</label>
           <input value={scaleForm.name} onChange={(e) => setScaleForm(p => ({ ...p, name: e.target.value }))}
             placeholder="e.g. Default A-F, WAEC, BECE" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
         </Modal>
       )}
 
@@ -375,36 +375,36 @@ function SetupTab({ setError, setSuccess }: { setError: (s: string) => void; set
         <Modal title="Add Grade Boundary" onClose={() => setShowRuleForm(false)} saving={saving} onSave={handleSaveRule}>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Grade</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Grade</label>
               <input value={ruleForm.grade} onChange={(e) => setRuleForm(p => ({ ...p, grade: e.target.value }))}
                 placeholder="e.g. A" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Points</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Points</label>
               <input type="number" value={ruleForm.points} onChange={(e) => setRuleForm(p => ({ ...p, points: Number(e.target.value) }))}
                 min="0" max="5" step="0.1" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Min %</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Min %</label>
               <input type="number" value={ruleForm.min_percent} onChange={(e) => setRuleForm(p => ({ ...p, min_percent: Number(e.target.value) }))}
                 min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Max %</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Max %</label>
               <input type="number" value={ruleForm.max_percent} onChange={(e) => setRuleForm(p => ({ ...p, max_percent: Number(e.target.value) }))}
                 min="0" max="100" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
           </div>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Remark (optional)</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Remark (optional)</label>
           <input value={ruleForm.remark} onChange={(e) => setRuleForm(p => ({ ...p, remark: e.target.value }))}
             placeholder="e.g. Excellent" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
         </Modal>
       )}
     </div>
@@ -492,28 +492,28 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
       <div className="flex flex-wrap gap-2 mb-4">
         <button onClick={() => setShowCreate(true)}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <Plus size={14} /> New Assessment
         </button>
         <select value={filters.class_id} onChange={(e) => setFilters(p => ({ ...p, class_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select value={filters.subject_id} onChange={(e) => setFilters(p => ({ ...p, subject_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All subjects</option>
           {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
         <select value={filters.term_id} onChange={(e) => setFilters(p => ({ ...p, term_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All terms</option>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1 min-w-[180px] max-w-[240px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+            className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
       </div>
 
@@ -524,7 +524,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
           {filtered.map(a => (
             <div key={a.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-sm" style={{ color: PLUM }}>{a.name}</span>
+                <span className="font-semibold text-sm" style={{ color: NAVY }}>{a.name}</span>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                   a.status === "open" ? "text-green-700" : a.status === "closed" ? "text-indigo-700" : "text-amber-700"
                 }`} style={{
@@ -552,73 +552,73 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
         <Modal title="Create Assessment" onClose={() => setShowCreate(false)} saving={saving} onSave={handleCreate} wide>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Assessment Name</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Assessment Name</label>
               <input value={form.name} onChange={(e) => setForm(p => ({ ...p, name: e.target.value }))}
                 placeholder="e.g. End of Term Mathematics Exam" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Class</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Class</label>
               <select value={form.class_id} onChange={(e) => setForm(p => ({ ...p, class_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Subject</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Subject</label>
               <select value={form.subject_id} onChange={(e) => setForm(p => ({ ...p, subject_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Assessment Type</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Assessment Type</label>
               <select value={form.assessment_type_id} onChange={(e) => setForm(p => ({ ...p, assessment_type_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {types.map(t => <option key={t.id} value={t.id}>{t.name} ({t.weight}%)</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Date</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Date</label>
               <input type="date" value={form.date} onChange={(e) => setForm(p => ({ ...p, date: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Max Score</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Max Score</label>
               <input type="number" value={form.max_score} onChange={(e) => setForm(p => ({ ...p, max_score: Number(e.target.value) }))}
                 min="1" className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Term</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Term</label>
               <select value={form.term_id} onChange={(e) => setForm(p => ({ ...p, term_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Session</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Session</label>
               <select value={form.session_id} onChange={(e) => setForm(p => ({ ...p, session_id: e.target.value }))}
                 className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-                style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 <option value="">Select...</option>
                 {sessions.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
           </div>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Description (optional)</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description (optional)</label>
           <textarea value={form.description} onChange={(e) => setForm(p => ({ ...p, description: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm" rows={2}
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
         </Modal>
       )}
     </>
@@ -693,7 +693,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <select value={selectedAssessmentId} onChange={(e) => setSelectedAssessmentId(e.target.value)}
           className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[250px]"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">Select an assessment...</option>
           {assessments.map(a => (
             <option key={a.id} value={a.id}>{a.name} — {a.class?.name} / {a.subject?.name}</option>
@@ -711,14 +711,14 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-[240px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
             <Search size={14} color={MUTED} />
             <input placeholder="Search student..." value={search} onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+              className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
           </div>
           <span className="text-sm" style={{ color: MUTED }}>{students.length} students</span>
           <span className="text-sm" style={{ color: "#10B981" }}>{filledCount} scored</span>
           {missingIds.length > 0 && <span className="text-sm" style={{ color: "#F59E0B" }}>{missingIds.length} missing</span>}
           <button onClick={handleSaveAll} disabled={saving}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold ml-auto"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
             {saving ? "Saving..." : `Save All (${filledCount})`}
           </button>
@@ -749,14 +749,14 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
                 {filteredStudents.map((s, i) => (
                   <tr key={s.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
-                    <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{s.name}</td>
+                    <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{s.name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</td>
                     <td className="px-4 py-3">
                       <input type="number" min="0" max={selectedAssessment?.max_score || 100}
                         value={scores[s.id] ?? ""}
                         onChange={(e) => setScores(prev => ({ ...prev, [s.id]: e.target.value === "" ? null as unknown as number : Number(e.target.value) }))}
                         className="w-24 px-3 py-2 rounded-xl outline-none text-sm"
-                        style={{ background: scores[s.id] !== undefined && scores[s.id] !== null ? "#D1FAE5" : MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                        style={{ background: scores[s.id] !== undefined && scores[s.id] !== null ? "#D1FAE5" : CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -860,7 +860,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
             <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Class</label>
             <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -869,7 +869,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
             <label className="block text-xs font-medium mb-1.5" style={{ color: MUTED }}>Term</label>
             <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select term...</option>
               {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -877,7 +877,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
           {selectedClass && selectedTerm && (
             <button onClick={loadGradebook} disabled={loading}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-95 disabled:opacity-50"
-              style={{ border: "1px solid rgba(56,25,50,0.1)", color: PLUM_LIGHT, background: "white" }}>
+              style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT, background: "white" }}>
               <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
               Recalculate
             </button>
@@ -888,7 +888,7 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
       {!selectedClass || !selectedTerm ? (
         <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
           <Percent size={40} color={MUTED} className="mx-auto mb-3" />
-          <p className="font-semibold text-sm" style={{ color: PLUM }}>Select a class and term</p>
+          <p className="font-semibold text-sm" style={{ color: NAVY }}>Select a class and term</p>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Choose a class and term above to view weighted term averages</p>
         </div>
       ) : loading ? (
@@ -925,14 +925,14 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
                         </button>
                       </td>
                       <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.rank}</td>
-                      <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{s.student_name}</td>
+                      <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{s.student_name}</td>
                       <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</td>
                       <td className="px-4 py-3">
                         <span className="text-xs" style={{ color: MUTED }}>
                           {breakdown.length > 0 ? `${breakdown.length} categories` : "—"}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-semibold" style={{ color: PLUM }}>{s.percentage.toFixed(1)}%</td>
+                      <td className="px-4 py-3 font-semibold" style={{ color: NAVY }}>{s.percentage.toFixed(1)}%</td>
                       <td className="px-4 py-3">
                         <span className="px-2.5 py-1 rounded-full text-xs font-medium"
                           style={{
@@ -962,14 +962,14 @@ function TermAverageTab({ setError, setSuccess }: { setError: (s: string) => voi
             return (
               <div key={`bd-${s.student_id}`} className="border-t px-4 py-3"
                 style={{ background: "rgba(56,25,50,0.02)", borderColor: "rgba(56,25,50,0.05)" }}>
-                <p className="text-xs font-semibold mb-2" style={{ color: PLUM }}>
+                <p className="text-xs font-semibold mb-2" style={{ color: NAVY }}>
                   {s.student_name} — Category Breakdown
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {breakdown.map((cat, i) => (
                     <div key={i} className="flex-1 min-w-[140px] p-3 rounded-xl"
                       style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-                      <p className="text-xs font-medium" style={{ color: PLUM }}>{cat.category_name}</p>
+                      <p className="text-xs font-medium" style={{ color: NAVY }}>{cat.category_name}</p>
                       <div className="flex items-baseline gap-1 mt-1">
                         <span className="text-lg font-bold" style={{ color: cat.average >= 50 ? "#065F46" : "#EF4444" }}>
                           {cat.average.toFixed(1)}%
@@ -1089,21 +1089,21 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
       <div className="flex flex-wrap gap-2 mb-4">
         <button onClick={() => setShowGenerate(true)}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <Plus size={14} /> Generate Report Card
         </button>
         <select value={filters.term_id} onChange={(e) => setFilters(p => ({ ...p, term_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All terms</option>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <select value={filters.class_id} onChange={(e) => setFilters(p => ({ ...p, class_id: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select value={filters.status} onChange={(e) => setFilters(p => ({ ...p, status: e.target.value }))}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All status</option>
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -1122,11 +1122,11 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                      style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                      style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                       {c.student?.name?.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase() || "?"}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm truncate" style={{ color: PLUM }}>{c.student?.name || "Unknown"}</p>
+                      <p className="font-semibold text-sm truncate" style={{ color: NAVY }}>{c.student?.name || "Unknown"}</p>
                       <p className="text-xs" style={{ color: MUTED }}>{c.class?.name} · {c.term?.name}</p>
                     </div>
                   </div>
@@ -1179,38 +1179,38 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
 
       {showGenerate && (
         <Modal title="Generate Report Card" onClose={() => setShowGenerate(false)} saving={saving} onSave={handleGenerate}>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Class</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Class</label>
           <select value={genForm.class_id} onChange={(e) => setGenForm(p => ({ ...p, class_id: e.target.value, student_id: "" }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <option value="">Select class...</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Student</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Student</label>
           <select value={genForm.student_id} onChange={(e) => setGenForm(p => ({ ...p, student_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <option value="">Select student...</option>
             {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Term</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Term</label>
           <select value={genForm.term_id} onChange={(e) => setGenForm(p => ({ ...p, term_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <option value="">Select term...</option>
             {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Session (optional)</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Session (optional)</label>
           <select value={genForm.session_id} onChange={(e) => setGenForm(p => ({ ...p, session_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm mb-3"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <option value="">Select session...</option>
             {sessions.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
-          <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Grading Scale (optional)</label>
+          <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Grading Scale (optional)</label>
           <select value={genForm.scale_id} onChange={(e) => setGenForm(p => ({ ...p, scale_id: e.target.value }))}
             className="w-full px-4 py-3 rounded-2xl outline-none text-sm"
-            style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <option value="">Default scale</option>
             {scales.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
@@ -1219,9 +1219,9 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
 
       {previewCard && (
         <Modal title="Report Card Preview" onClose={() => setPreviewCard(null)} wide>
-          <div className="p-6 rounded-2xl" style={{ background: MILK }}>
+          <div className="p-6 rounded-2xl" style={{ background: CREAM }}>
             <div className="text-center mb-4">
-              <h3 className="font-bold text-lg" style={{ color: PLUM }}>Term Report</h3>
+              <h3 className="font-bold text-lg" style={{ color: NAVY }}>Term Report</h3>
               <p className="text-sm" style={{ color: MUTED }}>{previewCard.student?.name} — {previewCard.class?.name} · {previewCard.term?.name}</p>
             </div>
             <div className="grid grid-cols-3 gap-3 mb-4">
@@ -1235,7 +1235,7 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
               ].map(item => (
                 <div key={item.label} className="text-center p-3 rounded-xl" style={{ background: "white" }}>
                   <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{item.label}</p>
-                  <p className="text-lg font-bold mt-1" style={{ color: PLUM }}>{item.value}</p>
+                  <p className="text-lg font-bold mt-1" style={{ color: NAVY }}>{item.value}</p>
                 </div>
               ))}
             </div>

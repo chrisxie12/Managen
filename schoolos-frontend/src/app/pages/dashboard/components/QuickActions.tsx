@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
 import { UserPlus, CreditCard, MessageSquare, Shield } from "lucide-react";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
 
 interface QuickActionItem {
   label: string;
@@ -53,7 +53,7 @@ export function QuickActions() {
 
   return (
     <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1rem", marginBottom: "1rem" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1rem", marginBottom: "1rem" }}>
         Quick Actions
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -68,10 +68,10 @@ export function QuickActions() {
               style={{ background: `${action.color}18` }}>
               <action.icon size={17} color={action.color} />
             </div>
-            <p style={{ color: PLUM, fontSize: "0.82rem", fontWeight: 600, lineHeight: 1.3, marginBottom: "0.15rem" }}>
+            <p style={{ color: NAVY, fontSize: "0.82rem", fontWeight: 600, lineHeight: 1.3, marginBottom: "0.15rem" }}>
               {action.label}
             </p>
-            <p style={{ color: PLUM_LIGHT, fontSize: "0.7rem", opacity: 0.7 }}>{action.desc}</p>
+            <p style={{ color: NAVY_LIGHT, fontSize: "0.7rem", opacity: 0.7 }}>{action.desc}</p>
           </button>
         ))}
       </div>

@@ -12,15 +12,15 @@ import { InterventionNotes } from "../components/student/InterventionNotes";
 import { StudentAnnouncements } from "../components/student/StudentAnnouncements";
 import type { StudentProfile, AttendanceRecord, ReportCard, Invoice, Intervention } from "../components/student/types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-      <h3 className="font-bold mb-4" style={{ color: PLUM, fontFamily: "'Playfair Display', serif", fontSize: "0.95rem" }}>{title}</h3>
+      <h3 className="font-bold mb-4" style={{ color: NAVY, fontFamily: "'Playfair Display', serif", fontSize: "0.95rem" }}>{title}</h3>
       {children}
     </div>
   );
@@ -81,7 +81,7 @@ export function ParentChildDetails() {
   }, [id]);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[400px]"><Loader2 className="animate-spin" size={32} color={PLUM} /></div>;
+    return <div className="flex items-center justify-center min-h-[400px]"><Loader2 className="animate-spin" size={32} color={NAVY} /></div>;
   }
 
   if (error) {
@@ -96,10 +96,10 @@ export function ParentChildDetails() {
     <div className="space-y-5">
       <div className="flex items-center gap-3 mb-2">
         <button onClick={() => navigate("/dashboard/parent")} className="p-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
-          <ArrowLeft size={16} color={PLUM} />
+          <ArrowLeft size={16} color={NAVY} />
         </button>
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{student?.name || "Child"}</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>{student?.name || "Child"}</h2>
           <p className="text-sm" style={{ color: MUTED }}>{student?.class_name}{student?.admission_no ? ` · ${student.admission_no}` : ""}</p>
         </div>
       </div>
@@ -109,8 +109,8 @@ export function ParentChildDetails() {
           <button key={t.key} onClick={() => setTab(t.key)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all active:scale-95"
             style={{
-              background: tab === t.key ? PLUM : "white",
-              color: tab === t.key ? MILK : PLUM_LIGHT,
+              background: tab === t.key ? NAVY : "white",
+              color: tab === t.key ? CREAM : NAVY_LIGHT,
               border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
             }}>
             <t.icon size={14} /> {t.label}

@@ -3,10 +3,10 @@ import { Loader2, CheckCircle2, X, AlertTriangle, Save } from "lucide-react";
 import { api } from "../../services/api";
 import type { ClassStudent, Assessment, Score } from "./types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function ClassGrades({ classId, students }: { classId: string; className: string; students: ClassStudent[] }) {
   const [assessments, setAssessments] = useState<Assessment[]>([]);
@@ -75,7 +75,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
   if (assessments.length === 0) {
     return (
       <div className="text-center py-12" style={{ color: MUTED }}>
-        <p className="font-semibold" style={{ color: PLUM }}>No Assessments</p>
+        <p className="font-semibold" style={{ color: NAVY }}>No Assessments</p>
         <p className="text-sm mt-1">Create assessments for this class first.</p>
       </div>
     );
@@ -98,7 +98,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
 
       <div className="flex items-center gap-3 flex-wrap">
         <select value={selectedAssessment} onChange={(e) => setSelectedAssessment(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[200px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm flex-1 min-w-[200px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">Select an assessment...</option>
           {assessments.map(a => (
             <option key={a.id} value={a.id}>
@@ -107,14 +107,14 @@ export function ClassGrades({ classId, students }: { classId: string; className:
           ))}
         </select>
         {selected && (
-          <span className="text-sm px-3 py-1.5 rounded-full" style={{ background: MILK, color: PLUM_LIGHT }}>
+          <span className="text-sm px-3 py-1.5 rounded-full" style={{ background: CREAM, color: NAVY_LIGHT }}>
             Max: {selected.max_score}
           </span>
         )}
         {selectedAssessment && (
           <button onClick={saveScores} disabled={saving}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             {saving ? "Saving..." : "Save Scores"}
           </button>
@@ -139,7 +139,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
                   <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
                     <td className="px-4 py-3">
-                      <span className="font-medium" style={{ color: PLUM }}>{student.name}</span>
+                      <span className="font-medium" style={{ color: NAVY }}>{student.name}</span>
                     </td>
                     <td className="px-4 py-3">
                       <input
@@ -150,7 +150,7 @@ export function ClassGrades({ classId, students }: { classId: string; className:
                         onChange={(e) => setScores(prev => ({ ...prev, [student.id]: e.target.value }))}
                         placeholder="—"
                         className="w-20 px-2 py-1.5 rounded-lg text-sm outline-none"
-                        style={{ background: MILK, border: "1px solid rgba(56,25,50,0.08)", color: PLUM }}
+                        style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }}
                       />
                     </td>
                     <td className="px-4 py-3">

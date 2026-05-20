@@ -7,10 +7,10 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Student = { id: string; name: string; class_name: string; admission_no?: string };
 type Teacher = { id: string; name: string; email?: string };
@@ -62,7 +62,7 @@ function SummaryCard({ icon: Icon, label, value, sub, color }: { icon: any; labe
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
       </div>
-      <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+      <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
       {sub && <p className="text-xs mt-0.5" style={{ color: MUTED }}>{sub}</p>}
     </div>
   );
@@ -92,7 +92,7 @@ function TrendBar({ day, max }: { day: DailyTrend; max: number }) {
 function LoadingSpinner({ height = 48 }: { height?: number }) {
   return (
     <div className="flex items-center justify-center" style={{ height }}>
-      <Loader2 className="animate-spin" size={24} color={PLUM} />
+      <Loader2 className="animate-spin" size={24} color={NAVY} />
     </div>
   );
 }
@@ -101,7 +101,7 @@ function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; des
   return (
     <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
       <Icon size={40} color={MUTED} className="mx-auto mb-3" />
-      <p className="font-semibold" style={{ color: PLUM }}>{title}</p>
+      <p className="font-semibold" style={{ color: NAVY }}>{title}</p>
       <p className="text-sm mt-1" style={{ color: MUTED }}>{desc}</p>
     </div>
   );
@@ -115,12 +115,12 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
-        <span className="font-medium px-2" style={{ color: PLUM }}>{page} / {totalPages}</span>
+        <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -140,7 +140,7 @@ export function Attendance() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Attendance</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Attendance</h2>
           <p className="text-sm" style={{ color: MUTED }}>Track and manage attendance</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -148,8 +148,8 @@ export function Attendance() {
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: tab === t.key ? PLUM : "white",
-                color: tab === t.key ? MILK : PLUM_LIGHT,
+                background: tab === t.key ? NAVY : "white",
+                color: tab === t.key ? CREAM : NAVY_LIGHT,
                 border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
@@ -220,14 +220,14 @@ function OverviewTab() {
       {trends.length > 0 && (
         <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-sm" style={{ color: PLUM }}>Daily Trends</h3>
+            <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Daily Trends</h3>
             <div className="flex gap-1.5">
               {[7, 14, 30].map(d => (
                 <button key={d} onClick={() => setTrendDays(d)}
                   className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all"
                   style={{
-                    background: trendDays === d ? PLUM : "transparent",
-                    color: trendDays === d ? MILK : MUTED,
+                    background: trendDays === d ? NAVY : "transparent",
+                    color: trendDays === d ? CREAM : MUTED,
                   }}>{d}d</button>
               ))}
             </div>
@@ -247,7 +247,7 @@ function OverviewTab() {
         <div className="p-5 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="flex items-center gap-2 mb-3">
             <AlertTriangle size={16} color="#EF4444" />
-            <h3 className="font-semibold text-sm" style={{ color: PLUM }}>
+            <h3 className="font-semibold text-sm" style={{ color: NAVY }}>
               Repeated Absence Alerts ({absentees.length})
             </h3>
           </div>
@@ -366,19 +366,19 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 180 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
           {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
         </select>
         <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search student..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+            className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
         <button onClick={submitAttendance} disabled={saving || !selectedClass || students.length === 0}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {saving ? <Loader2 size={15} className="animate-spin" /> : <CalendarCheck size={15} />}
           {saving ? "Saving..." : `Save (${submittedCount})`}
         </button>
@@ -410,10 +410,10 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                           {student.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                         </div>
-                        <span className="font-medium" style={{ color: PLUM }}>{student.name}</span>
+                        <span className="font-medium" style={{ color: NAVY }}>{student.name}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{student.admission_no || "—"}</td>
@@ -432,7 +432,7 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                     <td className="px-4 py-3">
                       <input value={notes[student.id] || ""} onChange={(e) => setNotes(prev => ({ ...prev, [student.id]: e.target.value }))}
                         placeholder="Note..."
-                        className="w-24 px-2 py-1 rounded-lg text-xs outline-none" style={{ background: MILK, border: "1px solid rgba(56,25,50,0.08)", color: PLUM }} />
+                        className="w-24 px-2 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -506,15 +506,15 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search staff..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+            className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
         <button onClick={submitStaffAttendance} disabled={saving || teachers.length === 0}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {saving ? <Loader2 size={15} className="animate-spin" /> : <CalendarCheck size={15} />}
           {saving ? "Saving..." : `Save (${submittedCount})`}
         </button>
@@ -545,10 +545,10 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                           {t.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                         </div>
-                        <span className="font-medium" style={{ color: PLUM }}>{t.name}</span>
+                        <span className="font-medium" style={{ color: NAVY }}>{t.name}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{t.email || "—"}</td>
@@ -566,11 +566,11 @@ function StaffTab({ setError, setSuccess }: { setError: (s: string) => void; set
                     ))}
                     <td className="px-2 py-3">
                       <input type="time" value={checkIn[t.id] || ""} onChange={(e) => setCheckIn(prev => ({ ...prev, [t.id]: e.target.value }))}
-                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: MILK, border: "1px solid rgba(56,25,50,0.08)", color: PLUM }} />
+                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
                     </td>
                     <td className="px-2 py-3">
                       <input type="time" value={checkOut[t.id] || ""} onChange={(e) => setCheckOut(prev => ({ ...prev, [t.id]: e.target.value }))}
-                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: MILK, border: "1px solid rgba(56,25,50,0.08)", color: PLUM }} />
+                        className="w-20 px-1.5 py-1 rounded-lg text-xs outline-none" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.08)", color: NAVY }} />
                     </td>
                   </tr>
                 ))}
@@ -628,19 +628,19 @@ function HistoryTab() {
     <>
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
           <option value="">All classes</option>
           {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
         </select>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 140 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 140 }}>
           <option value="">All status</option>
           {STATUS_OPTIONS.map(s => <option key={s.value} value={s.value}>{s.value}</option>)}
         </select>
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 280 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search by name..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+            className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
       </div>
 
@@ -666,8 +666,8 @@ function HistoryTab() {
                   const st = STATUS_OPTIONS.find(s => s.value === record.status) || STATUS_OPTIONS[0];
                   return (
                     <tr key={record.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
-                      <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{new Date(record.date).toLocaleDateString()}</td>
-                      <td className="px-4 py-3" style={{ color: PLUM }}>{record.student?.name || "Unknown"}</td>
+                      <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{new Date(record.date).toLocaleDateString()}</td>
+                      <td className="px-4 py-3" style={{ color: NAVY }}>{record.student?.name || "Unknown"}</td>
                       <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{record.class_name}</td>
                       <td className="px-4 py-3">
                         <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium w-fit"

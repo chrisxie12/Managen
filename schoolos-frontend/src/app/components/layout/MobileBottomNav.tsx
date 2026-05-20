@@ -1,10 +1,10 @@
 import { useNavigate, useLocation } from "react-router";
 import { LayoutDashboard, Users, CalendarCheck, Wallet, Bell } from "lucide-react";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
@@ -43,12 +43,12 @@ export function MobileBottomNav() {
           >
             <item.icon
               size={18}
-              color={active ? PLUM : MUTED}
+              color={active ? NAVY : MUTED}
               style={{ opacity: active ? 1 : 0.6 }}
             />
             <span
               style={{
-                color: active ? PLUM : MUTED,
+                color: active ? NAVY : MUTED,
                 fontSize: "0.6rem",
                 fontWeight: active ? 600 : 400,
                 opacity: active ? 1 : 0.6,

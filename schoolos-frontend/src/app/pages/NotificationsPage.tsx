@@ -8,10 +8,10 @@ import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const CATEGORIES = [
   { key: "all", label: "All", icon: Bell },
@@ -80,7 +80,7 @@ export function NotificationsPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>
             Notifications
           </h2>
           <p className="text-sm" style={{ color: MUTED }}>
@@ -91,7 +91,7 @@ export function NotificationsPage() {
           <button
             onClick={markAllAsRead}
             className="px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5"
-            style={{ background: PLUM, color: "white" }}
+            style={{ background: NAVY, color: "white" }}
           >
             <CheckCheck size={14} />
             Mark all read
@@ -106,8 +106,8 @@ export function NotificationsPage() {
             onClick={() => setFilterTab(c.key)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
             style={{
-              background: filterTab === c.key ? PLUM : "white",
-              color: filterTab === c.key ? MILK : PLUM_LIGHT,
+              background: filterTab === c.key ? NAVY : "white",
+              color: filterTab === c.key ? CREAM : NAVY_LIGHT,
               border: filterTab === c.key ? "none" : "1px solid rgba(56,25,50,0.1)",
             }}
           >
@@ -118,7 +118,7 @@ export function NotificationsPage() {
           onClick={() => setShowUnread(!showUnread)}
           className="ml-auto px-3 py-1.5 rounded-xl text-xs font-medium"
           style={{
-            background: showUnread ? PLUM : "transparent",
+            background: showUnread ? NAVY : "transparent",
             color: showUnread ? "white" : MUTED,
             border: "1px solid rgba(56,25,50,0.1)",
           }}
@@ -136,7 +136,7 @@ export function NotificationsPage() {
       {!loading && filtered.length === 0 && (
         <div className="text-center py-12" style={{ color: MUTED }}>
           <Bell size={36} className="mx-auto mb-3" />
-          <p className="font-semibold" style={{ color: PLUM }}>No Notifications</p>
+          <p className="font-semibold" style={{ color: NAVY }}>No Notifications</p>
           <p className="text-sm mt-1">
             {showUnread ? "No unread notifications." : "You're all caught up."}
           </p>
@@ -156,7 +156,7 @@ export function NotificationsPage() {
                   background: n.is_read ? "white" : "rgba(56,25,50,0.03)",
                   border: n.is_read
                     ? "1px solid rgba(56,25,50,0.07)"
-                    : `1px solid ${PLUM}22`,
+                    : `1px solid ${NAVY}22`,
                   opacity: n.is_read ? 0.7 : 1,
                 }}
               >
@@ -164,18 +164,18 @@ export function NotificationsPage() {
                   className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                   style={{ background: style.bg }}
                 >
-                  <style.icon size={14} style={{ color: PLUM }} />
+                  <style.icon size={14} style={{ color: NAVY }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium truncate" style={{ color: PLUM }}>
+                    <p className="text-sm font-medium truncate" style={{ color: NAVY }}>
                       {n.title}
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
                       {!n.is_read && (
                         <span
                           className="w-2 h-2 rounded-full"
-                          style={{ background: PLUM }}
+                          style={{ background: NAVY }}
                         />
                       )}
                       <span className="text-xs" style={{ color: MUTED }}>
@@ -184,7 +184,7 @@ export function NotificationsPage() {
                     </div>
                   </div>
                   {n.message && (
-                    <p className="text-xs mt-0.5" style={{ color: PLUM_LIGHT }}>
+                    <p className="text-xs mt-0.5" style={{ color: NAVY_LIGHT }}>
                       {n.message}
                     </p>
                   )}
@@ -213,7 +213,7 @@ export function NotificationsPage() {
                 ) : (
                   <AlertTriangle size={10} color="#EF4444" />
                 )}
-                <span style={{ color: PLUM }}>{log.type}</span>
+                <span style={{ color: NAVY }}>{log.type}</span>
                 <span style={{ color: MUTED }}>{log.channel}</span>
                 <span style={{ color: MUTED }}>{log.recipient}</span>
                 <span className="ml-auto" style={{ color: MUTED }}>

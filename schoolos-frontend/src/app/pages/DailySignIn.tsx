@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Clock, LogIn, LogOut, Loader2, Check, X, AlertCircle, Calendar, Users, Edit3, ChevronLeft, ChevronRight } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type DailyLink = { id: string; link_type: string; link_code: string; date: string; active_from: string; active_until: string; is_active: boolean };
 type DailyRecord = {
@@ -34,7 +34,7 @@ function AlertBanner({ type, message, onClose }: { type: "error" | "success"; me
 function LoadingSpinner({ height = 48 }: { height?: number }) {
   return (
     <div className="flex items-center justify-center" style={{ height }}>
-      <Loader2 className="animate-spin" size={24} color={PLUM} />
+      <Loader2 className="animate-spin" size={24} color={NAVY} />
     </div>
   );
 }
@@ -47,12 +47,12 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
-        <span className="font-medium px-2" style={{ color: PLUM }}>{page} / {totalPages}</span>
+        <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -88,7 +88,7 @@ export function DailySignIn() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Daily Sign-In / Sign-Out</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Daily Sign-In / Sign-Out</h2>
           <p className="text-sm" style={{ color: MUTED }}>Staff attendance with time-boxed links</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -100,8 +100,8 @@ export function DailySignIn() {
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: tab === t.key ? PLUM : "white",
-                color: tab === t.key ? MILK : PLUM_LIGHT,
+                background: tab === t.key ? NAVY : "white",
+                color: tab === t.key ? CREAM : NAVY_LIGHT,
                 border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
@@ -189,10 +189,10 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="p-6 rounded-xl text-center" style={{
           background: alreadySignedIn ? "#D1FAE5" : signInActive ? "white" : "#F3F4F6",
-          border: `1px solid ${alreadySignedIn ? "#A7F3D0" : signInActive ? PLUM : "rgba(56,25,50,0.07)"}`,
+          border: `1px solid ${alreadySignedIn ? "#A7F3D0" : signInActive ? NAVY : "rgba(56,25,50,0.07)"}`,
         }}>
-          <LogIn size={32} className="mx-auto mb-3" style={{ color: alreadySignedIn ? "#065F46" : signInActive ? PLUM : MUTED }} />
-          <h3 className="font-semibold text-sm mb-1" style={{ color: PLUM }}>Sign In</h3>
+          <LogIn size={32} className="mx-auto mb-3" style={{ color: alreadySignedIn ? "#065F46" : signInActive ? NAVY : MUTED }} />
+          <h3 className="font-semibold text-sm mb-1" style={{ color: NAVY }}>Sign In</h3>
           {signInLink && (
             <p className="text-xs mb-3" style={{ color: MUTED }}>
               {signInLink.active_from.slice(0, 5)} – {signInLink.active_until.slice(0, 5)}
@@ -208,7 +208,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
           ) : (
             <button onClick={signIn} disabled={!signInActive || signingIn}
               className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-              style={{ background: signInActive ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "#E5E7EB", color: signInActive ? MILK : MUTED }}>
+              style={{ background: signInActive ? `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` : "#E5E7EB", color: signInActive ? CREAM : MUTED }}>
               {signingIn ? <Loader2 size={15} className="animate-spin" /> : <LogIn size={15} />}
               {signingIn ? "Signing in..." : signInActive ? "Tap to Sign In" : "Link not active yet"}
             </button>
@@ -217,10 +217,10 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
 
         <div className="p-6 rounded-xl text-center" style={{
           background: alreadySignedOut ? "#D1FAE5" : signOutActive ? "white" : "#F3F4F6",
-          border: `1px solid ${alreadySignedOut ? "#A7F3D0" : signOutActive ? PLUM : "rgba(56,25,50,0.07)"}`,
+          border: `1px solid ${alreadySignedOut ? "#A7F3D0" : signOutActive ? NAVY : "rgba(56,25,50,0.07)"}`,
         }}>
-          <LogOut size={32} className="mx-auto mb-3" style={{ color: alreadySignedOut ? "#065F46" : signOutActive ? PLUM : MUTED }} />
-          <h3 className="font-semibold text-sm mb-1" style={{ color: PLUM }}>Sign Out</h3>
+          <LogOut size={32} className="mx-auto mb-3" style={{ color: alreadySignedOut ? "#065F46" : signOutActive ? NAVY : MUTED }} />
+          <h3 className="font-semibold text-sm mb-1" style={{ color: NAVY }}>Sign Out</h3>
           {signOutLink && (
             <p className="text-xs mb-3" style={{ color: MUTED }}>
               {signOutLink.active_from.slice(0, 5)} – {signOutLink.active_until.slice(0, 5)}
@@ -236,7 +236,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
           ) : (
             <button onClick={signOut} disabled={!signOutActive || signingOut}
               className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-              style={{ background: signOutActive ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "#E5E7EB", color: signOutActive ? MILK : MUTED }}>
+              style={{ background: signOutActive ? `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` : "#E5E7EB", color: signOutActive ? CREAM : MUTED }}>
               {signingOut ? <Loader2 size={15} className="animate-spin" /> : <LogOut size={15} />}
               {signingOut ? "Signing out..." : signOutActive ? "Tap to Sign Out" : "Link not active yet"}
             </button>
@@ -246,7 +246,7 @@ function StaffDashboardTab({ setError, setSuccess }: { setError: (s: string) => 
 
       {todayRecord && (
         <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-          <h3 className="font-semibold text-sm mb-2" style={{ color: PLUM }}>Today's Attendance</h3>
+          <h3 className="font-semibold text-sm mb-2" style={{ color: NAVY }}>Today's Attendance</h3>
           <div className="flex items-center gap-4 text-sm" style={{ color: MUTED }}>
             <span>Date: {todayRecord.date}</span>
             <span>Sign In: {todayRecord.sign_in_time ? new Date(todayRecord.sign_in_time).toLocaleTimeString() : "—"}</span>
@@ -286,14 +286,14 @@ function AllRecordsTab() {
     <div>
       <div className="flex gap-3 mb-4">
         <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
       </div>
 
       <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         {loading ? <LoadingSpinner height={200} /> : records.length === 0 ? (
           <div className="text-center py-12">
             <Calendar size={40} color={MUTED} className="mx-auto mb-3" />
-            <p style={{ color: PLUM, fontWeight: 600 }}>No records for this date</p>
+            <p style={{ color: NAVY, fontWeight: 600 }}>No records for this date</p>
           </div>
         ) : (
           <>
@@ -314,11 +314,11 @@ function AllRecordsTab() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                             {(r.user?.name || "?").split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                           </div>
                           <div>
-                            <span className="font-medium" style={{ color: PLUM }}>{r.user?.name}</span>
+                            <span className="font-medium" style={{ color: NAVY }}>{r.user?.name}</span>
                             <span className="text-xs ml-1" style={{ color: MUTED }}>({r.user?.role_title || r.user?.email})</span>
                           </div>
                         </div>
@@ -411,14 +411,14 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
             <tbody>
               {records.map(r => (
                 <tr key={r.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
-                  <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{r.user?.name || "—"}</td>
+                  <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{r.user?.name || "—"}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{r.date}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{r.sign_in_time ? new Date(r.sign_in_time).toLocaleTimeString() : "—"}</td>
                   <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{r.sign_out_time ? new Date(r.sign_out_time).toLocaleTimeString() : "—"}</td>
                   <td className="px-4 py-3">
                     <button onClick={() => openOverride(r)}
                       className="px-3 py-1 rounded-lg text-xs font-medium"
-                      style={{ background: PLUM, color: MILK }}>
+                      style={{ background: NAVY, color: CREAM }}>
                       Override
                     </button>
                   </td>
@@ -431,8 +431,8 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
 
       {selectedRecord && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4" onClick={() => setSelectedRecord(null)}>
-          <div className="w-full max-w-md p-6 rounded-2xl" style={{ background: MILK }} onClick={e => e.stopPropagation()}>
-            <h3 className="font-semibold text-sm mb-4" style={{ color: PLUM }}>
+          <div className="w-full max-w-md p-6 rounded-2xl" style={{ background: CREAM }} onClick={e => e.stopPropagation()}>
+            <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>
               Override Attendance: {selectedRecord.user?.name}
             </h3>
             <div className="space-y-3">
@@ -440,30 +440,30 @@ function OverrideTab({ setError, setSuccess }: { setError: (s: string) => void; 
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Sign In Time</label>
                 <input type="datetime-local" value={signInTime} onChange={(e) => setSignInTime(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Sign Out Time</label>
                 <input type="datetime-local" value={signOutTime} onChange={(e) => setSignOutTime(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
               </div>
               <div>
                 <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Reason for Override *</label>
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3}
                   className="w-full px-3 py-2 rounded-xl outline-none text-sm resize-none"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
                   placeholder="Explain why this override is necessary..." />
               </div>
               <div className="flex gap-2">
                 <button onClick={saveOverride} disabled={saving || !reason}
                   className="flex-1 py-2.5 rounded-xl text-sm font-semibold active:scale-95 disabled:opacity-50"
-                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                   {saving ? <Loader2 size={14} className="animate-spin mx-auto" /> : "Save Override"}
                 </button>
                 <button onClick={() => setSelectedRecord(null)}
                   className="px-4 py-2.5 rounded-xl text-sm"
-                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                  style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
                   Cancel
                 </button>
               </div>

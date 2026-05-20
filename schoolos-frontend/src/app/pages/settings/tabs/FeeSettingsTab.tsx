@@ -13,8 +13,8 @@ import {
   RadioGroup, RadioGroupItem,
 } from "../../../components/ui/radio-group";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const DEFAULT_FEE_CATEGORIES = [
   { name: "School Fees", amount: 0, frequency: "termly", mandatory: true },
@@ -37,7 +37,7 @@ const PAYMENT_OPTIONS = [
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -47,7 +47,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -312,7 +312,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             return (
               <div key={opt.key}>
                 <div className="flex items-center justify-between py-1.5">
-                  <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>
+                  <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>
                     {opt.label}
                   </label>
                   <Switch
@@ -356,7 +356,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                       </div>
                     </FormField>
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-medium" style={{ color: PLUM }}>Test Mode</label>
+                      <label className="text-xs font-medium" style={{ color: NAVY }}>Test Mode</label>
                       <Switch
                         checked={paystackKeys.test_mode || false}
                         onCheckedChange={setGatewayToggle("paystack", "test_mode")}
@@ -424,7 +424,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Fee Structures per Class" desc="Configure fee amounts per class">
         {loadingFeeStructures ? (
-          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={NAVY} /></div>
         ) : (
           <div className="overflow-x-auto mb-3">
             <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
@@ -445,14 +445,14 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                   const isEditing = editingFeeStructureId === fs.id;
                   return (
                     <tr key={fs.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                      <td className="py-2 pr-2" style={{ color: PLUM }}>{fs.class?.name || "—"}</td>
+                      <td className="py-2 pr-2" style={{ color: NAVY }}>{fs.class?.name || "—"}</td>
                       <td className="py-2 pr-2">
                         {isEditing ? (
                           <Input value={editFeeData.name} onChange={(e) => setEditFeeData((p) => ({ ...p, name: e.target.value }))}
                             className="h-8 text-xs rounded-xl min-w-[120px]"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span style={{ color: PLUM }}>{fs.name}</span>
+                          <span style={{ color: NAVY }}>{fs.name}</span>
                         )}
                       </td>
                       <td className="py-2 pr-2">
@@ -461,7 +461,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl w-24"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span style={{ color: PLUM }}>{fs.amount}</span>
+                          <span style={{ color: NAVY }}>{fs.amount}</span>
                         )}
                       </td>
                       <td className="py-2 pr-2">
@@ -478,7 +478,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                             </SelectContent>
                           </Select>
                         ) : (
-                          <span className="capitalize" style={{ color: PLUM }}>{fs.frequency}</span>
+                          <span className="capitalize" style={{ color: NAVY }}>{fs.frequency}</span>
                         )}
                       </td>
                       <td className="py-2 pr-2">
@@ -509,7 +509,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
                                 style={{ background: "rgba(56,25,50,0.06)" }}>
-                                <Pencil size={13} color={PLUM} />
+                                <Pencil size={13} color={NAVY} />
                               </button>
                             )}
                             {!isReadOnly && (
@@ -533,7 +533,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
         {!isReadOnly && (
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-end">
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Class</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Class</label>
               <Select value={newFeeStructure.class_id} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, class_id: v }))}>
                 <SelectTrigger className="h-9 text-xs rounded-xl"
                   style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -547,20 +547,20 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               </Select>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Name</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Name</label>
               <Input value={newFeeStructure.name} onChange={(e) => setNewFeeStructure((p) => ({ ...p, name: e.target.value }))}
                 placeholder="Fee name"
                 className="h-9 text-sm rounded-xl"
                 style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Amount</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Amount</label>
               <Input type="number" value={newFeeStructure.amount} onChange={(e) => setNewFeeStructure((p) => ({ ...p, amount: Number(e.target.value) }))}
                 className="h-9 text-sm rounded-xl"
                 style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Frequency</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Frequency</label>
               <Select value={newFeeStructure.frequency} onValueChange={(v) => setNewFeeStructure((p) => ({ ...p, frequency: v }))}>
                 <SelectTrigger className="h-9 text-xs rounded-xl"
                   style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -574,7 +574,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
               </Select>
             </div>
             <Button onClick={handleCreateFeeStructure} disabled={creatingFeeStructure || !newFeeStructure.name || !newFeeStructure.class_id}
-              className="text-xs rounded-xl h-9 px-3" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-3" style={{ background: NAVY }}>
               {creatingFeeStructure ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
               Add
             </Button>
@@ -654,7 +654,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
         {!isReadOnly && (
           <button type="button" onClick={addCategory}
             className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-            style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+            style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
             <Plus size={14} /> Add Custom Category
           </button>
         )}
@@ -662,7 +662,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Late Payment Settings" desc="Configure late fee rules and grace periods">
         <div className="flex items-center justify-between mb-4">
-          <label className="text-xs font-medium" style={{ color: PLUM }}>Enable Late Fee</label>
+          <label className="text-xs font-medium" style={{ color: NAVY }}>Enable Late Fee</label>
           <Switch
             checked={form.late_fee_settings?.enabled || false}
             onCheckedChange={setLateFeeToggle("enabled")}
@@ -699,11 +699,11 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
             disabled={isReadOnly}>
             <div className="flex items-center gap-2">
               <RadioGroupItem value="fixed" id="fee-fixed" disabled={isReadOnly} />
-              <label htmlFor="fee-fixed" className="text-xs cursor-pointer" style={{ color: PLUM }}>Fixed Amount</label>
+              <label htmlFor="fee-fixed" className="text-xs cursor-pointer" style={{ color: NAVY }}>Fixed Amount</label>
             </div>
             <div className="flex items-center gap-2">
               <RadioGroupItem value="percentage" id="fee-percentage" disabled={isReadOnly} />
-              <label htmlFor="fee-percentage" className="text-xs cursor-pointer" style={{ color: PLUM }}>Percentage</label>
+              <label htmlFor="fee-percentage" className="text-xs cursor-pointer" style={{ color: NAVY }}>Percentage</label>
             </div>
           </RadioGroup>
         </FormField>
@@ -721,14 +721,14 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Receipt Settings" desc="Configure receipt generation preferences">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-medium" style={{ color: PLUM }}>Auto-generate Receipts</label>
+          <label className="text-xs font-medium" style={{ color: NAVY }}>Auto-generate Receipts</label>
           <Switch
             checked={form.receipt_settings?.auto_generate || false}
             onCheckedChange={setReceiptToggle("auto_generate")}
             disabled={isReadOnly} />
         </div>
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-medium" style={{ color: PLUM }}>Show School Logo on Receipt</label>
+          <label className="text-xs font-medium" style={{ color: NAVY }}>Show School Logo on Receipt</label>
           <Switch
             checked={form.receipt_settings?.show_logo || false}
             onCheckedChange={setReceiptToggle("show_logo")}
@@ -757,7 +757,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
 
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-xs font-medium" style={{ color: PLUM }}>Enable Automatic Payment Reminders</label>
+            <label className="text-xs font-medium" style={{ color: NAVY }}>Enable Automatic Payment Reminders</label>
             <Switch
               checked={form.metadata?.reminder_settings?.enabled || false}
               onCheckedChange={(checked) => {
@@ -795,8 +795,8 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
                         disabled={isReadOnly}
                         className="px-3 py-1.5 text-xs font-medium rounded-xl transition-all active:scale-95 disabled:cursor-not-allowed"
                         style={{
-                          background: selected ? PLUM : "rgba(56,25,50,0.06)",
-                          color: selected ? "white" : PLUM,
+                          background: selected ? NAVY : "rgba(56,25,50,0.06)",
+                          color: selected ? "white" : NAVY,
                           border: selected ? "none" : "1px solid rgba(56,25,50,0.12)",
                         }}>
                         {day} {day === 1 ? "day" : "days"}
@@ -829,7 +829,7 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
           <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6"
-            style={{ background: PLUM }}>
+            style={{ background: NAVY }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save Fee Settings
           </Button>

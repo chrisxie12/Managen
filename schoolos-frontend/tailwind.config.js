@@ -17,12 +17,15 @@ module.exports = {
         'text-muted': 'var(--text-muted)',
         'border-primary': 'var(--border)',
         'border-hover': 'var(--border-hover)',
-        // Legacy CDN tokens for compatibility
-        glass: 'rgba(255, 255, 255, 0.25)',
-        glassBorder: 'rgba(255, 255, 255, 0.18)',
-        primary: '#2D7DFA',
-        'primary-hover': '#1e64d1',
-        accent: '#8b5cf6',
+        // Brand palette
+        navy: '#0A2472',
+        'navy-light': '#0C2D8A',
+        amber: '#FFBA08',
+        'amber-dark': '#E5A000',
+        cream: '#F8F9FA',
+        primary: '#0A2472',
+        'primary-hover': '#091E5E',
+        accent: '#FFBA08',
       },
       fontFamily: {
         headings: 'var(--font-headings)',

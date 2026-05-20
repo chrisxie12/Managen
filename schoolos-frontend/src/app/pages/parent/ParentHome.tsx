@@ -4,10 +4,10 @@ import { ChevronDown, CalendarCheck, AlertCircle, Loader2 } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string; admission_no?: string };
 type AttendanceDay = { date: string; status: string };
@@ -47,7 +47,7 @@ export function ParentHome() {
       .catch(() => {});
   }, [selectedChild, year, month]);
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={PLUM} /></div>;
+  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={NAVY} /></div>;
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = new Date(year, month, 1).getDay();
@@ -62,7 +62,7 @@ export function ParentHome() {
             value={selectedChild?.id || ""}
             onChange={(e) => setSelectedChild(children.find((c) => c.id === e.target.value) || null)}
             className="w-full p-3 rounded-2xl text-sm font-medium appearance-none cursor-pointer"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
           >
             {children.map((c) => <option key={c.id} value={c.id}>{c.name} — {c.class_name}</option>)}
           </select>
@@ -74,7 +74,7 @@ export function ParentHome() {
         <>
           {/* Attendance Calendar */}
           <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: PLUM }}>
+            <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: NAVY }}>
               <CalendarCheck size={16} /> Attendance — {now.toLocaleString("default", { month: "long" })}
             </h3>
             <div className="grid grid-cols-7 gap-1 text-center">
@@ -94,7 +94,7 @@ export function ParentHome() {
                     style={{
                       background: status === "present" ? "#10B98120" : status === "absent" ? "#EF444420" : status === "late" ? "#F59E0B20" : "transparent",
                       color: status ? (status === "present" ? "#10B981" : status === "absent" ? "#EF4444" : "#F59E0B") : MUTED,
-                      border: isToday ? `2px solid ${PLUM}` : "none",
+                      border: isToday ? `2px solid ${NAVY}` : "none",
                       fontWeight: isToday ? 700 : 400,
                     }}
                   >
@@ -115,13 +115,13 @@ export function ParentHome() {
             <button onClick={() => navigate(`/parent/fees?child=${selectedChild.id}`)}
               className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <span className="text-xl">💰</span>
-              <p className="text-sm font-semibold mt-2" style={{ color: PLUM }}>Fee Status</p>
+              <p className="text-sm font-semibold mt-2" style={{ color: NAVY }}>Fee Status</p>
               <p className="text-[11px]" style={{ color: MUTED }}>View balance & pay</p>
             </button>
             <button onClick={() => navigate(`/parent/reports?child=${selectedChild.id}`)}
               className="p-4 rounded-2xl text-left" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <span className="text-xl">📊</span>
-              <p className="text-sm font-semibold mt-2" style={{ color: PLUM }}>Report Cards</p>
+              <p className="text-sm font-semibold mt-2" style={{ color: NAVY }}>Report Cards</p>
               <p className="text-[11px]" style={{ color: MUTED }}>View term results</p>
             </button>
           </div>

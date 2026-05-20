@@ -8,10 +8,10 @@ import { processSyncQueue } from "../../lib/offlineSync";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const NAV_ITEMS = [
   { path: "/parent", icon: Home, label: "Home" },
@@ -60,19 +60,19 @@ export function ParentLayout() {
   }, [installPrompt]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: MILK, fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: CREAM, fontFamily: "'DM Sans', sans-serif" }}>
       <header className="flex items-center justify-between px-4 py-3 sticky top-0 z-30"
         style={{ background: "rgba(255,243,230,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: PLUM, color: MILK }}>S</div>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: NAVY, color: CREAM }}>S</div>
           <div>
-            <span className="text-sm font-semibold" style={{ color: PLUM }}>SchoolOS</span>
+            <span className="text-sm font-semibold" style={{ color: NAVY }}>SchoolOS</span>
             <p className="text-[10px]" style={{ color: MUTED }}>{user?.fullName}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {installPrompt && (
-            <button onClick={handleInstall} className="text-[11px] font-medium px-3 py-1.5 rounded-lg" style={{ background: PLUM, color: MILK }}>
+            <button onClick={handleInstall} className="text-[11px] font-medium px-3 py-1.5 rounded-lg" style={{ background: NAVY, color: CREAM }}>
               Install
             </button>
           )}
@@ -96,7 +96,7 @@ export function ParentLayout() {
                 key={item.path}
                 onClick={() => navigate(item.path)}
                 className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all active:scale-90"
-                style={{ color: isActive ? PLUM : MUTED }}
+                style={{ color: isActive ? NAVY : MUTED }}
               >
                 <item.icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
                 <span className="text-[10px] font-medium">{item.label}</span>

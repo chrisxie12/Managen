@@ -9,8 +9,8 @@ import {
 import { Button } from "../../../components/ui/button";
 import { api } from "../../../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const GHANA_REGIONS = [
   "Greater Accra", "Ashanti", "Western", "Eastern", "Central",
@@ -46,7 +46,7 @@ const PRESET_COLORS = [
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -56,7 +56,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, required, error, children }: { label: string; required?: boolean; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
@@ -69,7 +69,7 @@ function FormField({ label, required, error, children }: { label: string; requir
 const INITIAL_FORM = {
   name: "", motto: "", school_type: "", year_established: "", registration_number: "",
   email: "", phone: "+233", website: "", address: "", city: "", region: "", country: "Ghana",
-  logo_url: "", primary_color: PLUM, timezone: "Africa/Accra",
+  logo_url: "", primary_color: NAVY, timezone: "Africa/Accra",
 };
 
 export function SchoolProfileTab() {
@@ -98,7 +98,7 @@ export function SchoolProfileTab() {
             website: d.website || "", address: d.address || "",
             city: d.city || "", region: d.region || "",
             country: d.country || "Ghana",
-            logo_url: d.logo_url || "", primary_color: d.primary_color || PLUM,
+            logo_url: d.logo_url || "", primary_color: d.primary_color || NAVY,
             timezone: d.timezone || "Africa/Accra",
           });
         }
@@ -192,7 +192,7 @@ export function SchoolProfileTab() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Loader2 className="animate-spin" size={24} color={PLUM} />
+        <Loader2 className="animate-spin" size={24} color={NAVY} />
       </div>
     );
   }
@@ -329,7 +329,7 @@ export function SchoolProfileTab() {
                 ) : (
                   <div>
                     <Upload size={24} color={MUTED} className="mx-auto mb-2" />
-                    <p className="text-xs font-medium" style={{ color: PLUM }}>Upload Logo</p>
+                    <p className="text-xs font-medium" style={{ color: NAVY }}>Upload Logo</p>
                     <p className="text-xs mt-1" style={{ color: MUTED }}>PNG, JPG, SVG (Max 2MB)</p>
                   </div>
                 )}
@@ -354,11 +354,11 @@ export function SchoolProfileTab() {
                     )}
                   </button>
                 ))}
-                <input type="color" value={form.primary_color || PLUM}
+                <input type="color" value={form.primary_color || NAVY}
                   onChange={(e) => setForm((prev: Record<string, any>) => ({ ...prev, primary_color: e.target.value }))}
                   className="w-7 h-7 rounded-full cursor-pointer border-0 p-0" />
               </div>
-              <Input value={form.primary_color || PLUM} onChange={set("primary_color")}
+              <Input value={form.primary_color || NAVY} onChange={set("primary_color")}
                 className="h-8 text-xs rounded-xl font-mono"
                 style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </FormField>
@@ -369,8 +369,8 @@ export function SchoolProfileTab() {
               style={{ background: "white" }}>
               <div className="p-4"
                 style={{
-                  background: `linear-gradient(135deg, ${form.primary_color || PLUM} 0%, ${(form.primary_color || PLUM) + "dd"} 100%)`,
-                  boxShadow: `0 4px 20px ${(form.primary_color || PLUM)}33`,
+                  background: `linear-gradient(135deg, ${form.primary_color || NAVY} 0%, ${(form.primary_color || NAVY) + "dd"} 100%)`,
+                  boxShadow: `0 4px 20px ${(form.primary_color || NAVY)}33`,
                 }}>
                 <div className="flex items-center gap-3">
                   {form.logo_url ? (
@@ -411,7 +411,7 @@ export function SchoolProfileTab() {
 
       <div className="flex justify-end mt-2">
         <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6"
-          style={{ background: PLUM }}>
+          style={{ background: NAVY }}>
           {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
           Save School Profile
         </Button>

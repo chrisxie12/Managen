@@ -18,8 +18,8 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription,
 } from "../components/ui/sheet";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type AuditLog = {
   id: string;
@@ -131,13 +131,13 @@ const AlertBanner = ({ type, message, onClose }: { type: "error" | "success"; me
 };
 
 const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
-  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>
+  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
   <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
     <Icon size={40} color={MUTED} className="mx-auto mb-3" />
-    <p className="font-semibold text-sm" style={{ color: PLUM }}>{title}</p>
+    <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
   </div>
 );
@@ -157,7 +157,7 @@ const maskIp = (ip: string | null) => {
 const DetailRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="flex items-start gap-3 py-2 border-b" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
     <span className="text-xs font-medium shrink-0 w-28" style={{ color: MUTED }}>{label}</span>
-    <span className="text-sm" style={{ color: PLUM }}>{value}</span>
+    <span className="text-sm" style={{ color: NAVY }}>{value}</span>
   </div>
 );
 
@@ -180,13 +180,13 @@ const MetadataBlock = ({ data }: { data: Record<string, any> | null }) => {
         return (
           <div key={key} className="flex items-start gap-2 text-xs">
             <span className="font-medium shrink-0" style={{ color: MUTED, minWidth: 80 }}>{key}:</span>
-            <span style={{ color: PLUM, wordBreak: "break-word" }}>{maskSensitive(key, val)}</span>
+            <span style={{ color: NAVY, wordBreak: "break-word" }}>{maskSensitive(key, val)}</span>
           </div>
         );
       })}
       {data.body && (
         <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
-          <span className="text-xs font-semibold block mb-1" style={{ color: PLUM }}>Request Body:</span>
+          <span className="text-xs font-semibold block mb-1" style={{ color: NAVY }}>Request Body:</span>
           <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(56,25,50,0.03)", color: MUTED, maxHeight: 120 }}>
             {JSON.stringify(data.body, null, 2)}
           </pre>
@@ -194,7 +194,7 @@ const MetadataBlock = ({ data }: { data: Record<string, any> | null }) => {
       )}
       {data.response && (
         <div className="mt-2 pt-2 border-t" style={{ borderColor: "rgba(56,25,50,0.06)" }}>
-          <span className="text-xs font-semibold block mb-1" style={{ color: PLUM }}>Response:</span>
+          <span className="text-xs font-semibold block mb-1" style={{ color: NAVY }}>Response:</span>
           <pre className="text-xs p-2 rounded-lg overflow-x-auto" style={{ background: "rgba(56,25,50,0.03)", color: MUTED, maxHeight: 120 }}>
             {JSON.stringify(data.response, null, 2)}
           </pre>
@@ -249,7 +249,7 @@ const DetailDrawer = ({ log, open, onClose }: { log: AuditLog | null; open: bool
     <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader className="pb-4 border-b" style={{ borderColor: "rgba(56,25,50,0.08)" }}>
-          <SheetTitle className="text-lg font-bold" style={{ color: PLUM }}>
+          <SheetTitle className="text-lg font-bold" style={{ color: NAVY }}>
             Audit Log Detail
           </SheetTitle>
           <SheetDescription style={{ color: MUTED }}>
@@ -277,7 +277,7 @@ const DetailDrawer = ({ log, open, onClose }: { log: AuditLog | null; open: bool
 
         {changes && (
           <div className="mt-6">
-            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: PLUM }}>
+            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: NAVY }}>
               <Activity size={14} /> Changes
             </h4>
             {"before" in changes && "after" in changes && (
@@ -325,7 +325,7 @@ const DetailDrawer = ({ log, open, onClose }: { log: AuditLog | null; open: bool
         )}
 
         <div className="mt-6">
-          <h4 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: PLUM }}>
+          <h4 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: NAVY }}>
             <FileText size={14} /> Full Metadata
           </h4>
           <MetadataBlock data={log.metadata} />
@@ -463,7 +463,7 @@ export function AuditLogs() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: PLUM }}>Audit Logs</h1>
+          <h1 className="text-xl font-bold" style={{ color: NAVY }}>Audit Logs</h1>
           <p className="text-xs mt-1" style={{ color: MUTED }}>
             Complete audit trail of all system actions — {total} total events
           </p>
@@ -483,7 +483,7 @@ export function AuditLogs() {
 
       {alert && <AlertBanner type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-      <div className="mb-4 flex flex-wrap gap-2" style={{ color: PLUM }}>
+      <div className="mb-4 flex flex-wrap gap-2" style={{ color: NAVY }}>
         <div className="relative flex-1 min-w-[200px] max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: MUTED }} />
           <Input
@@ -572,12 +572,12 @@ export function AuditLogs() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Timestamp</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Actor</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Action</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Resource</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Severity</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>IP</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Timestamp</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Actor</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Action</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Resource</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Severity</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>IP</TableHead>
                   <TableHead className="w-10"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -588,7 +588,7 @@ export function AuditLogs() {
                     className="cursor-pointer hover:bg-[rgba(56,25,50,0.02)]"
                     onClick={() => openDetail(log)}
                   >
-                    <TableCell className="text-xs" style={{ color: PLUM }}>
+                    <TableCell className="text-xs" style={{ color: NAVY }}>
                       <div className="flex items-center gap-1.5">
                         <Clock size={12} style={{ color: MUTED }} />
                         {formatDate(log.created_at)}
@@ -598,14 +598,14 @@ export function AuditLogs() {
                       {log.user ? (
                         <div className="flex items-center gap-1.5">
                           <User size={12} style={{ color: MUTED }} />
-                          <span style={{ color: PLUM }}>{log.user.name}</span>
+                          <span style={{ color: NAVY }}>{log.user.name}</span>
                         </div>
                       ) : (
                         <span className="italic" style={{ color: MUTED }}>System</span>
                       )}
                     </TableCell>
                     <TableCell><ActionBadge action={log.action} /></TableCell>
-                    <TableCell className="text-xs" style={{ color: PLUM }}>
+                    <TableCell className="text-xs" style={{ color: NAVY }}>
                       <div className="flex items-center gap-1.5">
                         <Globe size={12} style={{ color: MUTED }} />
                         {resourceLabels[log.resource] || log.resource}
@@ -657,7 +657,7 @@ export function AuditLogs() {
                       size="sm"
                       onClick={() => fetchLogs(pageNum)}
                       className="h-8 w-8 p-0 text-xs"
-                      style={pageNum === page ? { background: PLUM } : {}}
+                      style={pageNum === page ? { background: NAVY } : {}}
                     >
                       {pageNum}
                     </Button>

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { Slider } from "../../../components/ui/slider";
 import { ArrowRight, TrendingUp, Clock } from "lucide-react";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
 
 function formatCurrency(value: number): string {
   return `GHS ${value.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -25,7 +25,7 @@ export function RoiCalculator() {
         <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
           <TrendingUp className="size-3" /> ROI Calculator
         </span>
-        <h3 className="mt-3 text-2xl font-bold tracking-tight" style={{ color: PLUM }}>
+        <h3 className="mt-3 text-2xl font-bold tracking-tight" style={{ color: NAVY }}>
           See What SchoolOS Saves You
         </h3>
         <p className="mt-1 text-sm text-slate-500">
@@ -37,7 +37,7 @@ export function RoiCalculator() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <label className="text-sm font-medium text-slate-700">Student Enrollment</label>
-          <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-semibold tabular-nums" style={{ color: PLUM }}>
+          <span className="rounded-lg bg-slate-100 px-3 py-1 text-sm font-semibold tabular-nums" style={{ color: NAVY }}>
             {students.toLocaleString()} students
           </span>
         </div>
@@ -65,8 +65,8 @@ export function RoiCalculator() {
             value={tuition}
             onChange={(e) => setTuition(e.target.value)}
             min={0}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm font-semibold tabular-nums outline-none transition focus:border-[#381932] focus:ring-2 focus:ring-[#381932]/20"
-            style={{ color: PLUM }}
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm font-semibold tabular-nums outline-none transition focus:border-[#0A2472] focus:ring-2 focus:ring-[#0A2472]/20"
+            style={{ color: NAVY }}
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ export function RoiCalculator() {
             <TrendingUp className="size-3.5 text-emerald-500" />
             Revenue Saved Per Term
           </div>
-          <div className="text-3xl font-extrabold tracking-tight" style={{ color: PLUM }}>
+          <div className="text-3xl font-extrabold tracking-tight" style={{ color: NAVY }}>
             {formatCurrency(revenueSaved)}
           </div>
         </div>
@@ -87,7 +87,7 @@ export function RoiCalculator() {
             <Clock className="size-3.5 text-amber-500" />
             Hours Reclaimed Per Term
           </div>
-          <div className="text-3xl font-extrabold tracking-tight" style={{ color: PLUM }}>
+          <div className="text-3xl font-extrabold tracking-tight" style={{ color: NAVY }}>
             {hoursReclaimed}h
           </div>
         </div>
@@ -97,7 +97,7 @@ export function RoiCalculator() {
       <button
         onClick={() => navigate("/auth?mode=signup")}
         className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-all active:scale-[0.98] hover:shadow-lg"
-        style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, boxShadow: `0 4px 14px ${PLUM}40` }}
+        style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, boxShadow: `0 4px 14px ${NAVY}40` }}
       >
         See How It Works
         <ArrowRight className="size-4" />

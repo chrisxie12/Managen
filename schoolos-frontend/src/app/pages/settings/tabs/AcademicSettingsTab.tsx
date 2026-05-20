@@ -9,8 +9,8 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Switch } from "../../../components/ui/switch";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const ACADEMIC_YEARS = ["2025/2026", "2026/2027", "2027/2028"];
 const TERMS = ["First Term", "Second Term", "Third Term"];
@@ -29,7 +29,7 @@ const DEFAULT_GRADE_BOUNDARIES = [
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -39,7 +39,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -520,7 +520,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         </div>
         {daysRemaining !== null && (
           <div className="mt-3 px-3 py-2 rounded-xl text-xs font-medium inline-block"
-            style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>
+            style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
             {daysRemaining} days remaining in term
           </div>
         )}
@@ -528,7 +528,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Academic Terms" desc="Manage all academic terms and set the current active term">
         {loadingTerms ? (
-          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={NAVY} /></div>
         ) : academicTerms.length === 0 ? (
           <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No terms found. Create terms from the academic setup.</p>
         ) : (
@@ -554,7 +554,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl min-w-[100px]"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span className="font-medium" style={{ color: PLUM }}>{term.name}</span>
+                          <span className="font-medium" style={{ color: NAVY }}>{term.name}</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3">
@@ -563,7 +563,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl w-[130px]"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span style={{ color: PLUM }}>{term.start_date}</span>
+                          <span style={{ color: NAVY }}>{term.start_date}</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3">
@@ -572,7 +572,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl w-[130px]"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span style={{ color: PLUM }}>{term.end_date}</span>
+                          <span style={{ color: NAVY }}>{term.end_date}</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3">
@@ -605,7 +605,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                               <Button onClick={() => handleSetCurrentTerm(term.id)}
                                 disabled={settingTerm === term.id}
                                 className="text-xs rounded-lg h-7 px-3"
-                                style={{ background: PLUM }}>
+                                style={{ background: NAVY }}>
                                 {settingTerm === term.id ? <Loader2 size={12} className="animate-spin" /> : "Set Current"}
                               </Button>
                             )}
@@ -616,7 +616,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
                                 style={{ background: "rgba(56,25,50,0.06)" }}>
-                                <Pencil size={13} color={PLUM} />
+                                <Pencil size={13} color={NAVY} />
                               </button>
                             )}
                             {!isReadOnly && (
@@ -662,7 +662,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         </div>
 
         <div className="mt-4">
-          <label className="text-xs font-medium mb-2 block" style={{ color: PLUM }}>Grade Boundaries</label>
+          <label className="text-xs font-medium mb-2 block" style={{ color: NAVY }}>Grade Boundaries</label>
           <div className="overflow-x-auto">
             <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
               <thead>
@@ -710,7 +710,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           {!isReadOnly && (
             <button type="button" onClick={addBoundary}
               className="mt-2 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-              style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+              style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
               <Plus size={14} /> Add Grade Boundary
             </button>
           )}
@@ -719,7 +719,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Grading Scales" desc="Manage named grading scales for different purposes">
         {loadingScales ? (
-          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={NAVY} /></div>
         ) : (
           <>
             <div className="overflow-x-auto mb-3">
@@ -741,7 +741,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span className="font-medium" style={{ color: PLUM }}>{scale.name}</span>
+                          <span className="font-medium" style={{ color: NAVY }}>{scale.name}</span>
                         )}
                       </td>
                       <td className="py-2.5">
@@ -764,7 +764,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                               {!isReadOnly && (
                                 <button onClick={() => { setEditingScaleId(scale.id); setEditScaleName(scale.name); }}
                                   className="text-xs font-medium px-2 py-1 rounded-lg transition-colors"
-                                  style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+                                  style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
                                   Edit
                                 </button>
                               )}
@@ -788,14 +788,14 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
             {!isReadOnly && (
               <div className="flex gap-2 items-end">
                 <div className="flex-1">
-                  <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>New Scale Name</label>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>New Scale Name</label>
                   <Input value={newScaleName} onChange={(e) => setNewScaleName(e.target.value)}
                     placeholder="e.g. Main Grading Scale"
                     className="h-9 text-sm rounded-xl"
                     style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                 </div>
                 <Button onClick={handleCreateScale} disabled={creatingScale || !newScaleName.trim()}
-                  className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                  className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
                   {creatingScale ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
                   Add Scale
                 </Button>
@@ -845,22 +845,22 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
 
         {!loadingClasses && classes.length > 0 && (
           <div className="mt-4">
-            <label className="text-xs font-medium mb-2 block" style={{ color: PLUM }}>Reorder Classes</label>
+            <label className="text-xs font-medium mb-2 block" style={{ color: NAVY }}>Reorder Classes</label>
             <div className="space-y-1">
               {classes.map((cls: any, index: number) => (
                 <div key={cls.id}
                   className="flex items-center justify-between px-3 py-2 rounded-xl text-xs"
                   style={{ background: "rgba(56,25,50,0.04)" }}>
-                  <span className="font-medium" style={{ color: PLUM }}>{cls.name}</span>
+                  <span className="font-medium" style={{ color: NAVY }}>{cls.name}</span>
                   {!isReadOnly && (
                     <div className="flex gap-1">
                       <button onClick={() => moveClass(index, "up")} disabled={index === 0 || reordering}
                         className="p-1 rounded hover:bg-white/50 disabled:opacity-30 transition-colors">
-                        <ArrowUp size={14} color={PLUM} />
+                        <ArrowUp size={14} color={NAVY} />
                       </button>
                       <button onClick={() => moveClass(index, "down")} disabled={index === classes.length - 1 || reordering}
                         className="p-1 rounded hover:bg-white/50 disabled:opacity-30 transition-colors">
-                        <ArrowDown size={14} color={PLUM} />
+                        <ArrowDown size={14} color={NAVY} />
                       </button>
                     </div>
                   )}
@@ -889,7 +889,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
         {selectedClassForSubjects && (
           <>
             {loadingSubjects || loadingClassSubjects ? (
-              <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+              <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={NAVY} /></div>
             ) : allSubjects.length === 0 ? (
               <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No subjects available. Create subjects first.</p>
             ) : (
@@ -908,7 +908,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                         onChange={() => toggleSubjectAssignment(subj.id)}
                         className="rounded accent-purple-700" />
                       <div className="min-w-0">
-                        <span className="font-medium block truncate" style={{ color: PLUM }}>{subj.name}</span>
+                        <span className="font-medium block truncate" style={{ color: NAVY }}>{subj.name}</span>
                         {subj.code && <span style={{ color: MUTED }}>{subj.code}</span>}
                       </div>
                     </label>
@@ -942,7 +942,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
               const selected = (form.attendance_settings?.weekend_days || []).includes(day);
               return (
                 <label key={day} className="flex items-center gap-1.5 text-xs cursor-pointer"
-                  style={{ color: PLUM }}>
+                  style={{ color: NAVY }}>
                   <input type="checkbox" checked={selected} disabled={isReadOnly}
                     onChange={() => toggleWeekendDay(day)}
                     className="rounded accent-purple-700" />
@@ -956,7 +956,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
 
       <SectionCard title="Assessment Types" desc="Configure weighted assessment categories for grading">
         {loadingSubjects ? (
-          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={PLUM} /></div>
+          <div className="flex justify-center py-4"><Loader2 size={18} className="animate-spin" color={NAVY} /></div>
         ) : (<>
           <div className="overflow-x-auto mb-3">
             <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
@@ -982,7 +982,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl min-w-[120px]"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span className="font-medium" style={{ color: PLUM }}>{at.name}</span>
+                          <span className="font-medium" style={{ color: NAVY }}>{at.name}</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3">
@@ -992,7 +992,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                             className="h-8 text-xs rounded-xl w-20"
                             style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                         ) : (
-                          <span style={{ color: PLUM }}>{at.weight}%</span>
+                          <span style={{ color: NAVY }}>{at.weight}%</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3">
@@ -1028,7 +1028,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                               }}
                                 className="p-1.5 rounded-lg transition-colors"
                                 style={{ background: "rgba(56,25,50,0.06)" }}>
-                                <Pencil size={13} color={PLUM} />
+                                <Pencil size={13} color={NAVY} />
                               </button>
                             )}
                             {!isReadOnly && (
@@ -1051,7 +1051,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
           {!isReadOnly && (
             <div className="flex gap-2 items-end">
               <div className="flex-1">
-                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>New Assessment Type</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>New Assessment Type</label>
                 <Input value={newAssessmentTypeName}
                   onChange={(e) => setNewAssessmentTypeName(e.target.value)}
                   placeholder="e.g. Midterm Exam"
@@ -1059,7 +1059,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </div>
               <div className="w-24">
-                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Weight %</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Weight %</label>
                 <Input type="number" min={0} max={100} value={newAssessmentTypeWeight}
                   onChange={(e) => setNewAssessmentTypeWeight(Number(e.target.value))}
                   className="h-9 text-sm rounded-xl"
@@ -1067,7 +1067,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
               </div>
               <Button onClick={handleCreateAssessmentType}
                 disabled={creatingAssessmentType || !newAssessmentTypeName.trim()}
-                className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
                 {creatingAssessmentType ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} className="mr-1" />}
                 Add
               </Button>
@@ -1079,7 +1079,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
           <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6"
-            style={{ background: PLUM }}>
+            style={{ background: NAVY }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save Academic Settings
           </Button>

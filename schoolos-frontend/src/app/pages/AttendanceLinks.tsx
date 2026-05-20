@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { MapPin, Link2, Loader2, Copy, Check, X, AlertCircle } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type AttendanceLink = {
   id: string; link_code: string; target_group: string; expires_at: string;
@@ -23,7 +23,7 @@ type GeofenceRecord = {
 function LoadingSpinner({ height = 48 }: { height?: number }) {
   return (
     <div className="flex items-center justify-center" style={{ height }}>
-      <Loader2 className="animate-spin" size={24} color={PLUM} />
+      <Loader2 className="animate-spin" size={24} color={NAVY} />
     </div>
   );
 }
@@ -61,7 +61,7 @@ export function AttendanceLinks() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Geofenced Attendance</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Geofenced Attendance</h2>
           <p className="text-sm" style={{ color: MUTED }}>Generate location-verified attendance links for staff</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -69,8 +69,8 @@ export function AttendanceLinks() {
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: tab === t.key ? PLUM : "white",
-                color: tab === t.key ? MILK : PLUM_LIGHT,
+                background: tab === t.key ? NAVY : "white",
+                color: tab === t.key ? CREAM : NAVY_LIGHT,
                 border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
@@ -126,14 +126,14 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
   return (
     <div className="space-y-6">
       <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <h3 className="font-semibold text-sm mb-4" style={{ color: PLUM }}>Generate New Attendance Link</h3>
+        <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Generate New Attendance Link</h3>
 
         <div className="grid gap-4 sm:grid-cols-2 mb-4">
           <div>
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Expires In (minutes)</label>
             <select value={expiry} onChange={(e) => setExpiry(Number(e.target.value))}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value={15}>15 minutes</option>
               <option value={30}>30 minutes</option>
               <option value={60}>1 hour</option>
@@ -146,7 +146,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Target Group</label>
             <select value={group} onChange={(e) => setGroup(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="all">All Staff</option>
               <option value="teachers">Teachers Only</option>
               <option value="non_teaching">Non-Teaching Staff Only</option>
@@ -156,7 +156,7 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
 
         <button onClick={generate} disabled={generating}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {generating ? <Loader2 size={15} className="animate-spin" /> : <Link2 size={15} />}
           {generating ? "Generating..." : "Generate Link"}
         </button>
@@ -169,10 +169,10 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
             <h3 className="font-semibold text-sm" style={{ color: "#065F46" }}>Link Generated!</h3>
           </div>
           <div className="flex items-center gap-2 p-3 rounded-lg" style={{ background: "white", border: "1px solid #A7F3D0" }}>
-            <code className="flex-1 text-sm break-all" style={{ color: PLUM }}>{linkUrl}</code>
+            <code className="flex-1 text-sm break-all" style={{ color: NAVY }}>{linkUrl}</code>
             <button onClick={copyToClipboard}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium"
-              style={{ background: copied ? "#D1FAE5" : PLUM, color: copied ? "#065F46" : MILK }}>
+              style={{ background: copied ? "#D1FAE5" : NAVY, color: copied ? "#065F46" : CREAM }}>
               {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
             </button>
           </div>
@@ -186,9 +186,9 @@ function GenerateLinkTab({ setError, setSuccess }: { setError: (s: string) => vo
 
       <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-start gap-3">
-          <MapPin size={20} color={PLUM} className="mt-0.5" />
+          <MapPin size={20} color={NAVY} className="mt-0.5" />
           <div>
-            <h3 className="font-semibold text-sm mb-1" style={{ color: PLUM }}>How it works</h3>
+            <h3 className="font-semibold text-sm mb-1" style={{ color: NAVY }}>How it works</h3>
             <ul className="text-sm space-y-1" style={{ color: MUTED }}>
               <li>1. Generate a unique attendance link with expiry time</li>
               <li>2. Share the link with staff via their dashboard, email, or SMS</li>
@@ -221,7 +221,7 @@ function LinksTab() {
       {links.length === 0 ? (
         <div className="text-center py-12">
           <Link2 size={40} color={MUTED} className="mx-auto mb-3" />
-          <p style={{ color: PLUM, fontWeight: 600 }}>No links generated yet</p>
+          <p style={{ color: NAVY, fontWeight: 600 }}>No links generated yet</p>
           <p className="text-sm mt-1" style={{ color: MUTED }}>Generate your first attendance link above</p>
         </div>
       ) : (
@@ -240,11 +240,11 @@ function LinksTab() {
               {links.map(link => (
                 <tr key={link.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
                   <td className="px-4 py-3">
-                    <code className="text-xs px-2 py-1 rounded" style={{ background: MILK, color: PLUM }}>
+                    <code className="text-xs px-2 py-1 rounded" style={{ background: CREAM, color: NAVY }}>
                       {link.link_code.slice(0, 16)}...
                     </code>
                   </td>
-                  <td className="px-4 py-3 capitalize" style={{ color: PLUM }}>{link.target_group.replace('_', ' ')}</td>
+                  <td className="px-4 py-3 capitalize" style={{ color: NAVY }}>{link.target_group.replace('_', ' ')}</td>
                   <td className="px-4 py-3">
                     <span className="text-xs" style={{ color: new Date(link.expires_at) < new Date() ? "#EF4444" : MUTED }}>
                       {new Date(link.expires_at).toLocaleString()}
@@ -284,7 +284,7 @@ function RecordsTab() {
       {records.length === 0 ? (
         <div className="text-center py-12">
           <MapPin size={40} color={MUTED} className="mx-auto mb-3" />
-          <p style={{ color: PLUM, fontWeight: 600 }}>No attendance records</p>
+          <p style={{ color: NAVY, fontWeight: 600 }}>No attendance records</p>
           <p className="text-sm mt-1" style={{ color: MUTED }}>Records appear when staff use attendance links</p>
         </div>
       ) : (
@@ -304,11 +304,11 @@ function RecordsTab() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                        style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                        style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                         {r.user?.name?.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase() || "?"}
                       </div>
                       <div>
-                        <span className="font-medium" style={{ color: PLUM }}>{r.user?.name || "Unknown"}</span>
+                        <span className="font-medium" style={{ color: NAVY }}>{r.user?.name || "Unknown"}</span>
                         {r.user?.department && <span className="text-xs ml-1" style={{ color: MUTED }}>({r.user.department})</span>}
                       </div>
                     </div>

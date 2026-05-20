@@ -6,8 +6,8 @@ import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
 import { useAuth } from "../../../contexts/AuthContext";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 const RED = "#DC2626";
 const ORANGE = "#EA580C";
 
@@ -52,7 +52,7 @@ function DangerAction({
           <Icon size={16} color={buttonColor} />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium" style={{ color: PLUM }}>{title}</h4>
+          <h4 className="text-sm font-medium" style={{ color: NAVY }}>{title}</h4>
           <p className="text-xs mt-0.5" style={{ color: MUTED }}>{desc}</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ export function DangerZoneTab({ profile }: Props) {
   const { user } = useAuth();
   if (user?.role !== "school_admin" && user?.role !== "admin") {
     return (
-      <p className="text-xs py-4 text-center" style={{ color: "#7D6077" }}>
+      <p className="text-xs py-4 text-center" style={{ color: "#6B7280" }}>
         You don't have permission to access the Danger Zone.
       </p>
     );
@@ -257,7 +257,7 @@ export function DangerZoneTab({ profile }: Props) {
             <Download size={16} color={MUTED} />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-medium" style={{ color: PLUM }}>Export All Data</h4>
+            <h4 className="text-sm font-medium" style={{ color: NAVY }}>Export All Data</h4>
             <p className="text-xs mt-0.5" style={{ color: MUTED }}>
               Download a complete export of all your school data (students, teachers, grades, fees, attendance)
             </p>
@@ -268,7 +268,7 @@ export function DangerZoneTab({ profile }: Props) {
             onClick={handleExport}
             disabled={exporting}
             className="text-xs rounded-xl h-9 px-4"
-            style={{ background: PLUM }}
+            style={{ background: NAVY }}
           >
             {exporting ? (
               <>

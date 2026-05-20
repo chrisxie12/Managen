@@ -6,9 +6,9 @@ import { useNavigate } from "react-router";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { api } from "../../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 interface CompetencyItem {
   class_name: string;
@@ -77,12 +77,12 @@ export function PerformanceChart() {
       <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
             <p style={{ color: MUTED, fontSize: "0.78rem" }}>Proficiency breakdown across class tiers</p>
           </div>
         </div>
         <div className="flex items-center justify-center h-[300px]">
-          <Loader2 size={24} className="animate-spin" color={PLUM} />
+          <Loader2 size={24} className="animate-spin" color={NAVY} />
         </div>
       </div>
     );
@@ -92,10 +92,10 @@ export function PerformanceChart() {
     <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>Termly NaCCA Competency Distribution</h3>
           <p style={{ color: MUTED, fontSize: "0.78rem" }}>Proficiency breakdown across class tiers</p>
         </div>
-        <button onClick={() => navigate("/dashboard/analytics")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+        <button onClick={() => navigate("/dashboard/analytics")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: NAVY_LIGHT }}>
           View Analytics <ArrowRight size={13} />
         </button>
       </div>
@@ -111,7 +111,7 @@ export function PerformanceChart() {
             />
             <Legend
               wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
-              formatter={(value: string) => <span style={{ color: PLUM_LIGHT }}>{LABELS[value] || value}</span>}
+              formatter={(value: string) => <span style={{ color: NAVY_LIGHT }}>{LABELS[value] || value}</span>}
             />
             <Bar dataKey="ee" stackId="a" fill={COLORS.ee} radius={[0, 0, 0, 0]} />
             <Bar dataKey="me" stackId="a" fill={COLORS.me} radius={[0, 0, 0, 0]} />

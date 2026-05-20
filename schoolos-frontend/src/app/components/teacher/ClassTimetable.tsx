@@ -3,9 +3,9 @@ import { Loader2, Calendar } from "lucide-react";
 import { api } from "../../services/api";
 import type { TimetableEntry } from "./types";
 
-const PLUM = "#381932";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -42,7 +42,7 @@ export function ClassTimetable({ className }: { className: string }) {
     return (
       <div className="text-center py-12" style={{ color: MUTED }}>
         <Calendar size={36} className="mx-auto mb-3" color={MUTED} />
-        <p className="font-semibold" style={{ color: PLUM }}>No Timetable</p>
+        <p className="font-semibold" style={{ color: NAVY }}>No Timetable</p>
         <p className="text-sm mt-1">No timetable entries for {className}.</p>
       </div>
     );
@@ -63,14 +63,14 @@ export function ClassTimetable({ className }: { className: string }) {
           <tbody>
             {periods.map(period => (
               <tr key={period} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
-                <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>Period {period}</td>
+                <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>Period {period}</td>
                 {DAYS.map(day => {
                   const entry = getEntry(day, period);
                   return (
                     <td key={day} className="px-4 py-3">
                       {entry ? (
-                        <div className="p-2 rounded-lg" style={{ background: MILK }}>
-                          <p className="font-medium text-xs" style={{ color: PLUM }}>{entry.subject}</p>
+                        <div className="p-2 rounded-lg" style={{ background: CREAM }}>
+                          <p className="font-medium text-xs" style={{ color: NAVY }}>{entry.subject}</p>
                           {entry.room && <p className="text-xs" style={{ color: MUTED }}>{entry.room}</p>}
                         </div>
                       ) : (

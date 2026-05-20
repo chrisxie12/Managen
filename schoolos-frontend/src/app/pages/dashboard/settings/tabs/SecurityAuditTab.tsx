@@ -9,14 +9,14 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../../components/ui/select";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -26,7 +26,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -209,7 +209,7 @@ export function SecurityAuditTab({ role }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Shield size={48} color="#EF4444" className="mb-4" />
-        <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>Access Denied</h3>
+        <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>Access Denied</h3>
         <p className="text-xs" style={{ color: MUTED }}>Only school administrators can access security settings.</p>
       </div>
     );
@@ -224,22 +224,22 @@ export function SecurityAuditTab({ role }: Props) {
             <input type="range" min={6} max={32} value={minPasswordLength}
               onChange={(e) => setMinPasswordLength(Number(e.target.value))}
               className="w-full accent-purple-700" style={{ height: 4 }} />
-            <span className="text-xs font-medium" style={{ color: PLUM }}>{minPasswordLength} characters</span>
+            <span className="text-xs font-medium" style={{ color: NAVY }}>{minPasswordLength} characters</span>
           </FormField>
           <div className="flex items-center justify-between py-2">
-            <label className="text-xs font-medium" style={{ color: PLUM }}>Require Uppercase</label>
+            <label className="text-xs font-medium" style={{ color: NAVY }}>Require Uppercase</label>
             <Switch checked={requireUppercase} onCheckedChange={setRequireUppercase} />
           </div>
           <div className="flex items-center justify-between py-2">
-            <label className="text-xs font-medium" style={{ color: PLUM }}>Require Lowercase</label>
+            <label className="text-xs font-medium" style={{ color: NAVY }}>Require Lowercase</label>
             <Switch checked={requireLowercase} onCheckedChange={setRequireLowercase} />
           </div>
           <div className="flex items-center justify-between py-2">
-            <label className="text-xs font-medium" style={{ color: PLUM }}>Require Digit</label>
+            <label className="text-xs font-medium" style={{ color: NAVY }}>Require Digit</label>
             <Switch checked={requireDigit} onCheckedChange={setRequireDigit} />
           </div>
           <div className="flex items-center justify-between py-2">
-            <label className="text-xs font-medium" style={{ color: PLUM }}>Require Special Character</label>
+            <label className="text-xs font-medium" style={{ color: NAVY }}>Require Special Character</label>
             <Switch checked={requireSpecial} onCheckedChange={setRequireSpecial} />
           </div>
           <FormField label="Password Expiry (days)">
@@ -253,7 +253,7 @@ export function SecurityAuditTab({ role }: Props) {
           </FormField>
         </div>
         <div className="flex justify-end mt-3">
-          <Button onClick={handleSavePolicy} disabled={savingPolicy} className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+          <Button onClick={handleSavePolicy} disabled={savingPolicy} className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
             {savingPolicy ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save Policy
           </Button>
@@ -299,7 +299,7 @@ export function SecurityAuditTab({ role }: Props) {
           </FormField>
         </div>
         <div className="flex justify-end mt-1">
-          <Button onClick={handleChangePassword} disabled={changingPassword} className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+          <Button onClick={handleChangePassword} disabled={changingPassword} className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
             {changingPassword ? <Loader2 size={14} className="animate-spin mr-1" /> : <Key size={14} className="mr-1" />}
             Update Password
           </Button>
@@ -312,7 +312,7 @@ export function SecurityAuditTab({ role }: Props) {
           <div className="flex items-center gap-3">
             <Smartphone size={18} color={MUTED} />
             <div>
-              <p className="text-xs font-medium" style={{ color: PLUM }}>Authenticator App</p>
+              <p className="text-xs font-medium" style={{ color: NAVY }}>Authenticator App</p>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
                 style={{ background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(56,25,50,0.06)", color: twoFAEnabled ? "#10B981" : MUTED }}>
                 {twoFAEnabled ? "Enabled" : "Not Enabled"}
@@ -320,20 +320,20 @@ export function SecurityAuditTab({ role }: Props) {
             </div>
           </div>
           {!twoFAEnabled && (
-            <Button onClick={() => setShow2FAModal(true)} className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM_LIGHT }}>
+            <Button onClick={() => setShow2FAModal(true)} className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY_LIGHT }}>
               Enable 2FA
             </Button>
           )}
         </div>
         {showBackupCodes && (
           <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(56,25,50,0.04)" }}>
-            <p className="text-xs font-medium mb-1" style={{ color: PLUM }}>Backup Codes</p>
+            <p className="text-xs font-medium mb-1" style={{ color: NAVY }}>Backup Codes</p>
             <p className="text-xs mb-2" style={{ color: MUTED }}>Store these securely. Each code can be used once if you lose access to your authenticator.</p>
-            <div className="p-2 rounded-lg font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            <div className="p-2 rounded-lg font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               {backupCodes}
             </div>
             <Button onClick={() => { const b = new Blob([backupCodes.replace(/, /g, "\n")], { type: "text/plain" }); const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "backup-codes.txt"; a.click(); }}
-              className="text-xs rounded-xl h-8 px-3 mt-2" style={{ background: PLUM_LIGHT }}>
+              className="text-xs rounded-xl h-8 px-3 mt-2" style={{ background: NAVY_LIGHT }}>
               <Download size={12} className="mr-1" /> Download Codes
             </Button>
           </div>
@@ -359,12 +359,12 @@ export function SecurityAuditTab({ role }: Props) {
                 {sessions.map((session: any) => (
                   <tr key={session.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
                     <td className="py-2.5 pr-3">
-                      <span className="font-medium" style={{ color: PLUM }}>{session.device || session.browser || "Unknown"}</span>
+                      <span className="font-medium" style={{ color: NAVY }}>{session.device || session.browser || "Unknown"}</span>
                       {session.is_current && (
                         <span className="ml-1.5 inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>Current</span>
                       )}
                     </td>
-                    <td className="py-2.5 pr-3" style={{ color: PLUM }}>{session.ip}</td>
+                    <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.ip}</td>
                     <td className="py-2.5 pr-3" style={{ color: MUTED }}>{session.last_active}</td>
                     <td className="py-2.5">
                       {!session.is_current && (
@@ -394,7 +394,7 @@ export function SecurityAuditTab({ role }: Props) {
       {/* AUDIT LOGS TABLE */}
       <SectionCard title="Audit Logs" desc="Read-only record of administrative actions across the school">
         {loadingAudit ? (
-          <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin" color={PLUM} /></div>
+          <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin" color={NAVY} /></div>
         ) : auditLogs.length === 0 ? (
           <p className="text-xs py-6 text-center" style={{ color: MUTED }}>No audit log entries found.</p>
         ) : (
@@ -412,11 +412,11 @@ export function SecurityAuditTab({ role }: Props) {
                 <tbody>
                   {auditLogs.map((entry) => (
                     <tr key={entry.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                      <td className="py-2.5 pr-3 whitespace-nowrap" style={{ color: PLUM }}>
+                      <td className="py-2.5 pr-3 whitespace-nowrap" style={{ color: NAVY }}>
                         {new Date(entry.created_at).toLocaleString()}
                       </td>
-                      <td className="py-2.5 pr-3 font-medium" style={{ color: PLUM }}>{entry.user_name || "—"}</td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{entry.action}</td>
+                      <td className="py-2.5 pr-3 font-medium" style={{ color: NAVY }}>{entry.user_name || "—"}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.action}</td>
                       <td className="py-2.5 font-mono" style={{ color: MUTED }}>{entry.ip_address || "—"}</td>
                     </tr>
                   ))}
@@ -429,10 +429,10 @@ export function SecurityAuditTab({ role }: Props) {
                 <div className="flex gap-2">
                   <button onClick={() => setAuditPage(p => Math.max(1, p - 1))} disabled={auditPage <= 1}
                     className="px-3 py-1.5 rounded-xl text-xs font-medium disabled:opacity-30 transition-colors"
-                    style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>Previous</button>
+                    style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Previous</button>
                   <button onClick={() => setAuditPage(p => Math.min(totalPages, p + 1))} disabled={auditPage >= totalPages}
                     className="px-3 py-1.5 rounded-xl text-xs font-medium disabled:opacity-30 transition-colors"
-                    style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>Next</button>
+                    style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Next</button>
                 </div>
               </div>
             )}
@@ -444,22 +444,22 @@ export function SecurityAuditTab({ role }: Props) {
       {show2FAModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4" style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
-            <h3 className="text-sm font-semibold mb-2" style={{ color: PLUM }}>Setup Two-Factor Authentication</h3>
+            <h3 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Setup Two-Factor Authentication</h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>Scan the QR code with your authenticator app.</p>
             <div className="flex justify-center mb-4">
               <div className="w-48 h-48 rounded-xl flex items-center justify-center" style={{ background: "rgba(56,25,50,0.04)", border: "2px dashed rgba(56,25,50,0.15)" }}>
-                <Smartphone size={48} color={PLUM_LIGHT} />
+                <Smartphone size={48} color={NAVY_LIGHT} />
               </div>
             </div>
             <div className="mb-4">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Verification Code</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Verification Code</label>
               <Input value={verificationCode} onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                 placeholder="Enter 6-digit code" className="h-9 text-sm rounded-xl text-center tracking-[0.3em]" maxLength={6}
                 style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="flex justify-end gap-3">
               <Button onClick={() => { setShow2FAModal(false); setVerificationCode(""); }} variant="outline" className="text-xs rounded-xl h-9 px-4">Cancel</Button>
-              <Button onClick={handleConfirm2FA} disabled={verificationCode.length !== 6} className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>Confirm</Button>
+              <Button onClick={handleConfirm2FA} disabled={verificationCode.length !== 6} className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>Confirm</Button>
             </div>
           </div>
         </div>

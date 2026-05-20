@@ -22,8 +22,8 @@ import {
   DialogFooter, DialogClose,
 } from "../components/ui/dialog";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 // ─── Types ────────────────────────────────────────────────────────
 type Message = {
@@ -101,13 +101,13 @@ const AlertBanner = ({ type, message, onClose }: { type: "error" | "success"; me
 );
 
 const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
-  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>
+  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
   <div className="text-center py-16 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
     <Icon size={40} color={MUTED} className="mx-auto mb-3" />
-    <p className="font-semibold text-sm" style={{ color: PLUM }}>{title}</p>
+    <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
   </div>
 );
@@ -123,7 +123,7 @@ const MetricCard = ({ icon: Icon, label, value, color }: { icon: any; label: str
       <Icon size={14} color={color || MUTED} />
       <span className="text-xs" style={{ color: MUTED }}>{label}</span>
     </div>
-    <p className="text-lg font-bold" style={{ color: PLUM }}>{value}</p>
+    <p className="text-lg font-bold" style={{ color: NAVY }}>{value}</p>
   </div>
 );
 
@@ -219,7 +219,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Channel</label>
+          <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
           <Select value={form.channel} onValueChange={(v) => update("channel", v)}>
             <SelectTrigger className="h-10 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
               <SelectValue />
@@ -232,7 +232,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
           </Select>
         </div>
         <div>
-          <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Template</label>
+          <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Template</label>
           <Select value={form.template_id} onValueChange={(v) => {
             const t = templates.find(t => t.id === v);
             update("template_id", v);
@@ -253,14 +253,14 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
 
       {form.channel === "email" && (
         <div className="mb-4">
-          <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Subject</label>
+          <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Subject</label>
           <Input value={form.subject} onChange={e => update("subject", e.target.value)}
             className="h-10 text-sm rounded-xl" placeholder="Email subject..." style={{ borderColor: "rgba(56,25,50,0.12)" }} />
         </div>
       )}
 
       <div className="mb-4">
-        <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Message Body</label>
+        <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Message Body</label>
         <Textarea value={form.body} onChange={e => update("body", e.target.value)} rows={6}
           className="text-sm rounded-xl resize-y" placeholder="Type your message..."
           style={{ borderColor: "rgba(56,25,50,0.12)" }} />
@@ -270,7 +270,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
       </div>
 
       <div className="mb-4 p-4 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <p className="text-xs font-semibold mb-3" style={{ color: PLUM }}>Recipients</p>
+        <p className="text-xs font-semibold mb-3" style={{ color: NAVY }}>Recipients</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-xs mb-1 block" style={{ color: MUTED }}>Target By</label>
@@ -320,8 +320,8 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
       <div className="flex items-center gap-3 mb-4">
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" checked={form.schedule} onChange={e => update("schedule", e.target.checked)}
-            className="rounded" style={{ accentColor: PLUM }} />
-          <span className="text-xs font-medium" style={{ color: PLUM }}>Schedule for later</span>
+            className="rounded" style={{ accentColor: NAVY }} />
+          <span className="text-xs font-medium" style={{ color: NAVY }}>Schedule for later</span>
         </label>
         {form.schedule && (
           <Input type="datetime-local" value={form.scheduled_at}
@@ -332,7 +332,7 @@ function ComposeTab({ onSent }: { onSent: () => void }) {
 
       <div className="flex gap-2">
         <Button onClick={handleSend} disabled={sending}
-          className="text-xs rounded-xl h-9" style={{ background: PLUM }}>
+          className="text-xs rounded-xl h-9" style={{ background: NAVY }}>
           {sending ? <Loader2 size={14} className="animate-spin mr-1" /> : <Send size={14} className="mr-1" />}
           {sending ? "Sending..." : form.schedule ? "Schedule" : "Send"}
         </Button>
@@ -359,7 +359,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
         onClick={e => e.stopPropagation()}>
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold" style={{ color: PLUM }}>Message Detail</h3>
+            <h3 className="text-base font-bold" style={{ color: NAVY }}>Message Detail</h3>
             <button onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100"><X size={16} /></button>
           </div>
 
@@ -371,10 +371,10 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
           </div>
 
           <div className="space-y-3 text-sm mb-4">
-            <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Subject</span><span style={{ color: PLUM }}>{msg.subject}</span></div>
-            <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Created</span><span style={{ color: PLUM }}>{formatDate(msg.created_at)}</span></div>
-            {msg.scheduled_at && <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Scheduled</span><span style={{ color: PLUM }}>{formatDate(msg.scheduled_at)}</span></div>}
-            {msg.sent_at && <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Sent</span><span style={{ color: PLUM }}>{formatDate(msg.sent_at)}</span></div>}
+            <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Subject</span><span style={{ color: NAVY }}>{msg.subject}</span></div>
+            <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Created</span><span style={{ color: NAVY }}>{formatDate(msg.created_at)}</span></div>
+            {msg.scheduled_at && <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Scheduled</span><span style={{ color: NAVY }}>{formatDate(msg.scheduled_at)}</span></div>}
+            {msg.sent_at && <div><span className="text-xs font-medium block" style={{ color: MUTED }}>Sent</span><span style={{ color: NAVY }}>{formatDate(msg.sent_at)}</span></div>}
           </div>
 
           {msg.recipientSummary && (
@@ -392,7 +392,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
                 <p className="text-xs text-yellow-600">Pending</p>
               </div>
               <div className="flex-1 p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.05)" }}>
-                <p className="text-lg font-bold" style={{ color: PLUM }}>{msg.recipientSummary.total}</p>
+                <p className="text-lg font-bold" style={{ color: NAVY }}>{msg.recipientSummary.total}</p>
                 <p className="text-xs" style={{ color: MUTED }}>Total</p>
               </div>
             </div>
@@ -406,7 +406,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
 
           <div className="mb-4">
             <p className="text-xs font-medium mb-1" style={{ color: MUTED }}>Body</p>
-            <div className="text-sm p-3 rounded-xl whitespace-pre-wrap" style={{ background: "rgba(56,25,50,0.03)", color: PLUM, border: "1px solid rgba(56,25,50,0.07)" }}>
+            <div className="text-sm p-3 rounded-xl whitespace-pre-wrap" style={{ background: "rgba(56,25,50,0.03)", color: NAVY, border: "1px solid rgba(56,25,50,0.07)" }}>
               {msg.body}
             </div>
           </div>
@@ -419,7 +419,7 @@ function MessageDetail({ msg, onClose, onResend }: { msg: Message | null; onClos
                   <div key={r.id} className="flex items-center justify-between p-2 rounded-lg text-xs"
                     style={{ background: "rgba(56,25,50,0.02)", border: "1px solid rgba(56,25,50,0.06)" }}>
                     <div>
-                      <span style={{ color: PLUM }}>{r.recipient_name || r.recipient_contact || "—"}</span>
+                      <span style={{ color: NAVY }}>{r.recipient_name || r.recipient_contact || "—"}</span>
                       <span className="ml-2" style={{ color: MUTED }}>({r.recipient_type})</span>
                     </div>
                     <StatusBadge status={r.status} />
@@ -517,11 +517,11 @@ function MessagesTab() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Subject</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Channel</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Status</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Recipients</TableHead>
-                  <TableHead className="text-xs font-semibold" style={{ color: PLUM }}>Date</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Subject</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Channel</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Status</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Recipients</TableHead>
+                  <TableHead className="text-xs font-semibold" style={{ color: NAVY }}>Date</TableHead>
                   <TableHead className="w-10"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -531,7 +531,7 @@ function MessagesTab() {
                   const sum = m.recipientSummary;
                   return (
                     <TableRow key={m.id} className="cursor-pointer hover:bg-[rgba(56,25,50,0.02)]" onClick={() => openDetail(m)}>
-                      <TableCell className="text-xs font-medium" style={{ color: PLUM }}>{m.subject}</TableCell>
+                      <TableCell className="text-xs font-medium" style={{ color: NAVY }}>{m.subject}</TableCell>
                       <TableCell><Badge variant="outline" className="flex items-center gap-1 text-xs w-fit"><ChIcon size={11} /> {channelLabels[m.channel]}</Badge></TableCell>
                       <TableCell><StatusBadge status={m.status} /></TableCell>
                       <TableCell className="text-xs" style={{ color: MUTED }}>
@@ -552,7 +552,7 @@ function MessagesTab() {
                 <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => fetch(page - 1)} className="h-8 w-8 p-0"><ChevronLeft size={14} /></Button>
                 {pageNumbers.map(pn => (
                   <Button key={pn} variant={pn === page ? "default" : "outline"} size="sm" onClick={() => fetch(pn)}
-                    className="h-8 w-8 p-0 text-xs" style={pn === page ? { background: PLUM } : {}}>{pn}</Button>
+                    className="h-8 w-8 p-0 text-xs" style={pn === page ? { background: NAVY } : {}}>{pn}</Button>
                 ))}
                 <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => fetch(page + 1)} className="h-8 w-8 p-0"><ChevronRight size={14} /></Button>
               </div>
@@ -616,7 +616,7 @@ function TemplatesTab() {
     <div>
       {error && <AlertBanner type="error" message={error} onClose={() => setError(null)} />}
       <div className="flex items-center gap-2 mb-4">
-        <Button size="sm" onClick={openCreate} className="text-xs rounded-xl h-9" style={{ background: PLUM }}>
+        <Button size="sm" onClick={openCreate} className="text-xs rounded-xl h-9" style={{ background: NAVY }}>
           <Plus size={14} className="mr-1" /> New Template
         </Button>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -642,7 +642,7 @@ function TemplatesTab() {
             <div key={t.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: PLUM }}>{t.name}</p>
+                  <p className="text-sm font-semibold" style={{ color: NAVY }}>{t.name}</p>
                   <div className="flex gap-1 mt-1">
                     <Badge variant="outline" className="text-[10px]">{t.category}</Badge>
                     <Badge variant="outline" className="text-[10px]">{t.channel === "any" ? "Multi" : channelLabels[t.channel]}</Badge>
@@ -663,18 +663,18 @@ function TemplatesTab() {
       <Dialog open={dialog.open} onOpenChange={(v) => !v && setDialog({ open: false })}>
         <DialogContent className="rounded-2xl sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle style={{ color: PLUM }}>{dialog.edit ? "Edit Template" : "New Template"}</DialogTitle>
+            <DialogTitle style={{ color: NAVY }}>{dialog.edit ? "Edit Template" : "New Template"}</DialogTitle>
             <DialogDescription style={{ color: MUTED }}>Create a reusable message template.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Name</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Name</label>
               <Input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
                 className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Channel</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
                 <Select value={form.channel} onValueChange={v => setForm(p => ({ ...p, channel: v }))}>
                   <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
                     <SelectValue />
@@ -688,7 +688,7 @@ function TemplatesTab() {
                 </Select>
               </div>
               <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Category</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Category</label>
                 <Select value={form.category} onValueChange={v => setForm(p => ({ ...p, category: v }))}>
                   <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
                     <SelectValue />
@@ -704,12 +704,12 @@ function TemplatesTab() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Subject (for email)</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Subject (for email)</label>
               <Input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
                 className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Body</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Body</label>
               <Textarea value={form.body} onChange={e => setForm(p => ({ ...p, body: e.target.value }))} rows={5}
                 className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
@@ -717,7 +717,7 @@ function TemplatesTab() {
           <DialogFooter>
             <DialogClose asChild><Button variant="outline" size="sm" className="text-xs rounded-xl">Cancel</Button></DialogClose>
             <Button size="sm" onClick={handleSave} disabled={saving}
-              className="text-xs rounded-xl" style={{ background: PLUM }}>
+              className="text-xs rounded-xl" style={{ background: NAVY }}>
               {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : null}
               {dialog.edit ? "Update" : "Create"}
             </Button>
@@ -769,7 +769,7 @@ function AnnouncementsTab() {
     <div>
       {error && <AlertBanner type="error" message={error} onClose={() => setError(null)} />}
 
-      <Button size="sm" onClick={() => setShowCreate(true)} className="text-xs rounded-xl h-9 mb-4" style={{ background: PLUM }}>
+      <Button size="sm" onClick={() => setShowCreate(true)} className="text-xs rounded-xl h-9 mb-4" style={{ background: NAVY }}>
         <Megaphone size={14} className="mr-1" /> New Announcement
       </Button>
 
@@ -782,7 +782,7 @@ function AnnouncementsTab() {
               style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <p className="text-sm font-semibold" style={{ color: PLUM }}>{a.title}</p>
+                  <p className="text-sm font-semibold" style={{ color: NAVY }}>{a.title}</p>
                   <StatusBadge status={a.status} />
                   <Badge variant="outline" className="text-[10px]">{channelLabels[a.channel]}</Badge>
                 </div>
@@ -807,17 +807,17 @@ function AnnouncementsTab() {
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent className="rounded-2xl sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle style={{ color: PLUM }}>New Announcement</DialogTitle>
+            <DialogTitle style={{ color: NAVY }}>New Announcement</DialogTitle>
             <DialogDescription style={{ color: MUTED }}>Broadcast to all parents, staff, and students.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Title</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Title</label>
               <Input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                 className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Channel</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Channel</label>
               <Select value={form.channel} onValueChange={v => setForm(p => ({ ...p, channel: v }))}>
                 <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
                   <SelectValue />
@@ -831,14 +831,14 @@ function AnnouncementsTab() {
               </Select>
             </div>
             <div>
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Body</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Body</label>
               <Textarea value={form.body} onChange={e => setForm(p => ({ ...p, body: e.target.value }))} rows={5}
                 className="text-sm rounded-xl resize-y" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.schedule} onChange={e => setForm(p => ({ ...p, schedule: e.target.checked }))}
-                className="rounded" style={{ accentColor: PLUM }} />
-              <span className="text-xs font-medium" style={{ color: PLUM }}>Schedule</span>
+                className="rounded" style={{ accentColor: NAVY }} />
+              <span className="text-xs font-medium" style={{ color: NAVY }}>Schedule</span>
             </label>
             {form.schedule && (
               <Input type="datetime-local" value={form.scheduled_at}
@@ -849,7 +849,7 @@ function AnnouncementsTab() {
           <DialogFooter>
             <DialogClose asChild><Button variant="outline" size="sm" className="text-xs rounded-xl">Cancel</Button></DialogClose>
             <Button size="sm" onClick={handleCreate} disabled={saving}
-              className="text-xs rounded-xl" style={{ background: PLUM }}>
+              className="text-xs rounded-xl" style={{ background: NAVY }}>
               {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : null}
               Create
             </Button>
@@ -875,7 +875,7 @@ export function Communication() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: PLUM }}>Communication Center</h1>
+          <h1 className="text-xl font-bold" style={{ color: NAVY }}>Communication Center</h1>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Send messages, manage templates, and broadcast announcements</p>
         </div>
       </div>

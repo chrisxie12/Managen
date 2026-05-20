@@ -14,10 +14,10 @@ import { SecurityAuditTab } from "./tabs/SecurityAuditTab";
 import { BackupsTab } from "./tabs/BackupsTab";
 import { CustomDomainsTab } from "./tabs/CustomDomainsTab";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const tabs = [
   { key: "profile", label: "General Profile", icon: Building2 },
@@ -43,13 +43,13 @@ export function SchoolSettings() {
         className="hidden lg:flex flex-col w-[240px] flex-shrink-0 p-4 gap-1 h-fit rounded-2xl bg-transparent"
         style={{ background: "#F9F1E7", borderRight: "1px solid rgba(56,25,50,0.07)" }}
       >
-        <h2 className="text-sm font-bold mb-3 px-3" style={{ color: PLUM }}>School Settings</h2>
+        <h2 className="text-sm font-bold mb-3 px-3" style={{ color: NAVY }}>School Settings</h2>
         {tabs.map(tab => (
           <TabsTrigger key={tab.key} value={tab.key}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left justify-start transition-all active:scale-95 data-[state=active]:scale-100"
             style={{
-              background: activeTab === tab.key ? PLUM : "transparent",
-              color: activeTab === tab.key ? MILK : PLUM_LIGHT,
+              background: activeTab === tab.key ? NAVY : "transparent",
+              color: activeTab === tab.key ? CREAM : NAVY_LIGHT,
               fontSize: "0.9rem",
               fontWeight: activeTab === tab.key ? 600 : 400,
             }}
@@ -68,8 +68,8 @@ export function SchoolSettings() {
             <TabsTrigger key={tab.key} value={tab.key}
               className="whitespace-nowrap px-3 py-1.5 text-xs rounded-xl shrink-0 data-[state=active]:scale-100"
               style={{
-                background: activeTab === tab.key ? PLUM : "#F9F1E7",
-                color: activeTab === tab.key ? MILK : PLUM_LIGHT,
+                background: activeTab === tab.key ? NAVY : "#F9F1E7",
+                color: activeTab === tab.key ? CREAM : NAVY_LIGHT,
               }}
             >
               <tab.icon size={14} className="mr-1" />

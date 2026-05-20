@@ -7,13 +7,13 @@ import { Switch } from "../../../../components/ui/switch";
 import { Badge } from "../../../../components/ui/badge";
 import { api } from "../../../../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -23,7 +23,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -103,7 +103,7 @@ export function ArkeselSmsTab({ role }: Props) {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
   }
 
   const isLowBalance = smsBalance !== null && smsBalance < lowThreshold;
@@ -139,7 +139,7 @@ export function ArkeselSmsTab({ role }: Props) {
             <Wallet size={22} color={isLowBalance ? "#EF4444" : "#10B981"} />
           </div>
           <div>
-            <p className="text-lg font-bold font-mono" style={{ color: PLUM }}>
+            <p className="text-lg font-bold font-mono" style={{ color: NAVY }}>
               {smsBalance !== null ? smsBalance.toLocaleString() : "—"}
             </p>
             <p className="text-xs" style={{ color: MUTED }}>
@@ -159,7 +159,7 @@ export function ArkeselSmsTab({ role }: Props) {
             <div className="flex items-center gap-3">
               <MessageSquare size={16} color={MUTED} />
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>Payment Receipts</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>Payment Receipts</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>Send SMS receipt when a payment is confirmed</p>
               </div>
             </div>
@@ -169,7 +169,7 @@ export function ArkeselSmsTab({ role }: Props) {
             <div className="flex items-center gap-3">
               <AlertTriangle size={16} color={MUTED} />
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>Absence Alerts</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>Absence Alerts</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>Notify parents when a student is marked absent</p>
               </div>
             </div>
@@ -180,7 +180,7 @@ export function ArkeselSmsTab({ role }: Props) {
 
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
-          <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+          <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save SMS Config
           </Button>

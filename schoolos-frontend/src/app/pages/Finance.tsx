@@ -24,9 +24,9 @@ import {
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
-const MILK = "#FFF3E6";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
+const CREAM = "#F8F9FA";
 
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
 
@@ -90,13 +90,13 @@ const AlertBanner = ({ type, message, onClose }: { type: "error" | "success"; me
 };
 
 const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
-  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>
+  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
   <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
     <Icon size={36} color={MUTED} className="mx-auto mb-2" />
-    <p className="font-semibold text-sm" style={{ color: PLUM }}>{title}</p>
+    <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
   </div>
 );
@@ -105,14 +105,14 @@ const MetricCard = ({ icon: Icon, label, value, sub, color }: {
   icon: any; label: string; value: string | number; sub?: string; color?: string;
 }) => (
   <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-    <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || PLUM }} />
+    <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
     <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || PLUM}15` }}>
-        <Icon size={18} color={color || PLUM} />
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
+        <Icon size={18} color={color || NAVY} />
       </div>
       <div>
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
-        <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+        <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
       </div>
     </div>
     {sub && <p className="text-xs" style={{ color: MUTED }}>{sub}</p>}
@@ -125,7 +125,7 @@ const ChartCard = ({ title, subtitle, children, action }: {
   <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
     <div className="flex items-center justify-between mb-4">
       <div>
-        <h3 className="font-semibold text-sm" style={{ color: PLUM }}>{title}</h3>
+        <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
         {subtitle && <p className="text-xs" style={{ color: MUTED }}>{subtitle}</p>}
       </div>
       {action}
@@ -234,11 +234,11 @@ function OverviewTab() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => handleExport("invoices")}
-            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
             <Download size={13} className="mr-1" /> Invoices CSV
           </Button>
           <Button variant="outline" size="sm" onClick={() => handleExport("payments")}
-            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+            className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
             <Download size={13} className="mr-1" /> Payments CSV
           </Button>
         </div>
@@ -327,7 +327,7 @@ function OverviewTab() {
                   <div key={item.status} className="flex items-center justify-between p-2 rounded-lg"
                     style={{ background: "rgba(56,25,50,0.03)" }}>
                     <span style={{ color: MUTED }}>{item.status}</span>
-                    <span className="font-medium" style={{ color: PLUM }}>{formatCedi(item.amount)} ({item.count})</span>
+                    <span className="font-medium" style={{ color: NAVY }}>{formatCedi(item.amount)} ({item.count})</span>
                   </div>
                 ))}
               </div>
@@ -358,7 +358,7 @@ function OverviewTab() {
                 {failedP.map(p => (
                   <TableRow key={p.id}>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{new Date(p.payment_date).toLocaleDateString()}</TableCell>
-                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{p.student?.name || "—"}</TableCell>
+                    <TableCell style={{ color: NAVY, fontSize: 13 }}>{p.student?.name || "—"}</TableCell>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{p.invoice?.invoice_number || "—"}</TableCell>
                     <TableCell style={{ fontSize: 13 }}>{formatCedi(p.amount)}</TableCell>
                     <TableCell><Badge variant="outline" className="bg-red-50 text-red-700 text-xs">{p.payment_method}</Badge></TableCell>
@@ -392,7 +392,7 @@ function OverviewTab() {
               <TableBody>
                 {defaulters.slice(0, 25).map(d => (
                   <TableRow key={d.student?.admission_no || Math.random()}>
-                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{d.student?.name || "Unknown"}</TableCell>
+                    <TableCell style={{ color: NAVY, fontSize: 13 }}>{d.student?.name || "Unknown"}</TableCell>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{d.class?.name || "—"}</TableCell>
                     <TableCell className="font-medium" style={{ color: "#EF4444" }}>{formatCedi(d.totalBalance)}</TableCell>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{d.invoiceCount}</TableCell>
@@ -486,13 +486,13 @@ function FeeStructuresTab() {
       <div className="flex justify-end mb-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openCreate} style={{ background: PLUM, color: MILK }} className="rounded-full">
+            <Button onClick={openCreate} style={{ background: NAVY, color: CREAM }} className="rounded-full">
               <Plus size={15} className="mr-1" /> Add Fee
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]" style={{ borderRadius: 20 }}>
             <DialogHeader>
-              <DialogTitle style={{ color: PLUM }}>{editItem ? "Edit Fee Structure" : "New Fee Structure"}</DialogTitle>
+              <DialogTitle style={{ color: NAVY }}>{editItem ? "Edit Fee Structure" : "New Fee Structure"}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <Input placeholder="Fee name (e.g. Tuition)" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
@@ -524,11 +524,11 @@ function FeeStructuresTab() {
                 </Select>
               </div>
               <Textarea placeholder="Description (optional)" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
-              <label className="flex items-center gap-2 text-sm" style={{ color: PLUM }}>
+              <label className="flex items-center gap-2 text-sm" style={{ color: NAVY }}>
                 <input type="checkbox" checked={form.is_optional} onChange={e => setForm({ ...form, is_optional: e.target.checked })} />
                 Optional fee
               </label>
-              <Button onClick={save} className="w-full rounded-full" style={{ background: PLUM, color: MILK }}>Save</Button>
+              <Button onClick={save} className="w-full rounded-full" style={{ background: NAVY, color: CREAM }}>Save</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -552,14 +552,14 @@ function FeeStructuresTab() {
           <TableBody>
             {fees.map(f => (
               <TableRow key={f.id}>
-                <TableCell className="font-medium" style={{ color: PLUM }}>{f.name}</TableCell>
+                <TableCell className="font-medium" style={{ color: NAVY }}>{f.name}</TableCell>
                 <TableCell style={{ color: MUTED }}>{f.category}</TableCell>
                 <TableCell>{formatCedi(f.amount)}</TableCell>
                 <TableCell style={{ color: MUTED }}>{f.class?.name || "All"}</TableCell>
                 <TableCell style={{ color: MUTED }}>{f.term?.name || "All"}</TableCell>
                 <TableCell><StatusBadge status={f.is_active ? "active" : "inactive"} /></TableCell>
                 <TableCell className="text-right">
-                  <button onClick={() => openEdit(f)} className="text-xs mr-2" style={{ color: PLUM }}>Edit</button>
+                  <button onClick={() => openEdit(f)} className="text-xs mr-2" style={{ color: NAVY }}>Edit</button>
                   <button onClick={() => remove(f.id)} className="text-xs" style={{ color: "#EF4444" }}>Delete</button>
                 </TableCell>
               </TableRow>
@@ -661,13 +661,13 @@ function InvoicesTab() {
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button style={{ background: PLUM, color: MILK }} className="rounded-full">
+            <Button style={{ background: NAVY, color: CREAM }} className="rounded-full">
               <Plus size={15} className="mr-1" /> Generate Invoice
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[450px]" style={{ borderRadius: 20 }}>
             <DialogHeader>
-              <DialogTitle style={{ color: PLUM }}>Generate Invoice</DialogTitle>
+              <DialogTitle style={{ color: NAVY }}>Generate Invoice</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <Select value={genForm.student_id} onValueChange={v => setGenForm({ ...genForm, student_id: v })}>
@@ -691,7 +691,7 @@ function InvoicesTab() {
                 </Select>
               </div>
               <Input type="date" value={genForm.due_date} onChange={e => setGenForm({ ...genForm, due_date: e.target.value })} />
-              <Button onClick={generate} className="w-full rounded-full" style={{ background: PLUM, color: MILK }}
+              <Button onClick={generate} className="w-full rounded-full" style={{ background: NAVY, color: CREAM }}
                 disabled={!genForm.student_id || !genForm.class_id || !genForm.term_id || !genForm.due_date}>Generate</Button>
             </div>
           </DialogContent>
@@ -718,7 +718,7 @@ function InvoicesTab() {
             <TableBody>
               {invoices.map(inv => (
                 <TableRow key={inv.id}>
-                  <TableCell className="font-medium" style={{ color: PLUM }}>{inv.invoice_number}</TableCell>
+                  <TableCell className="font-medium" style={{ color: NAVY }}>{inv.invoice_number}</TableCell>
                   <TableCell style={{ color: MUTED }}>{inv.student?.name || "—"}</TableCell>
                   <TableCell style={{ color: MUTED }}>{inv.class?.name || "—"}</TableCell>
                   <TableCell style={{ color: MUTED }}>{new Date(inv.due_date).toLocaleDateString()}</TableCell>
@@ -736,9 +736,9 @@ function InvoicesTab() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : PLUM, color: page <= 1 ? MUTED : MILK }}>Prev</button>
+              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : NAVY, color: page <= 1 ? MUTED : CREAM }}>Prev</button>
               <span className="text-xs" style={{ color: MUTED }}>Page {page} of {totalPages}</span>
-              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : PLUM, color: page >= totalPages ? MUTED : MILK }}>Next</button>
+              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : NAVY, color: page >= totalPages ? MUTED : CREAM }}>Next</button>
             </div>
           )}
         </>
@@ -803,13 +803,13 @@ function PaymentsTab() {
       <div className="flex justify-end mb-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button style={{ background: PLUM, color: MILK }} className="rounded-full">
+            <Button style={{ background: NAVY, color: CREAM }} className="rounded-full">
               <Plus size={15} className="mr-1" /> Record Payment
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[450px]" style={{ borderRadius: 20 }}>
             <DialogHeader>
-              <DialogTitle style={{ color: PLUM }}>Record Payment</DialogTitle>
+              <DialogTitle style={{ color: NAVY }}>Record Payment</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <Input placeholder="Invoice ID" value={payForm.invoice_id} onChange={e => setPayForm({ ...payForm, invoice_id: e.target.value })} />
@@ -827,7 +827,7 @@ function PaymentsTab() {
               <Input placeholder="Reference (optional)" value={payForm.reference} onChange={e => setPayForm({ ...payForm, reference: e.target.value })} />
               <Input type="date" value={payForm.payment_date} onChange={e => setPayForm({ ...payForm, payment_date: e.target.value })} />
               <Textarea placeholder="Notes (optional)" value={payForm.notes} onChange={e => setPayForm({ ...payForm, notes: e.target.value })} />
-              <Button onClick={record} className="w-full rounded-full" style={{ background: PLUM, color: MILK }}
+              <Button onClick={record} className="w-full rounded-full" style={{ background: NAVY, color: CREAM }}
                 disabled={!payForm.invoice_id || !payForm.amount}>Record</Button>
             </div>
           </DialogContent>
@@ -854,7 +854,7 @@ function PaymentsTab() {
               {payments.map(p => (
                 <TableRow key={p.id}>
                   <TableCell style={{ color: MUTED }}>{new Date(p.payment_date).toLocaleDateString()}</TableCell>
-                  <TableCell style={{ color: PLUM }}>{p.student?.name || "—"}</TableCell>
+                  <TableCell style={{ color: NAVY }}>{p.student?.name || "—"}</TableCell>
                   <TableCell style={{ color: MUTED }}>{p.invoice?.invoice_number || "—"}</TableCell>
                   <TableCell className="font-medium">{formatCedi(p.amount)}</TableCell>
                   <TableCell><Badge variant="outline" className="bg-gray-50">{p.payment_method.replace("_", " ")}</Badge></TableCell>
@@ -867,9 +867,9 @@ function PaymentsTab() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : PLUM, color: page <= 1 ? MUTED : MILK }}>Prev</button>
+              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : NAVY, color: page <= 1 ? MUTED : CREAM }}>Prev</button>
               <span className="text-xs" style={{ color: MUTED }}>Page {page} of {totalPages}</span>
-              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : PLUM, color: page >= totalPages ? MUTED : MILK }}>Next</button>
+              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : NAVY, color: page >= totalPages ? MUTED : CREAM }}>Next</button>
             </div>
           )}
         </>
@@ -961,19 +961,19 @@ function WaiversTab() {
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button style={{ background: PLUM, color: MILK }} className="rounded-full">
+            <Button style={{ background: NAVY, color: CREAM }} className="rounded-full">
               <Plus size={15} className="mr-1" /> New Waiver
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[400px]" style={{ borderRadius: 20 }}>
             <DialogHeader>
-              <DialogTitle style={{ color: PLUM }}>Create Waiver</DialogTitle>
+              <DialogTitle style={{ color: NAVY }}>Create Waiver</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <Input placeholder="Student ID" value={form.student_id} onChange={e => setForm({ ...form, student_id: e.target.value })} />
               <Input placeholder="Amount (GHS)" type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} />
               <Textarea placeholder="Reason" value={form.reason} onChange={e => setForm({ ...form, reason: e.target.value })} />
-              <Button onClick={create} className="w-full rounded-full" style={{ background: PLUM, color: MILK }}
+              <Button onClick={create} className="w-full rounded-full" style={{ background: NAVY, color: CREAM }}
                 disabled={!form.student_id || !form.reason || !form.amount}>Create</Button>
             </div>
           </DialogContent>
@@ -998,7 +998,7 @@ function WaiversTab() {
             <TableBody>
               {waivers.map(w => (
                 <TableRow key={w.id}>
-                  <TableCell style={{ color: PLUM }}>{w.student?.name || "—"}</TableCell>
+                  <TableCell style={{ color: NAVY }}>{w.student?.name || "—"}</TableCell>
                   <TableCell>{formatCedi(w.amount)}</TableCell>
                   <TableCell style={{ color: MUTED, fontSize: 13 }}>{w.reason}</TableCell>
                   <TableCell><StatusBadge status={w.status} /></TableCell>
@@ -1016,9 +1016,9 @@ function WaiversTab() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : PLUM, color: page <= 1 ? MUTED : MILK }}>Prev</button>
+              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page <= 1 ? "#f0f0f0" : NAVY, color: page <= 1 ? MUTED : CREAM }}>Prev</button>
               <span className="text-xs" style={{ color: MUTED }}>Page {page} of {totalPages}</span>
-              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : PLUM, color: page >= totalPages ? MUTED : MILK }}>Next</button>
+              <button disabled={page >= totalPages} onClick={() => setPage(p => p + 1)} className="px-3 py-1.5 rounded-lg text-xs" style={{ background: page >= totalPages ? "#f0f0f0" : NAVY, color: page >= totalPages ? MUTED : CREAM }}>Next</button>
             </div>
           )}
         </>
@@ -1090,13 +1090,13 @@ function DiscountsTab() {
       <div className="flex justify-end mb-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openCreate} style={{ background: PLUM, color: MILK }} className="rounded-full">
+            <Button onClick={openCreate} style={{ background: NAVY, color: CREAM }} className="rounded-full">
               <Plus size={15} className="mr-1" /> Add Discount
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[450px]" style={{ borderRadius: 20 }}>
             <DialogHeader>
-              <DialogTitle style={{ color: PLUM }}>{editItem ? "Edit Discount" : "New Discount"}</DialogTitle>
+              <DialogTitle style={{ color: NAVY }}>{editItem ? "Edit Discount" : "New Discount"}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <Input placeholder="Discount name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
@@ -1119,7 +1119,7 @@ function DiscountsTab() {
                   <SelectItem value="specific_class">Specific class</SelectItem>
                 </SelectContent>
               </Select>
-              <Button onClick={save} className="w-full rounded-full" style={{ background: PLUM, color: MILK }}>Save</Button>
+              <Button onClick={save} className="w-full rounded-full" style={{ background: NAVY, color: CREAM }}>Save</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -1142,13 +1142,13 @@ function DiscountsTab() {
           <TableBody>
             {discounts.map(d => (
               <TableRow key={d.id}>
-                <TableCell className="font-medium" style={{ color: PLUM }}>{d.name}</TableCell>
+                <TableCell className="font-medium" style={{ color: NAVY }}>{d.name}</TableCell>
                 <TableCell style={{ color: MUTED }}>{d.type === "percentage" ? "%" : "GHS"}</TableCell>
                 <TableCell>{d.type === "percentage" ? `${d.value}%` : formatCedi(d.value * 100)}</TableCell>
                 <TableCell style={{ color: MUTED }}>{d.applicable_to.replace("_", " ")}</TableCell>
                 <TableCell><StatusBadge status={d.is_active ? "active" : "inactive"} /></TableCell>
                 <TableCell className="text-right">
-                  <button onClick={() => openEdit(d)} className="text-xs mr-2" style={{ color: PLUM }}>Edit</button>
+                  <button onClick={() => openEdit(d)} className="text-xs mr-2" style={{ color: NAVY }}>Edit</button>
                   <button onClick={() => remove(d.id)} className="text-xs" style={{ color: "#EF4444" }}>Delete</button>
                 </TableCell>
               </TableRow>
@@ -1165,7 +1165,7 @@ export function Finance() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: PLUM }}>Finance</h1>
+        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: NAVY }}>Finance</h1>
         <p style={{ color: MUTED, fontSize: "0.85rem" }}>Fee structures, invoices, payments, waivers, and discounts</p>
       </div>
 

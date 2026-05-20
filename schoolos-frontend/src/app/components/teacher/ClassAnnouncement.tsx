@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Loader2, Send, CheckCircle2, X, AlertTriangle } from "lucide-react";
 import { api } from "../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function ClassAnnouncement({ className }: { className: string; classId: string }) {
   const [title, setTitle] = useState("");
@@ -60,7 +60,7 @@ export function ClassAnnouncement({ className }: { className: string; classId: s
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Announcement title..."
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
         />
       </div>
       <div>
@@ -71,14 +71,14 @@ export function ClassAnnouncement({ className }: { className: string; classId: s
           placeholder="Write your announcement..."
           rows={4}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm resize-none"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
         />
       </div>
       <button
         onClick={sendAnnouncement}
         disabled={sending || !title.trim() || !body.trim()}
         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-        style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}
+        style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}
       >
         {sending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
         {sending ? "Sending..." : `Send to ${className}`}

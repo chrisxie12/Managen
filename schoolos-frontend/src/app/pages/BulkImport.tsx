@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Upload, FileSpreadsheet, AlertCircle, Check, X, Loader2, Users, UserCheck, Briefcase } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type PreviewRow = Record<string, string>;
 type ImportError = { row: number; field: string; message: string };
@@ -108,13 +108,13 @@ export function BulkImport() {
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Bulk Import</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Bulk Import</h2>
           <p className="text-sm" style={{ color: MUTED }}>Import students, teachers, or staff from spreadsheet</p>
         </div>
         {step !== "select" && (
           <button onClick={reset}
             className="px-4 py-2 rounded-xl text-sm"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
             Start New Import
           </button>
         )}
@@ -127,9 +127,9 @@ export function BulkImport() {
               <button key={et.value} onClick={() => setEntityType(et.value)}
                 className="p-5 rounded-xl text-left transition-all active:scale-95"
                 style={{
-                  background: entityType === et.value ? PLUM : "white",
-                  border: `1px solid ${entityType === et.value ? PLUM : "rgba(56,25,50,0.1)"}`,
-                  color: entityType === et.value ? MILK : PLUM,
+                  background: entityType === et.value ? NAVY : "white",
+                  border: `1px solid ${entityType === et.value ? NAVY : "rgba(56,25,50,0.1)"}`,
+                  color: entityType === et.value ? CREAM : NAVY,
                 }}>
                 <et.icon size={24} className="mb-2" />
                 <p className="font-semibold text-sm mb-1">{et.label}</p>
@@ -140,9 +140,9 @@ export function BulkImport() {
 
           <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <label className="flex flex-col items-center justify-center p-8 rounded-xl cursor-pointer"
-              style={{ border: "2px dashed rgba(56,25,50,0.15)", background: MILK }}>
+              style={{ border: "2px dashed rgba(56,25,50,0.15)", background: CREAM }}>
               <Upload size={32} color={MUTED} className="mb-3" />
-              <p className="font-medium text-sm mb-1" style={{ color: PLUM }}>
+              <p className="font-medium text-sm mb-1" style={{ color: NAVY }}>
                 {file ? file.name : "Click to upload spreadsheet"}
               </p>
               <p className="text-xs" style={{ color: MUTED }}>Supports .xlsx and .csv files (max 20MB)</p>
@@ -150,15 +150,15 @@ export function BulkImport() {
             </label>
 
             {file && (
-              <div className="flex items-center justify-between mt-4 p-3 rounded-lg" style={{ background: MILK }}>
+              <div className="flex items-center justify-between mt-4 p-3 rounded-lg" style={{ background: CREAM }}>
                 <div className="flex items-center gap-2">
-                  <FileSpreadsheet size={16} color={PLUM} />
-                  <span className="text-sm" style={{ color: PLUM }}>{file.name}</span>
+                  <FileSpreadsheet size={16} color={NAVY} />
+                  <span className="text-sm" style={{ color: NAVY }}>{file.name}</span>
                   <span className="text-xs" style={{ color: MUTED }}>({(file.size / 1024).toFixed(1)} KB)</span>
                 </div>
                 <button onClick={previewImport} disabled={loading}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold active:scale-95 disabled:opacity-50"
-                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                   {loading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
                   Preview
                 </button>
@@ -173,20 +173,20 @@ export function BulkImport() {
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Entity Type</p>
-              <p className="font-semibold" style={{ color: PLUM }}>{entityType}</p>
+              <p className="font-semibold" style={{ color: NAVY }}>{entityType}</p>
             </div>
             <div className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Total Rows</p>
-              <p className="font-semibold" style={{ color: PLUM }}>{preview.totalRows}</p>
+              <p className="font-semibold" style={{ color: NAVY }}>{preview.totalRows}</p>
             </div>
             <div className="p-4 rounded-xl" style={{ background: preview.errors.length > 0 ? "#FEF2F2" : "white", border: `1px solid ${preview.errors.length > 0 ? "#FECACA" : "rgba(56,25,50,0.07)"}` }}>
               <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Validation Errors</p>
-              <p className="font-semibold" style={{ color: preview.errors.length > 0 ? "#EF4444" : PLUM }}>{preview.errors.length}</p>
+              <p className="font-semibold" style={{ color: preview.errors.length > 0 ? "#EF4444" : NAVY }}>{preview.errors.length}</p>
             </div>
           </div>
 
           <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-            <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: PLUM }}>Preview (First 5 Rows)</h3>
+            <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: NAVY }}>Preview (First 5 Rows)</h3>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[500px]">
                 <thead>
@@ -200,7 +200,7 @@ export function BulkImport() {
                   {preview.preview.map((row, i) => (
                     <tr key={i} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
                       {preview.requiredColumns.map(col => (
-                        <td key={col} className="px-4 py-3" style={{ color: PLUM }}>{row[col] || "—"}</td>
+                        <td key={col} className="px-4 py-3" style={{ color: NAVY }}>{row[col] || "—"}</td>
                       ))}
                     </tr>
                   ))}
@@ -227,13 +227,13 @@ export function BulkImport() {
           <div className="flex gap-3">
             <button onClick={confirmImport} disabled={loading || preview.errors.length > 0}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-              style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+              style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
               {loading ? <Loader2 size={15} className="animate-spin" /> : <Check size={15} />}
               {loading ? "Importing..." : `Confirm Import (${preview.totalRows} rows)`}
             </button>
             <button onClick={reset}
               className="px-5 py-2.5 rounded-xl text-sm"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               Cancel
             </button>
           </div>
@@ -270,7 +270,7 @@ export function BulkImport() {
 
           <button onClick={reset}
             className="px-5 py-2.5 rounded-xl text-sm font-semibold"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             Import Another File
           </button>
         </div>

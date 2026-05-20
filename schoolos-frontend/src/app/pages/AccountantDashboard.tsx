@@ -4,7 +4,7 @@ import { Receipt, ArrowRight } from "lucide-react";
 import { api } from "../services/api";
 import { LoadingSpinner, KpiCard, DashboardCard, MiniTable, StatusBadge, palette } from "../components/dashboard";
 
-const { PLUM, MUTED } = palette;
+const { NAVY, MUTED } = palette;
 
 type Payment = { id: string; amount: number; status: string; paid_at?: string; created_at?: string; school_name?: string; description?: string };
 
@@ -54,7 +54,7 @@ export function AccountantDashboard() {
 
       {hasData ? (
         <DashboardCard title="Recent Transactions" action={
-          <button onClick={() => navigate("/dashboard/finance")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+          <button onClick={() => navigate("/dashboard/finance")} className="flex items-center gap-1 text-xs" style={{ color: NAVY }}>
             View All <ArrowRight size={11} />
           </button>
         }>
@@ -71,7 +71,7 @@ export function AccountantDashboard() {
         <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="text-center p-8">
             <Receipt size={40} color={MUTED} className="mx-auto mb-4" />
-            <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>No Financial Data Yet</p>
+            <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>No Financial Data Yet</p>
             <p style={{ color: MUTED, fontSize: "0.85rem" }}>Revenue, invoices, and transaction history will appear once fees are set up and payments are recorded.</p>
           </div>
         </div>

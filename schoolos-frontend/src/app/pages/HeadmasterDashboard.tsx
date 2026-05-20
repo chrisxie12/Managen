@@ -4,7 +4,7 @@ import { Users, Clock, FileSpreadsheet, ArrowRight, GraduationCap } from "lucide
 import { api } from "../services/api";
 import { LoadingSpinner, StatCard, KpiCard, DashboardCard, MiniTable, StatusBadge, palette } from "../components/dashboard";
 
-const { PLUM, MUTED } = palette;
+const { NAVY, MUTED } = palette;
 
 type DashboardData = {
   totalStudents: number;
@@ -61,7 +61,7 @@ export function HeadmasterDashboard() {
 
       {d.recentAssessments.length > 0 ? (
         <DashboardCard title="Recent Assessments" action={
-          <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+          <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: NAVY }}>
             View All <ArrowRight size={11} />
           </button>
         }>
@@ -79,16 +79,16 @@ export function HeadmasterDashboard() {
         <div className="flex items-center justify-center min-h-[300px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="text-center p-8">
             <FileSpreadsheet size={40} color={MUTED} className="mx-auto mb-4" />
-            <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Academic Performance</p>
+            <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Academic Performance</p>
             <p style={{ color: MUTED, fontSize: "0.85rem" }}>Performance data will appear here once academic records are created.</p>
           </div>
         </div>
       )}
 
-      <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: `linear-gradient(135deg, ${PLUM}, #512b4a)` }}>
+      <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: `linear-gradient(135deg, ${NAVY}, #0C2D8A)` }}>
         <div className="text-center p-8">
           <GraduationCap size={32} color="rgba(255,243,230,0.6)" className="mx-auto mb-3" />
-          <p style={{ color: "#FFF3E6", fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Pending Approvals</p>
+          <p style={{ color: "#F8F9FA", fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Pending Approvals</p>
           <p style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.85rem" }}>
             {d.pendingApprovals > 0
               ? `${d.pendingApprovals} assessment${d.pendingApprovals > 1 ? "s" : ""} awaiting your review.`

@@ -5,10 +5,10 @@ import { api } from "../../services/api";
 import { toast } from "sonner";
 import { addToSyncQueue } from "../../lib/offlineSync";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string };
 type Invoice = {
@@ -86,7 +86,7 @@ export function ParentFees() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={PLUM} /></div>;
+  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={NAVY} /></div>;
 
   return (
     <div className="space-y-5">
@@ -96,7 +96,7 @@ export function ParentFees() {
           value={selected?.id || ""}
           onChange={(e) => setSelected(children.find((c) => c.id === e.target.value) || null)}
           className="w-full p-3 rounded-2xl text-sm font-medium"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
         >
           {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
@@ -105,7 +105,7 @@ export function ParentFees() {
       {selected && (
         <>
           {/* Balance summary */}
-          <div className="p-5 rounded-2xl text-white" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
+          <div className="p-5 rounded-2xl text-white" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
             <div className="flex items-center gap-2 mb-1">
               <Wallet size={18} />
               <span className="text-sm opacity-80">Total Balance</span>
@@ -120,7 +120,7 @@ export function ParentFees() {
           {/* Pending invoices */}
           {pendingInvoices.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: PLUM }}>
+              <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: NAVY }}>
                 <ArrowDown size={15} color="#EF4444" /> Outstanding Payments
               </h3>
               {pendingInvoices.map((inv) => {
@@ -128,7 +128,7 @@ export function ParentFees() {
                 return (
                   <div key={inv.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium" style={{ color: PLUM }}>{inv.term?.name || "Term"} Fee</span>
+                      <span className="text-sm font-medium" style={{ color: NAVY }}>{inv.term?.name || "Term"} Fee</span>
                       <span className="text-xs font-mono font-bold" style={{ color: inv.status === "overdue" ? "#EF4444" : "#F59E0B" }}>
                         GH₵ {(due / 100).toLocaleString()}
                       </span>
@@ -153,14 +153,14 @@ export function ParentFees() {
           {/* Payment history */}
           {payments.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: PLUM }}>
+              <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: NAVY }}>
                 <ArrowUp size={15} color="#10B981" /> Payment History
               </h3>
               {payments.slice(0, 10).map((p) => (
                 <div key={p.id} className="p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-medium" style={{ color: PLUM }}>{p.method.toUpperCase()}</span>
+                      <span className="text-xs font-medium" style={{ color: NAVY }}>{p.method.toUpperCase()}</span>
                       <p className="text-[10px]" style={{ color: MUTED }}>{new Date(p.created_at).toLocaleDateString()}</p>
                     </div>
                     <span className="text-sm font-mono font-bold" style={{ color: "#10B981" }}>

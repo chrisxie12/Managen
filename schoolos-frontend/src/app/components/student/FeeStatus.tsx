@@ -1,7 +1,7 @@
 import { Wallet, Loader2 } from "lucide-react";
 import type { Invoice } from "./types";
 
-const MUTED = "#7D6077";
+const MUTED = "#6B7280";
 
 export function FeeStatus({ invoices, loading }: { invoices: Invoice[]; loading: boolean }) {
   if (loading) {

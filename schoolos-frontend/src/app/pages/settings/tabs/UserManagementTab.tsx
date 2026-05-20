@@ -9,9 +9,9 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 type User = {
   id: string;
@@ -51,7 +51,7 @@ const ROLE_OPTIONS = ["Headmaster", "Accountant", "Teacher", "Parent"];
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -449,7 +449,7 @@ export function UserManagementTab({ role }: Props) {
   if (loadingUsers && users.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="animate-spin" size={28} color={PLUM} />
+        <Loader2 className="animate-spin" size={28} color={NAVY} />
       </div>
     );
   }
@@ -459,7 +459,7 @@ export function UserManagementTab({ role }: Props) {
       <SectionCard title="Invite Users" desc="Send invitations to new school members">
         <div className="flex flex-col sm:flex-row gap-3 items-end">
           <div className="flex-1 w-full">
-            <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Email</label>
+            <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Email</label>
             <div className="relative">
               <Input
                 type="email"
@@ -480,7 +480,7 @@ export function UserManagementTab({ role }: Props) {
             </div>
           </div>
           <div className="w-full sm:w-44">
-            <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Role</label>
+            <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Role</label>
             <Select value={inviteRole} onValueChange={setInviteRole}>
               <SelectTrigger className="h-9 text-xs rounded-xl"
                 style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -497,7 +497,7 @@ export function UserManagementTab({ role }: Props) {
             onClick={handleSendInvite}
             disabled={sendingInvite || !inviteEmail}
             className="text-xs rounded-xl h-9 px-5 w-full sm:w-auto"
-            style={{ background: PLUM }}
+            style={{ background: NAVY }}
           >
             {sendingInvite ? (
               <Loader2 size={14} className="animate-spin mr-1" />
@@ -513,7 +513,7 @@ export function UserManagementTab({ role }: Props) {
         <SectionCard title="Pending Invitations" desc="Invitations that have been sent but not yet accepted">
           {loadingInvitations ? (
             <div className="flex justify-center py-4">
-              <Loader2 size={18} className="animate-spin" color={PLUM} />
+              <Loader2 size={18} className="animate-spin" color={NAVY} />
             </div>
           ) : (
             <div className="space-y-2">
@@ -531,7 +531,7 @@ export function UserManagementTab({ role }: Props) {
                     <div className="flex items-center gap-3 min-w-0">
                       <Mail size={14} color={MUTED} className="flex-shrink-0" />
                       <div className="min-w-0">
-                        <span className="font-medium truncate block" style={{ color: PLUM }}>{inv.email}</span>
+                        <span className="font-medium truncate block" style={{ color: NAVY }}>{inv.email}</span>
                         <span style={{ color: MUTED }}>{inv.role} &middot; Sent {sentDate} &middot; Expires {expiresStr}</span>
                       </div>
                     </div>
@@ -540,7 +540,7 @@ export function UserManagementTab({ role }: Props) {
                         onClick={() => handleResendInvite(inv.id)}
                         disabled={resendingId === inv.id}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-50"
-                        style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}
+                        style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
                       >
                         {resendingId === inv.id ? "..." : "Resend"}
                       </button>
@@ -613,7 +613,7 @@ export function UserManagementTab({ role }: Props) {
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 mb-3 px-3 py-2 rounded-xl"
             style={{ background: "rgba(56,25,50,0.06)" }}>
-            <span className="text-xs font-medium" style={{ color: PLUM }}>
+            <span className="text-xs font-medium" style={{ color: NAVY }}>
               {selectedIds.size} selected
             </span>
             <button
@@ -628,7 +628,7 @@ export function UserManagementTab({ role }: Props) {
             <button
               onClick={handleExportSelected}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
-              style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}
+              style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
             >
               <Download size={12} />
               Export Selected (CSV)
@@ -638,7 +638,7 @@ export function UserManagementTab({ role }: Props) {
 
         {loadingUsers ? (
           <div className="flex justify-center py-10">
-            <Loader2 size={22} className="animate-spin" color={PLUM} />
+            <Loader2 size={22} className="animate-spin" color={NAVY} />
           </div>
         ) : users.length === 0 ? (
           <div className="text-center py-10">
@@ -685,11 +685,11 @@ export function UserManagementTab({ role }: Props) {
                         <div className="flex items-center gap-2.5">
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                            style={{ background: PLUM_LIGHT }}
+                            style={{ background: NAVY_LIGHT }}
                           >
                             {getInitials(user.full_name)}
                           </div>
-                          <span className="font-medium" style={{ color: PLUM }}>{user.full_name}</span>
+                          <span className="font-medium" style={{ color: NAVY }}>{user.full_name}</span>
                         </div>
                       </td>
                       <td className="py-3 pr-3" style={{ color: MUTED }}>{user.email}</td>
@@ -751,7 +751,7 @@ export function UserManagementTab({ role }: Props) {
                             {resettingPwId === user.id ? (
                               <Loader2 size={13} className="animate-spin" />
                             ) : (
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={PLUM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                               </svg>
                             )}
@@ -788,7 +788,7 @@ export function UserManagementTab({ role }: Props) {
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page <= 1}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
-                    style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}
+                    style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
                   >
                     Previous
                   </button>
@@ -796,7 +796,7 @@ export function UserManagementTab({ role }: Props) {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page >= totalPages}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
-                    style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}
+                    style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}
                   >
                     Next
                   </button>
@@ -810,12 +810,12 @@ export function UserManagementTab({ role }: Props) {
       <SectionCard title="Role Permissions" desc="Manage permissions assigned to each role">
         {loadingRoles ? (
           <div className="flex justify-center py-10">
-            <Loader2 size={22} className="animate-spin" color={PLUM} />
+            <Loader2 size={22} className="animate-spin" color={NAVY} />
           </div>
         ) : (
           <>
             <div className="mb-4">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Select Role</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Select Role</label>
               <Select value={selectedRoleId} onValueChange={handleRoleSelect}>
                 <SelectTrigger className="h-9 text-xs rounded-xl w-full sm:w-64"
                   style={{ borderColor: "rgba(56,25,50,0.12)" }}>
@@ -840,7 +840,7 @@ export function UserManagementTab({ role }: Props) {
                   <>
                     {loadingPermissions ? (
                       <div className="flex justify-center py-6">
-                        <Loader2 size={18} className="animate-spin" color={PLUM} />
+                        <Loader2 size={18} className="animate-spin" color={NAVY} />
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -849,7 +849,7 @@ export function UserManagementTab({ role }: Props) {
                         ) : (
                           Object.entries(groupedPermissions).map(([module, perms]) => (
                             <div key={module}>
-                              <h4 className="text-xs font-semibold mb-2 capitalize" style={{ color: PLUM }}>
+                              <h4 className="text-xs font-semibold mb-2 capitalize" style={{ color: NAVY }}>
                                 {module.replace(/_/g, ' ')}
                               </h4>
                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
@@ -861,7 +861,7 @@ export function UserManagementTab({ role }: Props) {
                                       className="flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-xs"
                                       style={{
                                         background: isChecked ? "rgba(56,25,50,0.06)" : "transparent",
-                                        color: PLUM,
+                                        color: NAVY,
                                       }}
                                     >
                                       <input
@@ -885,7 +885,7 @@ export function UserManagementTab({ role }: Props) {
                         onClick={handleSavePermissions}
                         disabled={savingPermissions || loadingPermissions}
                         className="text-xs rounded-xl h-9 px-6"
-                        style={{ background: PLUM }}
+                        style={{ background: NAVY }}
                       >
                         {savingPermissions ? (
                           <Loader2 size={14} className="animate-spin mr-1" />

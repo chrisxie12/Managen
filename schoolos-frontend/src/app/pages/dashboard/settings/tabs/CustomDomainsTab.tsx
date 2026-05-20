@@ -6,13 +6,13 @@ import { Button } from "../../../../components/ui/button";
 import { Badge } from "../../../../components/ui/badge";
 import { api } from "../../../../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -118,7 +118,7 @@ export function CustomDomainsTab({ role }: Props) {
   const statusCfg = STATUS_CONFIG[status];
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
   }
 
   return (
@@ -126,7 +126,7 @@ export function CustomDomainsTab({ role }: Props) {
       <SectionCard title="Custom Domain" desc="Point your own domain to your school portal">
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
           <div className="flex-1 w-full">
-            <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Domain Name</label>
+            <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Domain Name</label>
             <Input value={domain} onChange={(e) => setDomain(e.target.value)}
               disabled={isReadOnly}
               className="h-9 text-sm rounded-xl w-full"
@@ -136,7 +136,7 @@ export function CustomDomainsTab({ role }: Props) {
           {!isReadOnly && (
             <div className="flex gap-2">
               <Button onClick={handleSave} disabled={saving || !domain.trim()}
-                className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
                 {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Globe size={14} className="mr-1" />}
                 Save Domain
               </Button>
@@ -160,7 +160,7 @@ export function CustomDomainsTab({ role }: Props) {
                 : <Globe size={20} color={statusCfg.color} />}
             </div>
             <div>
-              <p className="text-sm font-medium" style={{ color: PLUM }}>
+              <p className="text-sm font-medium" style={{ color: NAVY }}>
                 {domain || "No domain configured"}
               </p>
               <Badge className="text-[10px] font-medium px-2 py-0.5 mt-0.5 rounded-full"
@@ -172,7 +172,7 @@ export function CustomDomainsTab({ role }: Props) {
           </div>
           {(status === "pending_dns" || status === "failed") && !isReadOnly && (
             <Button onClick={handleVerify} disabled={verifying}
-              className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
               {verifying ? <Loader2 size={14} className="animate-spin mr-1" /> : <RefreshCw size={14} className="mr-1" />}
               Verify Now
             </Button>
@@ -183,8 +183,8 @@ export function CustomDomainsTab({ role }: Props) {
           <div className="mt-4 p-3 rounded-xl text-xs" style={{ background: "rgba(217,119,6,0.06)", border: "1px solid rgba(217,119,6,0.15)" }}>
             <p className="font-medium mb-1" style={{ color: "#D97706" }}>DNS Configuration Required</p>
             <p style={{ color: MUTED }}>
-              Add a CNAME record pointing <span className="font-mono font-medium" style={{ color: PLUM }}>{domain}</span> to{' '}
-              <span className="font-mono font-medium" style={{ color: PLUM }}>portal.schoolos.io</span>
+              Add a CNAME record pointing <span className="font-mono font-medium" style={{ color: NAVY }}>{domain}</span> to{' '}
+              <span className="font-mono font-medium" style={{ color: NAVY }}>portal.schoolos.io</span>
               {' '}in your DNS provider settings. Click "Verify Now" after adding the record.
             </p>
           </div>
@@ -204,7 +204,7 @@ export function CustomDomainsTab({ role }: Props) {
               Your domain is active and secured with an SSL certificate.
             </p>
             <p className="mt-1" style={{ color: MUTED }}>
-              Access your school portal at <span className="font-mono font-medium" style={{ color: PLUM }}>https://{domain}</span>
+              Access your school portal at <span className="font-mono font-medium" style={{ color: NAVY }}>https://{domain}</span>
             </p>
           </div>
         )}

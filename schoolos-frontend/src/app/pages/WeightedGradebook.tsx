@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type ClassItem = { id: string; name: string };
 type Term = { id: string; name: string };
@@ -193,7 +193,7 @@ export function WeightedGradebook() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: PLUM }}>Weighted Gradebook</h1>
+        <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Weighted Gradebook</h1>
         <div className="flex gap-2">
           <button
             onClick={fetchGradebook}
@@ -202,7 +202,7 @@ export function WeightedGradebook() {
             style={{
               background: "white",
               border: "1px solid rgba(56,25,50,0.15)",
-              color: PLUM,
+              color: NAVY,
               opacity: fetching || !selectedClass || !selectedTerm ? 0.5 : 1,
             }}
           >
@@ -214,7 +214,7 @@ export function WeightedGradebook() {
             disabled={generating || !hasData}
             className="px-4 py-2 rounded-xl flex items-center gap-2 text-sm transition-all duration-200 text-white"
             style={{
-              background: generating ? MUTED : PLUM,
+              background: generating ? MUTED : NAVY,
               opacity: generating || !hasData ? 0.6 : 1,
             }}
           >
@@ -243,7 +243,7 @@ export function WeightedGradebook() {
             style={{
               background: "white",
               border: "1px solid rgba(56,25,50,0.12)",
-              color: PLUM,
+              color: NAVY,
             }}
           >
             <option value="">Select a class...</option>
@@ -263,7 +263,7 @@ export function WeightedGradebook() {
             style={{
               background: "white",
               border: "1px solid rgba(56,25,50,0.12)",
-              color: PLUM,
+              color: NAVY,
             }}
           >
             <option value="">Select a term...</option>
@@ -291,7 +291,7 @@ export function WeightedGradebook() {
         <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ background: PLUM }}>
+              <tr style={{ background: NAVY }}>
                 <th className="text-left p-3 text-xs uppercase tracking-wider text-white w-8"></th>
                 <th className="text-left p-3 text-xs uppercase tracking-wider text-white">Student Name</th>
                 <th className="text-left p-3 text-xs uppercase tracking-wider text-white">Roll No</th>
@@ -323,9 +323,9 @@ export function WeightedGradebook() {
                           isExpanded ? <ChevronDown size={14} style={{ color: MUTED }} /> : <ChevronRight size={14} style={{ color: MUTED }} />
                         )}
                       </td>
-                      <td className="p-3 font-medium" style={{ color: PLUM }}>{entry.name}</td>
+                      <td className="p-3 font-medium" style={{ color: NAVY }}>{entry.name}</td>
                       <td className="p-3" style={{ color: MUTED }}>{entry.roll_number || entry.admission_number || "-"}</td>
-                      <td className="p-3 text-center font-semibold" style={{ color: PLUM }}>
+                      <td className="p-3 text-center font-semibold" style={{ color: NAVY }}>
                         {entry.error ? (
                           <span className="text-red-500 text-xs">{entry.error}</span>
                         ) : entry.percentage !== undefined ? (
@@ -351,7 +351,7 @@ export function WeightedGradebook() {
                       <tr>
                         <td colSpan={6} className="p-0">
                           <div className="p-4" style={{ background: "rgba(56,25,50,0.03)" }}>
-                            <h4 className="text-sm font-semibold mb-2" style={{ color: PLUM }}>Category Breakdown</h4>
+                            <h4 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Category Breakdown</h4>
                             <table className="w-full text-xs">
                               <thead>
                                 <tr>
@@ -365,13 +365,13 @@ export function WeightedGradebook() {
                               <tbody>
                                 {Object.entries(entry.category_breakdown!).map(([cat, data]) => (
                                   <tr key={cat}>
-                                    <td className="p-2" style={{ color: PLUM }}>{cat}</td>
-                                    <td className="p-2 text-center" style={{ color: PLUM }}>{data.average}%</td>
+                                    <td className="p-2" style={{ color: NAVY }}>{cat}</td>
+                                    <td className="p-2 text-center" style={{ color: NAVY }}>{data.average}%</td>
                                     <td className="p-2 text-center" style={{ color: MUTED }}>{data.weight}%</td>
                                     <td className="p-2 text-center" style={{ color: MUTED }}>
                                       {data.assessments_count}/{data.total_assessments}
                                     </td>
-                                    <td className="p-2 text-center font-medium" style={{ color: PLUM }}>
+                                    <td className="p-2 text-center font-medium" style={{ color: NAVY }}>
                                       {data.weighted_score.toFixed(2)}
                                     </td>
                                   </tr>

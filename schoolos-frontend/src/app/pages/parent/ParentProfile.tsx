@@ -4,10 +4,10 @@ import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "sonner";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function ParentProfile() {
   const { user, school, logout } = useAuth();
@@ -68,11 +68,11 @@ export function ParentProfile() {
       {/* Profile header */}
       <div className="flex items-center gap-4">
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-lg font-bold"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {user?.fullName?.charAt(0) || "P"}
         </div>
         <div>
-          <h2 className="text-lg font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{user?.fullName}</h2>
+          <h2 className="text-lg font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>{user?.fullName}</h2>
           <p className="text-xs" style={{ color: MUTED }}>{school?.name}</p>
           <p className="text-[10px]" style={{ color: MUTED }}>Parent</p>
         </div>
@@ -81,14 +81,14 @@ export function ParentProfile() {
       {/* Contact */}
       <div className="space-y-2">
         <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-          <Mail size={16} color={PLUM_LIGHT} />
+          <Mail size={16} color={NAVY_LIGHT} />
           <div className="min-w-0">
             <p className="text-[10px] font-medium" style={{ color: MUTED }}>Email</p>
-            <p className="text-sm" style={{ color: PLUM }}>{user?.email}</p>
+            <p className="text-sm" style={{ color: NAVY }}>{user?.email}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-          <Phone size={16} color={PLUM_LIGHT} />
+          <Phone size={16} color={NAVY_LIGHT} />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-medium" style={{ color: MUTED }}>Phone (for alerts)</p>
             <input
@@ -96,7 +96,7 @@ export function ParentProfile() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="w-full bg-transparent text-sm outline-none"
-              style={{ color: PLUM }}
+              style={{ color: NAVY }}
               placeholder="+233 XX XXX XXXX"
             />
           </div>
@@ -105,7 +105,7 @@ export function ParentProfile() {
 
       {/* Notification preferences */}
       <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" style={{ color: PLUM }}>
+        <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" style={{ color: NAVY }}>
           <Bell size={15} /> Notification Preferences
         </h3>
         <div className="space-y-3">
@@ -116,7 +116,7 @@ export function ParentProfile() {
           ].map((item) => (
             <label key={item.key} className="flex items-center justify-between py-2">
               <div>
-                <p className="text-sm font-medium" style={{ color: PLUM }}>{item.label}</p>
+                <p className="text-sm font-medium" style={{ color: NAVY }}>{item.label}</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>{item.desc}</p>
               </div>
               <div
@@ -136,7 +136,7 @@ export function ParentProfile() {
         onClick={handleSave}
         disabled={saving}
         className="w-full py-3 rounded-2xl text-sm font-semibold active:scale-95 transition-all disabled:opacity-50"
-        style={{ background: PLUM, color: MILK }}
+        style={{ background: NAVY, color: CREAM }}
       >
         {saving ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Save Preferences"}
       </button>

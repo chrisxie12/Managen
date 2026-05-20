@@ -3,8 +3,8 @@ import { Upload, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const INDIGO = "#6366F1";
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const GHANA_REGIONS = [
   "Greater Accra", "Ashanti", "Western", "Eastern", "Central",
@@ -40,7 +40,7 @@ function Input({ label, required, value, onChange, placeholder, type, error }: a
       </label>
       <input type={type || "text"} value={value} onChange={onChange} placeholder={placeholder}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: PLUM }}
+        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
       />
       {error && <p className="text-xs mt-1 text-red-500">{error}</p>}
     </div>
@@ -55,7 +55,7 @@ function Textarea({ label, required, value, onChange, placeholder, error }: any)
       </label>
       <textarea value={value} onChange={onChange} placeholder={placeholder} rows={3}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all resize-none"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: PLUM }}
+        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
       />
       {error && <p className="text-xs mt-1 text-red-500">{error}</p>}
     </div>
@@ -70,7 +70,7 @@ function Select({ label, required, value, onChange, options, error }: any) {
       </label>
       <select value={value} onChange={onChange}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: value ? PLUM : MUTED }}
+        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: value ? NAVY : MUTED }}
       >
         <option value="" disabled>Select {label.toLowerCase()}...</option>
         {options.map((o: any) => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -158,7 +158,7 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
 
   return (
     <div className="py-4">
-      <h2 className="text-2xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>
+      <h2 className="text-2xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
         Set up your school profile
       </h2>
       <p className="text-sm text-center mb-6" style={{ color: MUTED }}>
@@ -226,7 +226,7 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
                 ) : (
                   <div>
                     <Upload size={24} color={MUTED} className="mx-auto mb-2" />
-                    <p className="text-sm font-medium" style={{ color: PLUM }}>Drag & drop your school logo here</p>
+                    <p className="text-sm font-medium" style={{ color: NAVY }}>Drag & drop your school logo here</p>
                     <p className="text-xs mt-1" style={{ color: MUTED }}>or click to browse</p>
                     <p className="text-xs mt-2" style={{ color: MUTED }}>Supported: PNG, JPG, SVG (Max 2MB)</p>
                   </div>
@@ -285,7 +285,7 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
 
       <div className="flex justify-between mt-10">
         <button onClick={onBack} className="px-5 py-2 rounded-xl text-sm font-medium active:scale-95 transition-transform"
-          style={{ background: "rgba(0,0,0,0.04)", color: PLUM }}>Back</button>
+          style={{ background: "rgba(0,0,0,0.04)", color: NAVY }}>Back</button>
         <button onClick={handleSubmit} disabled={!allRequired}
           className="px-8 py-2 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-40"
           style={{ background: INDIGO, color: "white" }}>Continue</button>

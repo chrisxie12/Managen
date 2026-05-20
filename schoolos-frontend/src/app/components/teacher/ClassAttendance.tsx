@@ -3,10 +3,10 @@ import { Check, X, Clock, AlertCircle, Loader2, CheckCircle2, AlertTriangle } fr
 import { api } from "../../services/api";
 import type { ClassStudent } from "./types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const STATUS_OPTIONS = [
   { value: "Present", color: "#10B981", bg: "#D1FAE5", icon: Check },
@@ -73,7 +73,7 @@ export function ClassAttendance({ className, students }: { className: string; st
 
       <div className="flex items-center gap-3 flex-wrap">
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-          className="px-4 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          className="px-4 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
         <div className="flex gap-2 flex-wrap">
           {summary.filter(s => s.count > 0).map(s => (
             <span key={s.label} className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium" style={{ background: `${s.color}15`, color: s.color }}>
@@ -83,7 +83,7 @@ export function ClassAttendance({ className, students }: { className: string; st
         </div>
         <button onClick={saveAttendance} disabled={saving || students.length === 0}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50 ml-auto"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {saving ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
           {saving ? "Saving..." : "Save Attendance"}
         </button>
@@ -102,10 +102,10 @@ export function ClassAttendance({ className, students }: { className: string; st
               <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                       {student.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                     </div>
-                    <span className="font-medium" style={{ color: PLUM }}>{student.name}</span>
+                    <span className="font-medium" style={{ color: NAVY }}>{student.name}</span>
                   </div>
                 </td>
                 {STATUS_OPTIONS.map(s => (

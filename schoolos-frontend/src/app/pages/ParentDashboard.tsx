@@ -5,7 +5,7 @@ import { api } from "../services/api";
 import { ChildCard } from "../components/parent/ChildCard";
 import { LoadingSpinner, ErrorState, EmptyState, AlertBanner, palette } from "../components/dashboard";
 
-const { PLUM, MUTED } = palette;
+const { NAVY, MUTED } = palette;
 
 type ChildData = {
   id: string;
@@ -46,7 +46,7 @@ export function ParentDashboard() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>My Children</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>My Children</h2>
           <p className="text-sm" style={{ color: MUTED }}>Track your child's progress</p>
         </div>
         <div className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>

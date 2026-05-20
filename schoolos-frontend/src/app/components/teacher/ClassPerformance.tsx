@@ -3,9 +3,9 @@ import { Loader2, Trophy, TrendingDown, BarChart3 } from "lucide-react";
 import { api } from "../../services/api";
 import type { Performer, GradeRule } from "./types";
 
-const PLUM = "#381932";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function ClassPerformance({ classId }: { classId: string; className: string }) {
   const [terms, setTerms] = useState<{ id: string; name: string; is_current: boolean }[]>([]);
@@ -68,7 +68,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 180 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name} {t.is_current ? "(Current)" : ""}</option>)}
         </select>
       </div>
@@ -76,7 +76,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
       {!performers ? (
         <div className="text-center py-12" style={{ color: MUTED }}>
           <BarChart3 size={36} className="mx-auto mb-3" color={MUTED} />
-          <p className="font-semibold" style={{ color: PLUM }}>No Performance Data</p>
+          <p className="font-semibold" style={{ color: NAVY }}>No Performance Data</p>
           <p className="text-sm mt-1">Grades and report cards need to be generated first.</p>
         </div>
       ) : (
@@ -84,18 +84,18 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
           <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <div className="flex items-center gap-2 mb-4">
               <Trophy size={18} color="#10B981" />
-              <h3 className="font-semibold text-sm" style={{ color: PLUM }}>Top Performers</h3>
+              <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Top Performers</h3>
             </div>
             {performers.top.length === 0 ? (
               <p className="text-sm" style={{ color: MUTED }}>No data available.</p>
             ) : (
               <div className="space-y-2">
                 {performers.top.map((p, i) => (
-                  <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: MILK }}>
+                  <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: CREAM }}>
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#10B981", color: "white" }}>{i + 1}</span>
                       <div>
-                        <p className="text-sm font-medium" style={{ color: PLUM }}>{p.student?.name || "Unknown"}</p>
+                        <p className="text-sm font-medium" style={{ color: NAVY }}>{p.student?.name || "Unknown"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{p.student?.admission_no || ""}</p>
                       </div>
                     </div>
@@ -112,7 +112,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
           <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <div className="flex items-center gap-2 mb-4">
               <TrendingDown size={18} color="#EF4444" />
-              <h3 className="font-semibold text-sm" style={{ color: PLUM }}>Needs Improvement</h3>
+              <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Needs Improvement</h3>
             </div>
             {performers.bottom.length === 0 ? (
               <p className="text-sm" style={{ color: MUTED }}>No data available.</p>
@@ -123,7 +123,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
                     <div className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#EF4444", color: "white" }}>{i + 1}</span>
                       <div>
-                        <p className="text-sm font-medium" style={{ color: PLUM }}>{p.student?.name || "Unknown"}</p>
+                        <p className="text-sm font-medium" style={{ color: NAVY }}>{p.student?.name || "Unknown"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{p.student?.admission_no || ""}</p>
                       </div>
                     </div>

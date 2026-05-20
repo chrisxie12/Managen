@@ -9,14 +9,14 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../components/ui/select";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -26,7 +26,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -383,7 +383,7 @@ export function SecurityTab({ role }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Shield size={48} color="#EF4444" className="mb-4" />
-        <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>Access Denied</h3>
+        <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>Access Denied</h3>
         <p className="text-xs" style={{ color: MUTED }}>Only school administrators can access security settings.</p>
       </div>
     );
@@ -427,7 +427,7 @@ export function SecurityTab({ role }: Props) {
           </div>
           <div className="flex justify-end mt-1">
             <Button onClick={handleChangePassword} disabled={changingPassword}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {changingPassword ? (
                 <Loader2 size={14} className="animate-spin mr-1" />
               ) : (
@@ -444,7 +444,7 @@ export function SecurityTab({ role }: Props) {
             <div className="flex items-center gap-3">
               <Smartphone size={18} color={MUTED} />
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>Authenticator App</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>Authenticator App</p>
                 <p className="text-xs" style={{ color: MUTED }}>
                   Status: <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
                     style={{
@@ -458,19 +458,19 @@ export function SecurityTab({ role }: Props) {
             </div>
             {!twoFAEnabled && (
               <Button onClick={() => setShow2FAModal(true)}
-                className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM_LIGHT }}>
+                className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY_LIGHT }}>
                 Enable 2FA
               </Button>
             )}
           </div>
           {showBackupCodes && (
             <div className="mt-3 p-3 rounded-xl" style={{ background: "rgba(56,25,50,0.04)" }}>
-              <p className="text-xs font-medium mb-2" style={{ color: PLUM }}>Backup Codes</p>
+              <p className="text-xs font-medium mb-2" style={{ color: NAVY }}>Backup Codes</p>
               <p className="text-xs mb-2" style={{ color: MUTED }}>Save these codes in a secure place. You can use them to log in if you lose access to your authenticator app.</p>
-              <div className="p-2 rounded-lg mb-2 font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              <div className="p-2 rounded-lg mb-2 font-mono text-xs break-all" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 {backupCodes}
               </div>
-              <Button onClick={handleDownloadCodes} className="text-xs rounded-xl h-8 px-3" style={{ background: PLUM_LIGHT }}>
+              <Button onClick={handleDownloadCodes} className="text-xs rounded-xl h-8 px-3" style={{ background: NAVY_LIGHT }}>
                 <Download size={12} className="mr-1" /> Download Codes
               </Button>
             </div>
@@ -498,15 +498,15 @@ export function SecurityTab({ role }: Props) {
                   {sessions.map((session) => (
                     <tr key={session.id} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
                       <td className="py-2.5 pr-3">
-                        <span className="font-medium" style={{ color: PLUM }}>{session.device}</span>
+                        <span className="font-medium" style={{ color: NAVY }}>{session.device}</span>
                         {session.is_current && (
                           <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium"
                             style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>Current</span>
                         )}
                       </td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{session.browser}</td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{session.ip}</td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{session.location}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.browser}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.ip}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.location}</td>
                       <td className="py-2.5 pr-3" style={{ color: MUTED }}>{session.last_active}</td>
                       <td className="py-2.5">
                         {!session.is_current && (
@@ -542,19 +542,19 @@ export function SecurityTab({ role }: Props) {
         <SectionCard title="Login History" desc="Recent login activity on your account">
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <div className="flex-1">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>From</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>From</label>
               <Input type="date" value={auditDateFrom}
                 onChange={(e) => setAuditDateFrom(e.target.value)}
                 className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="flex-1">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>To</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>To</label>
               <Input type="date" value={auditDateTo}
                 onChange={(e) => setAuditDateTo(e.target.value)}
                 className="h-9 text-xs rounded-xl w-full" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="w-full sm:w-40">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Status</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Status</label>
               <Select value={auditStatusFilter} onValueChange={setAuditStatusFilter}>
                 <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
                   <SelectValue />
@@ -569,7 +569,7 @@ export function SecurityTab({ role }: Props) {
           </div>
           {loadingAudit ? (
             <div className="flex justify-center py-6">
-              <Loader2 size={18} className="animate-spin" color={PLUM} />
+              <Loader2 size={18} className="animate-spin" color={NAVY} />
             </div>
           ) : loginHistory.length === 0 ? (
             <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No login history.</p>
@@ -587,9 +587,9 @@ export function SecurityTab({ role }: Props) {
                 <tbody>
                   {loginHistory.map((entry, i) => (
                     <tr key={i} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{entry.timestamp}</td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{entry.ip}</td>
-                      <td className="py-2.5 pr-3" style={{ color: PLUM }}>{entry.device}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.timestamp}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.ip}</td>
+                      <td className="py-2.5 pr-3" style={{ color: NAVY }}>{entry.device}</td>
                       <td className="py-2.5">
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
                           style={{
@@ -614,7 +614,7 @@ export function SecurityTab({ role }: Props) {
             <div className="flex items-center justify-between py-1">
               <div className="flex items-center gap-2">
                 <AlertTriangle size={15} color={MUTED} />
-                <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>
+                <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>
                   Email me on new login from unknown device
                 </label>
               </div>
@@ -623,7 +623,7 @@ export function SecurityTab({ role }: Props) {
             <div className="flex items-center justify-between py-1">
               <div className="flex items-center gap-2">
                 <Key size={15} color={MUTED} />
-                <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>
+                <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>
                   Email me if password is changed
                 </label>
               </div>
@@ -632,7 +632,7 @@ export function SecurityTab({ role }: Props) {
             <div className="flex items-center justify-between py-1">
               <div className="flex items-center gap-2">
                 <Shield size={15} color={MUTED} />
-                <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>
+                <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>
                   Email me on failed login attempts (after 3)
                 </label>
               </div>
@@ -641,7 +641,7 @@ export function SecurityTab({ role }: Props) {
           </div>
           <div className="flex justify-end mt-2">
             <Button onClick={handleSaveAlerts} disabled={savingAlerts}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {savingAlerts ? (
                 <Loader2 size={14} className="animate-spin mr-1" />
               ) : (
@@ -659,22 +659,22 @@ export function SecurityTab({ role }: Props) {
               <input type="range" min={6} max={32} value={minPasswordLength}
                 onChange={(e) => setMinPasswordLength(Number(e.target.value))}
                 className="w-full accent-purple-700" style={{ height: 4 }} />
-              <span className="text-xs font-medium" style={{ color: PLUM }}>{minPasswordLength} characters</span>
+              <span className="text-xs font-medium" style={{ color: NAVY }}>{minPasswordLength} characters</span>
             </FormField>
             <div className="flex items-center justify-between py-2">
-              <label className="text-xs font-medium" style={{ color: PLUM }}>Require Uppercase</label>
+              <label className="text-xs font-medium" style={{ color: NAVY }}>Require Uppercase</label>
               <Switch checked={requireUppercase} onCheckedChange={setRequireUppercase} />
             </div>
             <div className="flex items-center justify-between py-2">
-              <label className="text-xs font-medium" style={{ color: PLUM }}>Require Lowercase</label>
+              <label className="text-xs font-medium" style={{ color: NAVY }}>Require Lowercase</label>
               <Switch checked={requireLowercase} onCheckedChange={setRequireLowercase} />
             </div>
             <div className="flex items-center justify-between py-2">
-              <label className="text-xs font-medium" style={{ color: PLUM }}>Require Digit</label>
+              <label className="text-xs font-medium" style={{ color: NAVY }}>Require Digit</label>
               <Switch checked={requireDigit} onCheckedChange={setRequireDigit} />
             </div>
             <div className="flex items-center justify-between py-2">
-              <label className="text-xs font-medium" style={{ color: PLUM }}>Require Special Character</label>
+              <label className="text-xs font-medium" style={{ color: NAVY }}>Require Special Character</label>
               <Switch checked={requireSpecial} onCheckedChange={setRequireSpecial} />
             </div>
             <FormField label="Password Expiry (days)">
@@ -695,7 +695,7 @@ export function SecurityTab({ role }: Props) {
           </div>
           <div className="flex justify-end mt-3">
             <Button onClick={handleSavePolicy} disabled={savingPolicy}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {savingPolicy ? (
                 <Loader2 size={14} className="animate-spin mr-1" />
               ) : (
@@ -711,24 +711,24 @@ export function SecurityTab({ role }: Props) {
       {show2FAModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4" style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.15)" }}>
-            <h3 className="text-sm font-semibold mb-2" style={{ color: PLUM }}>Setup Two-Factor Authentication</h3>
+            <h3 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Setup Two-Factor Authentication</h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>
               Scan the QR code with your authenticator app (e.g. Google Authenticator, Authy).
             </p>
             <div className="flex justify-center mb-4">
               <div className="w-48 h-48 rounded-xl flex items-center justify-center"
                 style={{ background: "rgba(56,25,50,0.04)", border: "2px dashed rgba(56,25,50,0.15)" }}>
-                <Smartphone size={48} color={PLUM_LIGHT} />
+                <Smartphone size={48} color={NAVY_LIGHT} />
               </div>
             </div>
-            <p className="text-xs mb-3 font-medium" style={{ color: PLUM }}>Step-by-step instructions:</p>
+            <p className="text-xs mb-3 font-medium" style={{ color: NAVY }}>Step-by-step instructions:</p>
             <ol className="text-xs mb-4 space-y-1" style={{ color: MUTED }}>
               <li>1. Install an authenticator app on your device</li>
               <li>2. Open the app and scan the QR code displayed above</li>
               <li>3. Enter the 6-digit code from the app below</li>
             </ol>
             <div className="mb-4">
-              <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Verification Code</label>
+              <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Verification Code</label>
               <Input
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
@@ -744,7 +744,7 @@ export function SecurityTab({ role }: Props) {
                 Cancel
               </Button>
               <Button onClick={handleConfirm2FA} disabled={verificationCode.length !== 6}
-                className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM }}>
+                className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY }}>
                 Confirm
               </Button>
             </div>

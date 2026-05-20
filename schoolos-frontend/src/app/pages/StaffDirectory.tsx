@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Users, Search, ChevronLeft, ChevronRight, Loader2, ArrowUpDown, Briefcase } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type StaffMember = {
   id: string; name: string; full_name: string; email: string; phone: string;
@@ -18,7 +18,7 @@ const ITEMS_PER_PAGE = 50;
 function LoadingSpinner({ height = 48 }: { height?: number }) {
   return (
     <div className="flex items-center justify-center" style={{ height }}>
-      <Loader2 className="animate-spin" size={24} color={PLUM} />
+      <Loader2 className="animate-spin" size={24} color={NAVY} />
     </div>
   );
 }
@@ -31,12 +31,12 @@ function Pagination({ page, total, limit, onChange }: { page: number; total: num
       <span style={{ color: MUTED }}>{total} record{total !== 1 ? "s" : ""}</span>
       <div className="flex items-center gap-2">
         <button onClick={() => onChange(page - 1)} disabled={page <= 1}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronLeft size={14} />
         </button>
-        <span className="font-medium px-2" style={{ color: PLUM }}>{page} / {totalPages}</span>
+        <span className="font-medium px-2" style={{ color: NAVY }}>{page} / {totalPages}</span>
         <button onClick={() => onChange(page + 1)} disabled={page >= totalPages}
-          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}>
+          className="p-1.5 rounded-lg disabled:opacity-30" style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}>
           <ChevronRight size={14} />
         </button>
       </div>
@@ -52,7 +52,7 @@ function SortHeader({ label, field, currentField, order, onChange }: {
     <th className="px-4 py-3 font-medium cursor-pointer select-none" onClick={() => onChange(field, isActive && order === 'asc' ? 'desc' : 'asc')}>
       <div className="flex items-center gap-1">
         <span>{label}</span>
-        <ArrowUpDown size={12} style={{ color: isActive ? PLUM : MUTED, opacity: isActive ? 1 : 0.4 }} />
+        <ArrowUpDown size={12} style={{ color: isActive ? NAVY : MUTED, opacity: isActive ? 1 : 0.4 }} />
       </div>
     </th>
   );
@@ -137,7 +137,7 @@ export function StaffDirectory() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Staff Directory</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Staff Directory</h2>
           <p className="text-sm" style={{ color: MUTED }}>Manage teaching and non-teaching staff</p>
         </div>
         <div className="flex gap-2">
@@ -148,8 +148,8 @@ export function StaffDirectory() {
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: tab === t.key ? PLUM : "white",
-                color: tab === t.key ? MILK : PLUM_LIGHT,
+                background: tab === t.key ? NAVY : "white",
+                color: tab === t.key ? CREAM : NAVY_LIGHT,
                 border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
@@ -162,13 +162,13 @@ export function StaffDirectory() {
         <div>
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <select value={teacherView} onChange={(e) => { setTeacherView(e.target.value); setTeacherDept(""); }}
-              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
               <option value="overall">Overall View</option>
               <option value="by_department">By Department</option>
             </select>
             {teacherView === "by_department" && (
               <select value={teacherDept} onChange={(e) => setTeacherDept(e.target.value)}
-                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
                 <option value="">All Departments</option>
                 {departments.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
@@ -176,7 +176,7 @@ export function StaffDirectory() {
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
               <Search size={14} color={MUTED} />
               <input placeholder="Search by name, email, employee ID..." value={teacherSearch} onChange={(e) => setTeacherSearch(e.target.value)}
-                className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+                className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
             </div>
           </div>
 
@@ -184,7 +184,7 @@ export function StaffDirectory() {
             {teacherLoading ? <LoadingSpinner height={200} /> : teachers.length === 0 ? (
               <div className="text-center py-12">
                 <Users size={40} color={MUTED} className="mx-auto mb-3" />
-                <p style={{ color: PLUM, fontWeight: 600 }}>No teachers found</p>
+                <p style={{ color: NAVY, fontWeight: 600 }}>No teachers found</p>
               </div>
             ) : (
               <>
@@ -205,10 +205,10 @@ export function StaffDirectory() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                                style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                                style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                                 {(t.name || t.full_name || "?").split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                               </div>
-                              <span className="font-medium" style={{ color: PLUM }}>{t.name || t.full_name}</span>
+                              <span className="font-medium" style={{ color: NAVY }}>{t.name || t.full_name}</span>
                             </div>
                           </td>
                           <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{t.employee_id || "—"}</td>
@@ -231,13 +231,13 @@ export function StaffDirectory() {
         <div>
           <div className="flex flex-col sm:flex-row gap-3 mb-4">
             <select value={staffView} onChange={(e) => { setStaffView(e.target.value); setStaffRole(""); }}
-              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+              className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
               <option value="overall">Overall View</option>
               <option value="by_role">By Role</option>
             </select>
             {staffView === "by_role" && (
               <select value={staffRole} onChange={(e) => setStaffRole(e.target.value)}
-                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+                className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
                 <option value="">All Roles</option>
                 {roles.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
@@ -245,7 +245,7 @@ export function StaffDirectory() {
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
               <Search size={14} color={MUTED} />
               <input placeholder="Search by name, employee ID, role..." value={staffSearch} onChange={(e) => setStaffSearch(e.target.value)}
-                className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+                className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
             </div>
           </div>
 
@@ -253,7 +253,7 @@ export function StaffDirectory() {
             {staffLoading ? <LoadingSpinner height={200} /> : staff.length === 0 ? (
               <div className="text-center py-12">
                 <Briefcase size={40} color={MUTED} className="mx-auto mb-3" />
-                <p style={{ color: PLUM, fontWeight: 600 }}>No non-teaching staff found</p>
+                <p style={{ color: NAVY, fontWeight: 600 }}>No non-teaching staff found</p>
               </div>
             ) : (
               <>
@@ -273,10 +273,10 @@ export function StaffDirectory() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-                                style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                                style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                                 {(s.name || s.full_name || "?").split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                               </div>
-                              <span className="font-medium" style={{ color: PLUM }}>{s.name || s.full_name}</span>
+                              <span className="font-medium" style={{ color: NAVY }}>{s.name || s.full_name}</span>
                             </div>
                           </td>
                           <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.employee_id || "—"}</td>

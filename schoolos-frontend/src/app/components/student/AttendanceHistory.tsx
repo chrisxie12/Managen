@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { Check, X, Clock, AlertCircle, Loader2, CalendarCheck } from "lucide-react";
 import type { AttendanceRecord } from "./types";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const STATUS_MAP: Record<string, { color: string; bg: string; icon: any }> = {
   Present: { color: "#10B981", bg: "#D1FAE5", icon: Check },
@@ -57,7 +57,7 @@ export function AttendanceHistory({ records, loading }: { records: AttendanceRec
             const s = STATUS_MAP[r.status] || STATUS_MAP.Present;
             return (
               <div key={r.id} className="flex items-center justify-between p-2 rounded-lg text-sm" style={{ background: `${s.bg}60` }}>
-                <span style={{ color: PLUM }}>{new Date(r.date).toLocaleDateString()}</span>
+                <span style={{ color: NAVY }}>{new Date(r.date).toLocaleDateString()}</span>
                 <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.color }}>
                   <s.icon size={11} /> {r.status}
                 </span>

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { Check, X } from "lucide-react";
 import { api } from "../app/services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 
 type ChecklistItems = {
@@ -76,7 +76,7 @@ export function SetupChecklist() {
   return (
     <div className="mb-4 p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 2px 12px rgba(56,25,50,0.04)" }}>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-sm font-semibold" style={{ color: PLUM }}>Setup Checklist</p>
+        <p className="text-sm font-semibold" style={{ color: NAVY }}>Setup Checklist</p>
         <button onClick={() => setDismissed(true)} className="text-xs" style={{ color: MUTED }}><X size={14} /></button>
       </div>
       <div className="flex items-center gap-2 mb-3">
@@ -95,7 +95,7 @@ export function SetupChecklist() {
                 style={{ background: done ? "#10B981" : "transparent", border: done ? "none" : "2px solid #d1d5db" }}>
                 {done && <Check size={10} color="white" />}
               </div>
-              <span className="text-xs" style={{ color: done ? "#10B981" : PLUM, textDecoration: done ? "line-through" : "none" }}>
+              <span className="text-xs" style={{ color: done ? "#10B981" : NAVY, textDecoration: done ? "line-through" : "none" }}>
                 {item.label}
               </span>
             </button>

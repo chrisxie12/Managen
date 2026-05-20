@@ -1,8 +1,8 @@
 import { Loader2, CheckCircle2 } from "lucide-react";
 import type { Intervention } from "./types";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const SEVERITY_COLORS: Record<string, { bg: string; color: string }> = {
   low: { bg: "#EEF2FF", color: "#3730A3" },
@@ -38,7 +38,7 @@ export function InterventionNotes({ interventions, loading }: { interventions: I
         return (
           <div key={i.id} className="p-3 rounded-xl text-sm" style={{ background: sev.bg, border: `1px solid ${sev.color}30` }}>
             <div className="flex items-center justify-between mb-1">
-              <span className="font-medium" style={{ color: PLUM }}>{TYPE_LABELS[i.type] || i.type}</span>
+              <span className="font-medium" style={{ color: NAVY }}>{TYPE_LABELS[i.type] || i.type}</span>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: sev.color, color: "white" }}>{i.severity}</span>
             </div>
             {i.notes && <p className="text-xs mt-1" style={{ color: sev.color }}>{i.notes}</p>}

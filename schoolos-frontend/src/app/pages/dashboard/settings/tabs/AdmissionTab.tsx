@@ -5,13 +5,13 @@ import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { api } from "../../../../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -21,7 +21,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -113,7 +113,7 @@ export function AdmissionTab({ role }: Props) {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
   }
 
   return (
@@ -164,7 +164,7 @@ export function AdmissionTab({ role }: Props) {
         </div>
         {!isReadOnly && (
           <button onClick={addDoc} className="mt-3 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-colors"
-            style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+            style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
             <Plus size={14} /> Add Document Type
           </button>
         )}
@@ -192,7 +192,7 @@ export function AdmissionTab({ role }: Props) {
 
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
-          <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+          <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save Admission Settings
           </Button>

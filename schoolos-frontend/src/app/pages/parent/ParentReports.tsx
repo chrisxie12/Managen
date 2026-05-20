@@ -4,8 +4,8 @@ import { FileText, Download, Loader2 } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string };
 type ReportCard = {
@@ -63,7 +63,7 @@ export function ParentReports() {
     }
   };
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={PLUM} /></div>;
+  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={NAVY} /></div>;
 
   return (
     <div className="space-y-5">
@@ -72,7 +72,7 @@ export function ParentReports() {
           value={selected?.id || ""}
           onChange={(e) => setSelected(children.find((c) => c.id === e.target.value) || null)}
           className="w-full p-3 rounded-2xl text-sm font-medium"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}
         >
           {children.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
@@ -80,7 +80,7 @@ export function ParentReports() {
 
       {selected && (
         <>
-          <h2 className="text-lg font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>
+          <h2 className="text-lg font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>
             {selected.name} — Report Cards
           </h2>
 
@@ -96,7 +96,7 @@ export function ParentReports() {
               <div key={card.id} className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <span className="text-sm font-semibold" style={{ color: PLUM }}>{card.term?.name || "Term"}</span>
+                    <span className="text-sm font-semibold" style={{ color: NAVY }}>{card.term?.name || "Term"}</span>
                     <p className="text-[11px]" style={{ color: MUTED }}>{card.session?.name || ""}</p>
                   </div>
                   <span className="text-lg font-bold font-mono" style={{
@@ -111,7 +111,7 @@ export function ParentReports() {
                     onClick={() => handleDownload(card.id)}
                     disabled={downloading === card.id}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95 disabled:opacity-50"
-                    style={{ background: PLUM, color: "white" }}
+                    style={{ background: NAVY, color: "white" }}
                   >
                     {downloading === card.id ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
                     Download

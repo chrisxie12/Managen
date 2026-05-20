@@ -1,9 +1,9 @@
 import { ChevronRight, Users, BookOpen } from "lucide-react";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type ChildData = {
   id: string;
@@ -22,16 +22,16 @@ export function ChildCard({ child, onClick }: { child: ChildData; onClick: () =>
       style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}
     >
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-base font-bold" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-base font-bold" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {initials}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold truncate" style={{ color: PLUM, fontFamily: "'Playfair Display', serif", fontSize: "1.05rem" }}>{child.name}</p>
+          <p className="font-bold truncate" style={{ color: NAVY, fontFamily: "'Playfair Display', serif", fontSize: "1.05rem" }}>{child.name}</p>
           <p className="text-sm" style={{ color: MUTED }}>{child.class_name}</p>
         </div>
         <ChevronRight size={16} color={MUTED} />
       </div>
-      <div className="flex items-center gap-3 text-sm" style={{ color: PLUM_LIGHT }}>
+      <div className="flex items-center gap-3 text-sm" style={{ color: NAVY_LIGHT }}>
         <span className="flex items-center gap-1"><BookOpen size={13} /> {child.class_name}</span>
         {child.admission_no && <span className="flex items-center gap-1"><Users size={13} /> {child.admission_no}</span>}
       </div>

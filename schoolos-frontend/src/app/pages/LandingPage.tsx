@@ -12,10 +12,10 @@ import { toast } from "sonner";
 import { SadexLogo } from '../components/SadexLogo';
 import { RoiCalculator } from './public/components/RoiCalculator';
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const pricingPlans = [
   { name: "Free Trial", tagline: "Get started with no commitment", price: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
@@ -186,7 +186,7 @@ export function LandingPage() {
   ];
 
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#FFF3E6] text-[#381932]'}`}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#F8F9FA] text-[#0A2472]'}`}>
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -221,26 +221,26 @@ export function LandingPage() {
         .hero-gradient {
           background: linear-gradient(
             135deg,
-            #FFF3E6,
-            #f9e8f5,
-            #FFF3E6,
-            #f0e8ff,
-            #FFF3E6
+            #F8F9FA,
+            #E8EDF5,
+            #F8F9FA,
+            #FFF3D6,
+            #F8F9FA
           );
           background-size: 400% 400%;
           animation: gradientShift 12s ease infinite;
         }
         .dark .bg-white { background: #1f2937 !important; }
         .dark .bg-gray-50 { background: #111827 !important; }
-        .dark [style*="color: #381932"] { color: #e5e7eb !important; }
-        .dark [style*="color: #512b4a"] { color: #d1d5db !important; }
-        .dark [style*="color: #7D6077"] { color: #9ca3af !important; }
+        .dark [style*="color: #0A2472"] { color: #e5e7eb !important; }
+        .dark [style*="color: #0C2D8A"] { color: #d1d5db !important; }
+        .dark [style*="color: #6B7280"] { color: #9ca3af !important; }
         .dark .text-gray-500 { color: #d1d5db !important; }
         .dark .text-gray-600 { color: #e5e7eb !important; }
         .dark .border-gray-100 { border-color: #374151 !important; }
         .dark .border-gray-200 { border-color: #4B5563 !important; }
         .dark .hero-gradient {
-          background: linear-gradient(135deg, #1f2937, #111827, #1f2937, #1e1b4b, #1f2937) !important;
+          background: linear-gradient(135deg, #0C1A3A, #0A2472, #0C1A3A, #152252, #0C1A3A) !important;
           background-size: 400% 400% !important;
           animation: gradientShift 12s ease infinite !important;
         }
@@ -272,36 +272,36 @@ export function LandingPage() {
       >
         <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
-              <GraduationCap size={18} color={MILK} />
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
+              <GraduationCap size={18} color={CREAM} />
             </div>
-            <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
+            <span style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.25rem", fontWeight: 700 }}>Managen</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
+              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: NAVY_LIGHT, fontSize: "0.95rem" }} className="hover:opacity-70 transition-opacity">{item}</a>
             ))}
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <button onClick={() => setDark(!dark)} className="p-2 rounded-full hover:opacity-70 transition-opacity" style={{ color: PLUM }} title="Toggle theme">
+            <button onClick={() => setDark(!dark)} className="p-2 rounded-full hover:opacity-70 transition-opacity" style={{ color: NAVY }} title="Toggle theme">
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-            <button onClick={() => navigate("/auth")} style={{ color: PLUM, fontSize: "0.9rem" }} className="px-4 py-2 hover:opacity-70">Sign in</button>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, boxShadow: "0 4px 14px rgba(56,25,50,0.3)" }}>
+            <button onClick={() => navigate("/auth")} style={{ color: NAVY, fontSize: "0.9rem" }} className="px-4 py-2 hover:opacity-70">Sign in</button>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, boxShadow: "0 4px 14px rgba(56,25,50,0.3)" }}>
               Start Free <ArrowRight size={14} />
             </button>
           </div>
-          <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden" style={{ color: PLUM }}>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden" style={{ color: NAVY }}>
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
         <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? "max-h-96" : "max-h-0"}`}>
           <div className="px-6 pb-6 flex flex-col gap-4" style={{ borderTop: "1px solid rgba(56,25,50,0.07)" }}>
             {["Features", "Pricing", "Testimonials", "FAQ", "Contact"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: PLUM_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
+              <a key={item} href={`#${item.toLowerCase()}`} style={{ color: NAVY_LIGHT }} onClick={() => setMobileOpen(false)}>{item}</a>
             ))}
-            <button onClick={() => navigate("/auth")} style={{ color: PLUM }} className="text-left">Sign in</button>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm active:scale-95 w-fit" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>Start Free Trial</button>
+            <button onClick={() => navigate("/auth")} style={{ color: NAVY }} className="text-left">Sign in</button>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm active:scale-95 w-fit" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>Start Free Trial</button>
           </div>
         </div>
       </nav>
@@ -312,21 +312,21 @@ export function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="reveal reveal-1">
-                <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-6" style={{ borderColor: PLUM, color: PLUM }}>
+                <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-6" style={{ borderColor: NAVY, color: NAVY }}>
                   &#x1F1EC;&#x1F1ED; Built for Ghanaian Schools
                 </div>
               </div>
-              <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: PLUM }}>
+              <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: NAVY }}>
                 Run Your Entire<br />School Smarter.
               </h1>
               <p className="reveal reveal-2 text-gray-600 max-w-lg mt-4" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>
                 From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos.
               </p>
               <div className="reveal reveal-3 mt-8 flex gap-4 flex-wrap">
-                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: PLUM, color: "white" }}>
+                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: NAVY, color: "white" }}>
                   Start Free Trial <ArrowRight size={16} />
                 </button>
-                <button onClick={() => setDemoOpen(true)} className="request-demo-btn px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${PLUM}`, color: PLUM }}>
+                <button onClick={() => setDemoOpen(true)} className="request-demo-btn px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
                   Request Demo
                 </button>
               </div>
@@ -355,7 +355,7 @@ export function LandingPage() {
                 />
               </div>
               <div className="stat-card absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3">
-                <p className="text-sm font-semibold" style={{ color: PLUM }}>&#x2713; GHS 24,800 fees collected this term</p>
+                <p className="text-sm font-semibold" style={{ color: NAVY }}>&#x2713; GHS 24,800 fees collected this term</p>
               </div>
               <div className="stat-card absolute -top-4 -right-4 bg-white rounded-xl shadow-lg px-4 py-3">
                 <p className="text-sm font-semibold text-green-600">&#x1F4C8; 94.2% attendance rate</p>
@@ -372,10 +372,10 @@ export function LandingPage() {
             <div key={setIdx} className="flex items-center gap-12 shrink-0">
               {["Sunshine Primary", "Accra Academy", "Cape Coast Scholars", "Kumasi Prep", "Sapphire Group", "Lincoln Community", "Mfantsipim School", "Darkwa Education", "Ridge Church", "Faith Montessori"].map((name) => (
                 <div key={`${setIdx}-${name}`} className="flex items-center gap-2 opacity-40 hover:opacity-70 transition-opacity">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: `${PLUM}08`, color: PLUM }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: `${NAVY}08`, color: NAVY }}>
                     {name[0]}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: PLUM }}>{name}</span>
+                  <span className="text-sm font-medium" style={{ color: NAVY }}>{name}</span>
                 </div>
               ))}
             </div>
@@ -384,10 +384,10 @@ export function LandingPage() {
       </section>
 
       {/* STATS */}
-      <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }} ref={statsRef}>
+      <section className="py-14" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }} ref={statsRef}>
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 gap-8">
           <div className="text-center reveal reveal-1">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
               {stats.schools === null ? (
                 <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
               ) : (
@@ -397,11 +397,11 @@ export function LandingPage() {
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Schools Active</div>
           </div>
           <div className="text-center reveal reveal-2">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
             <div style={{ color: "rgba(255,243,230,0.65)", fontSize: "0.9rem" }}>Uptime SLA</div>
           </div>
           <div className="text-center reveal reveal-3">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "2.2rem", fontWeight: 700 }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
               <div style={{ opacity: statsVisible ? 1 : 0, transition: "opacity 0.8s ease" }}>
                 {countCountry}
               </div>
@@ -412,13 +412,13 @@ export function LandingPage() {
       </section>
 
       {/* HOW MANAGEN WORKS */}
-      <section className="py-24 px-6" style={{ background: MILK }}>
+      <section className="py-24 px-6" style={{ background: CREAM }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
               Simple by design
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>How Managen Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>How Managen Works</h2>
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               Set up your school, track everything, and get insights -- all in one place.
             </p>
@@ -443,13 +443,13 @@ export function LandingPage() {
               }
             ].map((step, i) => (
               <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 group">
-                <div className="h-36 relative flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }}>
+                <div className="h-36 relative flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }}>
                   <span className="absolute select-none font-bold leading-none" style={{ fontSize: "8rem", color: "white", opacity: 0.08, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{step.num}</span>
                   <step.icon size={44} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
                 </div>
                 <div className="p-6 lg:p-7">
-                  <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: PLUM_LIGHT }}>Step {step.num}</span>
-                  <h3 className="text-lg lg:text-xl font-bold mt-1 mb-2" style={{ color: PLUM }}>{step.title}</h3>
+                  <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: NAVY_LIGHT }}>Step {step.num}</span>
+                  <h3 className="text-lg lg:text-xl font-bold mt-1 mb-2" style={{ color: NAVY }}>{step.title}</h3>
                   <p className="text-gray-500 text-sm mb-4 leading-relaxed">{step.desc}</p>
                   <div className="space-y-2">
                     {step.items.map((item) => (
@@ -467,13 +467,13 @@ export function LandingPage() {
       </section>
 
       {/* BENTO GRID FEATURES */}
-      <section id="features" className="py-24 px-6" style={{ background: MILK }}>
+      <section id="features" className="py-24 px-6" style={{ background: CREAM }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
               Everything your school needs
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Built for how African schools actually work</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Built for how African schools actually work</h2>
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               Not adapted from software made elsewhere. Every feature designed for Ghanaian classrooms.
             </p>
@@ -487,16 +487,16 @@ export function LandingPage() {
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                     <Award className="size-3" /> NaCCA Compliant
                   </span>
-                  <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Continuous Assessment Core</h3>
+                  <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Continuous Assessment Core</h3>
                   <p className="mt-1 text-sm text-slate-500">Automated grade computation, competency bands, and terminal report cards aligned to Ghana's NaCCA standards.</p>
                 </div>
               </div>
               {/* Mini Structural Mockup */}
               <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `${PLUM}12`, color: PLUM }}>KM</div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `${NAVY}12`, color: NAVY }}>KM</div>
                   <div>
-                    <div className="text-sm font-semibold" style={{ color: PLUM }}>Kofi Mensah</div>
+                    <div className="text-sm font-semibold" style={{ color: NAVY }}>Kofi Mensah</div>
                     <div className="text-xs text-slate-400">JHS 2 · Mathematics</div>
                   </div>
                 </div>
@@ -509,7 +509,7 @@ export function LandingPage() {
                   ].map((a) => (
                     <div key={a.label} className="rounded-lg bg-white border border-slate-100 p-2.5 text-center">
                       <div className="text-xs text-slate-400 mb-1">{a.label}</div>
-                      <div className="text-sm font-bold tabular-nums" style={{ color: PLUM }}>{a.score}</div>
+                      <div className="text-sm font-bold tabular-nums" style={{ color: NAVY }}>{a.score}</div>
                     </div>
                   ))}
                 </div>
@@ -528,7 +528,7 @@ export function LandingPage() {
               <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 w-fit">
                 <Wallet className="size-3" /> Payments
               </span>
-              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Instant MoMo Rails</h3>
+              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Instant MoMo Rails</h3>
               <p className="mt-1 text-sm text-slate-500 mb-5">Real-time mobile money collections with automatic receipt generation.</p>
               {/* Notification Bubble Simulation */}
               <div className="mt-auto space-y-3">
@@ -547,7 +547,7 @@ export function LandingPage() {
                 <div className="rounded-xl bg-slate-50 border border-slate-100 p-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-slate-500">Today's Collections</span>
-                    <span className="text-sm font-bold tabular-nums" style={{ color: PLUM }}>GHS 24,800</span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: NAVY }}>GHS 24,800</span>
                   </div>
                   <div className="mt-2 h-1.5 rounded-full bg-slate-200 overflow-hidden">
                     <div className="h-full rounded-full bg-emerald-500" style={{ width: "78%" }} />
@@ -562,7 +562,7 @@ export function LandingPage() {
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-fit">
                 <MessageSquare className="size-3" /> Communications
               </span>
-              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Arkesel Automated SMS</h3>
+              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Arkesel Automated SMS</h3>
               <p className="mt-1 text-sm text-slate-500 mb-5">Zero-effort parent notifications for fees, attendance, and emergencies.</p>
               {/* SMS Screen Mockup */}
               <div className="mt-auto rounded-xl border border-slate-100 bg-slate-50/60 overflow-hidden">
@@ -577,7 +577,7 @@ export function LandingPage() {
                   ].map((sms, i) => (
                     <div key={i} className="rounded-lg bg-white border border-slate-100 p-2.5">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold" style={{ color: PLUM }}>→ {sms.to}</span>
+                        <span className="text-xs font-semibold" style={{ color: NAVY }}>→ {sms.to}</span>
                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${sms.status === "sent" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
                           {sms.status}
                         </span>
@@ -600,17 +600,17 @@ export function LandingPage() {
       {/* DASHBOARD PREVIEW */}
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(56,25,50,0.25)" }}>
+          <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(56,25,50,0.25)" }}>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div className="reveal">
                 <p className="text-sm uppercase tracking-widest mb-4" style={{ color: "rgba(255,243,230,0.6)" }}>Live Dashboard</p>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
                   A Command Center for Your Institution
                 </h2>
                 <p style={{ color: "rgba(255,243,230,0.75)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "1.5rem" }}>
                   Get instant visibility into every corner of your school -- fee collection, attendance rates, pending exam results -- all from a single bento dashboard.
                 </p>
-                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 600, fontSize: "0.95rem" }}>
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 600, fontSize: "0.95rem" }}>
                   See It In Action <ArrowRight size={16} />
                 </button>
               </div>
@@ -625,7 +625,7 @@ export function LandingPage() {
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}25` }}>
                       <card.icon size={16} color={card.color} />
                     </div>
-                    <div style={{ fontFamily: "'JetBrains Mono', monospace", color: MILK, fontSize: "1.1rem", fontWeight: 600 }}>{card.value}</div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", color: CREAM, fontSize: "1.1rem", fontWeight: 600 }}>{card.value}</div>
                     <div style={{ color: "rgba(255,243,230,0.6)", fontSize: "0.75rem" }}>{card.label}</div>
                   </div>
                 ))}
@@ -639,10 +639,10 @@ export function LandingPage() {
       <section id="testimonials" className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
               Trusted by schools across Africa
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Built for every type of school</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Built for every type of school</h2>
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               Whether you run a single classroom or a network of campuses, Managen scales with you.
             </p>
@@ -665,9 +665,9 @@ export function LandingPage() {
                 </div>
                 <div className="p-6">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor} -mt-8 relative z-10 shadow-md border-2 border-white`}>
-                    <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: PLUM } : {}} />
+                    <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: NAVY } : {}} />
                   </div>
-                  <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{s.title}</h3>
+                  <h3 className="font-bold text-lg mb-2" style={{ color: NAVY }}>{s.title}</h3>
                   <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {s.pills.map((pill) => (
@@ -684,7 +684,7 @@ export function LandingPage() {
           </div>
           <div className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap" data-reveal>
             <span className="text-sm text-gray-500">Join schools across Ghana managing their institutions with Managen</span>
-            <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-semibold flex items-center gap-1" style={{ color: PLUM }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-semibold flex items-center gap-1" style={{ color: NAVY }}>
               Start Free Trial <ArrowRight size={14} />
             </button>
           </div>
@@ -753,16 +753,16 @@ export function LandingPage() {
       <section id="pricing" className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6 reveal">
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
               Simple pricing
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Plans that grow with your school</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Plans that grow with your school</h2>
             <p className="text-gray-500 mt-3">Start free. Upgrade when you're ready.</p>
           </div>
           <div className="flex justify-center mb-12">
             <div className="pricing-toggle flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.10)" }}>
               {(["monthly", "annual"] as const).map((b) => (
-                <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? PLUM : "transparent", color: billing === b ? MILK : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
+                <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? NAVY : "transparent", color: billing === b ? CREAM : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
               ))}
             </div>
           </div>
@@ -774,17 +774,17 @@ export function LandingPage() {
               const billedText = isAnnual ? (plan as any).annualBilled || "" : "";
               return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
-                background: plan.highlighted ? `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` : "white",
+                background: plan.highlighted ? `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` : "white",
                 border: plan.highlighted ? "none" : "1px solid rgba(56,25,50,0.08)",
                 boxShadow: plan.highlighted ? "0 24px 60px rgba(56,25,50,0.3)" : "0 4px 24px rgba(56,25,50,0.06)",
                 transform: plan.highlighted ? "scale(1.03)" : "none",
               }}>
                 {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Most Popular</div>}
                 {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Save 20%</div>}
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? MILK : PLUM, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", color: plan.highlighted ? CREAM : NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
                 <p style={{ color: plan.highlighted ? "rgba(255,243,230,0.65)" : MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? MILK : PLUM, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", color: plan.highlighted ? CREAM : NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
                   <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.6)" : MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
                   {billedText && <div style={{ color: plan.highlighted ? "rgba(255,243,230,0.5)" : MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
                 </div>
@@ -792,11 +792,11 @@ export function LandingPage() {
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-center gap-2.5">
                       <CheckCircle2 size={15} color={plan.highlighted ? "#86efac" : "#10B981"} fill={plan.highlighted ? "rgba(134,239,172,0.2)" : "#D1FAE5"} />
-                      <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.85)" : PLUM_LIGHT, fontSize: "0.9rem" }}>{f}</span>
+                      <span style={{ color: plan.highlighted ? "rgba(255,243,230,0.85)" : NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? MILK : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: plan.highlighted ? PLUM : MILK, fontWeight: 600 }}>{plan.cta}</button>
+                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? CREAM : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: plan.highlighted ? NAVY : CREAM, fontWeight: 600 }}>{plan.cta}</button>
               </div>
               );
             })}
@@ -808,10 +808,10 @@ export function LandingPage() {
       <section id="faq" className="py-24 px-6 bg-gray-50">
         <div className="max-w-[768px] mx-auto">
           <div className="text-center mb-16 reveal">
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
+            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
               Questions and answers
             </div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently asked questions</h2>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently asked questions</h2>
             <p style={{ color: MUTED, fontSize: "0.9rem" }}>Everything you need to know before getting started</p>
           </div>
           <div className="space-y-3">
@@ -822,7 +822,7 @@ export function LandingPage() {
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
                     className="w-full flex items-center justify-between p-5 text-left active:scale-[0.99] transition-transform"
-                    style={{ color: PLUM }}
+                    style={{ color: NAVY }}
                   >
                     <span style={{ fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.4, paddingRight: "1rem" }}>{faq.q}</span>
                     <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} style={{ color: MUTED }} />
@@ -840,15 +840,15 @@ export function LandingPage() {
       {/* CTA BANNER */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(56,25,50,0.3)" }}>
+          <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(56,25,50,0.3)" }}>
             <Award size={36} color="rgba(255,243,230,0.7)" className="mx-auto mb-5" />
-            <h2 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
               Your School Deserves Better Tools
             </h2>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
               Join schools across Ghana who have eliminated spreadsheets forever.
             </p>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: MILK, color: PLUM, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
               Get Started Free -- No Credit Card
             </button>
             <div className="mt-4">
@@ -865,10 +865,10 @@ export function LandingPage() {
         <div className="footer-card max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 px-10 py-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
                 <GraduationCap size={15} color="white" />
               </div>
-              <span style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700 }}>Managen</span>
+              <span style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700 }}>Managen</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-gray-500 text-sm hidden sm:inline">School management that actually works.</span>
@@ -906,7 +906,7 @@ export function LandingPage() {
                   { icon: MessageSquare, text: "WhatsApp Support" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-2.5">
-                    <item.icon size={15} color={PLUM} className="flex-shrink-0" />
+                    <item.icon size={15} color={NAVY} className="flex-shrink-0" />
                     <span className="text-sm text-gray-600">{item.text}</span>
                   </div>
                 ))}
@@ -949,7 +949,7 @@ export function LandingPage() {
           <div className="w-full max-w-md rounded-[32px] p-8 modal-content" style={{ background: "white", boxShadow: "0 32px 80px rgba(56,25,50,0.3)" }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.4rem" }}>Request a Demo</h2>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.4rem" }}>Request a Demo</h2>
                 <p style={{ color: MUTED, fontSize: "0.85rem" }}>See Managen in action</p>
               </div>
               <button onClick={() => !sending && setDemoOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
@@ -958,31 +958,31 @@ export function LandingPage() {
             </div>
             <form onSubmit={submitDemo} className="flex flex-col gap-4">
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Full Name</label>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Full Name</label>
                 <input type="text" placeholder="e.g. Kwame Mensah" value={demoForm.name} onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
               </div>
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Email</label>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Email</label>
                 <input type="email" placeholder="admin@yourschool.edu" value={demoForm.email} onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
               </div>
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>School Name</label>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>School Name</label>
                 <input type="text" placeholder="e.g. Accra Ridge School" value={demoForm.schoolName} onChange={(e) => setDemoForm({ ...demoForm, schoolName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} required />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} required />
               </div>
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Country</label>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.3rem" }}>Country</label>
                 <select value={demoForm.country} onChange={(e) => setDemoForm({ ...demoForm, country: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                   <option value="Ghana">Ghana</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
               <button type="submit" disabled={sending}
                 className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm"
-                style={{ background: sending ? "rgba(56,25,50,0.5)" : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK, fontWeight: 600, boxShadow: "0 8px 24px rgba(56,25,50,0.25)" }}>
+                style={{ background: sending ? "rgba(56,25,50,0.5)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, fontWeight: 600, boxShadow: "0 8px 24px rgba(56,25,50,0.25)" }}>
                 {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "Sending..." : "Send Demo Request"}
               </button>

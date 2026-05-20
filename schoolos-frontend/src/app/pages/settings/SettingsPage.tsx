@@ -16,9 +16,9 @@ import { SecurityTab } from "./tabs/SecurityTab";
 import { BillingTab } from "./tabs/BillingTab";
 import { DangerZoneTab } from "./tabs/DangerZoneTab";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 type SchoolProfile = {
   id: string; name: string; email: string; phone: string | null;
@@ -120,7 +120,7 @@ export function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="animate-spin" size={32} color={PLUM} />
+        <Loader2 className="animate-spin" size={32} color={NAVY} />
       </div>
     );
   }
@@ -138,15 +138,15 @@ export function SettingsPage() {
       {blocker.state === "blocked" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl">
-            <h3 className="font-semibold text-sm mb-2" style={{ color: PLUM }}>Unsaved Changes</h3>
+            <h3 className="font-semibold text-sm mb-2" style={{ color: NAVY }}>Unsaved Changes</h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>You have unsaved changes. Are you sure you want to leave?</p>
             <div className="flex gap-2 justify-end">
               <button onClick={() => blocker.reset?.()}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>Stay</button>
+                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>Stay</button>
               <button onClick={() => blocker.proceed?.()}
                 className="px-4 py-2 rounded-xl text-xs font-medium text-white"
-                style={{ background: PLUM }}>Leave</button>
+                style={{ background: NAVY }}>Leave</button>
             </div>
           </div>
         </div>
@@ -155,13 +155,13 @@ export function SettingsPage() {
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-[280px] flex-shrink-0 p-4 gap-1"
         style={{ background: "#F9F1E7", borderRight: "1px solid rgba(56,25,50,0.07)" }}>
-        <h2 className="text-sm font-bold mb-3 px-3" style={{ color: PLUM }}>Settings</h2>
+        <h2 className="text-sm font-bold mb-3 px-3" style={{ color: NAVY }}>Settings</h2>
         {visibleTabs.map(tab => {
           const active = activeTab === tab.key;
           return (
             <button key={tab.key} onClick={() => { setActiveTab(tab.key); setDirty(false); }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left transition-all active:scale-95"
-              style={{ background: active ? PLUM : "transparent", color: active ? "#FFF3E6" : PLUM_LIGHT }}>
+              style={{ background: active ? NAVY : "transparent", color: active ? "#F8F9FA" : NAVY_LIGHT }}>
               <tab.icon size={17} />
               <span style={{ fontSize: "0.9rem", fontWeight: active ? 600 : 400 }}>{tab.label}</span>
             </button>
@@ -174,7 +174,7 @@ export function SettingsPage() {
         <div className="relative">
           <button onClick={() => setMobileOpen(!mobileOpen)}
             className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-sm font-medium"
-            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
             {visibleTabs.find(t => t.key === activeTab)?.label || "Settings"}
             <ChevronDown size={16} />
           </button>
@@ -184,7 +184,7 @@ export function SettingsPage() {
               {visibleTabs.map(tab => (
                 <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOpen(false); setDirty(false); }}
                   className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-sm"
-                  style={{ color: activeTab === tab.key ? PLUM : MUTED, fontWeight: activeTab === tab.key ? 600 : 400 }}>
+                  style={{ color: activeTab === tab.key ? NAVY : MUTED, fontWeight: activeTab === tab.key ? 600 : 400 }}>
                   <tab.icon size={15} /> {tab.label}
                 </button>
               ))}

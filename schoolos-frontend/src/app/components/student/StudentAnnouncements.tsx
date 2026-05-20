@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Loader2, Megaphone } from "lucide-react";
 import { api } from "../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Announcement = {
   id: string;
@@ -42,12 +42,12 @@ export function StudentAnnouncements() {
   return (
     <div className="space-y-2">
       {announcements.slice(0, 5).map(a => (
-        <div key={a.id} className="p-3 rounded-xl" style={{ background: MILK }}>
+        <div key={a.id} className="p-3 rounded-xl" style={{ background: CREAM }}>
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium" style={{ color: PLUM }}>{a.title}</p>
+            <p className="text-sm font-medium" style={{ color: NAVY }}>{a.title}</p>
             <span className="text-xs" style={{ color: MUTED }}>{new Date(a.created_at).toLocaleDateString()}</span>
           </div>
-          {a.body && <p className="text-xs line-clamp-2" style={{ color: PLUM_LIGHT }}>{a.body}</p>}
+          {a.body && <p className="text-xs line-clamp-2" style={{ color: NAVY_LIGHT }}>{a.body}</p>}
         </div>
       ))}
     </div>

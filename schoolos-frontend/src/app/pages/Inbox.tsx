@@ -5,10 +5,10 @@ import { InboxList } from "../components/inbox/InboxList";
 import { ComposeMessage } from "../components/inbox/ComposeMessage";
 import type { InboxMessage } from "../components/inbox/types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type View = "inbox" | "compose" | "detail";
 
@@ -37,18 +37,18 @@ export function Inbox() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         {view !== "inbox" ? (
-          <button onClick={() => { setView("inbox"); setSelected(null); }} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          <button onClick={() => { setView("inbox"); setSelected(null); }} className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <ArrowLeft size={14} /> Back
           </button>
         ) : (
           <div>
-            <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>Inbox</h2>
+            <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>Inbox</h2>
             <p className="text-sm" style={{ color: MUTED }}>{messages.length} message{messages.length !== 1 ? "s" : ""}</p>
           </div>
         )}
         <button onClick={() => setView("compose")}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold active:scale-95 transition-transform"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <PenSquare size={14} /> Compose
         </button>
       </div>
@@ -60,10 +60,10 @@ export function Inbox() {
       {view === "detail" && selected && (
         <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="mb-4">
-            <p className="text-lg font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{selected.message.subject}</p>
+            <p className="text-lg font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>{selected.message.subject}</p>
             <p className="text-sm" style={{ color: MUTED }}>{new Date(selected.message.created_at).toLocaleString()}</p>
           </div>
-          <div className="p-4 rounded-xl text-sm leading-relaxed whitespace-pre-wrap" style={{ background: MILK, color: PLUM_LIGHT }}>
+          <div className="p-4 rounded-xl text-sm leading-relaxed whitespace-pre-wrap" style={{ background: CREAM, color: NAVY_LIGHT }}>
             {selected.message.body}
           </div>
         </div>

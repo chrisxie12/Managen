@@ -5,10 +5,10 @@ import {
   ArrowRight, CheckCircle2, ArrowLeft,
 } from "lucide-react";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 import { useSignUp, useClerk } from "@clerk/react";
 import { api } from "../services/api";
@@ -172,17 +172,17 @@ export function AuthPage() {
       <div
         className="hidden lg:flex lg:w-[45%] flex-col relative overflow-hidden"
         style={{
-          background: `linear-gradient(160deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`,
+          background: `linear-gradient(160deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`,
         }}
       >
         {/* Decorative circles */}
         <div
           className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10"
-          style={{ background: MILK }}
+          style={{ background: CREAM }}
         />
         <div
           className="absolute -bottom-32 -left-16 w-96 h-96 rounded-full opacity-10"
-          style={{ background: MILK }}
+          style={{ background: CREAM }}
         />
 
         <div className="relative z-10 flex flex-col h-full p-12">
@@ -195,12 +195,12 @@ export function AuthPage() {
               className="w-10 h-10 rounded-xl flex items-center justify-center"
               style={{ background: "rgba(255,243,230,0.15)" }}
             >
-              <GraduationCap size={20} color={MILK} />
+              <GraduationCap size={20} color={CREAM} />
             </div>
             <span
               style={{
                 fontFamily: "'Playfair Display', serif",
-                color: MILK,
+                color: CREAM,
                 fontSize: "1.3rem",
                 fontWeight: 700,
               }}
@@ -214,7 +214,7 @@ export function AuthPage() {
             <h2
               style={{
                 fontFamily: "'Playfair Display', serif",
-                color: MILK,
+                color: CREAM,
                 fontSize: "2.4rem",
                 fontWeight: 700,
                 lineHeight: 1.2,
@@ -286,7 +286,7 @@ export function AuthPage() {
               <div>
                 <div
                   style={{
-                    color: MILK,
+                    color: CREAM,
                     fontSize: "0.85rem",
                     fontWeight: 600,
                   }}
@@ -310,7 +310,7 @@ export function AuthPage() {
       {/* ── RIGHT PANEL (Form) ── */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-6 py-12"
-        style={{ background: MILK }}
+        style={{ background: CREAM }}
       >
         {/* Back link */}
         <div className="w-full max-w-md mb-8">
@@ -328,14 +328,14 @@ export function AuthPage() {
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}
+              style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}
             >
-              <GraduationCap size={16} color={MILK} />
+              <GraduationCap size={16} color={CREAM} />
             </div>
             <span
               style={{
                 fontFamily: "'Playfair Display', serif",
-                color: PLUM,
+                color: NAVY,
                 fontWeight: 700,
                 fontSize: "1.2rem",
               }}
@@ -359,8 +359,8 @@ export function AuthPage() {
                 onClick={() => setMode(m)}
                 className="flex-1 py-2.5 rounded-full text-sm transition-all active:scale-95 capitalize"
                 style={{
-                  background: mode === m ? PLUM : "transparent",
-                  color: mode === m ? MILK : MUTED,
+                  background: mode === m ? NAVY : "transparent",
+                  color: mode === m ? CREAM : MUTED,
                   fontWeight: mode === m ? 600 : 400,
                   boxShadow:
                     mode === m ? "0 4px 14px rgba(56,25,50,0.25)" : "none",
@@ -378,7 +378,7 @@ export function AuthPage() {
             <h1
               style={{
                 fontFamily: "'Playfair Display', serif",
-                color: PLUM,
+                color: NAVY,
                 fontSize: "1.8rem",
                 fontWeight: 700,
                 marginBottom: "0.4rem",
@@ -405,7 +405,7 @@ export function AuthPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {mode === "forgot" && !resetSent && (
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                   Email Address
                 </label>
                 <div className="relative">
@@ -413,10 +413,10 @@ export function AuthPage() {
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
                     onChange={(e) => setField("email", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                 </div>
                 <div className="mt-4">
-                  <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                  <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                     School Subdomain <span style={{ color: MUTED, fontWeight: 400 }}>(optional)</span>
                   </label>
                   <div className="relative">
@@ -424,7 +424,7 @@ export function AuthPage() {
                     <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
                       onChange={(e) => setField("subdomain", e.target.value)}
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                      style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                      style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                   </div>
                 </div>
               </div>
@@ -435,11 +435,11 @@ export function AuthPage() {
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
                   <Mail size={28} color="#10B981" />
                 </div>
-                <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Check your email</p>
+                <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Check your email</p>
                 <p style={{ color: MUTED, fontSize: "0.85rem" }}>We sent a reset link to <strong>{form.email}</strong></p>
                 <button type="button" onClick={() => { setResetSent(false); setMode("login"); }}
                   className="mt-6 px-5 py-2.5 rounded-full text-sm"
-                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                   Back to sign in
                 </button>
               </div>
@@ -452,7 +452,7 @@ export function AuthPage() {
                   <input type={showPassword ? "text" : "password"} placeholder="New password (min 6 chars)"
                     value={form.password} onChange={(e) => setField("password", e.target.value)} required minLength={6}
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2">
                     {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
@@ -472,10 +472,10 @@ export function AuthPage() {
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
                   <CheckCircle2 size={28} color="#10B981" />
                 </div>
-                <p style={{ color: PLUM, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Email verified!</p>
+                <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Email verified!</p>
                 <button type="button" onClick={() => navigate("/auth")}
                   className="mt-6 px-5 py-2.5 rounded-full text-sm"
-                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                   Sign in to your account
                 </button>
               </div>
@@ -484,7 +484,7 @@ export function AuthPage() {
             {mode === "login" && (
               <>
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                   School Subdomain
                 </label>
                 <div className="relative">
@@ -492,13 +492,13 @@ export function AuthPage() {
                   <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
                     onChange={(e) => setField("subdomain", e.target.value)} required
                     className="w-full pl-10 pr-28 py-3.5 rounded-2xl outline-none text-sm text-ellipsis"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold whitespace-nowrap" style={{ color: MUTED }}>.getschoolos.me</span>
                 </div>
               </div>
 
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                   Your Email
                 </label>
                 <div className="relative">
@@ -506,12 +506,12 @@ export function AuthPage() {
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
                     onChange={(e) => setField("email", e.target.value)} required
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                 </div>
               </div>
 
               <div>
-                <label style={{ color: PLUM_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
+                <label style={{ color: NAVY_LIGHT, fontSize: "0.85rem", fontWeight: 500, display: "block", marginBottom: "0.4rem" }}>
                   Password
                 </label>
                 <div className="relative">
@@ -519,14 +519,14 @@ export function AuthPage() {
                   <input type={showPassword ? "text" : "password"} placeholder="••••••••••" value={form.password}
                     onChange={(e) => setField("password", e.target.value)} required
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
-                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: PLUM }} />
+                    style={{ background: "white", border: "1.5px solid rgba(56,25,50,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 -translate-y-1/2">
                     {showPassword ? <EyeOff size={16} color={MUTED} /> : <Eye size={16} color={MUTED} />}
                   </button>
                 </div>
                 <div className="text-right mt-1.5">
-                  <button type="button" onClick={() => setMode("forgot")} style={{ color: PLUM_LIGHT, fontSize: "0.8rem" }} className="hover:opacity-70">Forgot password?</button>
+                  <button type="button" onClick={() => setMode("forgot")} style={{ color: NAVY_LIGHT, fontSize: "0.8rem" }} className="hover:opacity-70">Forgot password?</button>
                 </div>
               </div>
               </>
@@ -537,7 +537,7 @@ export function AuthPage() {
                 <div>
                   <label
                     style={{
-                      color: PLUM_LIGHT,
+                      color: NAVY_LIGHT,
                       fontSize: "0.85rem",
                       fontWeight: 500,
                       display: "block",
@@ -562,7 +562,7 @@ export function AuthPage() {
                       style={{
                         background: "white",
                         border: `1.5px solid rgba(56,25,50,0.12)`,
-                        color: PLUM,
+                        color: NAVY,
                       }}
                     />
                   </div>
@@ -570,7 +570,7 @@ export function AuthPage() {
                 <div>
                   <label
                     style={{
-                      color: PLUM_LIGHT,
+                      color: NAVY_LIGHT,
                       fontSize: "0.85rem",
                       fontWeight: 500,
                       display: "block",
@@ -595,7 +595,7 @@ export function AuthPage() {
                       style={{
                         background: "white",
                         border: `1.5px solid rgba(56,25,50,0.12)`,
-                        color: PLUM,
+                        color: NAVY,
                       }}
                     />
                   </div>
@@ -607,7 +607,7 @@ export function AuthPage() {
             <div>
               <label
                 style={{
-                  color: PLUM_LIGHT,
+                  color: NAVY_LIGHT,
                   fontSize: "0.85rem",
                   fontWeight: 500,
                   display: "block",
@@ -632,7 +632,7 @@ export function AuthPage() {
                   style={{
                     background: "white",
                     border: `1.5px solid rgba(56,25,50,0.12)`,
-                    color: PLUM,
+                    color: NAVY,
                   }}
                 />
               </div>
@@ -641,7 +641,7 @@ export function AuthPage() {
             <div>
               <label
                 style={{
-                  color: PLUM_LIGHT,
+                  color: NAVY_LIGHT,
                   fontSize: "0.85rem",
                   fontWeight: 500,
                   display: "block",
@@ -666,7 +666,7 @@ export function AuthPage() {
                   style={{
                     background: "white",
                     border: `1.5px solid rgba(56,25,50,0.12)`,
-                    color: PLUM,
+                    color: NAVY,
                   }}
                 />
                 <button
@@ -694,8 +694,8 @@ export function AuthPage() {
               style={{
                 background: loading
                   ? "rgba(56,25,50,0.5)"
-                  : `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`,
-                color: MILK,
+                  : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`,
+                color: CREAM,
                 fontSize: "0.95rem",
                 fontWeight: 600,
                 boxShadow: "0 8px 24px rgba(56,25,50,0.25)",
@@ -728,7 +728,7 @@ export function AuthPage() {
                 Don't have an account?{" "}
                 <button
                   onClick={() => setMode("signup")}
-                  style={{ color: PLUM, fontWeight: 600 }}
+                  style={{ color: NAVY, fontWeight: 600 }}
                   className="hover:opacity-70"
                 >
                   Sign up free
@@ -737,7 +737,7 @@ export function AuthPage() {
             ) : mode === "superadmin" ? (
               <button
                 onClick={() => setMode("login")}
-                style={{ color: PLUM, fontWeight: 600, fontSize: "0.85rem" }}
+                style={{ color: NAVY, fontWeight: 600, fontSize: "0.85rem" }}
                 className="hover:opacity-70"
               >
                 Back to school login
@@ -747,7 +747,7 @@ export function AuthPage() {
                 Already have an account?{" "}
                 <button
                   onClick={() => setMode("login")}
-                  style={{ color: PLUM, fontWeight: 600 }}
+                  style={{ color: NAVY, fontWeight: 600 }}
                   className="hover:opacity-70"
                 >
                   Sign in
@@ -758,7 +758,7 @@ export function AuthPage() {
           )}
           {mode === "forgot" && !resetSent && (
             <p className="text-center mt-6" style={{ color: MUTED, fontSize: "0.85rem" }}>
-              <button onClick={() => setMode("login")} style={{ color: PLUM, fontWeight: 600 }} className="hover:opacity-70">
+              <button onClick={() => setMode("login")} style={{ color: NAVY, fontWeight: 600 }} className="hover:opacity-70">
                 Back to sign in
               </button>
             </p>

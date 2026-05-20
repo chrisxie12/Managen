@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const INDIGO = "#6366F1";
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type SurveyAnswers = {
   size?: string;
@@ -129,7 +129,7 @@ export function SurveyStep({ onNext, onBack }: { onNext: (answers: SurveyAnswers
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-6" style={{ borderColor: INDIGO, borderTopColor: "transparent" }} />
-        <h2 className="text-xl font-semibold mb-2" style={{ color: PLUM }}>Personalizing your experience...</h2>
+        <h2 className="text-xl font-semibold mb-2" style={{ color: NAVY }}>Personalizing your experience...</h2>
         <p style={{ color: MUTED }}>Setting up your school based on your answers</p>
       </div>
     );
@@ -141,7 +141,7 @@ export function SurveyStep({ onNext, onBack }: { onNext: (answers: SurveyAnswers
         <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: INDIGO }}>
           Question {qIndex + 1} of {questions.length}
         </p>
-        <h2 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>
+        <h2 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
           Help us personalize SchoolOS for your school
         </h2>
         <p className="text-sm mt-1" style={{ color: MUTED }}>
@@ -166,7 +166,7 @@ export function SurveyStep({ onNext, onBack }: { onNext: (answers: SurveyAnswers
           exit={{ opacity: 0, x: -40 }}
           transition={{ duration: 0.25 }}
         >
-          <h3 className="text-lg font-semibold text-center mb-6" style={{ color: PLUM }}>
+          <h3 className="text-lg font-semibold text-center mb-6" style={{ color: NAVY }}>
             {question.title}
           </h3>
 
@@ -193,7 +193,7 @@ export function SurveyStep({ onNext, onBack }: { onNext: (answers: SurveyAnswers
                     }}>
                     {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: PLUM }}>{opt.label}</span>
+                  <span className="text-sm font-medium" style={{ color: NAVY }}>{opt.label}</span>
                 </button>
               );
             })}
@@ -204,7 +204,7 @@ export function SurveyStep({ onNext, onBack }: { onNext: (answers: SurveyAnswers
       <div className="flex justify-between mt-8 max-w-lg mx-auto">
         <button onClick={handleBack}
           className="px-5 py-2 rounded-xl text-sm font-medium inline-flex items-center gap-1 active:scale-95 transition-transform"
-          style={{ background: "rgba(0,0,0,0.04)", color: PLUM }}>
+          style={{ background: "rgba(0,0,0,0.04)", color: NAVY }}>
           <ChevronLeft size={14} /> Back
         </button>
         {question.multi && (

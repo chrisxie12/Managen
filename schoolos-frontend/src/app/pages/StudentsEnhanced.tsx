@@ -7,9 +7,9 @@ import { api } from "../services/api";
 import { DataTable, type Column } from "../components/ui/DataTable";
 import { useStudents, useClasses } from "../hooks/useStudents";
 
-const PLUM = "#381932";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Student = {
   id: string; name: string; admission_no: string; class_name: string;
@@ -59,10 +59,10 @@ export function StudentsEnhanced() {
       render: (s) => (
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, #512b4a)`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, #0C2D8A)`, color: CREAM }}>
             {s.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
           </div>
-          <span className="font-medium" style={{ color: PLUM }}>{s.name}</span>
+          <span className="font-medium" style={{ color: NAVY }}>{s.name}</span>
         </div>
       ),
     },
@@ -70,7 +70,7 @@ export function StudentsEnhanced() {
       render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.admission_no || "\u2014"}</span>,
     },
     { key: "class_name", label: "Class", sortable: true,
-      render: (s) => <span className="px-2 py-0.5 rounded text-xs" style={{ background: MILK, color: PLUM }}>{s.class_name}</span>,
+      render: (s) => <span className="px-2 py-0.5 rounded text-xs" style={{ background: CREAM, color: NAVY }}>{s.class_name}</span>,
     },
     { key: "gender", label: "Gender", hideable: true,
       render: (s) => <span className="text-xs" style={{ color: MUTED }}>{s.gender || "\u2014"}</span>,
@@ -100,23 +100,23 @@ export function StudentsEnhanced() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Students</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Students</h2>
           <p className="text-sm" style={{ color: MUTED }}>Manage student records</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: PLUM, color: MILK }}>
+        <button className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: NAVY, color: CREAM }}>
           <Plus size={15} /> Add Student
         </button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <select value={view} onChange={(e) => { setView(e.target.value); setSelectedClass(""); }}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 160 }}>
+          className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 160 }}>
           <option value="overall">Overall View</option>
           <option value="by_class">By Class</option>
         </select>
         {view === "by_class" && (
           <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
-            className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM, minWidth: 180 }}>
+            className="px-4 py-2.5 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY, minWidth: 180 }}>
             <option value="">All Classes</option>
             {classes.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
           </select>
@@ -152,7 +152,7 @@ export function StudentsEnhanced() {
         emptyState={
           <div className="text-center py-12">
             <GraduationCap size={40} color={MUTED} className="mx-auto mb-3" />
-            <p style={{ color: PLUM, fontWeight: 600 }}>No students found</p>
+            <p style={{ color: NAVY, fontWeight: 600 }}>No students found</p>
             <p className="text-sm mt-1" style={{ color: MUTED }}>
               {search ? "Try a different search term." : "No students yet. Click the + button to add your first student."}
             </p>

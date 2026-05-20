@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type Invoice = {
   id: string;
@@ -64,9 +64,9 @@ function PaymentMethodSelector({
           onClick={() => onChange(m.id)}
           className="flex-1 p-3 rounded-xl flex flex-col items-center gap-2 text-sm transition-all duration-200"
           style={{
-            background: value === m.id ? PLUM : "white",
-            color: value === m.id ? "white" : PLUM,
-            border: value === m.id ? `2px solid ${PLUM}` : "2px solid rgba(56,25,50,0.1)",
+            background: value === m.id ? NAVY : "white",
+            color: value === m.id ? "white" : NAVY,
+            border: value === m.id ? `2px solid ${NAVY}` : "2px solid rgba(56,25,50,0.1)",
           }}
         >
           <m.icon size={20} />
@@ -99,17 +99,17 @@ function InvoiceRow({
       }}
     >
       <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "rgba(56,25,50,0.05)" }}>
-        <Receipt size={18} style={{ color: PLUM }} />
+        <Receipt size={18} style={{ color: NAVY }} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm" style={{ color: PLUM }}>{invoice.invoice_number}</p>
+        <p className="font-medium text-sm" style={{ color: NAVY }}>{invoice.invoice_number}</p>
         <p className="text-xs" style={{ color: MUTED }}>
           Due: {new Date(invoice.due_date).toLocaleDateString()}
           {invoice.term && ` · ${invoice.term.name}`}
         </p>
       </div>
       <div className="text-right">
-        <p className="font-bold" style={{ color: PLUM }}>GH₵{invoice.total_amount.toLocaleString()}</p>
+        <p className="font-bold" style={{ color: NAVY }}>GH₵{invoice.total_amount.toLocaleString()}</p>
         {invoice.paid_amount > 0 && (
           <p className="text-xs" style={{ color: MUTED }}>
             Paid: GH₵{invoice.paid_amount.toLocaleString()}
@@ -122,7 +122,7 @@ function InvoiceRow({
           onClick={onPay}
           disabled={paying}
           className="px-4 py-2 rounded-xl text-sm font-medium text-white transition-all duration-200 disabled:opacity-50"
-          style={{ background: PLUM }}
+          style={{ background: NAVY }}
         >
           {paying ? <Loader2 size={14} className="animate-spin" /> : "Pay Now"}
         </button>
@@ -177,20 +177,20 @@ function CheckoutModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
       <div
         className="w-full max-w-md mx-4 rounded-2xl p-6 shadow-xl"
-        style={{ background: "#FFF3E6" }}
+        style={{ background: "#F8F9FA" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold" style={{ color: PLUM }}>Checkout</h2>
+          <h2 className="text-lg font-bold" style={{ color: NAVY }}>Checkout</h2>
           <button onClick={onClose} className="text-lg" style={{ color: MUTED }}>✕</button>
         </div>
 
         <div className="p-4 rounded-xl mb-4" style={{ background: "white" }}>
           <p className="text-xs uppercase tracking-wider mb-1" style={{ color: MUTED }}>Invoice</p>
-          <p className="font-medium" style={{ color: PLUM }}>{invoice.invoice_number}</p>
+          <p className="font-medium" style={{ color: NAVY }}>{invoice.invoice_number}</p>
           <div className="flex justify-between items-center mt-2">
             <span className="text-sm" style={{ color: MUTED }}>Amount Due</span>
-            <span className="text-2xl font-bold" style={{ color: PLUM }}>GH₵{remaining.toLocaleString()}</span>
+            <span className="text-2xl font-bold" style={{ color: NAVY }}>GH₵{remaining.toLocaleString()}</span>
           </div>
         </div>
 
@@ -209,7 +209,7 @@ function CheckoutModal({
           onClick={handlePay}
           disabled={paying}
           className="w-full mt-4 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
-          style={{ background: PLUM }}
+          style={{ background: NAVY }}
         >
           {paying ? (
             <><Loader2 size={14} className="animate-spin" /> Processing...</>
@@ -310,10 +310,10 @@ export function FeePayment() {
     <div>
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(56,25,50,0.08)" }}>
-          <Wallet size={20} style={{ color: PLUM }} />
+          <Wallet size={20} style={{ color: NAVY }} />
         </div>
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: PLUM }}>Fee Payment</h1>
+          <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Fee Payment</h1>
           <p className="text-sm" style={{ color: MUTED }}>
             {isParent ? "View and pay fees for your children" : "View and pay your fees"}
           </p>
@@ -328,8 +328,8 @@ export function FeePayment() {
               onClick={() => handleTabChange(child.id)}
               className="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200"
               style={{
-                background: activeTab === child.id ? PLUM : "white",
-                color: activeTab === child.id ? "white" : PLUM,
+                background: activeTab === child.id ? NAVY : "white",
+                color: activeTab === child.id ? "white" : NAVY,
                 border: activeTab === child.id ? "none" : "1px solid rgba(56,25,50,0.12)",
               }}
             >
@@ -346,7 +346,7 @@ export function FeePayment() {
             onClick={() => setFilterTab(tab)}
             className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
             style={{
-              background: filterTab === tab ? PLUM : "transparent",
+              background: filterTab === tab ? NAVY : "transparent",
               color: filterTab === tab ? "white" : MUTED,
             }}
           >
@@ -364,7 +364,7 @@ export function FeePayment() {
       {!loading && displayInvoices.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 gap-2">
           <CheckCircle2 size={32} style={{ color: "#059669" }} />
-          <p className="font-medium" style={{ color: PLUM }}>
+          <p className="font-medium" style={{ color: NAVY }}>
             {filterTab === "pending" ? "No outstanding fees" : "No paid invoices yet"}
           </p>
           <p className="text-sm" style={{ color: MUTED }}>

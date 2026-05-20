@@ -8,10 +8,10 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { useUserPreferences } from "../contexts/UserPreferencesContext";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 const SIDEBAR_BG = "#F9F1E7";
 
 type NavItem = {
@@ -120,12 +120,12 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-2 px-5 py-6 cursor-pointer" onClick={() => navigate("/")}>
         <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
-          <Logo size={17} color={MILK} />
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
+          <Logo size={17} color={CREAM} />
         </div>
         {!collapsed && (
           <div>
-            <div style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>Managen</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>Managen</div>
             <div style={{ color: MUTED, fontSize: "0.68rem" }}>{school?.name || "Dashboard"}</div>
           </div>
         )}
@@ -145,7 +145,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
                 key={item.path}
                 onClick={() => { navigate(item.path); onMobileClose(); }}
                 className="flex items-center gap-3 px-3 py-1.5 rounded-xl w-full text-left transition-all active:scale-95"
-                style={{ color: PLUM_LIGHT }}
+                style={{ color: NAVY_LIGHT }}
               >
                 <Clock size={13} className="shrink-0" style={{ opacity: 0.5 }} />
                 <span style={{ fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -166,7 +166,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
             <div key={section.heading} className="mb-4">
               {!collapsed && (
                 <p className="px-3 mb-1.5 uppercase tracking-widest" style={{
-                  color: sectionActive ? PLUM : MUTED,
+                  color: sectionActive ? NAVY : MUTED,
                   fontSize: "0.63rem",
                   fontWeight: sectionActive ? 600 : 400,
                 }}>
@@ -180,8 +180,8 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
                     <button key={item.path} onClick={() => handleNavigate(item)}
                       className="flex items-center gap-3 px-3 py-2 rounded-xl w-full text-left transition-all active:scale-95 relative group"
                       style={{
-                        background: active ? PLUM : "transparent",
-                        color: active ? MILK : item.future ? MUTED : PLUM_LIGHT,
+                        background: active ? NAVY : "transparent",
+                        color: active ? CREAM : item.future ? MUTED : NAVY_LIGHT,
                         opacity: item.future ? 0.45 : 1,
                         cursor: item.future ? "not-allowed" : "pointer",
                       }}
@@ -227,13 +227,13 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
       <div className="mx-3 mb-4 p-3 rounded-2xl flex items-center gap-3"
         style={{ background: "rgba(56,25,50,0.05)", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})` }}>
-          <span style={{ color: MILK, fontSize: "0.8rem", fontWeight: 700 }}>{initials}</span>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
+          <span style={{ color: CREAM, fontSize: "0.8rem", fontWeight: 700 }}>{initials}</span>
         </div>
         {!collapsed && (
           <>
             <div className="flex-1 min-w-0">
-              <div style={{ color: PLUM, fontSize: "0.82rem", fontWeight: 600 }} className="truncate">{user?.fullName || "User"}</div>
+              <div style={{ color: NAVY, fontSize: "0.82rem", fontWeight: 600 }} className="truncate">{user?.fullName || "User"}</div>
               <div style={{ color: MUTED, fontSize: "0.72rem" }}>{roleLabel}</div>
             </div>
             <button onClick={handleLogout} className="hover:opacity-70 transition-opacity shrink-0">
@@ -263,7 +263,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onMobileClose
         <button
           onClick={onToggleCollapse}
           className="absolute z-10 -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center hidden lg:flex"
-          style={{ background: PLUM, color: MILK, border: `2px solid ${MILK}` }}
+          style={{ background: NAVY, color: CREAM, border: `2px solid ${CREAM}` }}
         >
           {collapsed ? <PanelRightClose size={12} /> : <ChevronLeft size={12} />}
         </button>

@@ -6,10 +6,10 @@ import { useUserPreferences } from "../../contexts/UserPreferencesContext";
 import { exportToCSV } from "../../utils/exportToCSV";
 import { useIsMobile } from "./use-mobile";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export interface Column<T> {
   key: string;
@@ -157,7 +157,7 @@ export function DataTable<T extends Record<string, unknown>>({
               value={searchValue || ""}
               onChange={(e) => onSearch(e.target.value)}
               className="bg-transparent outline-none text-sm flex-1"
-              style={{ color: PLUM }}
+              style={{ color: NAVY }}
             />
             {searchValue && (
               <button onClick={() => onSearch("")}>
@@ -172,7 +172,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={handleExport}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM_LIGHT }}
+              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT }}
             >
               <Download size={13} /> Export CSV
             </button>
@@ -182,7 +182,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={() => setShowColumnMenu(!showColumnMenu)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM_LIGHT }}
+              style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY_LIGHT }}
             >
               <Columns size={13} /> Columns
             </button>
@@ -202,7 +202,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       <label
                         key={col.key}
                         className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:opacity-80"
-                        style={{ color: PLUM }}
+                        style={{ color: NAVY }}
                       >
                         <input
                           type="checkbox"
@@ -228,7 +228,7 @@ export function DataTable<T extends Record<string, unknown>>({
             <span
               key={f.key}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
-              style={{ background: `${PLUM}12`, color: PLUM }}
+              style={{ background: `${NAVY}12`, color: NAVY }}
             >
               {f.label}: {f.value}
               <button onClick={f.onRemove} className="ml-0.5 hover:opacity-70">
@@ -248,7 +248,7 @@ export function DataTable<T extends Record<string, unknown>>({
         {scrollHint && !isMobile && (
           <div
             className="absolute right-2 top-2 z-10 px-2 py-1 rounded-lg text-[10px] font-medium animate-pulse"
-            style={{ background: PLUM, color: MILK }}
+            style={{ background: NAVY, color: CREAM }}
           >
             Scroll →
           </div>
@@ -258,14 +258,14 @@ export function DataTable<T extends Record<string, unknown>>({
           <div className="flex items-center justify-center py-16">
             <div className="space-y-3 w-full px-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-8 rounded animate-pulse" style={{ background: `${PLUM}08` }} />
+                <div key={i} className="h-8 rounded animate-pulse" style={{ background: `${NAVY}08` }} />
               ))}
             </div>
           </div>
         ) : data.length === 0 ? (
           emptyState || (
             <div className="text-center py-12" style={{ color: MUTED }}>
-              <p className="font-semibold" style={{ color: PLUM }}>No data found</p>
+              <p className="font-semibold" style={{ color: NAVY }}>No data found</p>
             </div>
           )
         ) : (
@@ -303,7 +303,7 @@ export function DataTable<T extends Record<string, unknown>>({
                           <ArrowUpDown
                             size={12}
                             style={{
-                              color: sortBy === col.key ? PLUM : MUTED,
+                              color: sortBy === col.key ? NAVY : MUTED,
                               opacity: sortBy === col.key ? 1 : 0.4,
                             }}
                           />
@@ -323,7 +323,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       className={`text-sm transition-colors ${onRowClick ? "cursor-pointer" : ""}`}
                       style={{
                         borderBottom: "1px solid rgba(56,25,50,0.05)",
-                        background: isSelected ? `${PLUM}06` : "transparent",
+                        background: isSelected ? `${NAVY}06` : "transparent",
                       }}
                       onClick={() => onRowClick?.(row)}
                     >
@@ -338,7 +338,7 @@ export function DataTable<T extends Record<string, unknown>>({
                         </td>
                       )}
                       {visibleColumns.map((col) => (
-                        <td key={col.key} className="px-4 py-3" style={{ color: PLUM }}>
+                        <td key={col.key} className="px-4 py-3" style={{ color: NAVY }}>
                           {col.render ? col.render(row) : (row[col.key] as ReactNode) ?? "—"}
                         </td>
                       ))}
@@ -355,11 +355,11 @@ export function DataTable<T extends Record<string, unknown>>({
           <div
             className="flex items-center gap-2 px-4 py-2.5 border-t"
             style={{
-              background: PLUM,
-              borderColor: PLUM_LIGHT,
+              background: NAVY,
+              borderColor: NAVY_LIGHT,
             }}
           >
-            <span className="text-sm font-medium mr-2" style={{ color: MILK }}>
+            <span className="text-sm font-medium mr-2" style={{ color: CREAM }}>
               {selectedIds.size} selected
             </span>
             {bulkActions.map((action) => (
@@ -369,7 +369,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95"
                 style={{
                   background: action.variant === "danger" ? "rgba(239,68,68,0.2)" : "rgba(255,243,230,0.15)",
-                  color: action.variant === "danger" ? "#EF4444" : MILK,
+                  color: action.variant === "danger" ? "#EF4444" : CREAM,
                   border: `1px solid ${action.variant === "danger" ? "rgba(239,68,68,0.3)" : "rgba(255,243,230,0.2)"}`,
                 }}
               >
@@ -401,18 +401,18 @@ export function DataTable<T extends Record<string, unknown>>({
                 onClick={() => onPageChange(page - 1)}
                 disabled={page <= 1}
                 className="p-1.5 rounded-lg disabled:opacity-30"
-                style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}
+                style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}
               >
                 <ChevronLeft size={14} />
               </button>
-              <span className="font-medium px-2" style={{ color: PLUM }}>
+              <span className="font-medium px-2" style={{ color: NAVY }}>
                 {page} / {totalPages}
               </span>
               <button
                 onClick={() => onPageChange(page + 1)}
                 disabled={page >= totalPages}
                 className="p-1.5 rounded-lg disabled:opacity-30"
-                style={{ color: PLUM, border: "1px solid rgba(56,25,50,0.12)" }}
+                style={{ color: NAVY, border: "1px solid rgba(56,25,50,0.12)" }}
               >
                 <ChevronRight size={14} />
               </button>

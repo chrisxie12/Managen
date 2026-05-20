@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import { Calendar, Loader2 } from "lucide-react";
 import type { TimetableEntry } from "./types";
 
-const PLUM = "#381932";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -32,7 +32,7 @@ export function TimetableWidget({ entries, loading }: { entries: TimetableEntry[
     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(56,25,50,0.07)" }}>
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ background: MILK }}>
+          <tr style={{ background: CREAM }}>
             <th className="px-2 py-2 text-left text-xs font-medium" style={{ color: MUTED }}>Per</th>
             {DAYS.map(d => <th key={d} className="px-2 py-2 text-center text-xs font-medium" style={{ color: MUTED }}>{d.slice(0, 3)}</th>)}
           </tr>
@@ -46,7 +46,7 @@ export function TimetableWidget({ entries, loading }: { entries: TimetableEntry[
                 return (
                   <td key={day} className="px-1 py-1.5 text-center">
                     {entry ? (
-                      <span className="text-xs font-medium" style={{ color: PLUM }}>{entry.subject}</span>
+                      <span className="text-xs font-medium" style={{ color: NAVY }}>{entry.subject}</span>
                     ) : (
                       <span style={{ color: MUTED }}>—</span>
                     )}

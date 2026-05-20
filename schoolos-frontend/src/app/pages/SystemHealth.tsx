@@ -8,8 +8,8 @@ import { api } from "../services/api";
 import { Button } from "../components/ui/button";
 
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 type HealthStatus = "healthy" | "degraded" | "down" | "unconfigured";
 
@@ -74,7 +74,7 @@ const AlertBanner = ({ type, message, onClose }: { type: "error" | "success"; me
 );
 
 const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
-  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>
+  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>
 );
 
 function ServiceCard({ name, check }: { name: string; check: ServiceCheck }) {
@@ -103,7 +103,7 @@ function ServiceCard({ name, check }: { name: string; check: ServiceCheck }) {
           <Icon size={18} color={sconfig.color} />
         </div>
         <div>
-          <p className="text-sm font-semibold" style={{ color: PLUM }}>{sinfo.label}</p>
+          <p className="text-sm font-semibold" style={{ color: NAVY }}>{sinfo.label}</p>
           <p className="text-xs" style={{ color: MUTED }}>{showDetails() || "—"}</p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export function SystemHealth() {
 
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: PLUM }}>System Health</h1>
+          <h1 className="text-xl font-bold" style={{ color: NAVY }}>System Health</h1>
           <p className="text-xs mt-1" style={{ color: MUTED }}>
             {data?.timestamp ? `Last checked ${formatDate(data.timestamp)}` : "Platform reliability & service status"}
           </p>
@@ -221,7 +221,7 @@ export function SystemHealth() {
       {data?.checks?.server && (
         <div className="mb-8">
           <button onClick={() => setServerExpanded(!serverExpanded)}
-            className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: PLUM }}>
+            className="flex items-center gap-2 text-sm font-semibold mb-3" style={{ color: NAVY }}>
             {serverExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             Server Details
           </button>
@@ -246,7 +246,7 @@ export function SystemHealth() {
               ].map(({ label, value }) => (
                 <div key={label} className="p-2 rounded-xl" style={{ background: "rgba(56,25,50,0.03)" }}>
                   <span className="block font-medium" style={{ color: MUTED }}>{label}</span>
-                  <span style={{ color: PLUM }}>{value}</span>
+                  <span style={{ color: NAVY }}>{value}</span>
                 </div>
               ))}
             </div>
@@ -256,11 +256,11 @@ export function SystemHealth() {
 
       {data?.notifications && data.notifications.total > 0 && (
         <div className="mb-8">
-          <h3 className="text-sm font-semibold mb-3" style={{ color: PLUM }}>Notification Delivery (7 days)</h3>
+          <h3 className="text-sm font-semibold mb-3" style={{ color: NAVY }}>Notification Delivery (7 days)</h3>
           <div className="flex flex-wrap gap-3">
             <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Total Sent</p>
-              <p className="text-lg font-bold" style={{ color: PLUM }}>{data.notifications.sent}</p>
+              <p className="text-lg font-bold" style={{ color: NAVY }}>{data.notifications.sent}</p>
             </div>
             <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Failed</p>
@@ -275,7 +275,7 @@ export function SystemHealth() {
             {Object.entries(data.notifications.byChannel).map(([ch, st]) => (
               <div key={ch} className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
                 <p className="text-xs" style={{ color: MUTED }}>{ch}</p>
-                <p className="text-lg font-bold" style={{ color: PLUM }}>{st.sent}/{st.total}</p>
+                <p className="text-lg font-bold" style={{ color: NAVY }}>{st.sent}/{st.total}</p>
               </div>
             ))}
           </div>
@@ -285,7 +285,7 @@ export function SystemHealth() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {data?.recentFailures && data.recentFailures.records.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: PLUM }}>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: NAVY }}>
               <AlertCircle size={14} /> Recent Failures (7d)
               {data.recentFailures.total > data.recentFailures.records.length && (
                 <span className="text-xs font-normal" style={{ color: MUTED }}>
@@ -310,7 +310,7 @@ export function SystemHealth() {
 
         {data?.incidents && data.incidents.records.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: PLUM }}>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: NAVY }}>
               <AlertTriangle size={14} /> Recent Delete Events (7d)
               {data.incidents.total > data.incidents.records.length && (
                 <span className="text-xs font-normal" style={{ color: MUTED }}>

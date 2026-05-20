@@ -7,9 +7,9 @@ import { Switch } from "../../../components/ui/switch";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { api } from "../../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 const TRIGGER_EVENTS = [
   { slug: "student-marked-absent", label: "Student marked absent" },
@@ -91,7 +91,7 @@ const DEFAULT_SMS_TEMPLATES = Object.fromEntries(
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -101,7 +101,7 @@ function SectionCard({ title, desc, children }: { title: string; desc?: string; 
 function FormField({ label, error, children }: { label: string; error?: string | null; children: React.ReactNode }) {
   return (
     <div className="mb-3">
-      <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>{label}</label>
+      <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>{label}</label>
       {children}
       {error && <p className="text-xs mt-1" style={{ color: "#EF4444" }}>{error}</p>}
     </div>
@@ -412,7 +412,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <MessageSquare size={15} color={MUTED} />
-              <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>WhatsApp Notifications</label>
+              <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>WhatsApp Notifications</label>
             </div>
             <Switch
               checked={channels.whatsapp?.enabled || false}
@@ -439,7 +439,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Smartphone size={15} color={MUTED} />
-              <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>SMS Notifications</label>
+              <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>SMS Notifications</label>
             </div>
             <Switch
               checked={channels.sms?.enabled || false}
@@ -484,7 +484,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Mail size={15} color={MUTED} />
-              <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>Email Notifications</label>
+              <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>Email Notifications</label>
             </div>
             <Switch
               checked={channels.email?.enabled || false}
@@ -522,7 +522,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
               <Bell size={15} color={MUTED} />
-              <label className="text-xs font-medium cursor-pointer" style={{ color: PLUM }}>Push Notifications</label>
+              <label className="text-xs font-medium cursor-pointer" style={{ color: NAVY }}>Push Notifications</label>
             </div>
             <Switch
               checked={channels.push?.enabled || false}
@@ -541,8 +541,8 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
 
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
-            <Check size={15} color={PLUM_LIGHT} />
-            <label className="text-xs font-medium" style={{ color: PLUM }}>In-App Notifications</label>
+            <Check size={15} color={NAVY_LIGHT} />
+            <label className="text-xs font-medium" style={{ color: NAVY }}>In-App Notifications</label>
           </div>
           <Switch checked disabled className="opacity-50" />
         </div>
@@ -571,7 +571,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
             <tbody>
               {TRIGGER_EVENTS.map((evt) => (
                 <tr key={evt.slug} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                  <td className="py-2.5 pr-3 text-xs font-medium" style={{ color: PLUM }}>{evt.label}</td>
+                  <td className="py-2.5 pr-3 text-xs font-medium" style={{ color: NAVY }}>{evt.label}</td>
                   {TRIGGER_CHANNELS.map((ch) => {
                     const enabled = ch.key === "in_app" ? true : (triggers[evt.slug] || []).includes(ch.key);
                     return (
@@ -609,8 +609,8 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                   disabled={isReadOnly}
                   className="px-3 py-1.5 text-xs font-medium rounded-xl transition-all active:scale-95 disabled:cursor-not-allowed"
                   style={{
-                    background: selected ? PLUM : "rgba(56,25,50,0.06)",
-                    color: selected ? "white" : PLUM,
+                    background: selected ? NAVY : "rgba(56,25,50,0.06)",
+                    color: selected ? "white" : NAVY,
                     border: selected ? "none" : "1px solid rgba(56,25,50,0.12)",
                   }}
                 >
@@ -656,7 +656,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                 type="button"
                 onClick={() => setExpandedEmailTemplate(isOpen ? null : evt.slug)}
                 className="w-full flex items-center justify-between px-3 py-2.5 text-left"
-                style={{ color: PLUM }}
+                style={{ color: NAVY }}
               >
                 <span className="text-xs font-medium">{evt.label}</span>
                 <ChevronDown size={14} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -712,7 +712,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
                 type="button"
                 onClick={() => setExpandedSmsTemplate(isOpen ? null : evt.slug)}
                 className="w-full flex items-center justify-between px-3 py-2.5 text-left"
-                style={{ color: PLUM }}
+                style={{ color: NAVY }}
               >
                 <span className="text-xs font-medium">{evt.label}</span>
                 <ChevronDown size={14} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -753,7 +753,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
           onClick={sendTestNotification}
           disabled={isReadOnly || testing}
           className="text-xs rounded-xl h-9 px-6"
-          style={{ background: PLUM_LIGHT }}
+          style={{ background: NAVY_LIGHT }}
         >
           {testing ? (
             <Loader2 size={14} className="animate-spin mr-1" />
@@ -768,7 +768,7 @@ export function NotificationSettingsTab({ profile, onSave, saving, role }: Props
       {!isReadOnly && (
         <div className="flex justify-end mt-2">
           <Button onClick={handleSave} disabled={saving} className="text-xs rounded-xl h-9 px-6"
-            style={{ background: PLUM }}>
+            style={{ background: NAVY }}>
             {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
             Save Notification Settings
           </Button>

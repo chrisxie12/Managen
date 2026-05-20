@@ -3,10 +3,10 @@ import { useNavigate } from "react-router";
 import { Search, Users, GraduationCap, Building2, FileText, X, Clock } from "lucide-react";
 import { api } from "../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 interface SearchResult {
   id: string;
@@ -133,10 +133,10 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
 
   const typeIcon = (type: string) => {
     switch (type) {
-      case "student": return <Users size={14} color={PLUM} />;
-      case "staff": return <GraduationCap size={14} color={PLUM} />;
-      case "class": return <Building2 size={14} color={PLUM} />;
-      default: return <FileText size={14} color={PLUM} />;
+      case "student": return <Users size={14} color={NAVY} />;
+      case "staff": return <GraduationCap size={14} color={NAVY} />;
+      case "class": return <Building2 size={14} color={NAVY} />;
+      default: return <FileText size={14} color={NAVY} />;
     }
   };
 
@@ -160,7 +160,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search students, staff, classes..."
             className="flex-1 bg-transparent outline-none text-sm"
-            style={{ color: PLUM }}
+            style={{ color: NAVY }}
           />
           {query && (
             <button onClick={() => setQuery("")}>
@@ -189,11 +189,11 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
                   key={item.id}
                   onClick={() => handleSelect(item)}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:opacity-80 transition-colors"
-                  style={{ color: PLUM }}
+                  style={{ color: NAVY }}
                 >
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: `${PLUM}10` }}
+                    style={{ background: `${NAVY}10` }}
                   >
                     {typeIcon(item.type)}
                   </div>
@@ -216,11 +216,11 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
                   key={item.id}
                   onClick={() => handleSelect(item)}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:opacity-80 transition-colors"
-                  style={{ color: PLUM }}
+                  style={{ color: NAVY }}
                 >
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: `${PLUM}08` }}
+                    style={{ background: `${NAVY}08` }}
                   >
                     {typeIcon(item.type)}
                   </div>
@@ -238,8 +238,8 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
           className="px-4 py-2 text-xs flex items-center gap-3"
           style={{ color: MUTED, borderTop: "1px solid rgba(56,25,50,0.07)" }}
         >
-          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${PLUM}08` }}>↑↓</kbd> Navigate</span>
-          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${PLUM}08` }}>ESC</kbd> Close</span>
+          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>↑↓</kbd> Navigate</span>
+          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>ESC</kbd> Close</span>
         </div>
       </div>
     </div>

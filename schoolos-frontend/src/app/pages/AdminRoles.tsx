@@ -5,10 +5,10 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Permission = { id: string; name: string; module: string; action: string; description: string };
 type Role = { id: string; name: string; label: string; description: string; is_system: boolean; school_id: string | null; permission_ids?: string[] };
@@ -126,7 +126,7 @@ export function AdminRoles() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin" size={32} color={PLUM} />
+        <Loader2 className="animate-spin" size={32} color={NAVY} />
       </div>
     );
   }
@@ -142,12 +142,12 @@ export function AdminRoles() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Roles & Permissions</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Roles & Permissions</h2>
           <p className="text-sm" style={{ color: MUTED }}>Manage roles and granular permissions for your school</p>
         </div>
         <button onClick={() => setShowCreate(true)}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <Plus size={16} /> Create Role
         </button>
       </div>
@@ -155,14 +155,14 @@ export function AdminRoles() {
       <div className="mb-4 flex items-center gap-2 px-3 py-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
         <Search size={14} color={MUTED} />
         <input placeholder="Search roles..." value={search} onChange={(e) => setSearch(e.target.value)}
-          className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+          className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
       </div>
 
       <div className="grid gap-4">
         {filteredRoles.length === 0 ? (
           <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <Shield size={40} color={MUTED} className="mx-auto mb-3" />
-            <p className="font-semibold" style={{ color: PLUM }}>No roles found</p>
+            <p className="font-semibold" style={{ color: NAVY }}>No roles found</p>
             <p className="text-sm mt-1" style={{ color: MUTED }}>Create your first role to get started</p>
           </div>
         ) : filteredRoles.map(role => (
@@ -174,7 +174,7 @@ export function AdminRoles() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold" style={{ color: PLUM }}>{role.label}</h3>
+                    <h3 className="font-semibold" style={{ color: NAVY }}>{role.label}</h3>
                     {role.is_system && (
                       <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "#EEF2FF", color: "#6366F1" }}>System</span>
                     )}
@@ -185,7 +185,7 @@ export function AdminRoles() {
               <div className="flex items-center gap-2">
                 {!role.is_system && (
                   <>
-                    <button onClick={() => openRoleEditor(role.id)} className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+                    <button onClick={() => openRoleEditor(role.id)} className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ color: NAVY_LIGHT }}>
                       <Pencil size={15} />
                     </button>
                     <button onClick={() => deleteRole(role.id)} className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ color: "#EF4444" }}>
@@ -202,14 +202,14 @@ export function AdminRoles() {
             {editingRole === role.id && (
               <div className="p-4" style={{ background: "#FAF8F6" }}>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-semibold" style={{ color: PLUM }}>Permissions for {role.label}</h4>
+                  <h4 className="text-sm font-semibold" style={{ color: NAVY }}>Permissions for {role.label}</h4>
                   <div className="flex gap-2">
                     <button onClick={() => setEditingRole(null)} className="px-3 py-1.5 rounded-lg text-xs" style={{ border: "1px solid rgba(56,25,50,0.15)", color: MUTED }}>
                       Cancel
                     </button>
                     <button onClick={saveRolePermissions} disabled={saving}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold active:scale-95 transition-transform"
-                      style={{ background: PLUM, color: MILK }}>
+                      style={{ background: NAVY, color: CREAM }}>
                       {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                       Save
                     </button>
@@ -225,12 +225,12 @@ export function AdminRoles() {
                         style={{ background: "rgba(56,25,50,0.03)" }}>
                         <div className="flex items-center gap-2">
                           {expandedModules[module] ? <ChevronDown size={14} color={MUTED} /> : <ChevronRight size={14} color={MUTED} />}
-                          <span className="text-sm font-medium capitalize" style={{ color: PLUM }}>{module}</span>
+                          <span className="text-sm font-medium capitalize" style={{ color: NAVY }}>{module}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs" style={{ color: MUTED }}>{modPerms.filter(p => selectedPerms.includes(p.id)).length}/{modPerms.length}</span>
                           <button onClick={(e) => { e.stopPropagation(); toggleModule(module, modPerms); }}
-                            className="px-2 py-0.5 rounded text-xs" style={{ background: "rgba(56,25,50,0.06)", color: PLUM_LIGHT }}>
+                            className="px-2 py-0.5 rounded text-xs" style={{ background: "rgba(56,25,50,0.06)", color: NAVY_LIGHT }}>
                             Toggle all
                           </button>
                         </div>
@@ -243,7 +243,7 @@ export function AdminRoles() {
                               style={{
                                 background: selectedPerms.includes(perm.id) ? "rgba(56,25,50,0.08)" : "transparent",
                                 border: `1px solid ${selectedPerms.includes(perm.id) ? "rgba(56,25,50,0.2)" : "rgba(56,25,50,0.07)"}`,
-                                color: selectedPerms.includes(perm.id) ? PLUM : PLUM_LIGHT,
+                                color: selectedPerms.includes(perm.id) ? NAVY : NAVY_LIGHT,
                               }}>
                               {selectedPerms.includes(perm.id) ? <Check size={11} /> : <div className="w-[11px]" />}
                               {perm.description || perm.name}
@@ -267,7 +267,7 @@ export function AdminRoles() {
             onMouseDown={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>Create Role</h2>
+                <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>Create Role</h2>
                 <p className="text-sm" style={{ color: MUTED }}>Add a custom role for your school</p>
               </div>
               <button onClick={() => setShowCreate(false)} className="p-2 rounded-full hover:opacity-70" style={{ background: "rgba(56,25,50,0.06)" }}>
@@ -276,28 +276,28 @@ export function AdminRoles() {
             </div>
             <div className="flex flex-col gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Role Name</label>
+                <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Role Name</label>
                 <input value={newRole.name} onChange={(e) => setNewRole(p => ({ ...p, name: e.target.value.toLowerCase().replace(/[^a-z_]/g, "") }))}
                   placeholder="e.g. vice_principal"
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
                 <p className="text-xs mt-1" style={{ color: MUTED }}>Lowercase letters and underscores only</p>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Display Label</label>
+                <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Display Label</label>
                 <input value={newRole.label} onChange={(e) => setNewRole(p => ({ ...p, label: e.target.value }))}
                   placeholder="e.g. Vice Principal"
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Description</label>
+                <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Description</label>
                 <textarea value={newRole.description} onChange={(e) => setNewRole(p => ({ ...p, description: e.target.value }))}
                   placeholder="What does this role do?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm resize-none" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                  className="w-full px-4 py-3 rounded-2xl outline-none text-sm resize-none" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
               </div>
               <button onClick={createRole} disabled={saving || !newRole.name || !newRole.label}
                 className="w-full py-3 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm font-semibold"
-                style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                 {saving ? <Loader2 size={16} className="animate-spin" /> : <Users size={16} />}
                 {saving ? "Creating..." : "Create Role"}
               </button>

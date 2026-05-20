@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Send, Loader2, CheckCircle2, X, AlertTriangle } from "lucide-react";
 import { api } from "../../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function ComposeMessage({ onSent }: { onSent: () => void }) {
   const [subject, setSubject] = useState("");
@@ -56,17 +56,17 @@ export function ComposeMessage({ onSent }: { onSent: () => void }) {
         <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Subject</label>
         <input value={subject} onChange={e => setSubject(e.target.value)}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm" placeholder="Subject..."
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
       </div>
       <div>
         <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Message</label>
         <textarea value={body} onChange={e => setBody(e.target.value)} rows={5}
           className="w-full px-4 py-2.5 rounded-xl outline-none text-sm resize-none" placeholder="Write your message..."
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }} />
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }} />
       </div>
       <button onClick={send} disabled={sending || !body.trim()}
         className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-        style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+        style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
         {sending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
         {sending ? "Sending..." : "Send Message"}
       </button>

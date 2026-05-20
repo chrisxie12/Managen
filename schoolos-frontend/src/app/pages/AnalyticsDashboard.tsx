@@ -10,9 +10,9 @@ import {
 } from "recharts";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type AttendanceTrend = { date: string; present: number; total: number; rate: number };
 type PerfTrend = { assessment_id: string; name: string; date: string; max_score: number; average: number; studentCount: number; rate: number };
@@ -42,14 +42,14 @@ function MetricCard({ icon: Icon, label, value, sub, trend, color }: {
 }) {
   return (
     <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || PLUM }} />
+      <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || PLUM}15` }}>
-          <Icon size={18} color={color || PLUM} />
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
+          <Icon size={18} color={color || NAVY} />
         </div>
         <div>
           <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
-          <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+          <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
         </div>
       </div>
       {sub && (
@@ -70,7 +70,7 @@ function ChartCard({ title, subtitle, children, action }: {
     <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-sm" style={{ color: PLUM }}>{title}</h3>
+          <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
           {subtitle && <p className="text-xs" style={{ color: MUTED }}>{subtitle}</p>}
         </div>
         {action}
@@ -81,14 +81,14 @@ function ChartCard({ title, subtitle, children, action }: {
 }
 
 function LoadingSpinner({ height = 48 }: { height?: number }) {
-  return <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+  return <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
 }
 
 function EmptyState({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) {
   return (
     <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
       <Icon size={36} color={MUTED} className="mx-auto mb-2" />
-      <p className="font-semibold text-sm" style={{ color: PLUM }}>{title}</p>
+      <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
       <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
     </div>
   );
@@ -178,12 +178,12 @@ export function AnalyticsDashboard() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Academic Analytics</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Academic Analytics</h2>
           <p className="text-sm" style={{ color: MUTED }}>Attendance trends, performance metrics, and risk insights</p>
         </div>
         <select value={selectedTermId} onChange={(e) => setSelectedTermId(e.target.value)}
           className="px-4 py-2.5 rounded-xl outline-none text-sm min-w-[160px]"
-          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}{t.is_current ? " (Current)" : ""}</option>)}
         </select>
       </div>
@@ -254,7 +254,7 @@ export function AnalyticsDashboard() {
                 <div className="space-y-2">
                   {subjectComp.map((s, i) => (
                     <div key={s.subject_id} className="flex items-center gap-3">
-                      <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: PLUM }}>{s.subject_name}</span>
+                      <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: NAVY }}>{s.subject_name}</span>
                       <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
                         <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(s.rate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                       </div>
@@ -271,7 +271,7 @@ export function AnalyticsDashboard() {
                   <BarChart data={classComp} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
                     <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
-                    <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: PLUM }} width={80} />
+                    <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
                     <Tooltip
                       contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
                       formatter={(value: number) => [`${value}%`, "Avg Score"]} />
@@ -327,9 +327,9 @@ export function AnalyticsDashboard() {
                   ) : (
                     <div className="space-y-2 max-h-64 overflow-y-auto">
                       {riskData.openInterventions.slice(0, 10).map(i => (
-                        <div key={i.id} className="p-3 rounded-xl text-sm" style={{ background: MILK, border: "1px solid rgba(56,25,50,0.07)" }}>
+                        <div key={i.id} className="p-3 rounded-xl text-sm" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.07)" }}>
                           <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-xs" style={{ color: PLUM }}>{i.student?.name || "Unknown"}</span>
+                            <span className="font-medium text-xs" style={{ color: NAVY }}>{i.student?.name || "Unknown"}</span>
                             <div className="flex gap-1">
                               <SeverityBadge severity={i.severity} />
                               <StatusBadge status={i.status} />
@@ -362,7 +362,7 @@ export function AnalyticsDashboard() {
                         {i + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate" style={{ color: PLUM }}>{p.student?.name || "Unknown"}</p>
+                        <p className="text-sm font-medium truncate" style={{ color: NAVY }}>{p.student?.name || "Unknown"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{p.class?.name} · Grade {p.grade}</p>
                       </div>
                       <span className="text-sm font-bold" style={{ color: "#065F46" }}>{p.average}%</span>
@@ -384,7 +384,7 @@ export function AnalyticsDashboard() {
                         {performers.bottom.length - i}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate" style={{ color: PLUM }}>{p.student?.name || "Unknown"}</p>
+                        <p className="text-sm font-medium truncate" style={{ color: NAVY }}>{p.student?.name || "Unknown"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{p.class?.name} · Grade {p.grade}</p>
                       </div>
                       <span className="text-sm font-bold" style={{ color: "#EF4444" }}>{p.average}%</span>

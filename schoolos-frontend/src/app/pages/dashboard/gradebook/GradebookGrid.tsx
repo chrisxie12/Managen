@@ -5,10 +5,10 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "../../../services/api";
 import { useMetaData, useGradebookData, type AssessmentItem, type StudentBasic } from "../../../hooks/useGradebook";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 const BG = "#F9F1E7";
 
 const GRADE_BANDS = [
@@ -195,13 +195,13 @@ export function GradebookGrid() {
   }
 
   return (
-    <div className="p-6 h-full flex flex-col" style={{ background: MILK }}>
+    <div className="p-6 h-full flex flex-col" style={{ background: CREAM }}>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: PLUM }}>Gradebook & SBA</h1>
+        <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Gradebook & SBA</h1>
         {hasItems && (
           <button onClick={handleSaveAll} disabled={saving || !dirty}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95 disabled:opacity-50"
-            style={{ background: dirty ? PLUM : MUTED, color: MILK }}>
+            style={{ background: dirty ? NAVY : MUTED, color: CREAM }}>
             <Save size={16} />
             {saving ? "Saving..." : "Save All Changes"}
           </button>
@@ -214,7 +214,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Class</label>
           <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }}>
+            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select class...</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -223,7 +223,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Subject</label>
           <select value={selectedSubject} onChange={e => setSelectedSubject(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }}>
+            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select subject...</option>
             {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
@@ -232,7 +232,7 @@ export function GradebookGrid() {
           <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Term</label>
           <select value={selectedTerm} onChange={e => setSelectedTerm(e.target.value)}
             className="rounded-xl px-3 py-2 text-sm border min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }}>
+            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
             <option value="">Select term...</option>
             {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
@@ -240,7 +240,7 @@ export function GradebookGrid() {
 
         <button onClick={() => refetchGradebook()} disabled={!selectedClass || !selectedSubject || !selectedTerm}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
-          style={{ background: PLUM, color: MILK }}>
+          style={{ background: NAVY, color: CREAM }}>
           <Loader2 size={14} className={loading ? "animate-spin" : "hidden"} />
           {loading ? "Loading..." : "Load"}
         </button>
@@ -252,18 +252,18 @@ export function GradebookGrid() {
           <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: MUTED }}>Add Assessment:</span>
           <input value={newItemName} onChange={e => setNewItemName(e.target.value)} placeholder="e.g. Exercise 1"
             className="rounded-xl px-3 py-1.5 text-sm border flex-1 min-w-[160px]"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }} />
+            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }} />
           <select value={newItemType} onChange={e => setNewItemType(e.target.value as "SBA" | "EXAM")}
-            className="rounded-xl px-3 py-1.5 text-sm border" style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }}>
+            className="rounded-xl px-3 py-1.5 text-sm border" style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }}>
             <option value="SBA">SBA (30%)</option>
             <option value="EXAM">Exam (70%)</option>
           </select>
           <input value={newItemMax} onChange={e => setNewItemMax(e.target.value)} placeholder="Max pts"
             type="number" min="1" className="rounded-xl px-3 py-1.5 text-sm border w-20"
-            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: PLUM }} />
+            style={{ borderColor: "rgba(56,25,50,0.15)", background: "#fff", color: NAVY }} />
           <button onClick={handleAddItem} disabled={addingItem || !newItemName.trim()}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
-            style={{ background: PLUM, color: MILK }}>
+            style={{ background: NAVY, color: CREAM }}>
             <Plus size={14} /> {addingItem ? "Adding..." : "Add"}
           </button>
         </div>
@@ -275,55 +275,55 @@ export function GradebookGrid() {
           <div className="flex justify-center py-20"><Loader2 size={28} className="animate-spin" color={MUTED} /></div>
         ) : !selectedClass || !selectedSubject || !selectedTerm ? (
           <div className="text-center py-20" style={{ color: MUTED }}>
-            <p className="font-semibold" style={{ color: PLUM }}>Select Filters</p>
+            <p className="font-semibold" style={{ color: NAVY }}>Select Filters</p>
             <p className="text-sm mt-1">Choose a class, subject, and term to load the gradebook.</p>
           </div>
         ) : !hasItems ? (
           <div className="text-center py-16" style={{ color: MUTED }}>
-            <p className="font-semibold" style={{ color: PLUM }}>No Assessment Items Yet</p>
+            <p className="font-semibold" style={{ color: NAVY }}>No Assessment Items Yet</p>
             <p className="text-sm mt-1">Use the "Add Assessment" bar above to create SBA or Exam items.</p>
           </div>
         ) : (
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="sticky top-0 z-10" style={{ background: PLUM }}>
+              <tr className="sticky top-0 z-10" style={{ background: NAVY }}>
                 <th className="sticky left-0 z-20 text-left px-3 py-2.5 font-semibold text-xs uppercase tracking-wider whitespace-nowrap min-w-[160px]"
-                  style={{ background: PLUM, color: MILK }}>Student</th>
+                  style={{ background: NAVY, color: CREAM }}>Student</th>
 
                 {/* SBA Header */}
                 {sbaItems.length > 0 && (
                   <th colSpan={sbaItems.length}
                     className="px-3 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap"
-                    style={{ background: "#7D6077", color: MILK }}>
+                    style={{ background: "#6B7280", color: CREAM }}>
                     School-Based Assessment (×30%)
                   </th>
                 )}
 
                 {sbaItems.length > 0 && examItems.length > 0 && (
-                  <th className="px-2 py-2" style={{ background: PLUM, width: 24 }} />
+                  <th className="px-2 py-2" style={{ background: NAVY, width: 24 }} />
                 )}
 
                 {/* EXAM Header */}
                 {examItems.length > 0 && (
                   <th colSpan={examItems.length}
                     className="px-3 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap"
-                    style={{ background: "#512b4a", color: MILK }}>
+                    style={{ background: "#0C2D8A", color: CREAM }}>
                     Terminal Examination (×70%)
                   </th>
                 )}
 
                 {/* Separator before summary */}
-                <th className="sticky right-[268px] z-10 px-2 py-2" style={{ background: PLUM, width: 12 }} />
+                <th className="sticky right-[268px] z-10 px-2 py-2" style={{ background: NAVY, width: 12 }} />
 
                 {/* Summary columns — cascade right values: 268→196→124→52→0 */}
                 <th className="sticky right-[196px] z-20 px-2.5 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap min-w-[72px]"
-                  style={{ background: PLUM, color: MILK }}>SBA<br/>(30%)</th>
+                  style={{ background: NAVY, color: CREAM }}>SBA<br/>(30%)</th>
                 <th className="sticky right-[124px] z-20 px-2.5 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap min-w-[72px]"
-                  style={{ background: PLUM, color: MILK }}>Exam<br/>(70%)</th>
+                  style={{ background: NAVY, color: CREAM }}>Exam<br/>(70%)</th>
                 <th className="sticky right-[52px] z-20 px-2.5 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap min-w-[72px]"
-                  style={{ background: PLUM, color: MILK }}>Final<br/>%</th>
+                  style={{ background: NAVY, color: CREAM }}>Final<br/>%</th>
                 <th className="sticky right-0 z-30 px-2.5 py-2 font-semibold text-xs uppercase tracking-wider text-center min-w-[52px]"
-                  style={{ background: PLUM, color: MILK }}>Grade</th>
+                  style={{ background: NAVY, color: CREAM }}>Grade</th>
               </tr>
 
               {/* Sub-header row for item names */}
@@ -333,7 +333,7 @@ export function GradebookGrid() {
 
                 {sbaItems.map(item => (
                   <th key={item.id} className="relative px-2 py-1.5 font-medium text-xs text-center group min-w-[80px]"
-                    style={{ color: PLUM }}>
+                    style={{ color: NAVY }}>
                     <div className="flex items-center justify-center gap-1">
                       <span className="truncate max-w-[70px]">{item.name}</span>
                       <button onClick={() => handleDeleteItem(item.id)}
@@ -351,7 +351,7 @@ export function GradebookGrid() {
 
                 {examItems.map(item => (
                   <th key={item.id} className="relative px-2 py-1.5 font-medium text-xs text-center group min-w-[80px]"
-                    style={{ color: PLUM }}>
+                    style={{ color: NAVY }}>
                     <div className="flex items-center justify-center gap-1">
                       <span className="truncate max-w-[70px]">{item.name}</span>
                       <button onClick={() => handleDeleteItem(item.id)}
@@ -378,7 +378,7 @@ export function GradebookGrid() {
                   style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)" }}>
                   {/* Student name column */}
                   <td className="sticky left-0 z-10 px-3 py-2 font-medium text-sm whitespace-nowrap"
-                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: PLUM }}>
+                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: NAVY }}>
                     {row.student.first_name} {row.student.last_name}
                     {row.student.admission_number && (
                       <span className="ml-2 text-xs" style={{ color: MUTED }}>#{row.student.admission_number}</span>
@@ -397,7 +397,7 @@ export function GradebookGrid() {
                           className="w-full max-w-[60px] mx-auto px-1.5 py-1 rounded-lg text-center text-sm border transition-all"
                           style={{
                             borderColor: isOver ? "#ef4444" : "rgba(56,25,50,0.12)",
-                            color: PLUM,
+                            color: NAVY,
                             background: val ? "#fff" : "rgba(249,241,231,0.5)",
                           }}
                           type="number" min="0" step="any" />
@@ -423,7 +423,7 @@ export function GradebookGrid() {
                           className="w-full max-w-[60px] mx-auto px-1.5 py-1 rounded-lg text-center text-sm border transition-all"
                           style={{
                             borderColor: isOver ? "#ef4444" : "rgba(56,25,50,0.12)",
-                            color: PLUM,
+                            color: NAVY,
                             background: val ? "#fff" : "rgba(249,241,231,0.5)",
                           }}
                           type="number" min="0" step="any" />
@@ -438,19 +438,19 @@ export function GradebookGrid() {
 
                   {/* SBA Weighted */}
                   <td className="sticky right-[196px] z-10 px-2.5 py-2 text-center font-semibold text-sm"
-                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: PLUM }}>
+                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: NAVY }}>
                     {row.sbaWeighted.toFixed(1)}
                   </td>
 
                   {/* Exam Weighted */}
                   <td className="sticky right-[124px] z-10 px-2.5 py-2 text-center font-semibold text-sm"
-                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: PLUM }}>
+                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: NAVY }}>
                     {row.examWeighted.toFixed(1)}
                   </td>
 
                   {/* Final % */}
                   <td className="sticky right-[52px] z-10 px-2.5 py-2 text-center font-bold text-sm"
-                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: PLUM }}>
+                    style={{ background: idx % 2 === 0 ? "#fff" : "rgba(249,241,231,0.4)", color: NAVY }}>
                     {row.finalPct.toFixed(1)}
                   </td>
 

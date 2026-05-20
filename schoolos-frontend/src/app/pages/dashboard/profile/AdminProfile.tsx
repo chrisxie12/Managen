@@ -15,8 +15,8 @@ import { Separator } from "../../../components/ui/separator";
 import { Alert, AlertTitle, AlertDescription } from "../../../components/ui/alert";
 import { Switch } from "../../../components/ui/switch";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 function AdminProfile() {
   const { user, refresh } = useAuth();
@@ -163,14 +163,14 @@ function AdminProfile() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
       <div>
-        <h1 className="text-lg font-bold" style={{ color: PLUM }}>My Profile</h1>
+        <h1 className="text-lg font-bold" style={{ color: NAVY }}>My Profile</h1>
         <p className="text-xs mt-0.5" style={{ color: MUTED }}>Manage your personal account settings and preferences</p>
       </div>
 
       {/* ─── Section 1: Personal Details ─── */}
       <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
         <CardHeader>
-          <CardTitle className="text-sm font-semibold" style={{ color: PLUM }}>Personal Details</CardTitle>
+          <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>Personal Details</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>Update your name, contact information, and profile photo</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -178,7 +178,7 @@ function AdminProfile() {
             <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
               <Avatar className="w-20 h-20 rounded-2xl" style={{ border: "3px solid rgba(56,25,50,0.1)" }}>
                 <AvatarImage src={avatarUrl} alt={fullName} />
-                <AvatarFallback className="text-sm font-bold rounded-2xl" style={{ background: PLUM, color: "#FFF3E6" }}>
+                <AvatarFallback className="text-sm font-bold rounded-2xl" style={{ background: NAVY, color: "#F8F9FA" }}>
                   {initials}
                 </AvatarFallback>
               </Avatar>
@@ -189,7 +189,7 @@ function AdminProfile() {
                 onChange={handleAvatarChange} className="hidden" />
             </div>
             <div className="text-xs leading-relaxed" style={{ color: MUTED }}>
-              <p className="font-medium" style={{ color: PLUM }}>{user?.fullName}</p>
+              <p className="font-medium" style={{ color: NAVY }}>{user?.fullName}</p>
               <p>{user?.email}</p>
               <p className="capitalize">{user?.role?.replace(/_/g, " ")}</p>
             </div>
@@ -197,17 +197,17 @@ function AdminProfile() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>Full Name</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>Full Name</Label>
               <Input value={fullName} onChange={(e) => setFullName(e.target.value)}
                 className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>Email</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>Email</Label>
               <Input value={user?.email || ""} disabled readOnly
                 className="h-9 text-sm rounded-xl opacity-60" style={{ borderColor: "rgba(56,25,50,0.12)" }} />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>Phone Number</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>Phone Number</Label>
               <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ""))}
                 className="h-9 text-sm rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }} placeholder="+233 XX XXX XXXX" />
             </div>
@@ -215,7 +215,7 @@ function AdminProfile() {
 
           <div className="flex justify-end pt-1">
             <Button onClick={handleSavePersonal} disabled={savingPersonal}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {savingPersonal ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
               Save Profile
             </Button>
@@ -226,7 +226,7 @@ function AdminProfile() {
       {/* ─── Section 2: Account Security ─── */}
       <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
         <CardHeader>
-          <CardTitle className="text-sm font-semibold" style={{ color: PLUM }}>Account Security</CardTitle>
+          <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>Account Security</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>Change your password and review security settings</CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -244,7 +244,7 @@ function AdminProfile() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>Current Password</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>Current Password</Label>
               <div className="relative">
                 <Input value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
                   type={showCurrent ? "text" : "password"}
@@ -258,7 +258,7 @@ function AdminProfile() {
             </div>
             <div />
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>New Password</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>New Password</Label>
               <div className="relative">
                 <Input value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
                   type={showNew ? "text" : "password"}
@@ -271,7 +271,7 @@ function AdminProfile() {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium" style={{ color: PLUM }}>Confirm New Password</Label>
+              <Label className="text-xs font-medium" style={{ color: NAVY }}>Confirm New Password</Label>
               <div className="relative">
                 <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                   type={showConfirm ? "text" : "password"}
@@ -287,7 +287,7 @@ function AdminProfile() {
 
           <div className="flex justify-end pt-1">
             <Button onClick={handleChangePassword} disabled={changingPassword}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {changingPassword ? <Loader2 size={14} className="animate-spin mr-1" /> : <Key size={14} className="mr-1" />}
               Update Password
             </Button>
@@ -298,7 +298,7 @@ function AdminProfile() {
       {/* ─── Section 3: App Preferences ─── */}
       <Card className="border rounded-2xl" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
         <CardHeader>
-          <CardTitle className="text-sm font-semibold" style={{ color: PLUM }}>App Preferences</CardTitle>
+          <CardTitle className="text-sm font-semibold" style={{ color: NAVY }}>App Preferences</CardTitle>
           <CardDescription className="text-xs" style={{ color: MUTED }}>
             Customize your theme and personal notification settings
           </CardDescription>
@@ -308,7 +308,7 @@ function AdminProfile() {
             <div className="flex items-center gap-3">
               {theme === "dark" ? <Moon size={16} color={MUTED} /> : <Sun size={16} color={MUTED} />}
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>Theme</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>Theme</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>{theme === "dark" ? "Dark mode" : "Light mode"}</p>
               </div>
             </div>
@@ -321,7 +321,7 @@ function AdminProfile() {
             <div className="flex items-center gap-3">
               <Bell size={16} color={MUTED} />
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>Email me daily attendance summaries</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>Email me daily attendance summaries</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>Receive a daily digest of attendance records</p>
               </div>
             </div>
@@ -332,7 +332,7 @@ function AdminProfile() {
             <div className="flex items-center gap-3">
               <Smartphone size={16} color={MUTED} />
               <div>
-                <p className="text-xs font-medium" style={{ color: PLUM }}>SMS me on failed Paystack webhooks</p>
+                <p className="text-xs font-medium" style={{ color: NAVY }}>SMS me on failed Paystack webhooks</p>
                 <p className="text-[11px]" style={{ color: MUTED }}>Get an SMS alert when a payment webhook fails</p>
               </div>
             </div>
@@ -341,7 +341,7 @@ function AdminProfile() {
 
           <div className="flex justify-end pt-1">
             <Button onClick={handleSavePreferences} disabled={savingPreferences}
-              className="text-xs rounded-xl h-9 px-6" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-6" style={{ background: NAVY }}>
               {savingPreferences ? <Loader2 size={14} className="animate-spin mr-1" /> : <Save size={14} className="mr-1" />}
               Save Preferences
             </Button>

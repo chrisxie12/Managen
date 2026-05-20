@@ -6,10 +6,10 @@ import {
 import { toast } from "sonner";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -234,7 +234,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             <tr>
               <th className="px-2 py-1.5 text-xs font-semibold text-left" style={{ color: MUTED, width: 60 }}>Period</th>
               {DAYS.map(day => (
-                <th key={day} className="px-2 py-1.5 text-xs font-semibold text-center" style={{ color: PLUM }}>{day.slice(0, 3)}</th>
+                <th key={day} className="px-2 py-1.5 text-xs font-semibold text-center" style={{ color: NAVY }}>{day.slice(0, 3)}</th>
               ))}
             </tr>
           </thead>
@@ -282,7 +282,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
       {!embedded && (
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>Timetable Scheduler</h1>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>Timetable Scheduler</h1>
             <p className="text-sm" style={{ color: MUTED }}>Automatically generate class timetables</p>
           </div>
         </div>
@@ -291,10 +291,10 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
       <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
         <div className="flex items-end gap-4 flex-wrap">
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium mb-1.5" style={{ color: PLUM_LIGHT }}>Class</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: NAVY_LIGHT }}>Class</label>
             <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select a class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -302,7 +302,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
           <div className="flex gap-2">
             <button onClick={handleGenerate} disabled={!selectedClass || generating || constraintsLoading}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-              style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+              style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
               {generating ? <LoadingSpinner size={14} /> : <RefreshCw size={14} />}
               {generating ? "Generating..." : "Generate Preview"}
             </button>
@@ -340,7 +340,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
       {!constraintsLoading && selectedClass && subjects.length === 0 && (
         <div className="p-10 rounded-2xl text-center" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <BookOpen size={32} className="mx-auto mb-2" style={{ color: MUTED }} />
-          <p className="text-sm font-medium" style={{ color: PLUM_LIGHT }}>No subjects assigned to this class</p>
+          <p className="text-sm font-medium" style={{ color: NAVY_LIGHT }}>No subjects assigned to this class</p>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Add subjects via Academics page first</p>
         </div>
       )}
@@ -348,15 +348,15 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
       {!constraintsLoading && selectedClass && subjects.length > 0 && (
         <>
           <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-            <h2 className="font-semibold text-sm mb-3" style={{ color: PLUM }}>
+            <h2 className="font-semibold text-sm mb-3" style={{ color: NAVY }}>
               <BookOpen size={14} className="inline mr-1.5" />
               Subjects & Periods per Week
             </h2>
             <div className="space-y-2">
               {subjects.map(cs => (
-                <div key={cs.id} className="flex items-center justify-between py-1.5 px-3 rounded-xl" style={{ background: MILK }}>
+                <div key={cs.id} className="flex items-center justify-between py-1.5 px-3 rounded-xl" style={{ background: CREAM }}>
                   <div>
-                    <span className="text-sm font-medium" style={{ color: PLUM }}>{cs.subject?.name || "Unknown"}</span>
+                    <span className="text-sm font-medium" style={{ color: NAVY }}>{cs.subject?.name || "Unknown"}</span>
                     {cs.subject?.code && <span className="ml-2 text-xs" style={{ color: MUTED }}>({cs.subject.code})</span>}
                     <div className="text-xs" style={{ color: MUTED }}>
                       {cs.teachers?.map((t: any) => t?.name).filter(Boolean).join(", ") || "No teacher assigned"}
@@ -365,11 +365,11 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                   <div className="flex items-center gap-1">
                     <button onClick={() => updatePeriods(cs.id, (cs.periods_per_week || 2) - 1)}
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold active:scale-90"
-                      style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>−</button>
-                    <span className="w-8 text-center text-sm font-bold" style={{ color: PLUM }}>{cs.periods_per_week || 2}</span>
+                      style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>−</button>
+                    <span className="w-8 text-center text-sm font-bold" style={{ color: NAVY }}>{cs.periods_per_week || 2}</span>
                     <button onClick={() => updatePeriods(cs.id, (cs.periods_per_week || 2) + 1)}
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold active:scale-90"
-                      style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>+</button>
+                      style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>+</button>
                   </div>
                 </div>
               ))}
@@ -378,13 +378,13 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
 
           <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-sm" style={{ color: PLUM }}>
+              <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
                 <Users size={14} className="inline mr-1.5" />
                 Teacher Availability
               </h2>
               <button onClick={() => setShowAvailEditor(!showAvailEditor)}
                 className="text-xs font-medium active:scale-95 transition-transform px-3 py-1 rounded-lg"
-                style={{ color: PLUM, background: "rgba(56,25,50,0.06)" }}>
+                style={{ color: NAVY, background: "rgba(56,25,50,0.06)" }}>
                 {showAvailEditor ? "Done" : "Edit"}
               </button>
             </div>
@@ -395,7 +395,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                   className="px-3 py-1.5 rounded-xl text-xs cursor-pointer transition-all"
                   style={{
                     background: showAvailEditor ? "rgba(99,102,241,0.1)" : "rgba(56,25,50,0.05)",
-                    color: PLUM,
+                    color: NAVY,
                     border: showAvailEditor ? "1px solid rgba(99,102,241,0.3)" : "none",
                   }}>
                   {t.name}
@@ -406,7 +406,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
 
           <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-sm" style={{ color: PLUM }}>
+              <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
                 <MapPin size={14} className="inline mr-1.5" />
                 Rooms ({rooms.length})
               </h2>
@@ -428,7 +428,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <h2 className="font-semibold text-sm" style={{ color: PLUM }}>
+                  <h2 className="font-semibold text-sm" style={{ color: NAVY }}>
                     <Calendar size={14} className="inline mr-1.5" />
                     Generated Timetable
                   </h2>
@@ -454,7 +454,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                   </span>
                   <button onClick={handleSave} disabled={saving || generated.length === 0}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold active:scale-95 transition-transform disabled:opacity-50"
-                    style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                    style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                     {saving ? <LoadingSpinner size={12} /> : <Save size={12} />}
                     Save
                   </button>
@@ -479,7 +479,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
                       {c.type === 'no_valid_slot' ? 'NO SLOT' :
                        c.type === 'max_attempts_exceeded' ? 'TIMEOUT' : c.type.toUpperCase()}
                     </span>
-                    <span style={{ color: PLUM }}>{c.message}</span>
+                    <span style={{ color: NAVY }}>{c.message}</span>
                   </div>
                 ))}
               </div>
@@ -490,7 +490,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
               <button onClick={() => setShowExisting(!showExisting)}
                 className="flex items-center gap-1.5 text-sm font-semibold mb-2"
-                style={{ color: PLUM }}>
+                style={{ color: NAVY }}>
                 {showExisting ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                 Existing Saved Timetable ({existingEntries.length} periods)
               </button>
@@ -506,7 +506,7 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
           <div className="w-full max-w-lg rounded-2xl p-5" style={{ background: "white" }}
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-sm" style={{ color: PLUM }}>
+              <h3 className="font-semibold text-sm" style={{ color: NAVY }}>
                 Edit Availability: {teachers.find(t => t.id === editingTeacher)?.name}
               </h3>
               <button onClick={() => setEditingTeacher(null)} className="p-1 rounded hover:opacity-70" style={{ color: MUTED }}>
@@ -516,15 +516,15 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             <div className="space-y-3">
               {DAYS.map(day => (
                 <div key={day}>
-                  <p className="text-xs font-medium mb-1" style={{ color: PLUM_LIGHT }}>{day}</p>
+                  <p className="text-xs font-medium mb-1" style={{ color: NAVY_LIGHT }}>{day}</p>
                   <div className="flex flex-wrap gap-1">
                     {Array.from({ length: settings?.periods_per_day || 8 }, (_, i) => i + 1).map(pn => (
                       <button key={pn} onClick={() => toggleAvailSlot(day, pn)}
                         className="w-8 h-8 rounded-lg text-xs font-medium active:scale-90 transition-all"
                         style={{
-                          background: (editAvail[day] || []).includes(pn) ? PLUM : MILK,
-                          color: (editAvail[day] || []).includes(pn) ? MILK : PLUM,
-                          border: `1px solid ${(editAvail[day] || []).includes(pn) ? PLUM : 'rgba(56,25,50,0.1)'}`,
+                          background: (editAvail[day] || []).includes(pn) ? NAVY : CREAM,
+                          color: (editAvail[day] || []).includes(pn) ? CREAM : NAVY,
+                          border: `1px solid ${(editAvail[day] || []).includes(pn) ? NAVY : 'rgba(56,25,50,0.1)'}`,
                         }}>
                         {pn}
                       </button>
@@ -536,10 +536,10 @@ export function TimetableScheduler({ embedded = false }: { embedded?: boolean })
             <div className="flex justify-end gap-2 mt-4">
               <button onClick={() => setEditingTeacher(null)}
                 className="px-4 py-2 rounded-xl text-sm font-medium"
-                style={{ background: MILK, color: PLUM }}>Cancel</button>
+                style={{ background: CREAM, color: NAVY }}>Cancel</button>
               <button onClick={saveAvailability}
                 className="px-4 py-2 rounded-xl text-sm font-semibold active:scale-95 transition-transform"
-                style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                 Save Availability
               </button>
             </div>

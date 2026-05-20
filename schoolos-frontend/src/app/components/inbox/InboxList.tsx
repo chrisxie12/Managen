@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Mail, MailOpen, Loader2, Search, MessageSquare } from "lucide-react";
 import type { InboxMessage } from "./types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function InboxList({ messages, loading, onSelect }: { messages: InboxMessage[]; loading: boolean; onSelect: (m: InboxMessage) => void }) {
   const [search, setSearch] = useState("");
@@ -22,7 +22,7 @@ export function InboxList({ messages, loading, onSelect }: { messages: InboxMess
     return (
       <div className="text-center py-12" style={{ color: MUTED }}>
         <MessageSquare size={36} className="mx-auto mb-3" />
-        <p className="font-semibold" style={{ color: PLUM }}>Inbox Empty</p>
+        <p className="font-semibold" style={{ color: NAVY }}>Inbox Empty</p>
         <p className="text-sm mt-1">No messages yet.</p>
       </div>
     );
@@ -33,7 +33,7 @@ export function InboxList({ messages, loading, onSelect }: { messages: InboxMess
       <div className="flex items-center gap-2 px-3 py-2 rounded-xl max-w-xs" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
         <Search size={14} color={MUTED} />
         <input placeholder="Search messages..." value={search} onChange={(e) => setSearch(e.target.value)}
-          className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+          className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
       </div>
 
       {filtered.length === 0 ? (
@@ -43,21 +43,21 @@ export function InboxList({ messages, loading, onSelect }: { messages: InboxMess
       ) : filtered.map(m => (
         <div key={m.id} onClick={() => onSelect(m)}
           className="p-4 rounded-xl cursor-pointer hover:opacity-80 transition-opacity"
-          style={{ background: m.status !== "read" ? MILK : "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+          style={{ background: m.status !== "read" ? CREAM : "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <div className="flex items-start gap-3">
             <div className="mt-0.5">
-              {m.status !== "read" ? <Mail size={16} color={PLUM} /> : <MailOpen size={16} color={MUTED} />}
+              {m.status !== "read" ? <Mail size={16} color={NAVY} /> : <MailOpen size={16} color={MUTED} />}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <p className={`text-sm font-medium truncate ${m.status !== "read" ? "font-semibold" : ""}`} style={{ color: PLUM }}>
+                <p className={`text-sm font-medium truncate ${m.status !== "read" ? "font-semibold" : ""}`} style={{ color: NAVY }}>
                   {m.message.subject}
                 </p>
                 <span className="text-xs shrink-0 ml-2" style={{ color: MUTED }}>
                   {new Date(m.message.created_at).toLocaleDateString()}
                 </span>
               </div>
-              <p className="text-xs line-clamp-2" style={{ color: PLUM_LIGHT }}>{m.message.body}</p>
+              <p className="text-xs line-clamp-2" style={{ color: NAVY_LIGHT }}>{m.message.body}</p>
             </div>
           </div>
         </div>

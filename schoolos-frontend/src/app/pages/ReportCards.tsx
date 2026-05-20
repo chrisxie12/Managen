@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { FileText, Upload, Download, Loader2, Check, X, AlertCircle, FileDown } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type Template = { id: string; name: string; file_name: string; created_at: string; uploader?: { name: string } };
 type ClassOption = { id: string; name: string };
@@ -39,7 +39,7 @@ export function ReportCards() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Report Cards</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Report Cards</h2>
           <p className="text-sm" style={{ color: MUTED }}>Generate student report cards from Word templates</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -51,8 +51,8 @@ export function ReportCards() {
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
               style={{
-                background: tab === t.key ? PLUM : "white",
-                color: tab === t.key ? MILK : PLUM_LIGHT,
+                background: tab === t.key ? NAVY : "white",
+                color: tab === t.key ? CREAM : NAVY_LIGHT,
                 border: tab === t.key ? "none" : "1px solid rgba(56,25,50,0.1)",
               }}>
               <t.icon size={14} /> {t.label}
@@ -106,21 +106,21 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
   return (
     <div className="space-y-6">
       <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <h3 className="font-semibold text-sm mb-4" style={{ color: PLUM }}>Upload Word Template</h3>
+        <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Upload Word Template</h3>
         <p className="text-xs mb-4" style={{ color: MUTED }}>
           Upload a .docx file with placeholders: {`{{student_name}}, {{roll_no}}, {{class}}, {{term}}, {{subject_scores}}, {{total_score}}, {{percentage}}, {{grade}}, {{remark}}`}
         </p>
 
         <div className="flex items-center gap-3 mb-4">
           <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl cursor-pointer text-sm"
-            style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+            style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
             <Upload size={15} />
             <span>{file ? file.name : "Choose .docx file"}</span>
             <input type="file" accept=".docx" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           </label>
           <button onClick={uploadFile} disabled={!file || uploading}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-            style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
             {uploading ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
             {uploading ? "Uploading..." : "Upload"}
           </button>
@@ -128,7 +128,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
       </div>
 
       <div className="rounded-xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: PLUM }}>Uploaded Templates</h3>
+        <h3 className="px-4 py-3 font-semibold text-sm" style={{ color: NAVY }}>Uploaded Templates</h3>
         {templates.length === 0 ? (
           <div className="text-center py-8">
             <FileText size={36} color={MUTED} className="mx-auto mb-2" />
@@ -147,7 +147,7 @@ function UploadTemplateTab({ setError, setSuccess }: { setError: (s: string) => 
               <tbody>
                 {templates.map(t => (
                   <tr key={t.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
-                    <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{t.name}</td>
+                    <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{t.name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{t.file_name}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{new Date(t.created_at).toLocaleDateString()}</td>
                   </tr>
@@ -208,14 +208,14 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
   return (
     <div className="space-y-6">
       <div className="p-6 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-        <h3 className="font-semibold text-sm mb-4" style={{ color: PLUM }}>Generate Report Cards</h3>
+        <h3 className="font-semibold text-sm mb-4" style={{ color: NAVY }}>Generate Report Cards</h3>
 
         <div className="grid gap-4 sm:grid-cols-3 mb-4">
           <div>
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Template</label>
             <select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select template...</option>
               {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -224,7 +224,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Class</label>
             <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select class...</option>
               {classes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
@@ -233,7 +233,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
             <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Term</label>
             <select value={selectedTerm} onChange={(e) => setSelectedTerm(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl outline-none text-sm"
-              style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+              style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
               <option value="">Select term...</option>
               {terms.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
             </select>
@@ -242,7 +242,7 @@ function GenerateCardsTab({ setError, setSuccess }: { setError: (s: string) => v
 
         <button onClick={generate} disabled={generating || !selectedTemplate || !selectedClass || !selectedTerm}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform disabled:opacity-50"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           {generating ? <Loader2 size={15} className="animate-spin" /> : <FileText size={15} />}
           {generating ? "Generating..." : "Generate Report Cards"}
         </button>
@@ -288,7 +288,7 @@ function ViewCardsTab() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <Loader2 className="animate-spin" size={24} color={PLUM} />
+      <Loader2 className="animate-spin" size={24} color={NAVY} />
     </div>
   );
 
@@ -297,7 +297,7 @@ function ViewCardsTab() {
       {cards.length > 0 && (
         <button onClick={downloadZip} disabled={downloading}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold mb-4 active:scale-95 transition-transform disabled:opacity-50"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <Download size={15} />
           {downloading ? "Preparing..." : "Download All as ZIP"}
         </button>
@@ -307,7 +307,7 @@ function ViewCardsTab() {
         {cards.length === 0 ? (
           <div className="text-center py-12">
             <FileDown size={40} color={MUTED} className="mx-auto mb-3" />
-            <p style={{ color: PLUM, fontWeight: 600 }}>No report cards yet</p>
+            <p style={{ color: NAVY, fontWeight: 600 }}>No report cards yet</p>
             <p className="text-sm mt-1" style={{ color: MUTED }}>Generate report cards to see them here</p>
           </div>
         ) : (
@@ -325,7 +325,7 @@ function ViewCardsTab() {
               <tbody>
                 {cards.map(card => (
                   <tr key={card.id} className="text-sm" style={{ borderBottom: "1px solid rgba(56,25,50,0.05)" }}>
-                    <td className="px-4 py-3 font-medium" style={{ color: PLUM }}>{card.student?.name || "—"}</td>
+                    <td className="px-4 py-3 font-medium" style={{ color: NAVY }}>{card.student?.name || "—"}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{card.student?.admission_no || "—"}</td>
                     <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{card.term?.name || "—"}</td>
                     <td className="px-4 py-3">

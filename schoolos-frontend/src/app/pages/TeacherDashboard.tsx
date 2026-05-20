@@ -12,7 +12,7 @@ import {
   SummaryCard, QuickActions as QuickActionsGrid, StatusBadge, palette,
 } from "../components/dashboard";
 
-const { PLUM, PLUM_LIGHT, MUTED } = palette;
+const { NAVY, NAVY_LIGHT, MUTED } = palette;
 
 type TeacherClass = { id: string; name: string; student_count?: number };
 type SubjectAssignment = { id: string; subject: { name: string; code?: string }; class: { name: string } };
@@ -76,7 +76,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
   return (
     <DashboardCard title="Quick Attendance" action={
       selectedClass && students.length > 0 ? (
-        <button onClick={saveAttendance} disabled={saving} className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium active:scale-95 transition-transform" style={{ background: `${PLUM}12`, color: PLUM }}>
+        <button onClick={saveAttendance} disabled={saving} className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium active:scale-95 transition-transform" style={{ background: `${NAVY}12`, color: NAVY }}>
           {saving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
           {saving ? "Saving..." : "Save"}
         </button>
@@ -87,7 +87,7 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
         value={selectedClass}
         onChange={(e) => { setSelectedClass(e.target.value); loadStudents(e.target.value); }}
         className="w-full mb-3 p-2.5 rounded-xl text-sm outline-none"
-        style={{ background: "#FFF3E6", color: PLUM, border: "1px solid rgba(56,25,50,0.1)" }}
+        style={{ background: "#F8F9FA", color: NAVY, border: "1px solid rgba(56,25,50,0.1)" }}
       >
         <option value="">Select a class...</option>
         {classes.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
@@ -99,13 +99,13 @@ function AttendanceMarkWidget({ classes }: { classes: TeacherClass[] }) {
       ) : selectedClass ? (
         <div className="max-h-[240px] overflow-y-auto space-y-1">
           {students.map((s) => (
-            <div key={s.id} className="flex items-center justify-between p-2 rounded-xl" style={{ background: "#FFF3E6" }}>
+            <div key={s.id} className="flex items-center justify-between p-2 rounded-xl" style={{ background: "#F8F9FA" }}>
               <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: `${PLUM}15`, color: PLUM }}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: `${NAVY}15`, color: NAVY }}>
                   {s.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="truncate">
-                  <p className="text-sm font-medium truncate" style={{ color: PLUM }}>{s.name}</p>
+                  <p className="text-sm font-medium truncate" style={{ color: NAVY }}>{s.name}</p>
                   {s.admission_no && <p className="text-xs" style={{ color: MUTED }}>{s.admission_no}</p>}
                 </div>
               </div>
@@ -142,7 +142,7 @@ function AlertWidget({ absentees, pendingAssessments, missingScores }:
         {alerts.map((a, i) => (
           <div key={i} className="flex items-center gap-2 p-2.5 rounded-xl" style={{ background: `${a.color}10`, border: `1px solid ${a.color}20` }}>
             <a.icon size={14} color={a.color} />
-            <span style={{ color: PLUM_LIGHT, fontSize: "0.82rem" }}>{a.text}</span>
+            <span style={{ color: NAVY_LIGHT, fontSize: "0.82rem" }}>{a.text}</span>
           </div>
         ))}
       </div>
@@ -246,7 +246,7 @@ export function TeacherDashboard() {
           <div className="lg:col-span-2 space-y-5">
             {todayPeriods.length > 0 ? (
               <DashboardCard title={`Today's Schedule (${todayName})`} action={
-                <button onClick={() => navigate("/dashboard/academics")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
+                <button onClick={() => navigate("/dashboard/academics")} className="flex items-center gap-1 text-xs" style={{ color: NAVY_LIGHT }}>
                   Full Timetable <ArrowRight size={11} />
                 </button>
               }>
@@ -272,7 +272,7 @@ export function TeacherDashboard() {
 
             <DashboardCard title="Upcoming Assessments & Grading" action={
               assessments.length > 0 ? (
-                <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
+                <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: NAVY_LIGHT }}>
                   Assessments <ArrowRight size={11} />
                 </button>
               ) : undefined
@@ -295,7 +295,7 @@ export function TeacherDashboard() {
 
             <DashboardCard title="Recent Announcements" action={
               announcements.length > 0 ? (
-                <button onClick={() => navigate("/dashboard/communication")} className="flex items-center gap-1 text-xs" style={{ color: PLUM_LIGHT }}>
+                <button onClick={() => navigate("/dashboard/communication")} className="flex items-center gap-1 text-xs" style={{ color: NAVY_LIGHT }}>
                   View All <ArrowRight size={11} />
                 </button>
               ) : undefined
@@ -303,9 +303,9 @@ export function TeacherDashboard() {
               {announcements.length > 0 ? (
                 <div className="space-y-3 max-h-[260px] overflow-y-auto">
                   {announcements.slice(0, 4).map((a) => (
-                    <div key={a.id} className="p-3 rounded-xl" style={{ background: "#FFF3E6" }}>
+                    <div key={a.id} className="p-3 rounded-xl" style={{ background: "#F8F9FA" }}>
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium" style={{ color: PLUM }}>{a.title}</p>
+                        <p className="text-sm font-medium" style={{ color: NAVY }}>{a.title}</p>
                         <span className="text-xs" style={{ color: MUTED }}>
                           {a.created_at ? new Date(a.created_at).toLocaleDateString() : ""}
                         </span>
@@ -327,12 +327,12 @@ export function TeacherDashboard() {
               <DashboardCard title="My Subjects & Classes">
                 <div className="space-y-2 max-h-[240px] overflow-y-auto">
                   {subjects.slice(0, 8).map((s) => (
-                    <div key={s.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "#FFF3E6" }}>
+                    <div key={s.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "#F8F9FA" }}>
                       <div>
-                        <p className="text-sm font-medium" style={{ color: PLUM }}>{s.subject?.name || "—"}</p>
+                        <p className="text-sm font-medium" style={{ color: NAVY }}>{s.subject?.name || "—"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{s.class?.name || "—"}</p>
                       </div>
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `${PLUM}12`, color: PLUM }}>
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `${NAVY}12`, color: NAVY }}>
                         {s.subject?.name?.charAt(0) || "?"}
                       </div>
                     </div>

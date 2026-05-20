@@ -7,8 +7,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding/index";
 import { toast } from "sonner";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 
 const STEPS = [
@@ -108,7 +108,7 @@ export function Onboarding() {
     <div className="min-h-screen bg-white flex">
       <div className="hidden md:flex flex-col w-64 bg-gray-50 border-r border-gray-100 p-8">
         <div className="mb-10">
-          <h1 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>SchoolOS</h1>
+          <h1 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>SchoolOS</h1>
           <p className="text-xs mt-1" style={{ color: MUTED }}>Onboarding</p>
         </div>
         <div className="space-y-6">
@@ -126,7 +126,7 @@ export function Onboarding() {
                   }}>
                   {currentStep > step.id ? <Check size={14} /> : <Icon size={14} />}
                 </div>
-                <span className="text-sm font-medium" style={{ color: isActive ? PLUM : MUTED }}>
+                <span className="text-sm font-medium" style={{ color: isActive ? NAVY : MUTED }}>
                   {step.label}
                 </span>
               </div>

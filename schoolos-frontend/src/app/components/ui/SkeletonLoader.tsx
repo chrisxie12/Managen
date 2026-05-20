@@ -1,6 +1,6 @@
 import { Skeleton } from "./skeleton";
 
-const PLUM = "#381932";
+const NAVY = "#0A2472";
 
 type SkeletonVariant = "card" | "table" | "form" | "chart" | "text" | "metric";
 

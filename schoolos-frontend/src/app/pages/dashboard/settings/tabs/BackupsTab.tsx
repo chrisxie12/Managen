@@ -8,13 +8,13 @@ import {
 } from "../../../../components/ui/select";
 import { api } from "../../../../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -73,7 +73,7 @@ export function BackupsTab({ role }: Props) {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={PLUM} /></div>;
+    return <div className="flex items-center justify-center min-h-[30vh]"><Loader2 className="animate-spin" size={24} color={NAVY} /></div>;
   }
 
   return (
@@ -81,14 +81,14 @@ export function BackupsTab({ role }: Props) {
       <SectionCard title="One-Click Data Export" desc="Export all your school data as a CSV archive">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium" style={{ color: PLUM }}>Complete CSV Export</p>
+            <p className="text-sm font-medium" style={{ color: NAVY }}>Complete CSV Export</p>
             <p className="text-xs mt-0.5" style={{ color: MUTED }}>
               Includes students, staff, attendance, fees, assessments, and grades
               {lastExport && <span className="block mt-0.5">Last export: {new Date(lastExport).toLocaleDateString()}</span>}
             </p>
           </div>
           <Button onClick={handleExport} disabled={exporting || isReadOnly}
-            className="text-xs rounded-xl h-9 px-5" style={{ background: PLUM }}>
+            className="text-xs rounded-xl h-9 px-5" style={{ background: NAVY }}>
             {exporting ? (
               <Loader2 size={14} className="animate-spin mr-1" />
             ) : (
@@ -102,7 +102,7 @@ export function BackupsTab({ role }: Props) {
       <SectionCard title="Auto-Backup Schedule" desc="Set a recurring schedule for automatic data backups">
         <div className="flex items-end gap-4">
           <div className="flex-1 max-w-xs">
-            <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Frequency</label>
+            <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Frequency</label>
             <Select value={schedule} onValueChange={setSchedule} disabled={isReadOnly}>
               <SelectTrigger className="h-9 text-xs rounded-xl" style={{ borderColor: "rgba(56,25,50,0.12)" }}>
                 <SelectValue />
@@ -117,7 +117,7 @@ export function BackupsTab({ role }: Props) {
           </div>
           {!isReadOnly && (
             <Button onClick={handleSaveSchedule} disabled={savingSchedule}
-              className="text-xs rounded-xl h-9 px-5" style={{ background: PLUM }}>
+              className="text-xs rounded-xl h-9 px-5" style={{ background: NAVY }}>
               {savingSchedule ? <Loader2 size={14} className="animate-spin mr-1" /> : <Calendar size={14} className="mr-1" />}
               Save Schedule
             </Button>

@@ -43,8 +43,8 @@ export function ProfileGuard({ children }: { children: React.ReactNode }) {
 
   if (authLoading || checking) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: "#FFF3E6" }}>
-        <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#381932", borderTopColor: "transparent" }} />
+      <div className="flex items-center justify-center min-h-screen" style={{ background: "#F8F9FA" }}>
+        <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#0A2472", borderTopColor: "transparent" }} />
       </div>
     );
   }

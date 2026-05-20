@@ -4,8 +4,8 @@ import { CheckCircle2, XCircle, Loader2, ArrowLeft, Wallet } from "lucide-react"
 import { toast } from "sonner";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 export function PaymentVerify() {
   const [searchParams] = useSearchParams();
@@ -52,12 +52,12 @@ export function PaymentVerify() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#F8F9FA" }}>
       <div className="w-full max-w-md rounded-2xl p-8 text-center" style={{ background: "white" }}>
         {status === "verifying" && (
           <>
-            <Loader2 size={48} className="animate-spin mx-auto mb-4" style={{ color: PLUM }} />
-            <h1 className="text-xl font-bold mb-2" style={{ color: PLUM }}>Verifying Payment</h1>
+            <Loader2 size={48} className="animate-spin mx-auto mb-4" style={{ color: NAVY }} />
+            <h1 className="text-xl font-bold mb-2" style={{ color: NAVY }}>Verifying Payment</h1>
             <p style={{ color: MUTED }}>Please wait while we confirm your payment...</p>
           </>
         )}
@@ -65,7 +65,7 @@ export function PaymentVerify() {
         {status === "success" && (
           <>
             <CheckCircle2 size={48} className="mx-auto mb-4" style={{ color: "#059669" }} />
-            <h1 className="text-xl font-bold mb-2" style={{ color: PLUM }}>Payment Successful!</h1>
+            <h1 className="text-xl font-bold mb-2" style={{ color: NAVY }}>Payment Successful!</h1>
             <p className="mb-4" style={{ color: MUTED }}>{message}</p>
           </>
         )}
@@ -73,7 +73,7 @@ export function PaymentVerify() {
         {status === "failed" && (
           <>
             <XCircle size={48} className="mx-auto mb-4" style={{ color: "#DC2626" }} />
-            <h1 className="text-xl font-bold mb-2" style={{ color: PLUM }}>Payment Failed</h1>
+            <h1 className="text-xl font-bold mb-2" style={{ color: NAVY }}>Payment Failed</h1>
             <p className="mb-4" style={{ color: MUTED }}>{message}</p>
           </>
         )}
@@ -82,7 +82,7 @@ export function PaymentVerify() {
           <button
             onClick={() => navigate("/dashboard/fees")}
             className="w-full px-4 py-3 rounded-xl text-sm font-medium text-white transition-all duration-200 flex items-center justify-center gap-2"
-            style={{ background: PLUM }}
+            style={{ background: NAVY }}
           >
             <Wallet size={16} />
             Return to Fee Payment
@@ -93,7 +93,7 @@ export function PaymentVerify() {
               className="w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2"
               style={{
                 background: "white",
-                color: PLUM,
+                color: NAVY,
                 border: "1px solid rgba(56,25,50,0.15)",
               }}
             >

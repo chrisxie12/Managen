@@ -35,13 +35,13 @@ createRoot(document.getElementById("root")!).render(
 
 function SentryErrorFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-8" style={{ background: "#FFF3E6" }}>
+    <div className="min-h-screen flex items-center justify-center p-8" style={{ background: "#F8F9FA" }}>
       <div className="max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-2" style={{ color: "#381932", fontFamily: "'Playfair Display', serif" }}>Something went wrong</h1>
-        <p className="text-sm mb-4" style={{ color: "#7D6077" }}>An unexpected error occurred. Our team has been notified.</p>
+        <h1 className="text-2xl font-bold mb-2" style={{ color: "#0A2472", fontFamily: "'Playfair Display', serif" }}>Something went wrong</h1>
+        <p className="text-sm mb-4" style={{ color: "#6B7280" }}>An unexpected error occurred. Our team has been notified.</p>
         <button onClick={() => window.location.reload()}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white"
-          style={{ background: "#381932" }}>
+          style={{ background: "#0A2472" }}>
           Reload Page
         </button>
       </div>

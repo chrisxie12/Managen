@@ -20,8 +20,8 @@ import {
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
 
 // ─── Shared Types ───────────────────────────────────────────────
@@ -62,13 +62,13 @@ const AlertBanner = ({ type, message, onClose }: { type: "error" | "success"; me
 };
 
 const LoadingSpinner = ({ height = 48 }: { height?: number }) => (
-  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={PLUM} /></div>
+  <div className="flex items-center justify-center" style={{ height }}><Loader2 className="animate-spin" size={24} color={NAVY} /></div>
 );
 
 const EmptyState = ({ icon: Icon, title, desc }: { icon: any; title: string; desc: string }) => (
   <div className="text-center py-10 rounded-2xl" style={{ background: "rgba(56,25,50,0.03)", border: "1px dashed rgba(56,25,50,0.1)" }}>
     <Icon size={36} color={MUTED} className="mx-auto mb-2" />
-    <p className="font-semibold text-sm" style={{ color: PLUM }}>{title}</p>
+    <p className="font-semibold text-sm" style={{ color: NAVY }}>{title}</p>
     <p className="text-xs mt-1" style={{ color: MUTED }}>{desc}</p>
   </div>
 );
@@ -77,14 +77,14 @@ const MetricCard = ({ icon: Icon, label, value, sub, color }: {
   icon: any; label: string; value: string | number; sub?: string; color?: string;
 }) => (
   <div className="p-5 rounded-2xl relative overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-    <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || PLUM }} />
+    <div className="absolute top-0 right-0 w-20 h-20 -mr-6 -mt-6 rounded-full opacity-10" style={{ background: color || NAVY }} />
     <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || PLUM}15` }}>
-        <Icon size={18} color={color || PLUM} />
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color || NAVY}15` }}>
+        <Icon size={18} color={color || NAVY} />
       </div>
       <div>
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
-        <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+        <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
       </div>
     </div>
     {sub && <p className="text-xs" style={{ color: MUTED }}>{sub}</p>}
@@ -96,7 +96,7 @@ const ChartCard = ({ title, subtitle, children }: {
 }) => (
   <div className="p-5 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
     <div className="mb-4">
-      <h3 className="font-semibold text-sm" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="font-semibold text-sm" style={{ color: NAVY }}>{title}</h3>
       {subtitle && <p className="text-xs" style={{ color: MUTED }}>{subtitle}</p>}
     </div>
     {children}
@@ -124,7 +124,7 @@ function FilterBar({ dateFrom, setDateFrom, dateTo, setDateTo, children, onExpor
       <div className="ml-auto" />
       {onExport && (
         <Button variant="outline" size="sm" onClick={onExport}
-          className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: PLUM }}>
+          className="rounded-full text-xs h-9" style={{ borderColor: "rgba(56,25,50,0.15)", color: NAVY }}>
           <Download size={13} className="mr-1" /> {exportLabel || "Export CSV"}
         </Button>
       )}
@@ -217,7 +217,7 @@ function AttendanceTab() {
                 {data.records.map((r: any) => (
                   <TableRow key={r.id}>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{r.date}</TableCell>
-                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{r.student?.name || "—"}</TableCell>
+                    <TableCell style={{ color: NAVY, fontSize: 13 }}>{r.student?.name || "—"}</TableCell>
                     <TableCell style={{ color: MUTED, fontSize: 12 }}>{r.class_name}</TableCell>
                     <TableCell><StatusBadge status={r.status} /></TableCell>
                   </TableRow>
@@ -299,7 +299,7 @@ function StaffAttendanceTab() {
                 {data.records.map((r: any) => (
                   <TableRow key={r.id}>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.date}</TableCell>
-                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{r.user?.name}</TableCell>
+                    <TableCell style={{ color: NAVY, fontSize: 13 }}>{r.user?.name}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.user?.email}</TableCell>
                     <TableCell><StatusBadge status={r.status} /></TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.check_in || "—"}</TableCell>
@@ -387,7 +387,7 @@ function AcademicPerformanceTab() {
               <div className="space-y-2 mb-6">
                 {data.subjectBreakdown.map((sb: any, i: number) => (
                   <div key={sb.subject_id} className="flex items-center gap-3">
-                    <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: PLUM }}>{sb.subject_name}</span>
+                    <span className="text-xs font-medium w-24 truncate shrink-0" style={{ color: NAVY }}>{sb.subject_name}</span>
                     <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
                       <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(sb.avgRate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                     </div>
@@ -416,7 +416,7 @@ function AcademicPerformanceTab() {
               <TableBody>
                 {data.records.map((r: any) => (
                   <TableRow key={r.assessment_id}>
-                    <TableCell className="font-medium" style={{ color: PLUM, fontSize: 13 }}>{r.name}</TableCell>
+                    <TableCell className="font-medium" style={{ color: NAVY, fontSize: 13 }}>{r.name}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.date}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.class}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.subject}</TableCell>
@@ -507,7 +507,7 @@ function ClassComparisonTab() {
               <BarChart data={data.records} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
                 <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: MUTED }} unit="%" />
-                <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: PLUM }} width={80} />
+                <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
                 <Tooltip contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(56,25,50,0.15)" }}
                   formatter={(value: number) => [`${value}%`, "Avg Score"]} />
                 <Bar dataKey="avgRate" radius={[0, 4, 4, 0]}>
@@ -530,7 +530,7 @@ function ClassComparisonTab() {
               <TableBody>
                 {data.records.map((r: any) => (
                   <TableRow key={r.class_id}>
-                    <TableCell className="font-medium" style={{ color: PLUM }}>{r.class_name}</TableCell>
+                    <TableCell className="font-medium" style={{ color: NAVY }}>{r.class_name}</TableCell>
                     <TableCell style={{ color: MUTED }}>{r.totalAssessments}</TableCell>
                     <TableCell style={{ color: MUTED }}>{r.studentCount}</TableCell>
                     <TableCell><StatusBadge status={r.avgRate >= 50 ? "active" : "inactive"} /></TableCell>
@@ -604,7 +604,7 @@ function SubjectPerformanceTab() {
             <div className="space-y-2 mb-6">
               {data.records.map((sb: any, i: number) => (
                 <div key={sb.subject_id} className="flex items-center gap-3">
-                  <span className="text-xs font-medium w-28 truncate shrink-0" style={{ color: PLUM }}>{sb.subject_name}</span>
+                  <span className="text-xs font-medium w-28 truncate shrink-0" style={{ color: NAVY }}>{sb.subject_name}</span>
                   <div className="flex-1 h-5 rounded-full overflow-hidden" style={{ background: "rgba(56,25,50,0.06)" }}>
                     <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(sb.avgRate, 100)}%`, background: COLORS[i % COLORS.length] }} />
                   </div>
@@ -629,7 +629,7 @@ function SubjectPerformanceTab() {
               <TableBody>
                 {data.assessmentBreakdown?.map((r: any) => (
                   <TableRow key={r.assessment_id}>
-                    <TableCell className="font-medium" style={{ color: PLUM, fontSize: 13 }}>{r.name}</TableCell>
+                    <TableCell className="font-medium" style={{ color: NAVY, fontSize: 13 }}>{r.name}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{r.subject}</TableCell>
                     <TableCell style={{ fontSize: 13 }}>{r.max_score}</TableCell>
                     <TableCell style={{ fontSize: 13 }}>{r.avgScore}</TableCell>
@@ -709,7 +709,7 @@ function FeeCollectionTab() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {data.byMethod.map((m: any) => (
                   <div key={m.method} className="p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)" }}>
-                    <p className="text-lg font-bold" style={{ color: PLUM }}>{formatCedi(m.amount)}</p>
+                    <p className="text-lg font-bold" style={{ color: NAVY }}>{formatCedi(m.amount)}</p>
                     <p className="text-xs" style={{ color: MUTED }}>{m.method} ({m.count})</p>
                   </div>
                 ))}
@@ -779,7 +779,7 @@ function OutstandingBalanceTab() {
               <TableBody>
                 {data.records.map((inv: any) => (
                   <TableRow key={inv.id}>
-                    <TableCell className="font-medium" style={{ color: PLUM, fontSize: 13 }}>{inv.student?.name || "—"}</TableCell>
+                    <TableCell className="font-medium" style={{ color: NAVY, fontSize: 13 }}>{inv.student?.name || "—"}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{inv.class?.name}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{inv.invoice_number}</TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{new Date(inv.due_date).toLocaleDateString()}</TableCell>
@@ -877,7 +877,7 @@ function AdmissionsTab() {
                 <BarChart data={data.byClass} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.06)" horizontal={false} />
                   <XAxis type="number" tick={{ fontSize: 10, fill: MUTED }} allowDecimals={false} />
-                  <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: PLUM }} width={80} />
+                  <YAxis type="category" dataKey="class_name" tick={{ fontSize: 11, fill: NAVY }} width={80} />
                   <Tooltip contentStyle={{ borderRadius: 12, border: "none" }}
                     formatter={(value: number) => [value, "Students"]} />
                   <Bar dataKey="count" radius={[0, 4, 4, 0]}>
@@ -960,13 +960,13 @@ function IncidentsTab() {
             <div className="grid gap-4 sm:grid-cols-3 mb-6">
               {s.byType.map((t: any) => (
                 <div key={t.type} className="p-4 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
-                  <p className="text-2xl font-bold" style={{ color: PLUM }}>{t.count}</p>
+                  <p className="text-2xl font-bold" style={{ color: NAVY }}>{t.count}</p>
                   <p className="text-xs" style={{ color: MUTED }}>{t.type}</p>
                 </div>
               ))}
               {s.bySeverity?.map((sev: any) => (
                 <div key={sev.severity} className="p-4 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)", border: "1px solid rgba(56,25,50,0.07)" }}>
-                  <p className="text-2xl font-bold" style={{ color: PLUM }}>{sev.count}</p>
+                  <p className="text-2xl font-bold" style={{ color: NAVY }}>{sev.count}</p>
                   <p className="text-xs" style={{ color: MUTED }}>{sev.severity}</p>
                 </div>
               ))}
@@ -990,7 +990,7 @@ function IncidentsTab() {
                 {data.records.map((r: any) => (
                   <TableRow key={r.id}>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{new Date(r.created_at).toLocaleDateString()}</TableCell>
-                    <TableCell className="font-medium" style={{ color: PLUM, fontSize: 13 }}>{r.student?.name || "—"}</TableCell>
+                    <TableCell className="font-medium" style={{ color: NAVY, fontSize: 13 }}>{r.student?.name || "—"}</TableCell>
                     <TableCell><Badge variant="outline" className="bg-gray-50">{r.type}</Badge></TableCell>
                     <TableCell><StatusBadge status={r.severity} /></TableCell>
                     <TableCell><StatusBadge status={r.status} /></TableCell>
@@ -1076,7 +1076,7 @@ function ActivityTab() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
                 {s.byResource.map((r: any) => (
                   <div key={r.resource} className="p-3 rounded-xl text-center" style={{ background: "rgba(56,25,50,0.03)" }}>
-                    <p className="text-lg font-bold" style={{ color: PLUM }}>{r.count}</p>
+                    <p className="text-lg font-bold" style={{ color: NAVY }}>{r.count}</p>
                     <p className="text-xs" style={{ color: MUTED }}>{r.resource}</p>
                   </div>
                 ))}
@@ -1099,7 +1099,7 @@ function ActivityTab() {
                 {data.records.map((r: any) => (
                   <TableRow key={r.id}>
                     <TableCell style={{ fontSize: 12, color: MUTED }}>{new Date(r.created_at).toLocaleString()}</TableCell>
-                    <TableCell style={{ color: PLUM, fontSize: 13 }}>{r.user?.name || "System"}</TableCell>
+                    <TableCell style={{ color: NAVY, fontSize: 13 }}>{r.user?.name || "System"}</TableCell>
                     <TableCell><StatusBadge status={r.action} /></TableCell>
                     <TableCell><Badge variant="outline" className="bg-gray-50">{r.resource}</Badge></TableCell>
                     <TableCell style={{ fontSize: 12, color: MUTED, maxWidth: 200 }} className="truncate">
@@ -1121,7 +1121,7 @@ export function Reports() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: PLUM }}>Reports & Analytics</h1>
+        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: NAVY }}>Reports & Analytics</h1>
         <p style={{ color: MUTED, fontSize: "0.85rem" }}>Actionable school-wide reports with filtering and export</p>
       </div>
 

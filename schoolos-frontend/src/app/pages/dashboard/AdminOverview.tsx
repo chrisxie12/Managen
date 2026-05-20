@@ -13,10 +13,10 @@ import { LiveIndicator } from "../../components/ui/LiveIndicator";
 import { useUserPreferences } from "../../contexts/UserPreferencesContext";
 import { SkeletonLoader } from "../../components/ui/SkeletonLoader";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 function MetricCard({
   icon: Icon,
@@ -47,7 +47,7 @@ function MetricCard({
           <Icon size={20} color={color} />
         </div>
       </div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.25rem" }}>
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.25rem" }}>
         {value}
       </div>
       <div style={{ color: MUTED, fontSize: "0.75rem", marginBottom: trend ? "0.3rem" : 0 }}>{label}</div>
@@ -99,7 +99,7 @@ export function AdminOverview() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.35rem", fontWeight: 700 }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.35rem", fontWeight: 700 }}>
               School Overview
             </h1>
             <LiveIndicator connected={connected} />
@@ -114,8 +114,8 @@ export function AdminOverview() {
           onClick={() => setEditMode(!editMode)}
           className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
           style={{
-            background: editMode ? PLUM : "white",
-            color: editMode ? MILK : MUTED,
+            background: editMode ? NAVY : "white",
+            color: editMode ? CREAM : MUTED,
             border: editMode ? "none" : "1px solid rgba(56,25,50,0.1)",
           }}
         >
@@ -131,9 +131,9 @@ export function AdminOverview() {
               onClick={() => toggleWidget(w.id)}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={{
-                background: w.visible ? `${PLUM}12` : "transparent",
-                color: PLUM,
-                border: `1px solid ${w.visible ? `${PLUM}30` : "rgba(56,25,50,0.1)"}`,
+                background: w.visible ? `${NAVY}12` : "transparent",
+                color: NAVY,
+                border: `1px solid ${w.visible ? `${NAVY}30` : "rgba(56,25,50,0.1)"}`,
                 opacity: w.visible ? 1 : 0.5,
               }}
             >
@@ -178,7 +178,7 @@ export function AdminOverview() {
                 label="Pending Assessments"
                 value={String(pendingCount)}
                 sub="NaCCA SBA tracker"
-                color={pendingCount > 0 ? "#F59E0B" : PLUM_LIGHT}
+                color={pendingCount > 0 ? "#F59E0B" : NAVY_LIGHT}
                 onClick={() => navigate("/dashboard/assessments")}
               />
             </div>
@@ -198,8 +198,8 @@ export function AdminOverview() {
         )}
 
         {visibleWidgets.find((w) => w.id === "school-glance") && (
-          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: MILK, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
+          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
               {dash?.stats?.totalStudents ? "School at a Glance" : "Welcome!"}
             </h3>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
@@ -214,7 +214,7 @@ export function AdminOverview() {
               ].map((item) => (
                 <button key={item.label} onClick={() => navigate(item.path)}
                   className="w-full py-2.5 rounded-full text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
-                  style={{ background: "rgba(255,243,230,0.12)", color: MILK, border: "1px solid rgba(255,243,230,0.2)" }}>
+                  style={{ background: "rgba(255,243,230,0.12)", color: CREAM, border: "1px solid rgba(255,243,230,0.2)" }}>
                   {item.label} <ArrowRight size={11} />
                 </button>
               ))}

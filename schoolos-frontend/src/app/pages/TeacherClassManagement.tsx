@@ -14,10 +14,10 @@ import { ClassTimetable } from "../components/teacher/ClassTimetable";
 import { ClassAnnouncement } from "../components/teacher/ClassAnnouncement";
 import type { TeacherClass, ClassStudent } from "../components/teacher/types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type ViewMode = "list" | "detail";
 type DetailTab = "students" | "attendance" | "grades" | "performance" | "timetable" | "announcements";
@@ -49,7 +49,7 @@ function AlertBanner({ type, message, onClose }: { type: "error" | "success"; me
 function LoadingSpinner() {
   return (
     <div className="flex items-center justify-center min-h-[400px]">
-      <Loader2 className="animate-spin" size={32} color={PLUM} />
+      <Loader2 className="animate-spin" size={32} color={NAVY} />
     </div>
   );
 }
@@ -112,7 +112,7 @@ export function TeacherClassManagement() {
         <>
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>My Classes</h2>
+              <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>My Classes</h2>
               <p className="text-sm" style={{ color: MUTED }}>Manage your assigned classes</p>
             </div>
             <div className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
@@ -123,7 +123,7 @@ export function TeacherClassManagement() {
           {classes.length === 0 ? (
             <div className="text-center py-16" style={{ color: MUTED }}>
               <BookOpen size={48} className="mx-auto mb-4" color={MUTED} />
-              <p className="text-lg font-semibold" style={{ color: PLUM }}>No Classes Assigned</p>
+              <p className="text-lg font-semibold" style={{ color: NAVY }}>No Classes Assigned</p>
               <p className="text-sm mt-1">Your classes will appear here once the admin assigns them.</p>
             </div>
           ) : (
@@ -140,10 +140,10 @@ export function TeacherClassManagement() {
         <>
           <div className="flex items-center gap-3 mb-2">
             <button onClick={closeClass} className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)" }}>
-              <ArrowLeft size={16} color={PLUM} />
+              <ArrowLeft size={16} color={NAVY} />
             </button>
             <div>
-              <h2 className="text-xl font-bold" style={{ color: PLUM, fontFamily: "'Playfair Display', serif" }}>{selectedClass.name}</h2>
+              <h2 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>{selectedClass.name}</h2>
               <p className="text-sm" style={{ color: MUTED }}>
                 {selectedClass.role === "form_teacher" ? "Form Teacher" : selectedClass.role === "assistant" ? "Assistant Teacher" : "Subject Teacher"}
                 {" · "}{selectedClass.student_count} student{selectedClass.student_count !== 1 ? "s" : ""}
@@ -157,8 +157,8 @@ export function TeacherClassManagement() {
               <button key={tab.key} onClick={() => setDetailTab(tab.key)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all active:scale-95"
                 style={{
-                  background: detailTab === tab.key ? PLUM : "white",
-                  color: detailTab === tab.key ? MILK : PLUM_LIGHT,
+                  background: detailTab === tab.key ? NAVY : "white",
+                  color: detailTab === tab.key ? CREAM : NAVY_LIGHT,
                   border: detailTab === tab.key ? "none" : "1px solid rgba(56,25,50,0.1)",
                 }}>
                 <tab.icon size={14} /> {tab.label}

@@ -5,9 +5,9 @@ import { api } from "../../../services/api";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const MUTED = "#6B7280";
 
 const PLAN_NAMES: Record<string, string> = {
   starter: "Starter",
@@ -38,7 +38,7 @@ const FEATURES: { name: string; starter: string; growth: string; enterprise: str
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl mb-4" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-      <h3 className="text-sm font-semibold mb-1" style={{ color: PLUM }}>{title}</h3>
+      <h3 className="text-sm font-semibold mb-1" style={{ color: NAVY }}>{title}</h3>
       {desc && <p className="text-xs mb-4" style={{ color: MUTED }}>{desc}</p>}
       {children}
     </div>
@@ -132,11 +132,11 @@ export function BillingTab({ profile, role }: Props) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="rounded-xl p-3" style={{ background: "rgba(56,25,50,0.06)" }}>
-              <CreditCard size={22} color={PLUM} />
+              <CreditCard size={22} color={NAVY} />
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold" style={{ color: PLUM }}>{planName}</span>
+                <span className="text-sm font-bold" style={{ color: NAVY }}>{planName}</span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
                   style={{ background: statusCfg.bg, color: statusCfg.color }}>
                   {statusCfg.label}
@@ -150,7 +150,7 @@ export function BillingTab({ profile, role }: Props) {
           {!isReadOnly && (
             <button onClick={() => setShowUpgradeModal(true)}
               className="self-start sm:self-auto px-5 py-2 rounded-xl text-xs font-medium text-white transition-opacity hover:opacity-90"
-              style={{ background: PLUM }}>
+              style={{ background: NAVY }}>
               {planKey === "enterprise" ? "Contact Sales" : "Upgrade Plan"}
             </button>
           )}
@@ -173,13 +173,13 @@ export function BillingTab({ profile, role }: Props) {
               {FEATURES.map((feat) => {
                 return (
                   <tr key={feat.name} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                    <td className="py-2.5 pr-4 font-medium" style={{ color: PLUM }}>{feat.name}</td>
+                    <td className="py-2.5 pr-4 font-medium" style={{ color: NAVY }}>{feat.name}</td>
                     {(["starter", "growth", "enterprise"] as const).map((p) => {
                       const isActivePlan = planKey === p;
                       return (
                         <td key={p} className={`py-2.5 pr-4 ${isActivePlan ? "rounded-lg" : ""}`}
                           style={{
-                            color: isActivePlan ? PLUM : MUTED,
+                            color: isActivePlan ? NAVY : MUTED,
                             background: isActivePlan ? "rgba(56,25,50,0.04)" : "transparent",
                             fontWeight: isActivePlan ? 600 : 400,
                           }}>
@@ -199,7 +199,7 @@ export function BillingTab({ profile, role }: Props) {
       <SectionCard title="Payment History" desc="Past invoices and payments">
         {loadingBilling ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 size={18} className="animate-spin" style={{ color: PLUM }} />
+            <Loader2 size={18} className="animate-spin" style={{ color: NAVY }} />
           </div>
         ) : history.length === 0 ? (
           <p className="text-xs py-4 text-center" style={{ color: MUTED }}>No payment history yet.</p>
@@ -219,11 +219,11 @@ export function BillingTab({ profile, role }: Props) {
                 <tbody>
                   {history.map((entry, idx) => (
                     <tr key={idx} className="border-t" style={{ borderColor: "rgba(56,25,50,0.07)" }}>
-                      <td className="py-2.5 pr-4 whitespace-nowrap" style={{ color: PLUM }}>
+                      <td className="py-2.5 pr-4 whitespace-nowrap" style={{ color: NAVY }}>
                         {formatDate(entry.date)}
                       </td>
-                      <td className="py-2.5 pr-4" style={{ color: PLUM }}>{entry.description}</td>
-                      <td className="py-2.5 pr-4 whitespace-nowrap" style={{ color: PLUM }}>
+                      <td className="py-2.5 pr-4" style={{ color: NAVY }}>{entry.description}</td>
+                      <td className="py-2.5 pr-4 whitespace-nowrap" style={{ color: NAVY }}>
                         ${(entry.amount || 0).toFixed(2)}
                       </td>
                       <td className="py-2.5 pr-4">
@@ -240,7 +240,7 @@ export function BillingTab({ profile, role }: Props) {
                         {entry.receipt_url ? (
                           <a href={entry.receipt_url} target="_blank" rel="noreferrer"
                             className="inline-flex items-center gap-1 text-xs font-medium hover:underline"
-                            style={{ color: PLUM }}>
+                            style={{ color: NAVY }}>
                             <Download size={12} />
                             Receipt
                           </a>
@@ -256,7 +256,7 @@ export function BillingTab({ profile, role }: Props) {
             {history.length > 0 && !isReadOnly && (
               <div className="flex justify-end mt-3">
                 <Button onClick={handleDownloadAll} disabled={downloadingAll}
-                  className="text-xs rounded-xl h-9 px-4" style={{ background: PLUM_LIGHT }}>
+                  className="text-xs rounded-xl h-9 px-4" style={{ background: NAVY_LIGHT }}>
                   {downloadingAll ? <Loader2 size={14} className="animate-spin mr-1" /> : <Download size={14} className="mr-1" />}
                   Download All (CSV)
                 </Button>
@@ -274,7 +274,7 @@ export function BillingTab({ profile, role }: Props) {
               <CreditCard size={20} color={MUTED} />
             </div>
             <div>
-              <p className="text-xs font-medium" style={{ color: PLUM }}>
+              <p className="text-xs font-medium" style={{ color: NAVY }}>
                 {billingData?.payment_method ? "Card on file" : "No payment method on file"}
               </p>
               {billingData?.payment_method && (
@@ -295,7 +295,7 @@ export function BillingTab({ profile, role }: Props) {
               )}
               <button onClick={() => setShowPaymentModal(true)}
                 className="px-4 py-2 rounded-xl text-xs font-medium transition-opacity hover:opacity-90"
-                style={{ background: PLUM_LIGHT, color: "white" }}>
+                style={{ background: NAVY_LIGHT, color: "white" }}>
                 {billingData?.payment_method ? "Update" : "Add Payment Method"}
               </button>
             </div>
@@ -308,7 +308,7 @@ export function BillingTab({ profile, role }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={(e) => { if (e.target === e.currentTarget) setShowUpgradeModal(false); }}>
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-sm font-semibold mb-2" style={{ color: PLUM }}>Upgrade Plan</h3>
+            <h3 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>Upgrade Plan</h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>
               Compare plans and contact our sales team to upgrade.
             </p>
@@ -319,10 +319,10 @@ export function BillingTab({ profile, role }: Props) {
                   style={{
                     background: planKey === p ? "rgba(56,25,50,0.04)" : "white",
                     border: "1px solid rgba(56,25,50,0.1)",
-                    ringColor: planKey === p ? PLUM : "transparent",
+                    ringColor: planKey === p ? NAVY : "transparent",
                   }}>
                   <div>
-                    <span className="text-sm font-semibold" style={{ color: PLUM }}>{PLAN_NAMES[p]}</span>
+                    <span className="text-sm font-semibold" style={{ color: NAVY }}>{PLAN_NAMES[p]}</span>
                     <p className="text-xs" style={{ color: MUTED }}>{PLAN_PRICES[p]}</p>
                   </div>
                   {planKey === p && <Check size={16} color="#16A34A" />}
@@ -332,12 +332,12 @@ export function BillingTab({ profile, role }: Props) {
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowUpgradeModal(false)}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>
+                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
                 Cancel
               </button>
               <a href="mailto:support@getschoolos.me?subject=Plan%20Upgrade%20Request"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-white"
-                style={{ background: PLUM }}>
+                style={{ background: NAVY }}>
                 <Mail size={14} /> Contact Sales
               </a>
             </div>
@@ -350,7 +350,7 @@ export function BillingTab({ profile, role }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
           onClick={(e) => { if (e.target === e.currentTarget) setShowPaymentModal(false); }}>
           <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-sm font-semibold mb-2" style={{ color: PLUM }}>
+            <h3 className="text-sm font-semibold mb-2" style={{ color: NAVY }}>
               {billingData?.payment_method ? "Update Payment Method" : "Add Payment Method"}
             </h3>
             <p className="text-xs mb-4" style={{ color: MUTED }}>
@@ -358,20 +358,20 @@ export function BillingTab({ profile, role }: Props) {
             </p>
             <div className="space-y-3 mb-4">
               <div>
-                <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Card Number</label>
+                <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Card Number</label>
                 <Input placeholder="4242 4242 4242 4242" disabled
                   className="h-9 text-sm rounded-xl"
                   style={{ borderColor: "rgba(56,25,50,0.12)" }} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>Expiry</label>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>Expiry</label>
                   <Input placeholder="MM/YY" disabled
                     className="h-9 text-sm rounded-xl"
                     style={{ borderColor: "rgba(56,25,50,0.12)" }} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: PLUM }}>CVC</label>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: NAVY }}>CVC</label>
                   <Input placeholder="123" disabled
                     className="h-9 text-sm rounded-xl"
                     style={{ borderColor: "rgba(56,25,50,0.12)" }} />
@@ -381,12 +381,12 @@ export function BillingTab({ profile, role }: Props) {
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowPaymentModal(false)}
                 className="px-4 py-2 rounded-xl text-xs font-medium"
-                style={{ background: "rgba(56,25,50,0.06)", color: PLUM }}>
+                style={{ background: "rgba(56,25,50,0.06)", color: NAVY }}>
                 Cancel
               </button>
               <a href="mailto:support@getschoolos.me?subject=Payment%20Method%20Update"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-white"
-                style={{ background: PLUM }}>
+                style={{ background: NAVY }}>
                 <Mail size={14} /> Contact Support
               </a>
             </div>

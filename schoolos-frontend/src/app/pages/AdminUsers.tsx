@@ -5,10 +5,10 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 type SchoolUser = {
   id: string;
@@ -127,12 +127,12 @@ export function AdminUsers() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: PLUM }}>Users</h2>
+          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Users</h2>
           <p className="text-sm" style={{ color: MUTED }}>{total} user{total !== 1 ? "s" : ""} in your school</p>
         </div>
         <button onClick={() => { setShowInvite(true); setInviteResult(null); }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-transform"
-          style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+          style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
           <Plus size={16} /> Invite User
         </button>
       </div>
@@ -141,15 +141,15 @@ export function AdminUsers() {
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl flex-1" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", maxWidth: 300 }}>
           <Search size={14} color={MUTED} />
           <input placeholder="Search users..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-            className="bg-transparent outline-none text-sm flex-1" style={{ color: PLUM }} />
+            className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
         </div>
         <select value={filterRole} onChange={(e) => { setFilterRole(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All roles</option>
           {roles.map(r => <option key={r.id} value={r.name}>{r.label}</option>)}
         </select>
         <select value={filterStatus} onChange={(e) => { setFilterStatus(e.target.value); setPage(1); }}
-          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+          className="px-3 py-2 rounded-xl outline-none text-sm" style={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
           <option value="">All status</option>
           <option value="active">Active</option>
           <option value="suspended">Suspended</option>
@@ -158,12 +158,12 @@ export function AdminUsers() {
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="animate-spin" size={32} color={PLUM} />
+          <Loader2 className="animate-spin" size={32} color={NAVY} />
         </div>
       ) : users.length === 0 ? (
         <div className="text-center py-12 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
           <Users size={40} color={MUTED} className="mx-auto mb-3" />
-          <p className="font-semibold" style={{ color: PLUM }}>No users found</p>
+          <p className="font-semibold" style={{ color: NAVY }}>No users found</p>
           <p className="text-sm mt-1" style={{ color: MUTED }}>Invite your first staff member to get started</p>
         </div>
       ) : (
@@ -190,11 +190,11 @@ export function AdminUsers() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                              style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                              style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                               {u.full_name?.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase() || "?"}
                             </div>
                             <div>
-                              <p className="font-semibold" style={{ color: PLUM }}>{u.full_name}</p>
+                              <p className="font-semibold" style={{ color: NAVY }}>{u.full_name}</p>
                               <p className="text-xs" style={{ color: MUTED }}>{u.email}</p>
                             </div>
                           </div>
@@ -244,12 +244,12 @@ export function AdminUsers() {
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-6">
               <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 Previous
               </button>
               <span className="text-sm px-3" style={{ color: MUTED }}>Page {page} of {totalPages}</span>
               <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                className="px-3 py-2 rounded-lg text-sm disabled:opacity-40" style={{ border: "1px solid rgba(56,25,50,0.1)", color: NAVY }}>
                 Next
               </button>
             </div>
@@ -264,7 +264,7 @@ export function AdminUsers() {
             onMouseDown={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>
+                <h2 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
                   {inviteResult ? "User Invited" : "Invite User"}
                 </h2>
                 <p className="text-sm" style={{ color: MUTED }}>
@@ -285,53 +285,53 @@ export function AdminUsers() {
                     <p className="text-xs mt-1" style={{ color: "#047857" }}>Share this temporary password with them. They'll be asked to change it on first login.</p>
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl mb-4" style={{ background: MILK, border: "1px solid rgba(56,25,50,0.1)" }}>
+                <div className="p-4 rounded-2xl mb-4" style={{ background: CREAM, border: "1px solid rgba(56,25,50,0.1)" }}>
                   <p className="text-xs font-medium mb-1" style={{ color: MUTED }}>Temporary Password</p>
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 text-sm font-mono font-bold" style={{ color: PLUM }}>{inviteResult.tempPassword}</code>
+                    <code className="flex-1 text-sm font-mono font-bold" style={{ color: NAVY }}>{inviteResult.tempPassword}</code>
                     <button onClick={() => { navigator.clipboard.writeText(inviteResult.tempPassword); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
                       className="p-2 rounded-lg hover:opacity-70 transition-opacity" style={{ background: "rgba(56,25,50,0.06)" }}>
-                      <Copy size={14} color={PLUM_LIGHT} />
+                      <Copy size={14} color={NAVY_LIGHT} />
                     </button>
                   </div>
                   {copied && <p className="text-xs mt-1" style={{ color: "#10B981" }}>Copied!</p>}
                 </div>
                 <button onClick={() => { setShowInvite(false); setInviteResult(null); }}
-                  className="w-full py-3 rounded-full text-sm font-semibold" style={{ background: PLUM, color: MILK }}>
+                  className="w-full py-3 rounded-full text-sm font-semibold" style={{ background: NAVY, color: CREAM }}>
                   Done
                 </button>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Full Name</label>
+                  <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Full Name</label>
                   <input value={inviteForm.full_name} onChange={(e) => setInviteForm(p => ({ ...p, full_name: e.target.value }))}
                     placeholder="e.g. Kwame Mensah"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Email</label>
+                  <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Email</label>
                   <input type="email" value={inviteForm.email} onChange={(e) => setInviteForm(p => ({ ...p, email: e.target.value }))}
                     placeholder="staff@yourschool.edu"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Phone (optional)</label>
+                  <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Phone (optional)</label>
                   <input value={inviteForm.phone} onChange={(e) => setInviteForm(p => ({ ...p, phone: e.target.value }))}
                     placeholder="+233 24 123 4567"
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }} />
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" style={{ color: PLUM_LIGHT }}>Role</label>
+                  <label className="block text-sm font-medium mb-1" style={{ color: NAVY_LIGHT }}>Role</label>
                   <select value={inviteForm.role_id} onChange={(e) => setInviteForm(p => ({ ...p, role_id: e.target.value }))}
-                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: MILK, border: "1.5px solid rgba(56,25,50,0.1)", color: PLUM }}>
+                    className="w-full px-4 py-3 rounded-2xl outline-none text-sm" style={{ background: CREAM, border: "1.5px solid rgba(56,25,50,0.1)", color: NAVY }}>
                     <option value="">Select a role...</option>
                     {roles.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
                   </select>
                 </div>
                 <button onClick={inviteUser} disabled={saving || !inviteForm.full_name || !inviteForm.email || !inviteForm.role_id}
                   className="w-full py-3 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm font-semibold"
-                  style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                   {saving ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
                   {saving ? "Sending..." : "Send Invitation"}
                 </button>

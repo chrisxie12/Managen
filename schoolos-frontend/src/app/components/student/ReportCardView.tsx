@@ -1,8 +1,8 @@
 import { FileSpreadsheet, Loader2 } from "lucide-react";
 import type { ReportCard } from "./types";
 
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loading: boolean }) {
   if (loading) {
@@ -25,7 +25,7 @@ export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loadin
         return (
           <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
             <div className="flex items-center justify-between mb-2">
-              <p className="font-semibold text-sm" style={{ color: PLUM }}>
+              <p className="font-semibold text-sm" style={{ color: NAVY }}>
                 {c.term?.name || "Term"} {c.session?.name ? `(${c.session.name})` : ""}
               </p>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{
@@ -41,11 +41,11 @@ export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loadin
                 <p className="text-xs" style={{ color: MUTED }}>Average</p>
               </div>
               <div>
-                <p className="text-lg font-bold" style={{ color: PLUM }}>{c.grade || "—"}</p>
+                <p className="text-lg font-bold" style={{ color: NAVY }}>{c.grade || "—"}</p>
                 <p className="text-xs" style={{ color: MUTED }}>Grade</p>
               </div>
               <div>
-                <p className="text-lg font-bold" style={{ color: PLUM }}>#{c.rank || "—"}</p>
+                <p className="text-lg font-bold" style={{ color: NAVY }}>#{c.rank || "—"}</p>
                 <p className="text-xs" style={{ color: MUTED }}>Rank</p>
               </div>
             </div>

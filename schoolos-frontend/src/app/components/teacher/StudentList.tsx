@@ -2,10 +2,10 @@ import { useState, useMemo } from "react";
 import { Search, Users, Loader2 } from "lucide-react";
 import type { ClassStudent } from "./types";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function StudentList({ students, loading }: { students: ClassStudent[]; loading: boolean }) {
   const [search, setSearch] = useState("");
@@ -26,7 +26,7 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
     return (
       <div className="text-center py-12" style={{ color: MUTED }}>
         <Users size={36} className="mx-auto mb-3" color={MUTED} />
-        <p className="font-semibold" style={{ color: PLUM }}>No Students</p>
+        <p className="font-semibold" style={{ color: NAVY }}>No Students</p>
         <p className="text-sm mt-1">No students assigned to this class.</p>
       </div>
     );
@@ -41,7 +41,7 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="bg-transparent outline-none text-sm flex-1"
-          style={{ color: PLUM }}
+          style={{ color: NAVY }}
         />
       </div>
       <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
@@ -61,10 +61,10 @@ export function StudentList({ students, loading }: { students: ClassStudent[]; l
                 <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{i + 1}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `linear-gradient(135deg, ${PLUM}, ${PLUM_LIGHT})`, color: MILK }}>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                       {s.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
                     </div>
-                    <span className="font-medium" style={{ color: PLUM }}>{s.name}</span>
+                    <span className="font-medium" style={{ color: NAVY }}>{s.name}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{s.admission_no || "—"}</td>

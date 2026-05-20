@@ -3,8 +3,8 @@ import { Check } from "lucide-react";
 import { api } from "../../services/api";
 
 const INDIGO = "#6366F1";
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const STEPS = [
   { label: "Saving school information...", key: "school" },
@@ -91,7 +91,7 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
                   )}
                 </div>
                 <span className="text-sm" style={{
-                  color: done ? "#10B981" : active ? PLUM : MUTED,
+                  color: done ? "#10B981" : active ? NAVY : MUTED,
                   fontWeight: done || active ? 500 : 400,
                 }}>
                   {step.label}

@@ -4,8 +4,8 @@ import { Check, School, BookOpen, Palette, Bell } from "lucide-react";
 import confetti from "canvas-confetti";
 
 const INDIGO = "#6366F1";
-const PLUM = "#381932";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const MUTED = "#6B7280";
 
 const FEATURES = [
   { label: "Fee Management", color: "#10B981" },
@@ -52,7 +52,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
         <Check size={36} color="white" />
       </motion.div>
 
-      <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: PLUM }}>
+      <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
         {schoolName} is ready! 🎉
       </h1>
       <p className="text-sm mb-8 max-w-md mx-auto" style={{ color: MUTED }}>
@@ -75,7 +75,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
           >
             <item.icon size={16} color={INDIGO} className="mb-1" />
             <p className="text-xs mt-1" style={{ color: MUTED }}>{item.label}</p>
-            <p className="text-sm font-semibold truncate" style={{ color: PLUM }}>{item.value}</p>
+            <p className="text-sm font-semibold truncate" style={{ color: NAVY }}>{item.value}</p>
           </motion.div>
         ))}
       </div>
@@ -86,7 +86,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
         transition={{ delay: 0.8 }}
         className="mb-8"
       >
-        <p className="text-sm font-medium mb-3" style={{ color: PLUM }}>Here's what's waiting for you:</p>
+        <p className="text-sm font-medium mb-3" style={{ color: NAVY }}>Here's what's waiting for you:</p>
         <div className="flex flex-wrap justify-center gap-2">
           {FEATURES.map(f => (
             <span key={f.label}

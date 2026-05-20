@@ -20,7 +20,7 @@ export function WelcomeStep({ adminName, onNext, onSkip }: { adminName: string; 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-3xl font-bold mb-3"
-        style={{ fontFamily: "'Playfair Display', serif", color: "#381932" }}
+        style={{ fontFamily: "'Playfair Display', serif", color: "#0A2472" }}
       >
         Welcome to SchoolOS, {adminName}! 👋
       </motion.h1>
@@ -30,7 +30,7 @@ export function WelcomeStep({ adminName, onNext, onSkip }: { adminName: string; 
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="text-base mb-10 max-w-lg mx-auto"
-        style={{ color: "#7D6077" }}
+        style={{ color: "#6B7280" }}
       >
         You're just a few steps away from transforming how your school operates.
       </motion.p>
@@ -49,8 +49,8 @@ export function WelcomeStep({ adminName, onNext, onSkip }: { adminName: string; 
               <f.icon size={20} color={INDIGO} />
             </div>
             <div>
-              <h3 className="font-semibold text-sm" style={{ color: "#381932" }}>{f.title}</h3>
-              <p className="text-xs mt-0.5" style={{ color: "#7D6077" }}>{f.desc}</p>
+              <h3 className="font-semibold text-sm" style={{ color: "#0A2472" }}>{f.title}</h3>
+              <p className="text-xs mt-0.5" style={{ color: "#6B7280" }}>{f.desc}</p>
             </div>
           </motion.div>
         ))}
@@ -61,7 +61,7 @@ export function WelcomeStep({ adminName, onNext, onSkip }: { adminName: string; 
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
         className="text-sm mb-6"
-        style={{ color: "#7D6077" }}
+        style={{ color: "#6B7280" }}
       >
         ⏱ Takes about 3 minutes
       </motion.p>
@@ -83,7 +83,7 @@ export function WelcomeStep({ adminName, onNext, onSkip }: { adminName: string; 
         transition={{ delay: 1 }}
         className="mt-6"
       >
-        <button onClick={onSkip} className="text-xs hover:underline" style={{ color: "#7D6077" }}>
+        <button onClick={onSkip} className="text-xs hover:underline" style={{ color: "#6B7280" }}>
           I'll do this later
         </button>
       </motion.div>

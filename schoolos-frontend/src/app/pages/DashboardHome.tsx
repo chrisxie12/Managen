@@ -15,7 +15,7 @@ import {
   DashboardCard, MiniTable, palette,
 } from "../components/dashboard";
 
-const { PLUM, PLUM_LIGHT, MUTED } = palette;
+const { NAVY, NAVY_LIGHT, MUTED } = palette;
 
 const quickActions = [
   { label: "Mark Attendance", icon: Clock, color: "#6366F1", path: "/dashboard/students" },
@@ -185,7 +185,7 @@ export function DashboardHome() {
       {/* ─── PHASE 1: Fee Collection chart + Payment Status pie (replaced) ── */}
       <div className="grid lg:grid-cols-3 gap-6">
         <ChartCard title="Fee Collection" subtitle="Last 6 months" action={
-          <button onClick={() => navigate("/dashboard/finance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+          <button onClick={() => navigate("/dashboard/finance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: NAVY_LIGHT }}>
             View all <ArrowRight size={13} />
           </button>
         }>
@@ -194,15 +194,15 @@ export function DashboardHome() {
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={PLUM} stopOpacity={0.15} />
-                    <stop offset="95%" stopColor={PLUM} stopOpacity={0.01} />
+                    <stop offset="5%" stopColor={NAVY} stopOpacity={0.15} />
+                    <stop offset="95%" stopColor={NAVY} stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,25,50,0.05)" />
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `GHS ${(v / 100).toFixed(0)}`} />
                 <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`GHS ${(v / 100).toLocaleString()}`, "Revenue"]} />
-                <Area type="monotone" dataKey="amount" stroke={PLUM} strokeWidth={2.5} fill="url(#revGrad)" />
+                <Area type="monotone" dataKey="amount" stroke={NAVY} strokeWidth={2.5} fill="url(#revGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
@@ -231,7 +231,7 @@ export function DashboardHome() {
                       <span style={{ color: MUTED, fontSize: "0.8rem" }}>{d.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "0.82rem", fontWeight: 600 }}>
+                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "0.82rem", fontWeight: 600 }}>
                         GHS {(d.value / 100).toLocaleString()}
                       </span>
                       <span className="px-1.5 py-0.5 rounded-full text-xs" style={{ background: `${d.color}15`, color: d.color, fontSize: "0.65rem" }}>
@@ -254,7 +254,7 @@ export function DashboardHome() {
 
       {/* ─── PHASE 3: Attendance Trend Chart ─────────────────────── */}
       <ChartCard title="Attendance Trend" subtitle="Last 30 days" action={
-        <button onClick={() => navigate("/dashboard/attendance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: PLUM_LIGHT }}>
+        <button onClick={() => navigate("/dashboard/attendance")} className="flex items-center gap-1 text-sm hover:opacity-70 transition-opacity" style={{ color: NAVY_LIGHT }}>
           View attendance <ArrowRight size={13} />
         </button>
       }>
@@ -278,7 +278,7 @@ export function DashboardHome() {
       {/* ─── PHASE 4: Academic Performance Widget ────────────────── */}
       <div className="grid lg:grid-cols-2 gap-6">
         <DashboardCard title="Class Performance Comparison" action={
-          <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+          <button onClick={() => navigate("/dashboard/assessments")} className="flex items-center gap-1 text-xs" style={{ color: NAVY }}>
             View All <ArrowRight size={11} />
           </button>
         }>
@@ -289,7 +289,7 @@ export function DashboardHome() {
                 <XAxis dataKey="class_name" tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} />
                 <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: MUTED }} axisLine={false} tickLine={false} tickFormatter={(v: number) => `${v}%`} />
                 <Tooltip contentStyle={{ background: "white", border: "1px solid rgba(56,25,50,0.1)", borderRadius: 12, fontSize: 12 }} formatter={(v: number) => [`${v}%`, "Average"]} />
-                <Bar dataKey="rate" fill={PLUM} radius={[6, 6, 0, 0]} cursor="pointer"
+                <Bar dataKey="rate" fill={NAVY} radius={[6, 6, 0, 0]} cursor="pointer"
                   onClick={(data) => {
                     if (data?.payload?.class_id) {
                       navigate(`/dashboard/students?class_id=${data.payload.class_id}`);
@@ -327,7 +327,7 @@ export function DashboardHome() {
       {/* ─── At-Risk Students (PHASE 4) ─────────────────────────── */}
       {riskAlerts.length > 0 && (
         <DashboardCard title={`At-Risk Students (${riskAlerts.length})`} action={
-          <button onClick={() => navigate("/dashboard/students")} className="flex items-center gap-1 text-xs" style={{ color: PLUM }}>
+          <button onClick={() => navigate("/dashboard/students")} className="flex items-center gap-1 text-xs" style={{ color: NAVY }}>
             View Students <ArrowRight size={11} />
           </button>
         }>
@@ -359,8 +359,8 @@ export function DashboardHome() {
             <QuickActions items={quickActions} />
           </div>
 
-          <div className="p-5 rounded-[24px] flex-1" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#FFF3E6", fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
+          <div className="p-5 rounded-[24px] flex-1" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(56,25,50,0.2)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", color: "#F8F9FA", fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
               {totalStudents > 0 ? "School Overview" : "Welcome!"}
             </h3>
             <p style={{ color: "rgba(255,243,230,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
@@ -375,7 +375,7 @@ export function DashboardHome() {
               ].map((item) => (
                 <button key={item.label} onClick={() => navigate(item.path)}
                   className="w-full py-2 rounded-full text-xs flex items-center justify-center gap-1 active:scale-95 transition-transform"
-                  style={{ background: "rgba(255,243,230,0.12)", color: "#FFF3E6", border: "1px solid rgba(255,243,230,0.2)" }}>
+                  style={{ background: "rgba(255,243,230,0.12)", color: "#F8F9FA", border: "1px solid rgba(255,243,230,0.2)" }}>
                   {item.label} <ArrowRight size={11} />
                 </button>
               ))}

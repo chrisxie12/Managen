@@ -1,15 +1,15 @@
 import { Loader2, ChevronRight, TrendingUp, TrendingDown, AlertCircle, CheckCircle2, Info, X, LucideIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const PLUM = "#381932";
-const PLUM_LIGHT = "#512b4a";
-const MILK = "#FFF3E6";
-const MUTED = "#7D6077";
+const NAVY = "#0A2472";
+const NAVY_LIGHT = "#0C2D8A";
+const CREAM = "#F8F9FA";
+const MUTED = "#6B7280";
 
 export function LoadingSpinner({ height = "min-h-[400px]" }: { height?: string }) {
   return (
     <div className={`flex items-center justify-center ${height}`}>
-      <Loader2 className="animate-spin" size={32} color={PLUM} />
+      <Loader2 className="animate-spin" size={32} color={NAVY} />
     </div>
   );
 }
@@ -19,9 +19,9 @@ export function LoadingSkeleton({ count = 4 }: { count?: number }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="p-5 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-          <div className="w-10 h-10 rounded-2xl mb-4 animate-pulse" style={{ background: `${PLUM}10` }} />
-          <div className="h-6 w-20 rounded mb-2 animate-pulse" style={{ background: `${PLUM}08` }} />
-          <div className="h-3 w-16 rounded animate-pulse" style={{ background: `${PLUM}05` }} />
+          <div className="w-10 h-10 rounded-2xl mb-4 animate-pulse" style={{ background: `${NAVY}10` }} />
+          <div className="h-6 w-20 rounded mb-2 animate-pulse" style={{ background: `${NAVY}08` }} />
+          <div className="h-3 w-16 rounded animate-pulse" style={{ background: `${NAVY}05` }} />
         </div>
       ))}
     </div>
@@ -33,10 +33,10 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
     <div className="flex items-center justify-center min-h-[300px]">
       <div className="text-center p-8">
         <AlertCircle size={40} color="#EF4444" className="mx-auto mb-4" />
-        <p className="text-lg font-semibold mb-1" style={{ color: PLUM }}>Something went wrong</p>
+        <p className="text-lg font-semibold mb-1" style={{ color: NAVY }}>Something went wrong</p>
         <p style={{ color: MUTED, fontSize: "0.85rem", marginBottom: "1rem" }}>{message}</p>
         {onRetry && (
-          <button onClick={onRetry} className="px-5 py-2 rounded-full text-sm active:scale-95 transition-transform" style={{ background: PLUM, color: "white" }}>
+          <button onClick={onRetry} className="px-5 py-2 rounded-full text-sm active:scale-95 transition-transform" style={{ background: NAVY, color: "white" }}>
             Try Again
           </button>
         )}
@@ -50,7 +50,7 @@ export function EmptyState({ icon: Icon, title, desc }: { icon: LucideIcon; titl
     <div className="flex items-center justify-center min-h-[200px] rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
       <div className="text-center p-8">
         <Icon size={36} color={MUTED} className="mx-auto mb-3" />
-        <p style={{ color: PLUM, fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.3rem" }}>{title}</p>
+        <p style={{ color: NAVY, fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.3rem" }}>{title}</p>
         <p style={{ color: MUTED, fontSize: "0.8rem" }}>{desc}</p>
       </div>
     </div>
@@ -79,7 +79,7 @@ export function DashboardCard({ title, action, children, className }: { title: s
   return (
     <div className={`p-5 rounded-[24px] ${className || ""}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1rem" }}>{title}</h3>
         {action}
       </div>
       {children}
@@ -101,7 +101,7 @@ export function StatCard({ icon: Icon, label, value, color, path, badge, onClick
         </div>
         <ChevronRight size={14} color={MUTED} />
       </div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
       <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
       {badge && <div className="mt-1 text-xs" style={{ color }}>{badge}</div>}
     </div>
@@ -111,7 +111,7 @@ export function StatCard({ icon: Icon, label, value, color, path, badge, onClick
 export function KpiCard({ value, label, sub, positive, onClick }: { value: string; label: string; sub?: string; positive?: boolean; onClick?: () => void }) {
   return (
     <div onClick={onClick} className={`p-5 rounded-[24px] ${onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform' : ''}`} style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: PLUM, fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
+      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
       <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
       {sub && (
         <div className="flex items-center gap-1 text-xs mt-1" style={{ color: positive !== undefined ? (positive ? "#10B981" : "#EF4444") : MUTED }}>
@@ -138,7 +138,7 @@ export function MiniTable({ headers, rows }: { headers: string[]; rows: (string 
           {rows.map((row, ri) => (
             <tr key={ri} className="border-t" style={{ borderColor: "rgba(56,25,50,0.05)" }}>
               {row.map((cell, ci) => (
-                <td key={ci} className="py-2.5 pr-3" style={{ color: PLUM_LIGHT, fontSize: "0.82rem" }}>{cell}</td>
+                <td key={ci} className="py-2.5 pr-3" style={{ color: NAVY_LIGHT, fontSize: "0.82rem" }}>{cell}</td>
               ))}
             </tr>
           ))}
@@ -176,7 +176,7 @@ export function SectionHeader({ title, subtitle, action }: { title: string; subt
   return (
     <div className="flex items-center justify-between mb-4">
       <div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontSize: "1.15rem", fontWeight: 700 }}>{title}</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.15rem", fontWeight: 700 }}>{title}</h2>
         {subtitle && <p style={{ color: MUTED, fontSize: "0.78rem" }}>{subtitle}</p>}
       </div>
       {action}
@@ -193,7 +193,7 @@ export function QuickActions({ items }: { items: { label: string; icon: LucideIc
           className="p-3 rounded-2xl text-left hover:scale-[1.03] transition-transform active:scale-95"
           style={{ background: `${action.color}10`, border: `1px solid ${action.color}20` }}>
           <action.icon size={16} color={action.color} className="mb-1" />
-          <p style={{ color: PLUM, fontSize: "0.75rem", fontWeight: 500, lineHeight: 1.3 }}>{action.label}</p>
+          <p style={{ color: NAVY, fontSize: "0.75rem", fontWeight: 500, lineHeight: 1.3 }}>{action.label}</p>
         </button>
       ))}
     </div>
@@ -216,7 +216,7 @@ export function ActivityFeed({ items }: { items: { icon: LucideIcon; color: stri
             <item.icon size={14} color={item.color} />
           </div>
           <div className="flex-1">
-            <p style={{ color: PLUM_LIGHT, fontSize: "0.88rem", lineHeight: 1.4 }}>{item.text}</p>
+            <p style={{ color: NAVY_LIGHT, fontSize: "0.88rem", lineHeight: 1.4 }}>{item.text}</p>
             <p style={{ color: MUTED, fontSize: "0.75rem", marginTop: "0.15rem" }}>{item.time}</p>
           </div>
         </div>
@@ -230,7 +230,7 @@ export function ChartCard({ title, subtitle, action, children }: { title: string
     <div className="p-6 rounded-[24px]" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)", boxShadow: "0 4px 24px rgba(56,25,50,0.06)" }}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", color: PLUM, fontWeight: 700, fontSize: "1.05rem" }}>{title}</h3>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700, fontSize: "1.05rem" }}>{title}</h3>
           {subtitle && <p style={{ color: MUTED, fontSize: "0.78rem" }}>{subtitle}</p>}
         </div>
         {action}
@@ -247,10 +247,10 @@ export function SummaryCard({ icon: Icon, label, value, sub, color }: { icon: Lu
         <Icon size={14} color={color || MUTED} />
         <p className="text-xs uppercase tracking-wider" style={{ color: MUTED }}>{label}</p>
       </div>
-      <p className="text-2xl font-bold" style={{ color: PLUM }}>{value}</p>
+      <p className="text-2xl font-bold" style={{ color: NAVY }}>{value}</p>
       {sub && <p className="text-xs mt-1" style={{ color: MUTED }}>{sub}</p>}
     </div>
   );
 }
 
-export const palette = { PLUM, PLUM_LIGHT, MILK, MUTED } as const;
+export const palette = { NAVY, NAVY_LIGHT, CREAM, MUTED } as const;
