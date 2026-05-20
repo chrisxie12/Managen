@@ -16,8 +16,12 @@ import appLogo from '../../assets/app-logo.png';
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
+const NAVY_DARK = "#0C1A3A";
+const AMBER = "#FFBA08";
+const AMBER_LIGHT = "#FFF8E1";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
+const CHARCOAL = "#1a1a2e";
 
 const pricingPlans = [
   { name: "Free Trial", tagline: "Get started with no commitment", price: "Free", period: " / 7-day trial", features: ["Up to 50 students", "Attendance & fee tracking", "Basic reports", "Email support", "No credit card required"], cta: "Start Free Trial", highlighted: false },
@@ -199,45 +203,23 @@ export function LandingPage() {
         .modal-overlay { animation: fadeIn 0.2s ease-out; }
         .modal-content { animation: fadeUp 0.3s ease-out; }
         .hero-icon { animation: iconFloat 3s ease-in-out infinite; }
-        @keyframes gradientShift {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        .hero-dot {
+          background-image: radial-gradient(circle, #0A2472 1px, transparent 1px);
+          background-size: 24px 24px;
+          opacity: 0.04;
         }
-        .hero-gradient {
-          background: linear-gradient(
-            135deg,
-            #F8F9FA,
-            #E8EDF5,
-            #F8F9FA,
-            #FFF3D6,
-            #F8F9FA
-          );
-          background-size: 400% 400%;
-          animation: gradientShift 12s ease infinite;
-        }
-        .dark .bg-white { background: #1f2937 !important; }
-        .dark .bg-gray-50 { background: #111827 !important; }
+        .card-amber-border { border-color: #E5E7EB; }
+        .card-amber-border:hover { border-color: #FFBA08 !important; }
+        .hover-amber { transition: color 0.2s ease; }
+        .hover-amber:hover { color: #FFBA08 !important; }
+        .amber-focus-ring:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255,186,8,0.4); }
         .dark [style*="color: #0A2472"] { color: #e5e7eb !important; }
         .dark [style*="color: #0C2D8A"] { color: #d1d5db !important; }
         .dark [style*="color: #6B7280"] { color: #9ca3af !important; }
-        .dark .text-gray-500 { color: #d1d5db !important; }
-        .dark .text-gray-600 { color: #e5e7eb !important; }
-        .dark .border-gray-100 { border-color: #374151 !important; }
-        .dark .border-gray-200 { border-color: #4B5563 !important; }
-        .dark .hero-gradient {
-          background: linear-gradient(135deg, #0C1A3A, #0A2472, #0C1A3A, #152252, #0C1A3A) !important;
-          background-size: 400% 400% !important;
-          animation: gradientShift 12s ease infinite !important;
-        }
-        .dark [style*="background: white"] { background: #1f2937 !important; }
-        .dark .pricing-toggle { background: #374151 !important; border-color: #4B5563 !important; }
+        .dark .hero-dot { opacity: 0.06; }
         .dark .modal-content { background: #1f2937 !important; }
-        .dark .faq-item { background: #1f2937 !important; border-color: #374151 !important; box-shadow: none !important; }
-        .dark .stat-card { background: #1f2937 !important; border-color: #374151 !important; box-shadow: none !important; }
-        .dark .works-with-pill { background: #374151 !important; border-color: #4B5563 !important; color: #e5e7eb !important; }
-        .dark .request-demo-btn { background: #374151 !important; border-color: #4B5563 !important; }
-        .dark .footer-card { background: #1f2937 !important; border-color: #374151 !important; }
+        .dark .card-amber-border { border-color: #374151 !important; }
+        .dark .card-amber-border:hover { border-color: #FFBA08 !important; }
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -271,7 +253,7 @@ export function LandingPage() {
               {dark ? <Sun size={16} /> : <Moon size={16} />}
             </button>
             <button onClick={() => navigate("/auth")} style={{ color: NAVY, fontSize: "0.9rem" }} className="px-4 py-2 hover:opacity-70">Sign in</button>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, boxShadow: "0 4px 14px rgba(10,36,114,0.3)" }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm flex items-center gap-2 active:scale-95 transition-transform font-semibold" style={{ background: AMBER, color: NAVY, boxShadow: "0 4px 14px rgba(255,186,8,0.3)" }}>
               Start Free <ArrowRight size={14} />
             </button>
           </div>
@@ -285,42 +267,43 @@ export function LandingPage() {
               <a key={item.label} href={item.href} style={{ color: NAVY_LIGHT }} onClick={() => setMobileOpen(false)}>{item.label}</a>
             ))}
             <button onClick={() => navigate("/auth")} style={{ color: NAVY }} className="text-left">Sign in</button>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm active:scale-95 w-fit" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>Start Free Trial</button>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-5 py-2.5 rounded-full text-sm font-semibold active:scale-95 w-fit" style={{ background: AMBER, color: NAVY }}>Start Free Trial</button>
           </div>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="pt-32 pb-20 px-6 hero-gradient">
-        <div className="max-w-7xl mx-auto">
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden bg-white">
+        <div className="hero-dot absolute inset-0 pointer-events-none" />
+        <div className="max-w-7xl mx-auto relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="reveal reveal-1">
-                <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-6" style={{ borderColor: NAVY, color: NAVY }}>
+                <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-6" style={{ background: AMBER_LIGHT, color: NAVY }}>
                   &#x1F1EC;&#x1F1ED; Built for Ghanaian Schools
                 </div>
               </div>
               <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: NAVY }}>
                 The All-in-One School Management<br />System Built for Ghana
               </h1>
-              <p className="reveal reveal-2 text-gray-600 max-w-lg mt-4" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>
+              <p className="reveal reveal-2 mt-4 max-w-lg" style={{ fontSize: "1.1rem", lineHeight: 1.75, color: "#6B7280" }}>
                 From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos. Trusted by 50+ schools across Ghana.
               </p>
               <div className="reveal reveal-3 mt-8 flex gap-4 flex-wrap">
-                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-semibold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: NAVY, color: "white" }}>
+                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: AMBER, color: NAVY, boxShadow: "0 4px 14px rgba(255,186,8,0.3)" }}>
                   Start Free Trial -- No Credit Card Needed <ArrowRight size={16} />
                 </button>
-                <button onClick={() => setDemoOpen(true)} className="request-demo-btn px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
                   Request Demo
                 </button>
               </div>
-              <p className="reveal reveal-4 text-sm text-gray-500 mt-4">
+              <p className="reveal reveal-4 text-sm mt-4" style={{ color: "#9CA3AF" }}>
                 &#x2713; No credit card required  &#x2713; 7-day free trial  &#x2713; Setup in 10 minutes
               </p>
               <div className="reveal reveal-5 mt-8 flex items-center flex-wrap gap-2">
-                <span className="text-xs text-gray-400 mr-1">Works with</span>
+                <span className="text-xs mr-1" style={{ color: "#9CA3AF" }}>Works with</span>
                 {["WAEC", "BECE", "Paystack", "WhatsApp"].map((name) => (
-                  <span key={name} className="works-with-pill rounded-full bg-white border border-gray-200 px-3 py-1 text-xs text-gray-600 shadow-sm">{name}</span>
+                  <span key={name} className="rounded-full bg-white border px-3 py-1 text-xs shadow-sm" style={{ borderColor: "#E5E7EB", color: "#6B7280" }}>{name}</span>
                 ))}
               </div>
             </div>
@@ -344,13 +327,13 @@ export function LandingPage() {
       </section>
 
       {/* SCHOOL EMBLEM MARQUEE */}
-      <section className="overflow-hidden py-6 border-y" style={{ borderColor: "rgba(10,36,114,0.06)", background: "white" }}>
+      <section className="overflow-hidden py-6" style={{ background: "#F9FAFB", borderTop: "2px solid #FFBA08", borderBottom: "1px solid #E5E7EB" }}>
         <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, setIdx) => (
             <div key={setIdx} className="flex items-center gap-12 shrink-0">
               {["Sunshine Primary", "Accra Academy", "Cape Coast Scholars", "Kumasi Prep", "Sapphire Group", "Lincoln Community", "Mfantsipim School", "Darkwa Education", "Ridge Church", "Faith Montessori"].map((name) => (
-                <div key={`${setIdx}-${name}`} className="flex items-center gap-2 opacity-40 hover:opacity-70 transition-opacity">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: `${NAVY}08`, color: NAVY }}>
+                <div key={`${setIdx}-${name}`} className="flex items-center gap-2 opacity-50 hover:opacity-80 transition-opacity">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: AMBER_LIGHT, color: NAVY }}>
                     {name[0]}
                   </div>
                   <span className="text-sm font-medium" style={{ color: NAVY }}>{name}</span>
@@ -362,39 +345,51 @@ export function LandingPage() {
       </section>
 
       {/* STATS */}
-      <section className="py-14" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }} ref={statsRef}>
-        <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 gap-8">
-          <div className="text-center reveal reveal-1">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>
-              {stats.schools === null ? (
-                <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
-              ) : (
-                `${countSchools}+`
-              )}
-            </div>
-            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Schools Active Across Ghana</div>
+      <section className="py-16 px-6 bg-white border-y" style={{ borderColor: "#F3F4F6" }} ref={statsRef}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10 reveal reveal-1">
+            <h2 className="text-2xl md:text-3xl font-bold" style={{ color: NAVY }}>Trusted by Schools Across Ghana</h2>
           </div>
-          <div className="text-center reveal reveal-2">
-            <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
-            <div style={{ color: "rgba(248,249,250,0.65)", fontSize: "0.9rem" }}>Guaranteed Uptime</div>
+          <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <div className="reveal reveal-1 rounded-2xl p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: AMBER_LIGHT }}>
+                <GraduationCap size={22} color={AMBER} />
+              </div>
+              <div style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>
+                {stats.schools === null ? (
+                  <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
+                ) : (
+                  `${countSchools}+`
+                )}
+              </div>
+              <div style={{ color: MUTED, fontSize: "0.9rem" }}>Schools Active Across Ghana</div>
+            </div>
+            <div className="reveal reveal-2 rounded-2xl p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: AMBER_LIGHT }}>
+                <Clock size={22} color={AMBER} />
+              </div>
+              <div style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
+              <div style={{ color: MUTED, fontSize: "0.9rem" }}>Guaranteed Uptime</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* HOW MANAGEN WORKS */}
-      <section className="py-24 px-6" style={{ background: CREAM }}>
+      <section className="py-24 px-6" style={{ background: "#F3F4F6" }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Simple by design
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>How Managen Works</h2>
-            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+            <p className="mt-3 max-w-2xl mx-auto" style={{ color: "#6B7280" }}>
               Set up your school, track everything, and get insights -- all in one place.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8" data-reveal data-stagger="true">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative" data-reveal data-stagger="true">
+            <div className="hidden md:block absolute top-1/3 left-[16.67%] right-[16.67%] h-0.5" style={{ background: AMBER, opacity: 0.3 }} />
             {[
               {
                 num: "01", icon: Zap, title: "Set up your school in minutes",
@@ -412,20 +407,25 @@ export function LandingPage() {
                 items: ["WhatsApp reports sent to parents automatically", "Term-end report card generation", "Fee collection analytics", "Multi-school performance overview"]
               }
             ].map((step, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 group">
+              <div key={i} className="rounded-2xl overflow-hidden bg-white border hover:shadow-lg transition-all duration-300 group relative" style={{ borderColor: "#E5E7EB" }}>
                 <div className="h-36 relative flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }}>
                   <span className="absolute select-none font-bold leading-none" style={{ fontSize: "8rem", color: "white", opacity: 0.08, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{step.num}</span>
-                  <step.icon size={44} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                  <div className="w-16 h-16 rounded-xl flex items-center justify-center relative z-10" style={{ background: AMBER }}>
+                    <step.icon size={28} className="text-white group-hover:scale-110 transition-transform duration-300" />
+                  </div>
                 </div>
                 <div className="p-6 lg:p-7">
-                  <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: NAVY_LIGHT }}>Step {step.num}</span>
-                  <h3 className="text-lg lg:text-xl font-bold mt-1 mb-2" style={{ color: NAVY }}>{step.title}</h3>
-                  <p className="text-gray-500 text-sm mb-4 leading-relaxed">{step.desc}</p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: AMBER, color: NAVY }}>{step.num}</div>
+                    <span className="text-xs font-semibold" style={{ color: MUTED }}>Step {step.num}</span>
+                  </div>
+                  <h3 className="text-lg lg:text-xl font-bold mb-2" style={{ color: NAVY }}>{step.title}</h3>
+                  <p className="text-sm mb-4 leading-relaxed" style={{ color: "#6B7280" }}>{step.desc}</p>
                   <div className="space-y-2">
                     {step.items.map((item) => (
                       <div key={item} className="flex items-start gap-2">
                         <CheckCircle2 size={15} className="text-green-500 shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-600">{item}</span>
+                        <span className="text-sm" style={{ color: "#4B5563" }}>{item}</span>
                       </div>
                     ))}
                   </div>
@@ -437,21 +437,21 @@ export function LandingPage() {
       </section>
 
       {/* BENTO GRID FEATURES */}
-      <section id="features" className="py-24 px-6" style={{ background: CREAM }}>
+      <section id="features" className="py-24 px-6" style={{ background: "white" }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Everything your school needs
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Built for how African schools actually work</h2>
-            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+            <p className="mt-3 max-w-2xl mx-auto" style={{ color: "#6B7280" }}>
               Not adapted from software made elsewhere. Every feature designed for Ghanaian classrooms.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5" data-reveal data-stagger="true">
             {/* Card 1: NaCCA Compliance Core (2 cols) */}
-            <div className="md:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+            <div className="md:col-span-2 rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border">
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
@@ -494,7 +494,7 @@ export function LandingPage() {
             </div>
 
             {/* Card 2: Instant MoMo Rails (1 col) */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+            <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 w-fit">
                 <Wallet className="size-3" /> Payments
               </span>
@@ -528,7 +528,7 @@ export function LandingPage() {
             </div>
 
             {/* Card 3: Arkesel Automated SMS (1 col) */}
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+            <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-fit">
                 <MessageSquare className="size-3" /> Communications
               </span>
@@ -580,7 +580,7 @@ export function LandingPage() {
                 <p style={{ color: "rgba(248,249,250,0.75)", fontSize: "1rem", lineHeight: 1.75, marginBottom: "1.5rem" }}>
                   Get instant visibility into every corner of your school -- fee collection, attendance rates, pending exam results -- all from a single bento dashboard.
                 </p>
-                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 600, fontSize: "0.95rem" }}>
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold" style={{ background: AMBER, color: NAVY, fontSize: "0.95rem" }}>
                   See It In Action <ArrowRight size={16} />
                 </button>
               </div>
@@ -609,7 +609,7 @@ export function LandingPage() {
       <section id="school-types" className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Trusted by schools across Africa
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Built for every type of school</h2>
@@ -645,7 +645,7 @@ export function LandingPage() {
           </div>
           <div className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap" data-reveal>
             <span className="text-sm text-gray-500">Join schools across Ghana managing their institutions with Managen</span>
-            <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-semibold flex items-center gap-1" style={{ color: NAVY }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-bold flex items-center gap-1 px-4 py-2 rounded-full" style={{ background: AMBER, color: NAVY }}>
               Start Free Trial <ArrowRight size={14} />
             </button>
           </div>
@@ -653,11 +653,11 @@ export function LandingPage() {
       </section>
 
       {/* SOCIAL PROOF */}
-      <section className="py-24 px-6" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }}>
+      <section className="py-24 px-6" style={{ background: NAVY_DARK }}>
         <div className="max-w-7xl mx-auto text-center">
           <div data-reveal>
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4"
-              style={{ borderColor: 'rgba(248,249,250,0.4)', color: 'rgba(248,249,250,0.8)' }}>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4"
+              style={{ background: 'rgba(255,186,8,0.15)', color: AMBER }}>
               Growing fast
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 text-white">
@@ -674,20 +674,19 @@ export function LandingPage() {
               { icon: Globe, count: "5+", label: "International Schools" },
               { icon: Building2, count: "3+", label: "School Groups" },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl p-6"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.12)'
-                }}>
-                <item.icon size={32} className="text-white mx-auto mb-3 opacity-70" />
-                <div style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "2rem", fontWeight: 700 }}>{item.count}</div>
+              <div key={item.label} className="rounded-2xl p-6" style={{
+                background: '#0C1A3A',
+                border: '1px solid rgba(255,186,8,0.2)',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.2)'
+              }}>
+                <item.icon size={32} className="mx-auto mb-3" style={{ color: AMBER }} />
+                <div style={{ fontFamily: "'Playfair Display', serif", color: AMBER, fontSize: "2rem", fontWeight: 700 }}>{item.count}</div>
                 <div style={{ color: 'rgba(248,249,250,0.6)', fontSize: "0.85rem" }}>{item.label}</div>
               </div>
             ))}
           </div>
           <div className="mt-12" data-reveal>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-8 py-4 rounded-full font-semibold active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontSize: "1rem", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-8 py-4 rounded-full font-bold active:scale-95 transition-transform" style={{ background: AMBER, color: NAVY, fontSize: "1rem", boxShadow: "0 8px 24px rgba(255,186,8,0.3)" }}>
               Join Them -- Start Free Trial <ArrowRight size={16} className="inline ml-1" />
             </button>
           </div>
@@ -695,19 +694,19 @@ export function LandingPage() {
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="py-24 px-6">
+      <section id="pricing" className="py-24 px-6" style={{ background: "#F9FAFB" }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-6 reveal">
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
-              Simple pricing
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
+              Simple, transparent pricing
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Plans that grow with your school</h2>
-            <p className="text-gray-500 mt-3">Start free. Upgrade when you're ready.</p>
+            <p className="mt-3" style={{ color: "#6B7280" }}>Start free. Upgrade when you're ready.</p>
           </div>
           <div className="flex justify-center mb-12">
-            <div className="pricing-toggle flex rounded-full p-1" style={{ background: "white", border: "1px solid rgba(10,36,114,0.10)" }}>
+            <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid #E5E7EB" }}>
               {(["monthly", "annual"] as const).map((b) => (
-                <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95" style={{ background: billing === b ? NAVY : "transparent", color: billing === b ? CREAM : MUTED, fontWeight: billing === b ? 600 : 400 }}>{b}</button>
+                <button key={b} onClick={() => setBilling(b)} className="px-5 py-2 rounded-full text-sm transition-all active:scale-95 font-semibold" style={{ background: billing === b ? AMBER : "transparent", color: billing === b ? NAVY : MUTED }}>{b}</button>
               ))}
             </div>
           </div>
@@ -717,17 +716,20 @@ export function LandingPage() {
               const showSaveBadge = isAnnual && (plan.name === "Growth" || plan.name === "Pro");
               const displayPrice = isAnnual && (plan as any).priceAnnual ? (plan as any).priceAnnual : plan.price;
               const billedText = isAnnual ? (plan as any).annualBilled || "" : "";
+              const isFree = plan.price === "Free";
+              const isCustom = plan.price === "Custom";
               return (
               <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: "white",
-                border: plan.highlighted ? "2px solid #F59E0B" : "1px solid rgba(10,36,114,0.08)",
-                boxShadow: plan.highlighted ? "0 24px 60px rgba(245,158,11,0.15)" : "0 4px 24px rgba(10,36,114,0.06)",
+                border: plan.highlighted ? `2px solid ${AMBER}` : "1px solid #E5E7EB",
+                boxShadow: plan.highlighted ? `0 24px 60px rgba(255,186,8,0.15)` : "0 4px 24px rgba(10,36,114,0.06)",
               }}>
-                {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs" style={{ background: "#F59E0B", color: "white", fontWeight: 600 }}>Most Popular</div>}
-                {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs" style={{ background: "#10B981", color: "white", fontWeight: 600 }}>Save 20%</div>}
+                {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: AMBER, color: NAVY }}>Most Popular</div>}
+                {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "#10B981", color: "white" }}>Save 20%</div>}
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
                 <p style={{ color: MUTED, fontSize: "0.85rem", marginBottom: "1.5rem" }}>{plan.tagline}</p>
                 <div className="mb-6">
+                  {!isFree && !isCustom && <span style={{ color: AMBER, fontSize: "0.9rem", fontWeight: 600, verticalAlign: "super" }}>GHS </span>}
                   <span style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{displayPrice}</span>
                   <span style={{ color: MUTED, fontSize: "0.85rem" }}>{plan.period}</span>
                   {billedText && <div style={{ color: MUTED, fontSize: "0.7rem", marginTop: "0.15rem" }}>Billed as {billedText}</div>}
@@ -735,12 +737,12 @@ export function LandingPage() {
                 <div className="space-y-3 mb-8">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-center gap-2.5">
-                      <CheckCircle2 size={15} color="#10B981" fill="#D1FAE5" />
-                      <span style={{ color: NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
+                      <CheckCircle2 size={15} color={plan.highlighted ? AMBER : "#10B981"} fill={plan.highlighted ? `${AMBER}30` : "#D1FAE5"} />
+                      <span style={{ color: plan.highlighted ? NAVY : NAVY_LIGHT, fontSize: "0.9rem" }}>{f}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm" style={{ background: plan.highlighted ? "linear-gradient(135deg, #F59E0B, #D97706)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: "white", fontWeight: 600 }}>{plan.cta}</button>
+                <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm font-bold" style={{ background: plan.highlighted ? AMBER : NAVY, color: plan.highlighted ? NAVY : "white" }}>{plan.cta}</button>
               </div>
               );
             })}
@@ -749,10 +751,10 @@ export function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-24 px-6 bg-gray-50">
+      <section id="faq" className="py-24 px-6 bg-white">
         <div className="max-w-[768px] mx-auto">
           <div className="text-center mb-16 reveal">
-            <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: NAVY, color: NAVY }}>
+            <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Questions and answers
             </div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently asked questions</h2>
@@ -762,14 +764,19 @@ export function LandingPage() {
             {faqs.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className="faq-item rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.04)" }}>
+                <div key={i} className={`rounded-2xl overflow-hidden transition-all duration-300`} style={{
+                  background: isOpen ? AMBER_LIGHT : "white",
+                  border: isOpen ? `1px solid ${AMBER}` : "1px solid #E5E7EB",
+                  boxShadow: isOpen ? "0 4px 20px rgba(255,186,8,0.1)" : "0 2px 12px rgba(10,36,114,0.04)",
+                  borderLeft: isOpen ? `4px solid ${AMBER}` : "4px solid transparent"
+                }}>
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
                     className="w-full flex items-center justify-between p-5 text-left active:scale-[0.99] transition-transform"
                     style={{ color: NAVY }}
                   >
                     <span style={{ fontWeight: 600, fontSize: "0.95rem", lineHeight: 1.4, paddingRight: "1rem" }}>{faq.q}</span>
-                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} style={{ color: MUTED }} />
+                    <ChevronDown size={16} className={`flex-shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} style={{ color: isOpen ? AMBER : MUTED }} />
                   </button>
                   <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96" : "max-h-0"}`}>
                     <div className="px-5 pb-5" style={{ color: MUTED, fontSize: "0.88rem", lineHeight: 1.7 }}>{faq.a}</div>
@@ -792,7 +799,7 @@ export function LandingPage() {
             <p style={{ color: "rgba(248,249,250,0.7)", fontSize: "1.05rem", maxWidth: 480, margin: "0 auto 1.5rem", lineHeight: 1.7 }}>
               Join schools across Ghana who have eliminated spreadsheets forever.
             </p>
-            <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base active:scale-95 transition-transform" style={{ background: CREAM, color: NAVY, fontWeight: 700, boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}>
+            <button onClick={() => navigate("/auth?mode=signup")} className="px-10 py-4 rounded-full text-base font-bold active:scale-95 transition-transform" style={{ background: AMBER, color: NAVY, boxShadow: "0 8px 24px rgba(255,186,8,0.3)" }}>
               Get Started Free -- No Credit Card
             </button>
             <div className="mt-4">
@@ -805,64 +812,67 @@ export function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer id="contact" className="bg-gray-50 py-12 px-6">
-        <div className="footer-card max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 px-10 py-12">
+      <footer id="contact" className="py-12 px-6" style={{ background: CHARCOAL }}>
+        <div className="max-w-7xl mx-auto px-10 py-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
-                <GraduationCap size={15} color="white" />
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: AMBER }}>
+                <GraduationCap size={15} color={NAVY} />
               </div>
-              <span style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700 }}>Managen</span>
+              <span style={{ fontFamily: "'Playfair Display', serif", color: "white", fontWeight: 700 }}>Managen</span>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-500 text-sm hidden sm:inline">School management that actually works.</span>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gray-100 bg-gray-50/50">
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">A Product of</span>
-                <SadexLogo size={18} variant="light" />
+              <span className="text-sm hidden sm:inline" style={{ color: "#9CA3AF" }}>School management that actually works.</span>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "#6B7280" }}>A Product of</span>
+                <SadexLogo size={18} variant="dark" />
               </div>
             </div>
           </div>
-          <hr className="border-gray-100 mb-8" />
+          <hr className="mb-8" style={{ borderColor: "rgba(255,255,255,0.08)" }} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             <div>
-              <h4 className="font-semibold text-gray-900 text-sm mb-4">Product</h4>
+              <h4 className="font-semibold text-sm mb-4" style={{ color: "#9CA3AF" }}>Product</h4>
               <div className="flex flex-col gap-2.5">
                 {[{ label: "Features", href: "#features" }, { label: "Pricing", href: "#pricing" }, { label: "FAQ", href: "#faq" }].map((link) => (
-                  <a key={link.label} href={link.href} className="text-sm hover:opacity-70 transition-opacity" style={{ color: MUTED }}>{link.label}</a>
+                  <a key={link.label} href={link.href} className="text-sm transition-colors" style={{ color: "#D1D5DB" }} onMouseEnter={(e) => e.currentTarget.style.color = AMBER} onMouseLeave={(e) => e.currentTarget.style.color = "#D1D5DB"}>{link.label}</a>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-gray-900 text-sm mb-4">Contact</h4>
-              <div className="flex flex-col gap-3">
+              <h4 className="font-semibold text-sm mb-4" style={{ color: "#9CA3AF" }}>Contact</h4>
+              <div className="flex flex-col gap-3" style={{ color: "#D1D5DB" }}>
                 {[
                   { icon: Mail, text: "support@getschoolos.me" },
-                  { icon: MapPin, text: "Accra, Ghana" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-2.5">
-                    <item.icon size={15} color={NAVY} className="flex-shrink-0" />
-                    <span className="text-sm text-gray-600">{item.text}</span>
+                    <item.icon size={15} color={AMBER} className="flex-shrink-0" />
+                    <span className="text-sm">{item.text}</span>
                   </div>
                 ))}
+                <div className="flex items-center gap-2.5 mt-2">
+                  <MapPin size={15} color={AMBER} className="flex-shrink-0" />
+                  <span className="text-sm">Accra, Ghana</span>
+                </div>
               </div>
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 border border-gray-200 rounded-full px-3 py-1 text-xs text-gray-500 mb-6">
+              <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs mb-6" style={{ background: "rgba(255,186,8,0.15)", color: AMBER, border: "1px solid rgba(255,186,8,0.3)" }}>
                 <Globe size={13} />
                 Ghana
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: "#9CA3AF" }}>
                 Built by SADEX Innovations.<br />
                 Accra, Ghana.
               </p>
             </div>
           </div>
-          <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-gray-400">&copy; 2026 Managen. All rights reserved.</span>
-            <span className="text-xs text-gray-400">Made for African schools &#x1F30D;</span>
-            <div className="flex gap-4 text-xs text-gray-400">
-              <a href="/privacy">Privacy Policy</a>
-              <a href="/terms">Terms of Service</a>
+          <div className="mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <span className="text-xs" style={{ color: "#6B7280" }}>&copy; 2026 Managen. All rights reserved.</span>
+            <span className="text-xs" style={{ color: "#6B7280" }}>Made for African schools &#x1F30D;</span>
+            <div className="flex gap-4 text-xs">
+              <a href="/privacy" style={{ color: "#9CA3AF" }} className="hover-amber">Privacy Policy</a>
+              <a href="/terms" style={{ color: "#9CA3AF" }} className="hover-amber">Terms of Service</a>
             </div>
           </div>
         </div>
@@ -906,8 +916,8 @@ export function LandingPage() {
                 </select>
               </div>
               <button type="submit" disabled={sending}
-                className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm"
-                style={{ background: sending ? "rgba(10,36,114,0.5)" : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM, fontWeight: 600, boxShadow: "0 8px 24px rgba(10,36,114,0.25)" }}>
+                className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform text-sm font-bold"
+                style={{ background: sending ? "rgba(255,186,8,0.5)" : AMBER, color: NAVY, boxShadow: "0 8px 24px rgba(255,186,8,0.25)" }}>
                 {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "Sending..." : "Send Demo Request"}
               </button>
