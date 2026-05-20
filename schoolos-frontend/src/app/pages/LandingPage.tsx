@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import {
-  ArrowRight, BookOpen, BarChart3, MessageSquare, Users,
+  ArrowRight, BookOpen, BarChart3, MessageSquare,
   CheckCircle2, GraduationCap, Wallet, Bell, Menu, X,
   Zap, Clock, Award, XCircle, Send, Building2, Loader2,
   ChevronDown, Mail, MapPin, Globe, Linkedin, Twitter,
@@ -10,6 +10,7 @@ import {
 import { api } from "../services/api";
 import { toast } from "sonner";
 import { SadexLogo } from '../components/SadexLogo';
+import { RoiCalculator } from './public/components/RoiCalculator';
 
 const PLUM = "#381932";
 const PLUM_LIGHT = "#512b4a";
@@ -168,14 +169,7 @@ export function LandingPage() {
     }
   };
 
-  const featureItems = [
-    { icon: Users, title: "Student Management", desc: "Maintain complete student profiles including attendance history, academic records, fee payment history, and parent contact details. Support for up to 800 students on the Pro plan.", subFeatures: ["Detailed student profiles and history", "Class and subject assignment", "Parent portal and contact management"], iconColor: "text-blue-500", bgColor: "bg-blue-100" },
-    { icon: Wallet, title: "Fee Tracking & Payments", desc: "Create custom fee structures per class, track payments, generate invoices, and send automated reminders via WhatsApp. Integrated with Paystack for seamless online collection.", subFeatures: ["Custom fee structures per class/term", "Paystack payment integration", "Automated overdue fee reminders"], iconColor: "text-green-500", bgColor: "bg-green-100" },
-    { icon: BookOpen, title: "Exams & Academics", desc: "Schedule exams, enter results, generate report cards, and track academic performance over time. Supports WAEC and BECE result formats.", subFeatures: ["Exam scheduling and timetabling", "Result entry and grade computation", "WAEC/BECE-compatible report cards"], iconColor: "text-purple-500", bgColor: "bg-purple-100" },
-    { icon: MessageSquare, title: "WhatsApp Reports", desc: "Send automated attendance summaries, fee reminders, exam results, and custom announcements directly to parents and staff via WhatsApp Business API - without any manual effort.", subFeatures: ["Daily attendance notifications to parents", "Fee payment receipts and reminders", "Term results and report card delivery"], iconColor: "text-green-600", bgColor: "bg-green-100" },
-    { icon: BarChart3, title: "Analytics Dashboard", desc: "Track school performance with real-time dashboards showing attendance trends, fee collection rates, academic performance, and staff activity - all in one command center.", subFeatures: ["Real-time attendance and fee dashboards", "Term-over-term performance comparison", "Export reports to PDF and CSV"], iconColor: "text-amber-500", bgColor: "bg-amber-100" },
-    { icon: Building2, title: "Multi-School Management", desc: "Manage multiple campuses or school branches from a single superadmin dashboard. Each school gets its own isolated environment with custom branding and subdomain.", subFeatures: ["Centralized superadmin dashboard", "Per-school isolation and data security", "Custom subdomain per school"], iconColor: "text-custom", bgColor: "bg-custom" },
-  ];
+
 
   const schoolTypes = [
     { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", photo: "https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&q=80" },
@@ -258,6 +252,13 @@ export function LandingPage() {
         .dark .works-with-pill { background: #374151 !important; border-color: #4B5563 !important; color: #e5e7eb !important; }
         .dark .request-demo-btn { background: #374151 !important; border-color: #4B5563 !important; }
         .dark .footer-card { background: #1f2937 !important; border-color: #374151 !important; }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
       `}</style>
 
       {/* NAV */}
@@ -364,6 +365,24 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* SCHOOL EMBLEM MARQUEE */}
+      <section className="overflow-hidden py-6 border-y" style={{ borderColor: "rgba(56,25,50,0.06)", background: "white" }}>
+        <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
+          {[...Array(2)].map((_, setIdx) => (
+            <div key={setIdx} className="flex items-center gap-12 shrink-0">
+              {["Sunshine Primary", "Accra Academy", "Cape Coast Scholars", "Kumasi Prep", "Sapphire Group", "Lincoln Community", "Mfantsipim School", "Darkwa Education", "Ridge Church", "Faith Montessori"].map((name) => (
+                <div key={`${setIdx}-${name}`} className="flex items-center gap-2 opacity-40 hover:opacity-70 transition-opacity">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: `${PLUM}08`, color: PLUM }}>
+                    {name[0]}
+                  </div>
+                  <span className="text-sm font-medium" style={{ color: PLUM }}>{name}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* STATS */}
       <section className="py-14" style={{ background: `linear-gradient(135deg, ${PLUM} 0%, ${PLUM_LIGHT} 100%)` }} ref={statsRef}>
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-3 gap-8">
@@ -447,37 +466,133 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* FEATURES GRID */}
+      {/* BENTO GRID FEATURES */}
       <section id="features" className="py-24 px-6" style={{ background: MILK }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16" data-reveal>
             <div className="inline-flex rounded-full border px-3 py-1 text-xs mb-4" style={{ borderColor: PLUM, color: PLUM }}>
               Everything your school needs
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Everything your school needs</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: PLUM }}>Built for how African schools actually work</h2>
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-              Built for how African schools actually work -- not adapted from software made elsewhere.
+              Not adapted from software made elsewhere. Every feature designed for Ghanaian classrooms.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal data-stagger="true">
-            {featureItems.map((item, i) => (
-              <div key={i} className="rounded-2xl bg-white border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 p-6 lg:p-7 flex flex-col group">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${item.bgColor} group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300`}>
-                  <item.icon size={24} className={item.iconColor === "text-custom" ? "" : item.iconColor} style={item.iconColor === "text-custom" ? { color: PLUM } : {}} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5" data-reveal data-stagger="true">
+            {/* Card 1: NaCCA Compliance Core (2 cols) */}
+            <div className="md:col-span-2 rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    <Award className="size-3" /> NaCCA Compliant
+                  </span>
+                  <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Continuous Assessment Core</h3>
+                  <p className="mt-1 text-sm text-slate-500">Automated grade computation, competency bands, and terminal report cards aligned to Ghana's NaCCA standards.</p>
                 </div>
-                <h3 className="font-bold text-lg mb-2" style={{ color: PLUM }}>{item.title}</h3>
-                <p className="text-sm flex-1" style={{ color: MUTED, lineHeight: 1.7 }}>{item.desc}</p>
-                <div className="space-y-1.5 mt-4 pt-4 border-t border-gray-100">
-                  {item.subFeatures.map((sf) => (
-                    <div key={sf} className="flex items-start gap-2 text-sm" style={{ color: MUTED }}>
-                      <CheckCircle2 size={14} className="text-green-500 shrink-0 mt-0.5" />
-                      {sf}
+              </div>
+              {/* Mini Structural Mockup */}
+              <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: `${PLUM}12`, color: PLUM }}>KM</div>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: PLUM }}>Kofi Mensah</div>
+                    <div className="text-xs text-slate-400">JHS 2 · Mathematics</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 gap-2 mb-3">
+                  {[
+                    { label: "Quiz 1", score: "18/20", pct: 90 },
+                    { label: "Mid-Term", score: "42/50", pct: 84 },
+                    { label: "Project", score: "27/30", pct: 90 },
+                    { label: "Exam", score: "68/80", pct: 85 },
+                  ].map((a) => (
+                    <div key={a.label} className="rounded-lg bg-white border border-slate-100 p-2.5 text-center">
+                      <div className="text-xs text-slate-400 mb-1">{a.label}</div>
+                      <div className="text-sm font-bold tabular-nums" style={{ color: PLUM }}>{a.score}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between rounded-lg bg-white border border-slate-100 px-4 py-2.5">
+                  <span className="text-xs font-medium text-slate-500">Final Grade</span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    EE — Exceeding Expectations
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Instant MoMo Rails (1 col) */}
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 w-fit">
+                <Wallet className="size-3" /> Payments
+              </span>
+              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Instant MoMo Rails</h3>
+              <p className="mt-1 text-sm text-slate-500 mb-5">Real-time mobile money collections with automatic receipt generation.</p>
+              {/* Notification Bubble Simulation */}
+              <div className="mt-auto space-y-3">
+                <div className="rounded-xl bg-amber-50 border border-amber-100 p-4 animate-pulse" style={{ animationDuration: "3s" }}>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                      <Bell className="size-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-amber-800">Payment Received</div>
+                      <div className="text-sm font-bold text-amber-900 mt-0.5">GHS 1,200.00</div>
+                      <div className="text-xs text-amber-600 mt-0.5">MTN MoMo · Class Fee · JHS 2</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-xl bg-slate-50 border border-slate-100 p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-500">Today's Collections</span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: PLUM }}>GHS 24,800</span>
+                  </div>
+                  <div className="mt-2 h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                    <div className="h-full rounded-full bg-emerald-500" style={{ width: "78%" }} />
+                  </div>
+                  <div className="mt-1 text-xs text-slate-400 text-right">78% of daily target</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Arkesel Automated SMS (1 col) */}
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-fit">
+                <MessageSquare className="size-3" /> Communications
+              </span>
+              <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: PLUM }}>Arkesel Automated SMS</h3>
+              <p className="mt-1 text-sm text-slate-500 mb-5">Zero-effort parent notifications for fees, attendance, and emergencies.</p>
+              {/* SMS Screen Mockup */}
+              <div className="mt-auto rounded-xl border border-slate-100 bg-slate-50/60 overflow-hidden">
+                <div className="px-4 py-2.5 text-xs font-semibold text-slate-400 border-b border-slate-100" style={{ background: "white" }}>
+                  Automated Alerts Queue
+                </div>
+                <div className="p-3 space-y-2">
+                  {[
+                    { to: "Mrs. Asante", msg: "Balance alert: GHS 450.00 outstanding for Kofi M.", status: "sent" },
+                    { to: "Mr. Boateng", msg: "Attendance: Ama was absent today.", status: "sent" },
+                    { to: "Ms. Serwaa", msg: "Term report card is ready for download.", status: "queued" },
+                  ].map((sms, i) => (
+                    <div key={i} className="rounded-lg bg-white border border-slate-100 p-2.5">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-semibold" style={{ color: PLUM }}>→ {sms.to}</span>
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${sms.status === "sent" ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"}`}>
+                          {sms.status}
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-500 truncate">{sms.msg}</div>
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Card 4: ROI Calculator (2 cols) */}
+            <div className="md:col-span-2">
+              <RoiCalculator />
+            </div>
           </div>
         </div>
       </section>
