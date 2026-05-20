@@ -5,7 +5,7 @@ services:
       branch: main
       repo: chrisxie12/Managen
     run_command: node server.js
-    build_command: npm install
+    build_command: pnpm install --no-frozen-lockfile
     source_dir: /
     http_port: 8080
     envs:
