@@ -13,6 +13,7 @@ const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
 const gradebookService = require('../services/gradebookService');
 const notifService = require('../services/notificationService');
+const pushService = require('../services/pushService');
 const TimetableScheduler = require('../services/timetableScheduler');
 const { z } = require('zod');
 const { validate } = require('../middleware/validate');
@@ -1895,6 +1896,24 @@ router.delete('/push/unsubscribe', protect, async (req, res) => {
         if (error) return res.status(500).json({ error: error.message });
         return res.json({ data: { message: 'Unsubscribed.' } });
     } catch (err) { return res.status(500).json({ error: 'Error removing subscription.' }); }
+});
+
+router.get('/push/vapid-public-key', async (req, res) => {
+    return res.json({ data: { publicKey: process.env.VAPID_PUBLIC_KEY || '' } });
+});
+
+router.post('/push/broadcast', protect, requirePermission('announcements.create'), async (req, res) => {
+    try {
+        const { title, body, role, url } = req.body;
+        if (!title) return res.status(400).json({ error: 'title is required.' });
+
+        if (role) {
+            await pushService.sendToRole(req.tenant.id, role, { title, body, url });
+        } else {
+            await pushService.sendToSchool(req.tenant.id, { title, body, url });
+        }
+        return res.json({ data: { message: 'Push notification sent.' } });
+    } catch (err) { return res.status(500).json({ error: 'Error sending push notification.' }); }
 });
 
 module.exports = router;

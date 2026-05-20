@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
-import { ChevronDown, CalendarCheck, AlertCircle, Loader2 } from "lucide-react";
+import { ChevronDown, CalendarCheck, CalendarDays, AlertCircle, Loader2, MapPin, Clock } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
@@ -11,16 +11,33 @@ const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string; admission_no?: string };
 type AttendanceDay = { date: string; status: string };
+type Event = {
+  id: string;
+  title: string;
+  description?: string;
+  event_date: string;
+  event_time?: string;
+  event_type: string;
+  location?: string;
+};
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
 }
+
+const EVENT_TYPE_LABELS: Record<string, string> = {
+  general: "General", holiday: "Holiday", exam: "Exam", sports: "Sports", meeting: "Meeting", deadline: "Deadline",
+};
+const EVENT_TYPE_COLORS: Record<string, string> = {
+  general: "#0A2472", holiday: "#10B981", exam: "#EF4444", sports: "#F59E0B", meeting: "#8B5CF6", deadline: "#EC4899",
+};
 
 export function ParentHome() {
   const navigate = useNavigate();
   const [children, setChildren] = useState<Child[]>([]);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [attendance, setAttendance] = useState<AttendanceDay[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [now] = useState(() => new Date());
   const year = now.getFullYear();
@@ -46,6 +63,12 @@ export function ParentHome() {
       .then((res) => setAttendance(res.data?.records || []))
       .catch(() => {});
   }, [selectedChild, year, month]);
+
+  useEffect(() => {
+    api.get<{ records: Event[] }>("/api/communication/events/list?upcoming=true&limit=10")
+      .then((res) => setEvents(res.data?.records || []))
+      .catch(() => {});
+  }, []);
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={28} color={NAVY} /></div>;
 
@@ -109,6 +132,51 @@ export function ParentHome() {
               <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Late</span>
             </div>
           </div>
+
+          {/* Upcoming Events */}
+          {events.length > 0 && (
+            <div className="p-4 rounded-2xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2" style={{ color: NAVY }}>
+                <CalendarDays size={16} /> Upcoming Events
+              </h3>
+              <div className="space-y-2">
+                {events.map((ev) => {
+                  const date = new Date(ev.event_date);
+                  const day = date.getDate();
+                  const monthName = date.toLocaleString("default", { month: "short" });
+                  const color = EVENT_TYPE_COLORS[ev.event_type] || NAVY;
+                  return (
+                    <div key={ev.id} className="flex gap-3 items-start">
+                      <div className="flex flex-col items-center w-10 pt-0.5">
+                        <span className="text-[10px] font-bold uppercase" style={{ color }}>{monthName}</span>
+                        <span className="text-lg font-bold leading-none" style={{ color: NAVY }}>{day}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold truncate" style={{ color: NAVY }}>{ev.title}</p>
+                        <div className="flex flex-wrap gap-3 mt-0.5">
+                          {ev.event_type !== "general" && (
+                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded" style={{ background: `${color}15`, color }}>
+                              {EVENT_TYPE_LABELS[ev.event_type] || ev.event_type}
+                            </span>
+                          )}
+                          {ev.event_time && (
+                            <span className="text-[10px] flex items-center gap-1" style={{ color: MUTED }}>
+                              <Clock size={10} /> {ev.event_time.slice(0, 5)}
+                            </span>
+                          )}
+                          {ev.location && (
+                            <span className="text-[10px] flex items-center gap-1 truncate" style={{ color: MUTED }}>
+                              <MapPin size={10} /> {ev.location}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Quick links */}
           <div className="grid grid-cols-2 gap-3">

@@ -217,8 +217,17 @@ class HealthService {
     }
   }
 
+  async checkPushNotifications() {
+    const hasPublic = !!process.env.VAPID_PUBLIC_KEY;
+    const hasPrivate = !!process.env.VAPID_PRIVATE_KEY;
+    if (!hasPublic || !hasPrivate) {
+      return { status: 'unconfigured', message: 'VAPID keys not set. Push notifications disabled.', vapidConfigured: false };
+    }
+    return { status: 'healthy', message: 'Push notifications configured.', vapidConfigured: true };
+  }
+
   async getFullHealth(schoolId) {
-    const [db, server, redis, queue, storage, email, sms, whatsapp, failures, incidents, notifStats] = await Promise.all([
+    const [db, server, redis, queue, storage, email, sms, whatsapp, push, failures, incidents, notifStats] = await Promise.all([
       this.checkDatabase(),
       this.checkServer(),
       this.checkRedis(),
@@ -227,12 +236,13 @@ class HealthService {
       this.checkEmail(),
       this.checkSms(),
       this.checkWhatsApp(),
+      this.checkPushNotifications(),
       this.getRecentFailures(schoolId),
       this.getIncidents(schoolId),
       this.getNotificationStats(schoolId),
     ]);
 
-    const checks = { db, server, redis, queue, storage, email, sms, whatsapp };
+    const checks = { db, server, redis, queue, storage, email, sms, whatsapp, push };
     const downCount = Object.values(checks).filter(c => c.status === 'down').length;
     const degradedCount = Object.values(checks).filter(c => c.status === 'degraded').length;
     const unconfiguredCount = Object.values(checks).filter(c => c.status === 'unconfigured').length;

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { Wallet, ArrowDown, ArrowUp, Loader2, ExternalLink } from "lucide-react";
+import { Wallet, ArrowDown, ArrowUp, Loader2, CheckCircle, XCircle } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 import { addToSyncQueue } from "../../lib/offlineSync";
+import { useAuth } from "../../contexts/AuthContext";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -28,8 +29,10 @@ type Payment = {
 };
 
 export function ParentFees() {
-  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const childId = searchParams.get("child");
+  const refParam = searchParams.get("reference");
 
   const [children, setChildren] = useState<Child[]>([]);
   const [selected, setSelected] = useState<Child | null>(null);
@@ -37,6 +40,8 @@ export function ParentFees() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyResult, setVerifyResult] = useState<"success" | "failed" | null>(null);
 
   useEffect(() => {
     api.get<{ children: Child[] }>("/api/school/parent/children")
@@ -54,20 +59,41 @@ export function ParentFees() {
     if (!selected) return;
     Promise.all([
       api.get<{ invoices: Invoice[] }>(`/api/school/invoices?student_id=${selected.id}`).catch(() => ({ data: { invoices: [] } })),
-      api.get<{ payments: Payment[] }>(`/api/school/fees/payments?student_id=${selected.id}`).catch(() => ({ data: { payments: [] } })),
+      api.get<{ payments: Payment[] }>(`/api/school/payments?student_id=${selected.id}`).catch(() => ({ data: { payments: [] } })),
     ]).then(([invRes, payRes]) => {
       setInvoices(invRes.data?.invoices || []);
       setPayments(payRes.data?.payments || []);
     });
   }, [selected]);
 
+  useEffect(() => {
+    if (!refParam) return;
+    setVerifying(true);
+    api.get<{ status: string; message?: string }>(`/api/billing/verify-payment?reference=${refParam}`)
+      .then((res) => {
+        const ok = res.data?.status === "completed" || res.data?.status === "already_completed";
+        setVerifyResult(ok ? "success" : "failed");
+        if (ok) {
+          toast.success("Payment verified successfully!");
+          setSearchParams((prev) => { prev.delete("reference"); prev.delete("trxref"); return prev; });
+        } else {
+          toast.error(res.data?.message || "Payment verification failed.");
+        }
+      })
+      .catch(() => {
+        setVerifyResult("failed");
+        toast.error("Could not verify payment.");
+      })
+      .finally(() => setVerifying(false));
+  }, [refParam, setSearchParams]);
+
   const totalBilled = invoices.reduce((s, i) => s + Number(i.total_amount), 0);
   const totalPaid = invoices.reduce((s, i) => s + Number(i.paid_amount), 0);
   const balance = totalBilled - totalPaid;
   const pendingInvoices = invoices.filter((i) => i.status === "pending" || i.status === "overdue");
 
-  const handlePayOffline = async (invoice: Invoice) => {
-    if (!selected) return;
+  const handlePayWithPaystack = async (invoice: Invoice) => {
+    if (!selected || !user?.email) return;
     setPaying(true);
     const amount = Number(invoice.total_amount) - Number(invoice.paid_amount);
     try {
@@ -76,11 +102,19 @@ export function ParentFees() {
         toast.success("Payment saved offline. Will sync when connected.");
         return;
       }
-      await api.post("/api/school/fees/payments", { student_id: selected.id, amount, method: "paystack" });
-      toast.success("Payment initiated. You will be redirected to Paystack.");
-      // Redirect to Paystack — the backend should return a payment URL
+      const callbackUrl = `${window.location.origin}/parent/fees?child=${selected.id}`;
+      const res = await api.post<{ authorization_url: string; reference: string }>(
+        "/api/billing/paystack-initialize",
+        { invoice_id: invoice.id, amount, email: user.email, callback_url: callbackUrl }
+      );
+      const authUrl = res.data?.authorization_url;
+      if (authUrl) {
+        window.location.href = authUrl;
+      } else {
+        throw new Error("No authorization URL returned.");
+      }
     } catch (err: any) {
-      toast.error(err.message || "Payment failed");
+      toast.error(err.response?.data?.error || err.message || "Payment initialization failed");
     } finally {
       setPaying(false);
     }
@@ -104,6 +138,26 @@ export function ParentFees() {
 
       {selected && (
         <>
+          {/* Verify result banner */}
+          {verifying && (
+            <div className="flex items-center gap-2 p-4 rounded-2xl" style={{ background: "#FFF3CD", border: "1px solid #FFC107" }}>
+              <Loader2 className="animate-spin" size={18} color="#856404" />
+              <span className="text-sm" style={{ color: "#856404" }}>Verifying your payment...</span>
+            </div>
+          )}
+          {verifyResult === "success" && (
+            <div className="flex items-center gap-2 p-4 rounded-2xl" style={{ background: "#D4EDDA", border: "1px solid #28A745" }}>
+              <CheckCircle size={18} color="#155724" />
+              <span className="text-sm font-medium" style={{ color: "#155724" }}>Payment successful! Your account has been updated.</span>
+            </div>
+          )}
+          {verifyResult === "failed" && (
+            <div className="flex items-center gap-2 p-4 rounded-2xl" style={{ background: "#F8D7DA", border: "1px solid #DC3545" }}>
+              <XCircle size={18} color="#721C24" />
+              <span className="text-sm font-medium" style={{ color: "#721C24" }}>Payment verification failed. Please contact support if funds were deducted.</span>
+            </div>
+          )}
+
           {/* Balance summary */}
           <div className="p-5 rounded-2xl text-white" style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
             <div className="flex items-center gap-2 mb-1">
@@ -137,12 +191,13 @@ export function ParentFees() {
                       <p className="text-[11px]" style={{ color: MUTED }}>Due: {new Date(inv.due_date).toLocaleDateString()}</p>
                     )}
                     <button
-                      onClick={() => handlePayOffline(inv)}
-                      disabled={paying}
-                      className="mt-2 w-full py-2.5 rounded-xl text-xs font-semibold active:scale-95 transition-all disabled:opacity-50"
-                      style={{ background: "#10B981", color: "white" }}
+                      onClick={() => handlePayWithPaystack(inv)}
+                      disabled={paying || verifying}
+                      className="mt-2 w-full py-2.5 rounded-xl text-xs font-semibold active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      style={{ background: "#0A2472", color: "white" }}
                     >
-                      {paying ? "Processing..." : `Pay GH₵ ${(due / 100).toLocaleString()}`}
+                      {paying ? <Loader2 className="animate-spin" size={14} /> : null}
+                      {paying ? "Connecting to Paystack..." : `Pay with Paystack — GH₵ ${(due / 100).toLocaleString()}`}
                     </button>
                   </div>
                 );
@@ -156,19 +211,22 @@ export function ParentFees() {
               <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: NAVY }}>
                 <ArrowUp size={15} color="#10B981" /> Payment History
               </h3>
-              {payments.slice(0, 10).map((p) => (
-                <div key={p.id} className="p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-medium" style={{ color: NAVY }}>{p.method.toUpperCase()}</span>
-                      <p className="text-[10px]" style={{ color: MUTED }}>{new Date(p.created_at).toLocaleDateString()}</p>
+              {payments.slice(0, 10).map((p) => {
+                const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobile Money", cash: "Cash", bank_transfer: "Bank Transfer", paystack: "Online" };
+                return (
+                  <div key={p.id} className="p-3 rounded-xl" style={{ background: "white", border: "1px solid rgba(56,25,50,0.07)" }}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-medium" style={{ color: NAVY }}>{methodLabel[p.method] || p.method.toUpperCase()}</span>
+                        <p className="text-[10px]" style={{ color: MUTED }}>{new Date(p.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <span className="text-sm font-mono font-bold" style={{ color: "#10B981" }}>
+                        +GH₵ {(p.amount / 100).toLocaleString()}
+                      </span>
                     </div>
-                    <span className="text-sm font-mono font-bold" style={{ color: "#10B981" }}>
-                      +GH₵ {(p.amount / 100).toLocaleString()}
-                    </span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 

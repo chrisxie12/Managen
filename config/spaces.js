@@ -76,9 +76,22 @@ async function generatePresignedPutUrl(bucket, key, contentType) {
   return url;
 }
 
+const PUBLIC_BUCKETS = ['student-photos'];
+
+function getFileBucket(key) {
+  const parts = key.split('/');
+  return parts.length >= 2 ? parts[1] : null;
+}
+
 async function generatePresignedGetUrl(key, expiresIn = 3600) {
   const s3 = getClient();
   if (!s3) throw new Error('Spaces not configured.');
+
+  const bucket = getFileBucket(key);
+
+  if (bucket && PUBLIC_BUCKETS.includes(bucket) && CDN_ENDPOINT) {
+    return `${CDN_ENDPOINT}/${key}`;
+  }
 
   const command = new GetObjectCommand({
     Bucket: BUCKET,

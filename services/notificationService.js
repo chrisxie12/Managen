@@ -2,6 +2,7 @@
 // In-app notification creation and management
 
 const supabase = require('../config/db');
+const pushService = require('./pushService');
 
 /**
  * Create an in-app notification for a user
@@ -31,6 +32,19 @@ async function createNotification({ userId, schoolId, title, message, type, refe
         console.error('Failed to create notification:', error);
         throw error;
     }
+
+    // Also send push notification
+    try {
+        const typePath = referenceType ? `/${referenceType}/${referenceId}` : '';
+        pushService.sendToUser(userId, schoolId, {
+            title,
+            body: message,
+            url: `/dashboard${typePath}`,
+        }).catch((e) => console.error('Push send failed:', e.message));
+    } catch (e) {
+        // Non-blocking - push failure shouldn't break notification creation
+    }
+
     return data;
 }
 
