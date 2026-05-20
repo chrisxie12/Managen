@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/db');
+const spaces = require('../config/spaces');
 const { protect } = require('./school');
 
 // POST /api/user/upload-avatar
@@ -32,27 +33,18 @@ router.post('/upload-avatar', protect, async (req, res) => {
       return res.status(400).json({ error: 'Could not resolve school context.' });
     }
 
-    const filePath = `${tenantId}/${userId}/avatar.${ext}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('avatars')
-      .upload(filePath, buffer, {
-        contentType: `image/${ext === 'jpg' ? 'jpeg' : ext}`,
-        upsert: true,
-      });
-
-    if (uploadError) throw uploadError;
-
-    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
+    const key = spaces.buildKey(tenantId, 'documents', userId, `avatar.${ext}`);
+    const contentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
+    await spaces.uploadBuffer('documents', key, buffer, contentType);
 
     const { error: dbError } = await supabase
       .from('users')
-      .update({ avatar_url: publicUrl })
+      .update({ avatar_url: key })
       .eq('id', userId);
 
     if (dbError) throw dbError;
 
-    return res.json({ success: true, avatar_url: publicUrl });
+    return res.json({ success: true, avatar_url: key });
   } catch (error) {
     console.error('Avatar upload failure:', error);
     return res.status(500).json({ error: 'Failed to upload avatar.' });

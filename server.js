@@ -119,19 +119,15 @@ app.post('/webhooks/whatsapp', express.raw({ type: 'application/json' }), async 
         if (msg.type === 'text') messageText = msg.text?.body || '';
         else if (msg.type === 'audio') {
             audioUrl = msg.audio?.media_url || '';
-            // Download audio to Supabase Storage
+            // Download audio to DigitalOcean Spaces
             if (audioUrl) {
                 const token = process.env.WHATSAPP_ACCESS_TOKEN;
                 const audioRes = await fetch(audioUrl, { headers: { Authorization: `Bearer ${token}` } });
                 const audioBuffer = Buffer.from(await audioRes.arrayBuffer());
-                const storageFile = require('./config/storage');
-                const result = await storageFile.uploadFile('documents', {
-                    originalname: `voice-${Date.now()}.ogg`,
-                    mimetype: 'audio/ogg',
-                    buffer: audioBuffer,
-                    size: audioBuffer.length,
-                }, school.id);
-                audioUrl = result.url;
+                const spaces = require('./config/spaces');
+                const key = spaces.buildKey(school.id, 'documents', null, `voice-${Date.now()}.ogg`);
+                await spaces.uploadBuffer('documents', key, audioBuffer, 'audio/ogg');
+                audioUrl = key;
             }
         } else if (msg.type === 'image') {
             messageText = msg.image?.caption || '[Image received]';
@@ -228,6 +224,7 @@ app.get('/health', async (req, res) => {
             healthService.checkRedis(),
             healthService.checkQueue(),
         ]);
+        const aiStatus = process.env.GOOGLE_API_KEY ? 'available' : 'disabled';
         const allHealthy = [db, redis, queue].every(c => c.status === 'healthy' || c.status === 'unconfigured');
         res.json({
             status: allHealthy ? 'ok' : 'degraded',
@@ -236,6 +233,7 @@ app.get('/health', async (req, res) => {
                 db: db.status === 'healthy',
                 redis: redis.status,
                 queue: queue.status === 'healthy' ? true : queue.status,
+                ai: aiStatus,
                 uptime: server.uptime,
                 memory: server.memory.heapUsed,
                 timestamp: Date.now(),
@@ -267,6 +265,7 @@ app.use('/api/school/settings', tenantMiddleware, settingsRoutes);
 app.use('/api/school/features', tenantMiddleware, featureRoutes);
 app.use('/api/user', tenantMiddleware, userRoutes);
 app.use('/api/grades', tenantMiddleware, require('./routes/grades'));
+app.use('/api/school/ai', tenantMiddleware, require('./routes/ai'));
 
 // ─── Health / Queues Endpoint ──────────────────────────────────
 app.get('/health/queues', async (req, res) => {

@@ -87,11 +87,11 @@ export function StudentDetails() {
     load();
   }, [id]);
 
-  const handleAvatarUpload = useCallback(async (result: { url: string; path: string }) => {
+  const handleAvatarUpload = useCallback(async (result: { url: string; key: string }) => {
     if (!id) return;
     try {
-      await api.patch(`/api/school/students/${id}/avatar`, { avatar_url: result.url });
-      setAvatarUrl(result.url);
+      await api.patch(`/api/school/students/${id}/avatar`, { key: result.key || result.url });
+      setAvatarUrl(result.key || result.url);
       toast.success("Photo updated");
     } catch {
       toast.error("Failed to save photo URL");

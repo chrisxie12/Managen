@@ -1,10 +1,7 @@
-const supabase = require('../config/db');
-const OpenAI = require('openai');
+const supabase = require('../../config/db');
+const { getModel } = require('./geminiClient');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-const COMMENT_PROMPT = (studentName, grades, attendance, incidents) =>
-  `Write a 2-sentence teacher comment for ${studentName}. Grades: ${grades}. Attendance: ${attendance}%. Behavior incidents: ${incidents}. Tone: professional, encouraging, specific. Return 3 distinct variants separated by "---".`;
+const SYSTEM_PROMPT = `You are a professional Ghanaian school teacher writing terminal report card comments for the NaCCA/WAEC curriculum. Write exactly 2 sentences. Tone: encouraging, specific, professional.`;
 
 async function fetchStudentData(studentId, termId, schoolId) {
   const [studentRes, gradesRes, attendanceRes, incidentsRes] = await Promise.all([
@@ -40,45 +37,59 @@ async function fetchStudentData(studentId, termId, schoolId) {
   };
 }
 
+async function generateComment(studentData) {
+  const model = getModel();
+  if (!model) throw new Error('GOOGLE_API_KEY not configured');
+
+  const gradeSummary = Object.entries(studentData.grades)
+    .map(([subject, score]) => `${subject} ${score}%`)
+    .join(', ');
+
+  const prompt = `Student: ${studentData.name}. Grades: ${gradeSummary}. Attendance: ${studentData.attendanceRate}%. Write the comment:`;
+
+  const result = await model.generateContent([
+    { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
+    { role: 'user', parts: [{ text: prompt }] },
+  ]);
+
+  const text = result.response.text().trim();
+  return { comment: text };
+}
+
 async function generateComments(studentId, termId, schoolId) {
-  // Check cache: return if teacher already approved a comment
   const { data: existing } = await supabase.from('report_cards')
-    .select('comment_approved, comments')
+    .select('ai_comment_status, ai_comment')
     .eq('student_id', studentId)
     .eq('term_id', termId)
     .maybeSingle();
 
-  if (existing?.comment_approved) {
-    return { cached: true, variants: existing.comments, approved: existing.comment_approved };
+  if (existing?.ai_comment_status === 'approved' && existing?.ai_comment) {
+    return { cached: true, comment: existing.ai_comment, status: existing.ai_comment_status };
   }
 
   const data = await fetchStudentData(studentId, termId, schoolId);
-  const prompt = COMMENT_PROMPT(data.studentName, data.grades, data.attendance, data.incidents);
+  const studentData = {
+    name: data.studentName,
+    grades: { grades: data.grades },
+    attendanceRate: data.attendance,
+  };
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 300,
-    temperature: 0.7,
-  });
+  const { comment } = await generateComment(studentData);
 
-  const text = response.choices[0]?.message?.content || '';
-  const variants = text.split('---').map(v => v.trim()).filter(Boolean).slice(0, 3);
-
-  // Cache in report_cards.comments
   await supabase.from('report_cards').upsert({
     student_id: studentId,
     term_id: termId,
     school_id: schoolId,
-    comments: variants,
+    ai_comment: comment,
+    ai_comment_status: 'draft',
   }, { onConflict: 'student_id,term_id,school_id' });
 
-  return { cached: false, variants };
+  return { cached: false, comment, status: 'draft' };
 }
 
 async function approveComment(studentId, termId, schoolId, comment) {
   const { error } = await supabase.from('report_cards')
-    .update({ comment_approved: comment })
+    .update({ ai_comment: comment, ai_comment_status: 'approved' })
     .eq('student_id', studentId)
     .eq('term_id', termId)
     .eq('school_id', schoolId);
@@ -100,4 +111,4 @@ async function bulkGenerateComments(classId, termId, schoolId) {
   }));
 }
 
-module.exports = { generateComments, approveComment, bulkGenerateComments, fetchStudentData };
+module.exports = { generateComments, approveComment, bulkGenerateComments, generateComment, fetchStudentData };

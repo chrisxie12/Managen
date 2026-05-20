@@ -7,8 +7,7 @@ const multer   = require('multer');
 const supabase = require('../config/db');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
-const uploadStorage = require('../config/storage');
-const fileUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
+const spaces = require('../config/spaces');
 const schoolService = require('../services/schoolService');
 const examService = require('../services/examService');
 const feeReminderService = require('../services/feeReminderService');
@@ -2674,65 +2673,120 @@ router.get('/search', protect, async (req, res) => {
     } catch (err) { return res.status(500).json({ error: 'Error performing search.' }); }
 });
 
-// ===== FILE UPLOADS (Supabase Storage) =====
+// ===== FILE STORAGE (DigitalOcean Spaces) =====
 
-router.post('/upload', protect, fileUpload.single('file'), async (req, res) => {
-    try {
-        const schoolId = req.tenant.id;
-        const { bucket } = req.body;
-        const file = req.file;
+const ENTITY_MAP = {
+  'student-photos': { table: 'students', column: 'avatar_url' },
+  'report-cards': { table: 'report_cards', column: 'report_card_url' },
+};
 
-        if (!file) return res.status(400).json({ error: 'No file provided.' });
-        if (!bucket) return res.status(400).json({ error: 'Bucket name required.' });
+router.post('/upload', protect, async (req, res) => {
+  try {
+    const schoolId = req.tenant.id;
+    const { bucket, entity_type, entity_id, filename, content_type, file_size } = req.body;
 
-        // Virus scan placeholder — integrate ClamAV here via clamscan or similar
-        // Example: const { isInfected } = await scanWithClamAV(file.buffer);
-        // if (isInfected) return res.status(400).json({ error: 'File rejected by virus scan.' });
-
-        const result = await uploadStorage.uploadFile(bucket, file, schoolId);
-        return res.json({ data: result });
-    } catch (err) {
-        return res.status(400).json({ error: err.message || 'Upload failed.' });
+    if (!bucket || !filename || !content_type || !file_size) {
+      return res.status(400).json({ error: 'Missing required fields: bucket, filename, content_type, file_size.' });
     }
+
+    const validationError = spaces.validateFile(bucket, content_type, file_size);
+    if (validationError) return res.status(400).json({ error: validationError });
+
+    const key = spaces.buildKey(schoolId, bucket, entity_id, filename);
+    const uploadUrl = await spaces.generatePresignedPutUrl(bucket, key, content_type);
+
+    return res.json({ data: { uploadUrl, key, bucket, filename } });
+  } catch (err) {
+    return res.status(500).json({ error: err.message || 'Failed to generate upload URL.' });
+  }
+});
+
+router.post('/upload/confirm', protect, async (req, res) => {
+  try {
+    const schoolId = req.tenant.id;
+    const { key, bucket, entity_type, entity_id } = req.body;
+
+    if (!key || !bucket) {
+      return res.status(400).json({ error: 'Missing required fields: key, bucket.' });
+    }
+    if (!key.startsWith(schoolId)) {
+      return res.status(403).json({ error: 'Access denied.' });
+    }
+
+    const mapping = ENTITY_MAP[bucket];
+    if (mapping && entity_id) {
+      const { data: record } = await supabase
+        .from(mapping.table)
+        .select('id')
+        .eq('id', entity_id)
+        .eq('school_id', schoolId)
+        .single();
+      if (!record) return res.status(404).json({ error: `${mapping.table} record not found.` });
+
+      if (mapping.column === 'document_urls') {
+        const { data: existing } = await supabase
+          .from(mapping.table)
+          .select('document_urls')
+          .eq('id', entity_id)
+          .single();
+        const urls = existing?.document_urls || [];
+        urls.push({ key, bucket, uploaded_at: new Date().toISOString() });
+        await supabase.from(mapping.table).update({ document_urls: urls }).eq('id', entity_id);
+      } else {
+        await supabase.from(mapping.table).update({ [mapping.column]: key }).eq('id', entity_id);
+      }
+    }
+
+    return res.json({ data: { message: 'File confirmed.', key } });
+  } catch (err) {
+    return res.status(500).json({ error: err.message || 'Failed to confirm upload.' });
+  }
 });
 
 router.delete('/upload', protect, async (req, res) => {
-    try {
-        const { bucket, path } = req.body;
-        if (!bucket || !path) return res.status(400).json({ error: 'Bucket and path are required.' });
-        if (!path.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
-        await uploadStorage.deleteFile(bucket, path);
-        return res.json({ data: { message: 'File deleted.' } });
-    } catch (err) {
-        return res.status(400).json({ error: err.message || 'Delete failed.' });
-    }
+  try {
+    const { key } = req.body;
+    if (!key) return res.status(400).json({ error: 'Key is required.' });
+    if (!key.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
+    await spaces.deleteFile(key);
+    return res.json({ data: { message: 'File deleted.' } });
+  } catch (err) {
+    return res.status(400).json({ error: err.message || 'Delete failed.' });
+  }
 });
 
-router.get('/storage/signed-url', protect, async (req, res) => {
-    try {
-        const { bucket, path } = req.query;
-        if (!bucket || !path) return res.status(400).json({ error: 'Bucket and path query params required.' });
-        if (!path.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
-        const signedUrl = await uploadStorage.generateSignedUrl(bucket, path, 3600);
-        return res.json({ data: { url: signedUrl } });
-    } catch (err) {
-        return res.status(400).json({ error: err.message || 'Failed to generate signed URL.' });
-    }
+router.get('/files/*fileKey', protect, async (req, res) => {
+  try {
+    const key = req.params.fileKey;
+    if (!key) return res.status(400).json({ error: 'File key is required.' });
+    if (!key.startsWith(req.tenant.id)) return res.status(403).json({ error: 'Access denied.' });
+    const url = await spaces.generatePresignedGetUrl(key, 3600);
+    return res.json({ data: { url, key } });
+  } catch (err) {
+    return res.status(400).json({ error: err.message || 'Failed to generate download URL.' });
+  }
 });
 
 router.patch('/students/:id/avatar', protect, async (req, res) => {
-    try {
-        const schoolId = req.tenant.id;
-        const { id } = req.params;
-        const { avatar_url } = req.body;
+  try {
+    const schoolId = req.tenant.id;
+    const { id } = req.params;
+    const { avatar_url, key } = req.body;
 
-        const { data: student } = await supabase.from('students').select('id').eq('id', id).eq('school_id', schoolId).single();
-        if (!student) return res.status(404).json({ error: 'Student not found.' });
+    const finalKey = key || avatar_url;
 
-        const { error } = await supabase.from('students').update({ avatar_url }).eq('id', id).eq('school_id', schoolId);
-        if (error) return res.status(500).json({ error: error.message });
-        return res.json({ data: { message: 'Avatar updated.' } });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error updating avatar.' });
+    const { data: student } = await supabase.from('students').select('id').eq('id', id).eq('school_id', schoolId).single();
+    if (!student) return res.status(404).json({ error: 'Student not found.' });
+
+    await supabase.from('students').update({ avatar_url: finalKey }).eq('id', id).eq('school_id', schoolId);
+
+    let signedUrl = null;
+    if (finalKey) {
+      try { signedUrl = await spaces.generatePresignedGetUrl(finalKey, 3600); } catch {}
     }
+
+    return res.json({ data: { message: 'Avatar updated.', key: finalKey, url: signedUrl } });
+  } catch (err) {
+    return res.status(500).json({ error: 'Error updating avatar.' });
+  }
 });

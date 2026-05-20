@@ -6,18 +6,30 @@ import { api } from "../../services/api";
 
 interface UploadButtonProps {
   bucket: "student-photos" | "report-cards" | "documents";
-  accept?: string;
-  maxSize?: number;
+  entityType?: string;
+  entityId?: string;
   currentUrl?: string;
-  onUploadComplete?: (result: { url: string; path: string }) => void;
+  onUploadComplete?: (result: { url: string; key: string }) => void;
   onError?: (error: string) => void;
   className?: string;
 }
 
+const BUCKET_ACCEPT: Record<string, string> = {
+  "student-photos": "image/jpeg,image/png,image/webp,image/gif",
+  "report-cards": "application/pdf",
+  "documents": "image/jpeg,image/png,image/webp,image/gif,application/pdf",
+};
+
+const BUCKET_MAX_SIZE: Record<string, number> = {
+  "student-photos": 2 * 1024 * 1024,
+  "report-cards": 5 * 1024 * 1024,
+  "documents": 10 * 1024 * 1024,
+};
+
 export function UploadButton({
   bucket,
-  accept = "image/*,application/pdf",
-  maxSize = 5 * 1024 * 1024,
+  entityType,
+  entityId,
   currentUrl,
   onUploadComplete,
   onError,
@@ -28,50 +40,86 @@ export function UploadButton({
   const [progress, setProgress] = useState(0);
   const [preview, setPreview] = useState<string | null>(currentUrl || null);
 
-  const simulateProgress = useCallback(() => {
-    setProgress(10);
-    const interval = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 90) { clearInterval(interval); return 90; }
-        return p + Math.random() * 20;
-      });
-    }, 300);
-    return interval;
-  }, []);
-
   const handleFile = useCallback(async (file: File) => {
+    const maxSize = BUCKET_MAX_SIZE[bucket] || 5 * 1024 * 1024;
     if (file.size > maxSize) {
       onError?.(`File exceeds ${maxSize / 1024 / 1024} MB limit.`);
       return;
     }
 
+    const acceptTypes = BUCKET_ACCEPT[bucket] || "image/*,application/pdf";
+    const allowed = acceptTypes.split(",").map((t) => t.trim());
+    const isAllowed = allowed.some((t) => {
+      if (t.endsWith("/*")) return file.type.startsWith(t.replace("/*", "/"));
+      return file.type === t;
+    });
+    if (!isAllowed) {
+      onError?.(`File type ${file.type} is not supported for ${bucket}.`);
+      return;
+    }
+
     setUploading(true);
-    const interval = simulateProgress();
+    setProgress(5);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("bucket", bucket);
-
-      const res = await api.upload<{ url: string; path: string }>("/api/school/upload", formData);
+      const res = await api.post<{ uploadUrl: string; key: string }>("/api/school/upload", {
+        bucket,
+        entity_type: entityType || bucket,
+        entity_id: entityId || "",
+        filename: file.name,
+        content_type: file.type,
+        file_size: file.size,
+      });
       if (res.error) throw new Error(res.error);
-      if (!res.data) throw new Error("Upload returned no data.");
+      if (!res.data) throw new Error("Failed to get upload URL.");
 
-      clearInterval(interval);
+      const { uploadUrl, key } = res.data;
+
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", uploadUrl, true);
+        xhr.setRequestHeader("Content-Type", file.type);
+
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setProgress(Math.round((e.loaded / e.total) * 85) + 5);
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            setProgress(90);
+            resolve();
+          } else {
+            reject(new Error(`Upload failed with status ${xhr.status}`));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error("Network error during upload."));
+        xhr.send(file);
+      });
+
+      const confirmRes = await api.post("/api/school/upload/confirm", {
+        key,
+        bucket,
+        entity_type: entityType || bucket,
+        entity_id: entityId || "",
+      });
+      if (confirmRes.error) throw new Error(confirmRes.error);
+
       setProgress(100);
-      setPreview(res.data.url);
+      setPreview(confirmKey);
       setTimeout(() => {
-        onUploadComplete?.(res.data!);
+        onUploadComplete?.({ url: confirmKey, key: confirmKey });
         setProgress(0);
       }, 500);
     } catch (err: any) {
-      clearInterval(interval);
       setProgress(0);
       onError?.(err.message || "Upload failed.");
     } finally {
       setTimeout(() => setUploading(false), 600);
     }
-  }, [bucket, maxSize, onUploadComplete, onError, simulateProgress]);
+  }, [bucket, entityType, entityId, onUploadComplete, onError]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -83,8 +131,6 @@ export function UploadButton({
     setPreview(null);
     if (inputRef.current) inputRef.current.value = "";
   }, []);
-
-  const isImage = preview && (preview.match(/\.(jpe?g|png|webp|gif)/i) || !preview.includes("pdf"));
 
   return (
     <div className={cn("flex flex-col items-center gap-3", className)}>
@@ -106,14 +152,14 @@ export function UploadButton({
           </div>
         ) : preview ? (
           <>
-            {isImage ? (
-              <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-2xl" />
-            ) : (
-              <div className="flex flex-col items-center gap-1">
-                <FileText className="size-8 text-muted-foreground" />
-                <span className="text-[10px] text-muted-foreground text-center px-2 break-all">PDF</span>
-              </div>
-            )}
+            <img
+              src={preview.startsWith("http") ? preview : `/api/school/files/${preview}`}
+              alt="Preview"
+              className="w-full h-full object-cover rounded-2xl"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
             <button
               onClick={(e) => { e.stopPropagation(); handleRemove(); }}
               className="absolute -top-2 -right-2 p-1 rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 transition-colors"
@@ -125,22 +171,22 @@ export function UploadButton({
           <>
             <ImageIcon className="size-8 text-muted-foreground/50 mb-1" />
             <span className="text-[11px] text-muted-foreground/60 text-center px-1 leading-tight">Click or drop file</span>
-            <span className="text-[9px] text-muted-foreground/40 mt-1">{accept.replace(/,/g, ", ")}</span>
+            <span className="text-[9px] text-muted-foreground/40 mt-1">{bucket.replace(/-/g, " ")}</span>
           </>
         )}
         <input
           ref={inputRef}
           type="file"
-          accept={accept}
+          accept={BUCKET_ACCEPT[bucket] || "image/*,application/pdf"}
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {
-              const reader = new FileReader();
-              reader.onload = () => {
-                if (file.type.startsWith("image/")) setPreview(reader.result as string);
-              };
-              if (file.type.startsWith("image/")) reader.readAsDataURL(file);
+              if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = () => setPreview(reader.result as string);
+                reader.readAsDataURL(file);
+              }
               handleFile(file);
             }
           }}
