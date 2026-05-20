@@ -42,9 +42,36 @@ const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
     <div style={{ backgroundColor: color }} className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
       {initials}
     </div>
-    </>
   );
-}
+};
+
+export function LandingPage() {
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+  const [scrolled, setScrolled] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [stats, setStats] = useState<{ schools: number | null }>({ schools: null });
+  const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "", country: "Ghana" });
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [countSchools, setCountSchools] = useState(0);
+  const [countUptime, setCountUptime] = useState(0);
+  const [countCountry, setCountCountry] = useState(0);
+  const [statsVisible, setStatsVisible] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
   }, [dark]);
 
   useEffect(() => {
@@ -160,9 +187,8 @@ const InitialsAvatar = ({ name, color }: { name: string; color: string }) => {
   ];
 
   return (
-    <>
+    <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-[#F8F9FA] text-[#0A2472]'}`}>
       <EducationBackground />
-      <div style={{ fontFamily: "'DM Sans', sans-serif" }} className={`min-h-screen transition-colors duration-300 relative z-0 ${dark ? 'bg-gray-950 text-gray-100' : 'bg-transparent text-[#0A2472]'}`}>
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
