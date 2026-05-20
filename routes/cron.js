@@ -94,4 +94,49 @@ router.post('/fees/reminders/send', async (req, res) => {
     }
 });
 
+// POST /api/cron/payments/reconcile
+// Run nightly to compare Paystack/MoMo transactions vs fee_payments table
+router.post('/payments/reconcile', async (req, res) => {
+    try {
+        if (!isAuthorized(req)) {
+            return res.status(401).json({ error: 'Unauthorized cron request.' });
+        }
+
+        const paymentReconciliationService = require('../services/paymentReconciliationService');
+        const results = await paymentReconciliationService.runDailyReconciliation();
+
+        res.json({
+            status: 'completed',
+            data: results,
+            timestamp: new Date().toISOString(),
+        });
+    } catch (err) {
+        console.error('Cron payment reconciliation error:', err);
+        return res.status(500).json({ error: 'Payment reconciliation failed.', detail: err.message });
+    }
+});
+
+// POST /api/cron/payments/reconcile/:schoolId
+// Manual reconciliation for specific school (admin triggered)
+router.post('/payments/reconcile/:schoolId', async (req, res) => {
+    try {
+        if (!isAuthorized(req)) {
+            return res.status(401).json({ error: 'Unauthorized cron request.' });
+        }
+
+        const { schoolId } = req.params;
+        const paymentReconciliationService = require('../services/paymentReconciliationService');
+        const results = await paymentReconciliationService.reconcileSchoolNow(schoolId);
+
+        res.json({
+            status: 'completed',
+            data: results,
+            timestamp: new Date().toISOString(),
+        });
+    } catch (err) {
+        console.error(`Cron payment reconciliation error for school ${req.params.schoolId}:`, err);
+        return res.status(500).json({ error: 'Payment reconciliation failed.', detail: err.message });
+    }
+});
+
 module.exports = router;

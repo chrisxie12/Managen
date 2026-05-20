@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { LandingPage } from "./pages/LandingPage";
-import { AuthPage } from "./pages/AuthPage";
+import { LandingPageV2 } from "./pages/LandingPageV2";
+import { AuthPageV2 } from "./pages/AuthPageV2";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
 import { AdminOverview } from "./pages/dashboard/AdminOverview";
@@ -64,7 +64,7 @@ import { RoleRouter } from "./components/RoleRouter";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: LandingPage,
+    Component: LandingPageV2,
   },
   {
     path: "/login",
@@ -80,7 +80,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/auth",
-    Component: AuthPage,
+    Component: AuthPageV2,
   },
   {
     path: "/onboarding",

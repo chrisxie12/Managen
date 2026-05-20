@@ -16,8 +16,8 @@ export default defineConfig({
       description: 'School management platform for Ghanaian schools',
       start_url: '/dashboard',
       display: 'standalone',
-      background_color: '#FFF3E6',
-      theme_color: '#381932',
+      background_color: '#F8F9FA',
+      theme_color: '#0A2472',
       orientation: 'portrait-primary',
       icons: [
         { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -49,10 +49,10 @@ export default defineConfig({
       ],
     },
   }),
-  (typeof process !== 'undefined' && process.env?.VITE_SENTRY_DSN) ? sentryVitePlugin({
-    org: process.env.SENTRY_ORG || 'schoolos',
-    project: process.env.SENTRY_PROJECT || 'frontend',
-    authToken: process.env.SENTRY_AUTH_TOKEN,
+  import.meta.env.VITE_SENTRY_DSN ? sentryVitePlugin({
+    org: import.meta.env.SENTRY_ORG || 'schoolos',
+    project: import.meta.env.SENTRY_PROJECT || 'frontend',
+    authToken: import.meta.env.SENTRY_AUTH_TOKEN,
     telemetry: false,
   }) : null,].filter(Boolean),
   resolve: {
@@ -62,7 +62,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: (typeof process !== 'undefined' && process.env?.VITE_SENTRY_DSN) ? 'hidden' : false,
+    sourcemap: import.meta.env.VITE_SENTRY_DSN ? 'hidden' : false,
   },
   server: {
     proxy: {
