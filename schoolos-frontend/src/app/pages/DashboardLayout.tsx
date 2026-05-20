@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
-import { Sidebar } from "../components/Sidebar";
+import { ManaGenSidebar } from "../../components/ui/sidebar-component";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 import { UserPreferencesProvider, useUserPreferences } from "../contexts/UserPreferencesContext";
@@ -57,7 +57,7 @@ function DashboardLayoutInner() {
   const location = useLocation();
   const { user, school } = useAuth();
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
-  const { preferences, toggleSidebar, addRecentItem } = useUserPreferences();
+  const { preferences, addRecentItem } = useUserPreferences();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
@@ -138,12 +138,7 @@ function DashboardLayoutInner() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM }}>
-      <Sidebar
-        collapsed={preferences.sidebarCollapsed}
-        onToggleCollapse={toggleSidebar}
-        mobileOpen={mobileOpen}
-        onMobileClose={() => setMobileOpen(false)}
-      />
+      <ManaGenSidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"
