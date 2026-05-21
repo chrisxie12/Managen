@@ -13,7 +13,8 @@ function prune() {
   }
 }
 
-setInterval(prune, 60_000);
+const pruneTimer = setInterval(prune, 60_000);
+pruneTimer.unref?.();
 
 function checkLimit(key, max, windowMs) {
   prune();

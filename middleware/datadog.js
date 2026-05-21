@@ -50,7 +50,8 @@ function reportQueueGauges(getTrialQueue, getReportCardQueue) {
   };
 
   report();
-  setInterval(report, 30_000);
+  const gaugeTimer = setInterval(report, 30_000);
+  gaugeTimer.unref?.();
 }
 
 module.exports = { datadogMiddleware, reportQueueGauges };

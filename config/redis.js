@@ -89,12 +89,22 @@ const testRedisConnection = async () => {
   }
 };
 
+const isReady = () => {
+  if (!isRedisConfigured()) return false;
+  if (restClient && !bullmqClient) return true;
+  if (bullmqClient) {
+    return ['ready', 'wait', 'connecting'].includes(bullmqClient.status);
+  }
+  return false;
+};
+
 if (bullmqClient) {
   bullmqClient.isRedisConfigured = isRedisConfigured;
   bullmqClient.testRedisConnection = testRedisConnection;
   bullmqClient.isUpstash = _isUpstash;
   bullmqClient.rest = restClient;
   bullmqClient.getCache = getCacheClient;
+  bullmqClient.isReady = isReady;
   module.exports = bullmqClient;
 } else if (restClient) {
   restClient.isRedisConfigured = isRedisConfigured;
@@ -103,11 +113,13 @@ if (bullmqClient) {
   restClient.rest = restClient;
   restClient.getCache = () => restClient;
   restClient.status = 'rest-only';
+  restClient.isReady = isReady;
   module.exports = restClient;
 } else {
   module.exports = {
     isRedisConfigured,
     testRedisConnection,
+    isReady: () => false,
     isUpstash: false,
     rest: null,
     status: 'unconfigured',
@@ -123,3 +135,4 @@ if (bullmqClient) {
     getCache: () => module.exports,
   };
 }
+
