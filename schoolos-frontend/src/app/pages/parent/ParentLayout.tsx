@@ -1,12 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Home, User, Wallet, FileText, Settings, Bell, LogOut, RefreshCw,
+  Home, User, Wallet, FileText, Settings, LogOut,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { processSyncQueue } from "../../lib/offlineSync";
 import { api } from "../../services/api";
 import { toast } from "sonner";
+import { useBiometricAuth } from "../../../hooks/useBiometricAuth";
+import { useFcmPush } from "../../../hooks/useFcmPush";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -28,13 +30,16 @@ export function ParentLayout() {
 
   const activeTab = NAV_ITEMS.find((item) => location.pathname === item.path)?.path || "/parent";
 
-  // PWA install
-  const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
-  useState(() => {
-    const handler = (e: Event) => { e.preventDefault(); setInstallPrompt(e); };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  });
+  // Init Capacitor native features
+  useBiometricAuth();
+  useFcmPush();
+
+  // Hide splash screen once app is interactive
+  useEffect(() => {
+    if (window.Capacitor?.isNativePlatform?.()) {
+      import("@capacitor/splash-screen").then(({ SplashScreen }) => SplashScreen.hide());
+    }
+  }, []);
 
   // Offline sync
   useState(() => {
@@ -53,29 +58,18 @@ export function ParentLayout() {
     return () => window.removeEventListener("online", sync);
   });
 
-  const handleInstall = useCallback(() => {
-    if (!installPrompt) return;
-    (installPrompt as any).prompt();
-    (installPrompt as any).userChoice.then(() => setInstallPrompt(null));
-  }, [installPrompt]);
-
   return (
     <div className="min-h-screen flex flex-col" style={{ background: CREAM, fontFamily: "'DM Sans', sans-serif" }}>
       <header className="flex items-center justify-between px-4 py-3 sticky top-0 z-30"
         style={{ background: "rgba(248,249,250,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: NAVY, color: CREAM }}>S</div>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold" style={{ background: NAVY, color: CREAM }}>M</div>
           <div>
-            <span className="text-sm font-semibold" style={{ color: NAVY }}>SchoolOS</span>
+            <span className="text-sm font-semibold" style={{ color: NAVY }}>Managen</span>
             <p className="text-[10px]" style={{ color: MUTED }}>{user?.fullName}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {installPrompt && (
-            <button onClick={handleInstall} className="text-[11px] font-medium px-3 py-1.5 rounded-lg" style={{ background: NAVY, color: CREAM }}>
-              Install
-            </button>
-          )}
           <button onClick={() => logout()} className="p-2 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}>
             <LogOut size={15} color={MUTED} />
           </button>
