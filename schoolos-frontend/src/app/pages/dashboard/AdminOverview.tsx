@@ -397,6 +397,16 @@ export function AdminOverview() {
     },
   ];
 
+  const tabs = [
+    { id: "overview", label: "Overview", status: "active" },
+    { id: "analytics", label: "Analytics", status: "coming-soon" },
+    { id: "reports", label: "Reports", status: "coming-soon" },
+    { id: "finance", label: "Finance", status: "coming-soon" },
+    { id: "settings", label: "Settings", status: "coming-soon" },
+  ];
+
+  const [activeTab, setActiveTab] = useState("overview");
+
   return (
     <div className="space-y-6 pb-8">
       {/* Header */}
@@ -446,6 +456,61 @@ export function AdminOverview() {
             <Settings size={20} style={{ color: NAVY }} />
           </button>
         </div>
+      </div>
+
+      {/* Tabs Navigation */}
+      <div
+        className="flex items-center gap-1 border-b overflow-x-auto"
+        style={{ borderColor: "rgba(10,36,114,0.1)" }}
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              if (tab.status !== "coming-soon") {
+                setActiveTab(tab.id);
+              }
+            }}
+            disabled={tab.status === "coming-soon"}
+            className={`px-4 py-3 font-medium text-sm transition-all relative ${
+              tab.status === "coming-soon"
+                ? "cursor-not-allowed opacity-50"
+                : activeTab === tab.id
+                ? "cursor-pointer"
+                : "cursor-pointer hover:text-gray-600"
+            }`}
+            style={{
+              color:
+                tab.status === "coming-soon"
+                  ? MUTED
+                  : activeTab === tab.id
+                  ? NAVY
+                  : MUTED,
+            }}
+          >
+            <span className="flex items-center gap-2">
+              {tab.label}
+              {tab.status === "coming-soon" && (
+                <span
+                  className="text-xs px-2 py-0.5 rounded-full"
+                  style={{
+                    background: `${COLOR_SCHEME.warning}20`,
+                    color: COLOR_SCHEME.warning,
+                    fontWeight: 600,
+                  }}
+                >
+                  Soon
+                </span>
+              )}
+            </span>
+            {activeTab === tab.id && (
+              <div
+                className="absolute bottom-0 left-0 right-0 h-1 rounded-t"
+                style={{ background: COLOR_SCHEME.primary }}
+              />
+            )}
+          </button>
+        ))}
       </div>
 
       {/* Time Range Filter */}
