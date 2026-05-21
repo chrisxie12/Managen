@@ -4,6 +4,10 @@ import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
 import { AdminOverview } from "./pages/dashboard/AdminOverview";
+import { StudentsPage } from "./pages/dashboard/StudentsPage";
+import { FeesPage } from "./pages/dashboard/FeesPage";
+import { AttendancePage } from "./pages/dashboard/AttendancePage";
+import { ClassesPage } from "./pages/dashboard/ClassesPage";
 import { AccountantDashboard } from "./pages/AccountantDashboard";
 import { TeacherDashboard } from "./pages/TeacherDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
@@ -104,6 +108,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: RoleRouter },
       { path: "admin", Component: AdminOverview },
+      { path: "students", Component: StudentsPage },
+      { path: "fees", Component: FeesPage },
+      { path: "attendance", Component: AttendancePage },
+      { path: "classes", Component: ClassesPage },
       { path: "headmaster", Component: HeadmasterDashboard },
       { path: "accountant", Component: AccountantDashboard },
       { path: "teacher", Component: TeacherDashboard },
@@ -115,8 +123,7 @@ export const router = createBrowserRouter([
       { path: "parent/child/:id", Component: ParentChildDetails },
       { path: "inbox", Component: Inbox },
       { path: "notifications", Component: NotificationsPage },
-      { path: "students", Component: StudentsEnhanced },
-      { path: "attendance", Component: Attendance },
+      { path: "old/students", Component: StudentsEnhanced },
       { path: "attendance-links", Component: AttendanceLinks },
       { path: "report-cards", Component: ReportCards },
       { path: "bulk-import", Component: BulkImport },
@@ -131,9 +138,10 @@ export const router = createBrowserRouter([
       { path: "gradebook", Component: GradebookGrid },
       { path: "reports", Component: Reports },
       { path: "audit-logs", Component: AuditLogs },
-      { path: "fees", Component: FeePayment },
+      { path: "old/fees", Component: FeePayment },
       { path: "fee-reminders", Component: SmartFeeReminders },
       { path: "communication", Component: Communication },
+      { path: "communications", Component: Communication },
       { path: "system-health", Component: SystemHealth },
       { path: "profile", Component: AdminProfile },
       { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SchoolSettings /></RequireRole> },

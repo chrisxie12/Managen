@@ -23,6 +23,7 @@ import {
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
+import { DashboardLayout } from "../../components/layout/Sidebar";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -278,6 +279,16 @@ export function AdminOverview() {
     "today"
   );
 
+  // Determine user role for sidebar
+  const userRole = (user?.role || "school-admin") as
+    | "super-admin"
+    | "school-admin"
+    | "teacher"
+    | "bursar"
+    | "parent";
+
+  const dashboardContent = (
+
   // Mock data - will be replaced with real data from API
   const mockData = {
     stats: {
@@ -407,7 +418,7 @@ export function AdminOverview() {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  return (
+  const dashboardContent = (
     <div className="space-y-6 pb-8">
       {/* Header */}
       <div className="flex items-start justify-between">
@@ -782,5 +793,12 @@ export function AdminOverview() {
         </p>
       </div>
     </div>
+  );
+  };
+
+  return (
+    <DashboardLayout role={userRole}>
+      {dashboardContent}
+    </DashboardLayout>
   );
 }
