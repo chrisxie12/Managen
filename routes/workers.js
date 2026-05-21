@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/db');
 const whatsappService = require('../services/whatsappService');
+const { generateReportCard } = require('../services/reportPdfService');
+const { uploadToSpaces } = require('../services/storageService');
 
 // POST /api/workers/process-receipt-queue
 // This endpoint is meant to be hit by an external cron every 30 seconds
@@ -122,6 +124,75 @@ router.post('/process-receipt-queue', async (req, res) => {
         return res.json({ status: 'success', processed: jobs.length, results });
     } catch (err) {
         console.error('Queue processing error:', err);
+        return res.status(500).json({ error: 'Internal worker error' });
+    }
+});
+
+// POST /api/workers/process-report-queue
+router.post('/process-report-queue', async (req, res) => {
+    try {
+        const workerSecret = req.headers['x-worker-secret'];
+        if (process.env.WORKER_SECRET && workerSecret !== process.env.WORKER_SECRET) {
+            return res.status(401).json({ error: 'Unauthorized worker' });
+        }
+
+        // 1. Pop jobs atomically
+        const { data: jobs, error: rpcError } = await supabase.rpc('pop_report_jobs', { p_limit: 5 });
+        if (rpcError) {
+            console.error('Error popping report jobs:', rpcError);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (!jobs || jobs.length === 0) {
+            return res.json({ status: 'success', processed: 0, message: 'No pending jobs' });
+        }
+
+        const results = { success: 0, failures: 0 };
+
+        for (const job of jobs) {
+            try {
+                let studentIds = [];
+                if (job.student_id) {
+                    studentIds.push(job.student_id);
+                } else {
+                    // Fetch all students in class
+                    const { data: students } = await supabase.from('students').select('id').eq('current_class_id', job.class_id);
+                    if (students) studentIds = students.map(s => s.id);
+                }
+
+                for (const sId of studentIds) {
+                    // Generate PDF Buffer and QR Token
+                    const { pdfBuffer, qrToken } = await generateReportCard(job.school_id, job.class_id, job.term_id, sId, false);
+                    
+                    // Upload to Storage
+                    const filename = `term_${job.term_id}/student_${sId}_${Date.now()}.pdf`;
+                    const publicUrl = await uploadToSpaces(pdfBuffer, filename, 'application/pdf');
+
+                    // Save to report_cards table
+                    await supabase.from('report_cards').upsert({
+                        student_id: sId,
+                        term_id: job.term_id,
+                        pdf_url: publicUrl,
+                        qr_token: qrToken,
+                        status: 'published'
+                    }, { onConflict: 'student_id, term_id' });
+
+                    // Optionally, trigger WhatsApp message here by inserting into receipt_queue or sending directly
+                    // e.g. await supabase.from('receipt_queue').insert({ parent_phone: ..., message: `Your report card is ready: ${publicUrl}`, channel: 'whatsapp' });
+                }
+
+                await supabase.from('report_job_queue').update({ status: 'completed' }).eq('id', job.id);
+                results.success++;
+            } catch (err) {
+                console.error(`Failed to process report job ${job.id}:`, err);
+                await supabase.from('report_job_queue').update({ status: 'failed', error_message: err.message }).eq('id', job.id);
+                results.failures++;
+            }
+        }
+
+        return res.json({ status: 'success', processed: jobs.length, results });
+    } catch (err) {
+        console.error('Report queue processing error:', err);
         return res.status(500).json({ error: 'Internal worker error' });
     }
 });

@@ -40,6 +40,8 @@ const settingsRoutes      = require('./routes/settings');
 const featureRoutes       = require('./routes/features');
 const userRoutes          = require('./routes/users');
 const dashboardRoutes     = require('./routes/dashboard');
+const assessmentsRoutes   = require('./routes/assessments');
+const publicRoutes        = require('./routes/public');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -153,10 +155,18 @@ app.post('/webhooks/momo', express.json(), async (req, res) => {
                 supabase.from('students').select('name, parent_name, parent_phone').eq('id', payment.student_id).single()
                     .then(({ data: student }) => {
                         if (student && student.parent_phone) {
-                            const whatsappService = require('./services/whatsappService');
                             const receiptNumber = `RCP-${new Date().getFullYear()}-${payment.id.split('-')[0].toUpperCase()}`;
                             const message = `Dear ${student.parent_name || 'Parent'},\nWe have received your MoMo payment of GHS ${payment.amount} for ${student.name}. Receipt ID: ${receiptNumber}. Thank you!`;
-                            whatsappService.sendWhatsAppMessage(student.parent_phone, message).catch(console.error);
+                            
+                            // Phase 2: Enqueue instead of sending directly
+                            supabase.from('receipt_queue').insert({
+                                payment_id: payment.id,
+                                tenant_id: payment.tenant_id,
+                                parent_phone: student.parent_phone,
+                                message: message,
+                                channel: 'whatsapp',
+                                status: 'pending'
+                            }).catch(console.error);
                         }
                     }).catch(console.error);
             }
@@ -348,9 +358,16 @@ app.use('/health', publicHealthRoutes);      // /health/status, /health/live, /h
 
 // ─── Public Routes ────────────────────────────────────────────
 app.use('/api/onboard', onboardRoutes);
+app.use('/api/workers', require('./routes/workers'));
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/billing',    billingRoutes);
 app.use('/api/cron',       cronRoutes);
+app.use('/api/approvals',  approvalRoutes);
+app.use('/api/reports',    reportRoutes);
+app.use('/api/audit',      auditRoutes);
+app.use('/api/cron',       cronRoutes);
+app.use('/api/public',     publicRoutes);
+app.use('/api/assessments', assessmentsRoutes);
 
 // ─── Tenant Middleware (only for school-scoped routes) ─────────
 const { tenantMiddleware } = require('./middleware/tenant');

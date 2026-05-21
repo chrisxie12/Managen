@@ -40,6 +40,7 @@ import { Communication } from "./pages/Communication";
 import { AdminRoles } from "./pages/AdminRoles";
 import { AdminUsers } from "./pages/AdminUsers";
 import { Attendance } from "./pages/Attendance";
+import { AssessmentsEntry } from "./pages/AssessmentsEntry";
 import { WeightedGradebook } from "./pages/WeightedGradebook";
 import { FeePayment } from "./pages/FeePayment";
 import { PaymentVerify } from "./pages/PaymentVerify";
@@ -135,6 +136,7 @@ export const router = createBrowserRouter([
       { path: "daily-signin", Component: DailySignIn },
       { path: "assessments", Component: Assessments },
       { path: "weighted-gradebook", Component: WeightedGradebook },
+      { path: "assessments/entry", Component: AssessmentsEntry },
       { path: "timetable-scheduler", Component: TimetableScheduler },
       { path: "analytics", Component: AnalyticsDashboard },
       { path: "academics", Component: Academics },
