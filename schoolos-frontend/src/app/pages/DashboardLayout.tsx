@@ -8,7 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { HeadmasterDashboardV2 } from "./HeadmasterDashboardV2";
 import { AccountantDashboardV2 } from "./AccountantDashboardV2";
 import { TeacherDashboardV2 } from "./TeacherDashboardV2";
-import { Sidebar } from "../../components/layout/Sidebar";
+import { Sidebar } from "../components/layout/Sidebar";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 import { UserPreferencesProvider, useUserPreferences } from "../contexts/UserPreferencesContext";
