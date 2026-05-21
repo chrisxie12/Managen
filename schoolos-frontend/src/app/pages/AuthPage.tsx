@@ -7,6 +7,8 @@ import {
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
+const AMBER = "#FFBA08";
+const AMBER_LIGHT = "#FFF8E1";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -39,14 +41,32 @@ export function AuthPage() {
     subdomain: "",
   });
 
+  const calculatePasswordStrength = (pwd: string) => {
+    if (!pwd) return null;
+    const hasUpper = /[A-Z]/.test(pwd);
+    const hasLower = /[a-z]/.test(pwd);
+    const hasNum = /\d/.test(pwd);
+    const hasSpecial = /[!@#$%^&*]/.test(pwd);
+    const length = pwd.length >= 8;
+    const strength = [hasUpper, hasLower, hasNum, hasSpecial, length].filter(Boolean).length;
+    if (strength <= 2) return "weak";
+    if (strength <= 3) return "medium";
+    return "strong";
+  };
+
   const emailPlaceholder = "admin@yourschool.edu.gh";
 
+  const [passwordStrength, setPasswordStrength] = useState<"weak" | "medium" | "strong" | null>(null);
   const [resetSent, setResetSent] = useState(false);
   const resetToken = searchParams.get("token") || "";
   const [verified, setVerified] = useState(false);
   const { signUp } = useSignUp();
   const clerk = useClerk();
   const { refresh } = useAuth();
+
+  useEffect(() => {
+    setPasswordStrength(calculatePasswordStrength(form.password));
+  }, [form.password]);
 
   useEffect(() => {
     const m = searchParams.get("mode");
@@ -349,21 +369,18 @@ export function AuthPage() {
           <div
             className="flex p-1 rounded-full mb-8"
             style={{
-              background: "rgba(10,36,114,0.06)",
-              border: `1px solid rgba(10,36,114,0.08)`,
+              background: "#F3F4F6",
             }}
           >
             {(["login", "signup", "superadmin"] as const).map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className="flex-1 py-2.5 rounded-full text-sm transition-all active:scale-95 capitalize"
+                className="flex-1 py-2.5 rounded-full text-sm transition-all capitalize"
                 style={{
                   background: mode === m ? NAVY : "transparent",
-                  color: mode === m ? CREAM : MUTED,
+                  color: mode === m ? "white" : MUTED,
                   fontWeight: mode === m ? 600 : 400,
-                  boxShadow:
-                    mode === m ? "0 4px 14px rgba(10,36,114,0.25)" : "none",
                   fontSize: m === "superadmin" ? "0.75rem" : "0.85rem",
                 }}
               >
@@ -526,7 +543,7 @@ export function AuthPage() {
                   </button>
                 </div>
                 <div className="text-right mt-1.5">
-                  <button type="button" onClick={() => setMode("forgot")} style={{ color: NAVY_LIGHT, fontSize: "0.8rem" }} className="hover:opacity-70">Forgot password?</button>
+                  <button type="button" onClick={() => setMode("forgot")} style={{ color: AMBER, fontSize: "0.8rem", fontWeight: 600 }} className="hover:opacity-70">Forgot password?</button>
                 </div>
               </div>
               </>
@@ -682,6 +699,19 @@ export function AuthPage() {
                 </button>
               </div>
             </div>
+            {mode === "signup" && form.password && (
+              <div className="p-3 rounded-2xl text-sm" style={{
+                background: passwordStrength === "weak" ? "#FEF2F2" : passwordStrength === "medium" ? AMBER_LIGHT : "#ECFDF5",
+                borderLeft: `3px solid ${passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? AMBER : "#10B981"}`,
+                color: NAVY,
+              }}>
+                Strength: <span style={{
+                  fontWeight: 600,
+                  color: passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? AMBER : "#10B981",
+                  textTransform: "capitalize",
+                }}>{passwordStrength}</span>
+              </div>
+            )}
             </>)}
 
             <div id="clerk-captcha"></div>
@@ -693,12 +723,12 @@ export function AuthPage() {
               className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform"
               style={{
                 background: loading
-                  ? "rgba(10,36,114,0.5)"
-                  : `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`,
-                color: CREAM,
+                  ? "rgba(255,186,8,0.5)"
+                  : AMBER,
+                color: NAVY,
                 fontSize: "0.95rem",
-                fontWeight: 600,
-                boxShadow: "0 8px 24px rgba(10,36,114,0.25)",
+                fontWeight: 700,
+                boxShadow: "0 8px 24px rgba(255,186,8,0.3)",
               }}
             >
               {loading ? (

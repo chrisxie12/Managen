@@ -182,7 +182,7 @@ export function AnalyticsDashboard() {
           <p className="text-sm" style={{ color: MUTED }}>Attendance trends, performance metrics, and risk insights</p>
         </div>
         <select value={selectedTermId} onChange={(e) => setSelectedTermId(e.target.value)}
-          className="px-4 py-2.5 rounded-xl outline-none text-sm min-w-[160px]"
+          className="px-4 py-2.5 rounded-xl outline-none text-sm w-full sm:w-auto"
           style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)", color: NAVY }}>
           {terms.map(t => <option key={t.id} value={t.id}>{t.name}{t.is_current ? " (Current)" : ""}</option>)}
         </select>

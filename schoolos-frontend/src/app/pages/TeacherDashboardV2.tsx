@@ -76,10 +76,10 @@ export function TeacherDashboardV2() {
   );
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6">
       {/* HEADER */}
       <div>
-        <h1 style={{ color: COLORS.NAVY }} className="text-3xl font-bold">
+        <h1 style={{ color: COLORS.NAVY }} className="text-2xl sm:text-3xl font-bold">
           My Classes
         </h1>
         <p style={{ color: COLORS.MUTED }} className="mt-2">
@@ -88,7 +88,7 @@ export function TeacherDashboardV2() {
       </div>
 
       {/* TODAY'S STATUS */}
-      <div className="p-6 rounded-xl border"
+      <div className="p-4 sm:p-6 rounded-xl border"
         style={{
           background: data.attendanceMarked
             ? `linear-gradient(135deg, ${COLORS.GREEN}15, ${COLORS.GREEN}08)`
@@ -119,7 +119,7 @@ export function TeacherDashboardV2() {
       </div>
 
       {/* KEY METRICS */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           icon={BookOpen}
           label="My Classes"
@@ -157,7 +157,7 @@ export function TeacherDashboardV2() {
         <h2 style={{ color: COLORS.NAVY }} className="text-lg font-bold mb-4">
           Class Assignments
         </h2>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { name: "JHS 2A - Mathematics", students: 35, avgGrade: 78, color: COLORS.BLUE },
             { name: "JHS 2B - Mathematics", students: 32, avgGrade: 82, color: COLORS.GREEN },
@@ -167,7 +167,7 @@ export function TeacherDashboardV2() {
             <div
               key={i}
               onClick={() => navigate(`/dashboard/classes/${cls.name}`)}
-              className="p-6 rounded-xl border bg-white cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1"
+              className="p-4 sm:p-6 rounded-xl border bg-white cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1"
               style={{ borderColor: `${cls.color}20` }}
             >
               <div className="flex items-start justify-between mb-4">
@@ -221,7 +221,7 @@ export function TeacherDashboardV2() {
         <h2 style={{ color: COLORS.NAVY }} className="text-lg font-bold mb-4">
           Quick Actions
         </h2>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
               icon: Clock,
@@ -245,7 +245,7 @@ export function TeacherDashboardV2() {
             <div
               key={i}
               onClick={action.action}
-              className="p-6 rounded-xl border bg-white cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1"
+              className="p-4 sm:p-6 rounded-xl border bg-white cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1"
               style={{ borderColor: `${COLORS.BLUE}20` }}
             >
               <div
@@ -267,7 +267,7 @@ export function TeacherDashboardV2() {
 
       {/* UPCOMING EXAMS */}
       {data.upcomingExams > 0 && (
-        <div className="p-6 rounded-xl border bg-white">
+        <div className="p-4 sm:p-6 rounded-xl border bg-white">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold mb-4">
             Upcoming Exams
           </h3>

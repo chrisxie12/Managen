@@ -74,10 +74,10 @@ export function AccountantDashboardV2() {
   );
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6">
       {/* HEADER */}
       <div>
-        <h1 style={{ color: COLORS.NAVY }} className="text-3xl font-bold">
+        <h1 style={{ color: COLORS.NAVY }} className="text-2xl sm:text-3xl font-bold">
           Finance Dashboard
         </h1>
         <p style={{ color: COLORS.MUTED }} className="mt-2">
@@ -86,7 +86,7 @@ export function AccountantDashboardV2() {
       </div>
 
       {/* PRIMARY METRICS */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           icon={DollarSign}
           label="Total Collected"
@@ -119,9 +119,9 @@ export function AccountantDashboardV2() {
       </div>
 
       {/* DETAILED BREAKDOWN */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Payment Methods */}
-        <div className="p-6 rounded-xl border bg-white">
+        <div className="p-4 sm:p-6 rounded-xl border bg-white">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold mb-4">
             Payment Methods
           </h3>
@@ -152,7 +152,7 @@ export function AccountantDashboardV2() {
         </div>
 
         {/* Class-wise Collection */}
-        <div className="p-6 rounded-xl border bg-white">
+        <div className="p-4 sm:p-6 rounded-xl border bg-white">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold mb-4">
             Collection by Class
           </h3>
@@ -183,7 +183,7 @@ export function AccountantDashboardV2() {
       </div>
 
       {/* RECENT INVOICES */}
-      <div className="p-6 rounded-xl border bg-white">
+      <div className="p-4 sm:p-6 rounded-xl border bg-white">
         <div className="flex items-center justify-between mb-4">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold">
             Recent Invoices
@@ -253,7 +253,7 @@ export function AccountantDashboardV2() {
         <h2 style={{ color: COLORS.NAVY }} className="text-lg font-bold mb-4">
           Quick Actions
         </h2>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { icon: DollarSign, title: "Create Invoice", desc: "Add new payment invoice" },
             { icon: BarChart3, title: "Generate Report", desc: "Fee collection summary" },

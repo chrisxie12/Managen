@@ -167,10 +167,10 @@ export function LandingPage() {
 
 
   const schoolTypes = [
-    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], pillBg: "bg-green-50", pillText: "text-green-700", example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", iconColor: "text-green-500", bgColor: "bg-green-100", gradient: "linear-gradient(135deg, #059669, #34D399)" },
-    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], pillBg: "bg-blue-50", pillText: "text-blue-700", example: "Accra Academy, Mfantsipim School", iconColor: "text-blue-500", bgColor: "bg-blue-100", gradient: "linear-gradient(135deg, #2563EB, #60A5FA)" },
-    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], pillBg: "bg-amber-50", pillText: "text-amber-700", example: "Ghana International School, Lincoln Community School", iconColor: "text-amber-500", bgColor: "bg-amber-100", gradient: "linear-gradient(135deg, #D97706, #FBBF24)" },
-    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], pillBg: "bg-purple-50", pillText: "text-purple-700", example: "Adeyemi Group of Schools, Sapphire Education Group", iconColor: "text-custom", bgColor: "bg-custom", gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` },
+    { icon: GraduationCap, title: "Primary Schools", desc: "Manage KG through Primary 6 with simple attendance, fee collection, and parent WhatsApp updates.", pills: ["Attendance", "Fees", "WhatsApp"], example: "Sunshine Primary, Accra", example2: "Little Stars Academy, Kumasi", gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` },
+    { icon: BookOpen, title: "JHS & SHS", desc: "Handle BECE and WASSCE preparation, exam scheduling, result management, and payroll for larger teaching staff.", pills: ["Exams", "Results", "Payroll"], example: "Accra Academy, Mfantsipim School", gradient: `linear-gradient(135deg, ${NAVY_LIGHT}, ${NAVY})` },
+    { icon: Globe, title: "International Schools", desc: "Multi-currency fees, custom branding, and advanced analytics for premium institutions with higher expectations.", pills: ["Multi-currency", "Branding", "Analytics"], example: "Ghana International School, Lincoln Community School", gradient: `linear-gradient(135deg, ${NAVY}, #0C1A3A)` },
+    { icon: Building2, title: "School Groups & Districts", desc: "One superadmin dashboard for multiple campuses. Each school keeps its own isolated data, subdomain, and branding.", pills: ["Multi-campus", "Superadmin", "Isolation"], example: "Adeyemi Group of Schools, Sapphire Education Group", gradient: `linear-gradient(135deg, ${CHARCOAL}, ${NAVY_DARK})` },
   ];
 
   return (
@@ -289,11 +289,11 @@ export function LandingPage() {
               <p className="reveal reveal-2 mt-4 max-w-lg" style={{ fontSize: "1.1rem", lineHeight: 1.75, color: "#6B7280" }}>
                 From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos. Trusted by 50+ schools across Ghana.
               </p>
-              <div className="reveal reveal-3 mt-8 flex gap-4 flex-wrap">
-                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 transition-transform" style={{ background: AMBER, color: NAVY, boxShadow: "0 4px 14px rgba(255,186,8,0.3)" }}>
-                  Start Free Trial -- No Credit Card Needed <ArrowRight size={16} />
+              <div className="reveal reveal-3 mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform w-full sm:w-auto" style={{ background: AMBER, color: NAVY, boxShadow: "0 4px 14px rgba(255,186,8,0.3)" }}>
+                  Start Free Trial <ArrowRight size={16} />
                 </button>
-                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
+                <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform w-full sm:w-auto flex items-center justify-center" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
                   Request Demo
                 </button>
               </div>
@@ -351,25 +351,25 @@ export function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold" style={{ color: NAVY }}>Trusted by Schools Across Ghana</h2>
           </div>
           <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <div className="reveal reveal-1 rounded-2xl p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: AMBER_LIGHT }}>
-                <GraduationCap size={22} color={AMBER} />
+            <div className="reveal reveal-1 rounded-2xl p-4 sm:p-6 md:p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ background: AMBER_LIGHT }}>
+                <GraduationCap size={20} color={AMBER} />
               </div>
-              <div style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>
+              <div className="text-2xl sm:text-3xl md:text-4xl" style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700 }}>
                 {stats.schools === null ? (
                   <span style={{ animation: "pulse 1.5s ease-in-out infinite", opacity: 0.5 }}>--</span>
                 ) : (
                   `${countSchools}+`
                 )}
               </div>
-              <div style={{ color: MUTED, fontSize: "0.9rem" }}>Schools Active Across Ghana</div>
+              <div className="text-sm sm:text-base" style={{ color: MUTED }}>Schools Active Across Ghana</div>
             </div>
-            <div className="reveal reveal-2 rounded-2xl p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: AMBER_LIGHT }}>
-                <Clock size={22} color={AMBER} />
+            <div className="reveal reveal-2 rounded-2xl p-4 sm:p-6 md:p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ background: AMBER_LIGHT }}>
+                <Clock size={20} color={AMBER} />
               </div>
-              <div style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "2.2rem", fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
-              <div style={{ color: MUTED, fontSize: "0.9rem" }}>Guaranteed Uptime</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl" style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
+              <div className="text-sm sm:text-base" style={{ color: MUTED }}>Guaranteed Uptime</div>
             </div>
           </div>
         </div>
@@ -451,10 +451,10 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5" data-reveal data-stagger="true">
             {/* Card 1: NaCCA Compliance Core (2 cols) */}
-            <div className="md:col-span-2 rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border">
+            <div className="md:col-span-2 rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border">
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: AMBER_LIGHT, color: NAVY }}>
                     <Award className="size-3" /> NaCCA Compliant
                   </span>
                   <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Continuous Assessment Core</h3>
@@ -470,14 +470,14 @@ export function LandingPage() {
                     <div className="text-xs text-slate-400">JHS 2 · Mathematics</div>
                   </div>
                 </div>
-                <div className="grid grid-cols-4 gap-2 mb-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
                   {[
                     { label: "Quiz 1", score: "18/20", pct: 90 },
                     { label: "Mid-Term", score: "42/50", pct: 84 },
                     { label: "Project", score: "27/30", pct: 90 },
                     { label: "Exam", score: "68/80", pct: 85 },
                   ].map((a) => (
-                    <div key={a.label} className="rounded-lg bg-white border border-slate-100 p-2.5 text-center">
+                    <div key={a.label} className="rounded-lg bg-white border border-slate-100 p-1.5 sm:p-2.5 text-center">
                       <div className="text-xs text-slate-400 mb-1">{a.label}</div>
                       <div className="text-sm font-bold tabular-nums" style={{ color: NAVY }}>{a.score}</div>
                     </div>
@@ -485,8 +485,8 @@ export function LandingPage() {
                 </div>
                 <div className="flex items-center justify-between rounded-lg bg-white border border-slate-100 px-4 py-2.5">
                   <span className="text-xs font-medium text-slate-500">Final Grade</span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold" style={{ background: AMBER_LIGHT, color: NAVY }}>
+                    <span className="w-2 h-2 rounded-full" style={{ background: AMBER }} />
                     EE — Exceeding Expectations
                   </span>
                 </div>
@@ -494,8 +494,8 @@ export function LandingPage() {
             </div>
 
             {/* Card 2: Instant MoMo Rails (1 col) */}
-            <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 w-fit">
+            <div className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <Wallet className="size-3" /> Payments
               </span>
               <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Instant MoMo Rails</h3>
@@ -528,8 +528,8 @@ export function LandingPage() {
             </div>
 
             {/* Card 3: Arkesel Automated SMS (1 col) */}
-            <div className="rounded-2xl border bg-white p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-fit">
+            <div className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <MessageSquare className="size-3" /> Communications
               </span>
               <h3 className="mt-3 text-xl font-bold tracking-tight" style={{ color: NAVY }}>Arkesel Automated SMS</h3>
@@ -570,7 +570,7 @@ export function LandingPage() {
       {/* DASHBOARD PREVIEW */}
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-[48px] overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, padding: "3rem", boxShadow: "0 24px 80px rgba(10,36,114,0.25)" }}>
+          <div className="rounded-2xl sm:rounded-[48px] overflow-hidden relative p-5 sm:p-8 lg:p-12" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.25)" }}>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div className="reveal">
                 <p className="text-sm uppercase tracking-widest mb-4" style={{ color: "rgba(248,249,250,0.6)" }}>Live Dashboard</p>
@@ -625,19 +625,19 @@ export function LandingPage() {
                   <s.icon size={56} className="text-white opacity-30" />
                 </div>
                 <div className="p-6">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${s.bgColor} -mt-8 relative z-10 shadow-md border-2 border-white`}>
-                    <s.icon size={24} className={s.iconColor === "text-custom" ? "" : s.iconColor} style={s.iconColor === "text-custom" ? { color: NAVY } : {}} />
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 -mt-8 relative z-10 shadow-md border-2 border-white" style={{ background: AMBER_LIGHT }}>
+                    <s.icon size={24} style={{ color: NAVY }} />
                   </div>
                   <h3 className="font-bold text-lg mb-2" style={{ color: NAVY }}>{s.title}</h3>
                   <p className="text-sm mb-4" style={{ color: MUTED, lineHeight: 1.6 }}>{s.desc}</p>
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {s.pills.map((pill) => (
-                      <span key={pill} className={`text-xs rounded-full px-2 py-0.5 ${s.pillBg} ${s.pillText}`}>{pill}</span>
+                      <span key={pill} className="text-xs rounded-full px-2 py-0.5" style={{ background: AMBER_LIGHT, color: NAVY }}>{pill}</span>
                     ))}
                   </div>
                   <div className="text-xs" style={{ color: "#9CA3AF" }}>
                     <p>{s.example}</p>
-                    <p>{s.example2}</p>
+                    {s.example2 && <p>{s.example2}</p>}
                   </div>
                 </div>
               </div>
@@ -719,7 +719,7 @@ export function LandingPage() {
               const isFree = plan.price === "Free";
               const isCustom = plan.price === "Custom";
               return (
-              <div key={plan.name} className={`p-8 rounded-[32px] relative reveal reveal-${i + 1}`} style={{
+              <div key={plan.name} className={`p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[32px] relative reveal reveal-${i + 1}`} style={{
                 background: "white",
                 border: plan.highlighted ? `2px solid ${AMBER}` : "1px solid #E5E7EB",
                 boxShadow: plan.highlighted ? `0 24px 60px rgba(255,186,8,0.15)` : "0 4px 24px rgba(10,36,114,0.06)",
@@ -789,9 +789,9 @@ export function LandingPage() {
       </section>
 
       {/* CTA BANNER */}
-      <section className="py-20 px-6">
+      <section className="py-12 sm:py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-20 px-8 rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.3)" }}>
+          <div className="text-center py-12 sm:py-20 px-5 sm:px-8 rounded-2xl sm:rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.3)" }}>
             <Award size={36} color="rgba(248,249,250,0.7)" className="mx-auto mb-5" />
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
               Your School Deserves Better Tools
@@ -812,8 +812,8 @@ export function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer id="contact" className="py-12 px-6" style={{ background: CHARCOAL }}>
-        <div className="max-w-7xl mx-auto px-10 py-12">
+      <footer id="contact" className="py-12 px-4 sm:px-6" style={{ background: CHARCOAL }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: AMBER }}>

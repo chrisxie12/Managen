@@ -122,10 +122,10 @@ export function HeadmasterDashboardV2() {
   );
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-6 sm:space-y-8 p-4 sm:p-6">
       {/* HEADER */}
       <div>
-        <h1 style={{ color: COLORS.NAVY }} className="text-3xl font-bold">
+        <h1 style={{ color: COLORS.NAVY }} className="text-2xl sm:text-3xl font-bold">
           Dashboard
         </h1>
         <p style={{ color: COLORS.MUTED }} className="mt-2">
@@ -134,7 +134,7 @@ export function HeadmasterDashboardV2() {
       </div>
 
       {/* KEY METRICS - PRIMARY ROW */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           icon={Users}
           label="Total Students"
@@ -169,7 +169,7 @@ export function HeadmasterDashboardV2() {
       </div>
 
       {/* SECONDARY METRICS */}
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KpiCard
           icon={Clock}
           label="Attendance Today"
@@ -198,7 +198,7 @@ export function HeadmasterDashboardV2() {
         <h2 style={{ color: COLORS.NAVY }} className="text-lg font-bold mb-4">
           Quick Actions
         </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <ActionCard
             icon={Users}
             title="Manage Students"
@@ -231,9 +231,9 @@ export function HeadmasterDashboardV2() {
       </div>
 
       {/* RECENT ACTIVITIES */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Payments */}
-        <div className="p-6 rounded-xl border bg-white">
+        <div className="p-4 sm:p-6 rounded-xl border bg-white">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold mb-4">
             Recent Payments
           </h3>
@@ -266,7 +266,7 @@ export function HeadmasterDashboardV2() {
         </div>
 
         {/* Attendance Summary */}
-        <div className="p-6 rounded-xl border bg-white">
+        <div className="p-4 sm:p-6 rounded-xl border bg-white">
           <h3 style={{ color: COLORS.NAVY }} className="font-bold mb-4">
             Attendance This Week
           </h3>
