@@ -418,6 +418,159 @@ router.post('/students', protect, requirePermission('students.create', 'students
     }
 });
 
+// GET /api/school/students/template
+router.get('/students/template', protect, requirePermission('students.create'), (req, res) => {
+    const csvContent = 'student_id,first_name,last_name,other_names,date_of_birth,gender,class_name,enrollment_date,parent_name,parent_phone,parent_whatsapp,parent_email,address,previous_school,boarding_status\n';
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="nacca_student_import_template.csv"');
+    res.send(csvContent);
+});
+
+// POST /api/school/students/import
+router.post('/students/import', protect, requirePermission('students.create'), upload.single('file'), async (req, res) => {
+    try {
+        const startMs = Date.now();
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
+        const results = [];
+        const fs = require('fs');
+        const csv = require('csv-parser');
+        const crypto = require('crypto');
+
+        // Parse CSV stream, strip BOM via mapHeaders
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(req.file.path)
+                .pipe(csv({ mapHeaders: ({ header }) => header.trim().replace(/^\uFEFF/, '') }))
+                .on('data', (data) => results.push(data))
+                .on('end', resolve)
+                .on('error', reject);
+        });
+
+        // Clean up file
+        fs.unlinkSync(req.file.path);
+
+        const errors = [];
+        const payloads = [];
+        const errorRows = [];
+        const skippedRows = [];
+        const headers = results.length > 0 ? Object.keys(results[0]) : [];
+
+        // Pre-fetch validations from DB
+        const { data: existingStudents } = await supabase.from('students').select('admission_no').eq('tenant_id', req.tenant.id);
+        const { data: existingClasses } = await supabase.from('classes').select('name').eq('tenant_id', req.tenant.id);
+
+        const studentIdsInDb = new Set((existingStudents || []).map(s => s.admission_no).filter(Boolean));
+        const classesInDb = new Set((existingClasses || []).map(c => c.name));
+        const studentIdsInCsv = new Set();
+
+        // Phase 1: Validation
+        for (let i = 0; i < results.length; i++) {
+            const row = results[i];
+            const rowNum = i + 2; // 1-indexed plus header row
+            let rowHasError = false;
+            let rowErrorMessages = [];
+
+            const addError = (field, msg, val) => {
+                errors.push({ row: rowNum, field, value: val, message: msg });
+                rowErrorMessages.push(msg);
+                rowHasError = true;
+            };
+
+            const name = `${row.first_name || ''} ${row.other_names || ''} ${row.last_name || ''}`.replace(/\s+/g, ' ').trim();
+            if (!name) addError('first_name', 'Missing student name', '');
+
+            if (!row.class_name || !classesInDb.has(row.class_name)) {
+                addError('class_name', `Class name "${row.class_name}" does not exist`, row.class_name);
+            }
+
+            let skipExisting = false;
+            if (!row.student_id) {
+                addError('student_id', 'student_id is required', '');
+            } else if (studentIdsInDb.has(row.student_id)) {
+                // Skip existing logic (upsert/skip mode)
+                skipExisting = true;
+                skippedRows.push({ row: rowNum, student_id: row.student_id, reason: 'already_exists' });
+            } else if (studentIdsInCsv.has(row.student_id)) {
+                addError('student_id', `Duplicate student_id within CSV`, row.student_id);
+            } else {
+                studentIdsInCsv.add(row.student_id);
+            }
+
+            if (row.parent_phone && !/^0\d{9}$/.test(row.parent_phone)) {
+                addError('parent_phone', `Must be 10 digits starting with 0`, row.parent_phone);
+            }
+
+            if (row.date_of_birth && !/^\d{2}\/\d{2}\/\d{4}$/.test(row.date_of_birth)) {
+                addError('date_of_birth', `Invalid DOB. Must be DD/MM/YYYY`, row.date_of_birth);
+            }
+
+            if (rowHasError) {
+                errorRows.push({ ...row, _error_message: rowErrorMessages.join(' | ') });
+            } else if (!skipExisting) {
+                payloads.push({
+                    id: crypto.randomUUID(),
+                    name,
+                    class_name: row.class_name,
+                    gender: row.gender,
+                    dob: row.date_of_birth,
+                    admission_no: row.student_id,
+                    address: row.address,
+                    parent_name: row.parent_name,
+                    parent_phone: row.parent_phone,
+                    parent_email: row.parent_email
+                });
+            }
+        }
+
+        // Return immediately if any errors
+        if (errors.length > 0) {
+            const errorCsvHeaders = [...headers, '_error_message'];
+            const escapeCsv = (str) => {
+                if (str === null || str === undefined) return '';
+                const s = String(str);
+                return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` : s;
+            };
+            const errorCsvRows = errorRows.map(r => errorCsvHeaders.map(h => escapeCsv(r[h])).join(','));
+            const errorCsvString = [errorCsvHeaders.join(','), ...errorCsvRows].join('\n');
+            const errorCsvBase64 = Buffer.from(errorCsvString).toString('base64');
+
+            return res.status(400).json({ 
+                status: 'validation_failed', 
+                errors,
+                error_csv_base64: errorCsvBase64
+            });
+        }
+
+        // Phase 2: Insert atomically via RPC
+        if (payloads.length > 0) {
+            const { data, error } = await supabase.rpc('bulk_import_students', {
+                p_tenant_id: req.tenant.id,
+                p_students: payloads
+            });
+
+            if (error) {
+                console.error('RPC Error:', error);
+                return res.status(500).json({ status: 'error', message: 'Transaction failed', rollback: true });
+            }
+        }
+
+        const import_id = crypto.randomUUID();
+        return res.json({ 
+            data: { 
+                status: 'success', 
+                imported: payloads.length, 
+                skipped: skippedRows.length,
+                skipped_rows: skippedRows,
+                errors: 0,
+                import_id,
+                duration_ms: Date.now() - startMs
+            } 
+        });
+    } catch (err) {
+        console.error('Import error:', err);
+        return res.status(500).json({ error: 'Error importing students.' });
+    }
+});
+
 // POST /api/school/attendance
 router.post('/attendance', protect, requirePermission('attendance.create', 'attendance.edit'), async (req, res) => {
     try {
@@ -600,10 +753,48 @@ router.get('/payments', protect, requirePermission('fees.view'), async (req, res
 router.post('/payments', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
     try {
         const payment = await schoolService.recordPayment(req.tenant.id, req.body, req.user?.userId);
+        
+        // WhatsApp Receipt
+        if (req.body.student_id) {
+            const { data: student } = await supabase.from('students').select('name, parent_name, parent_phone').eq('id', req.body.student_id).single();
+            if (student && student.parent_phone) {
+                const whatsappService = require('../services/whatsappService');
+                const message = `Dear ${student.parent_name || 'Parent'},\nWe have received your payment of GHS ${req.body.amount} for ${student.name}. Thank you!`;
+                await whatsappService.sendWhatsAppMessage(student.parent_phone, message).catch(console.error);
+            }
+        }
+        
         return res.status(201).json({ data: { payment } });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
         return res.status(500).json({ error: 'Error recording payment.' });
+    }
+});
+
+router.post('/payments/momo', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
+    try {
+        const { amount, phone, studentId, studentName, invoiceId } = req.body;
+        const momoService = require('../services/momoService');
+        const crypto = require('crypto');
+        const externalId = crypto.randomUUID();
+
+        // 1. Request to Pay via MoMo
+        const momoRes = await momoService.requestToPay(amount, phone, externalId, studentName || 'Student');
+
+        // 2. Record pending payment
+        const payment = await schoolService.recordPayment(req.tenant.id, {
+            invoice_id: invoiceId,
+            amount: amount,
+            payment_method: 'momo',
+            reference: externalId,
+            status: 'pending',
+            notes: 'MoMo Request to Pay initiated',
+            payment_date: new Date().toISOString().split('T')[0]
+        }, req.user?.userId);
+
+        return res.status(201).json({ data: { message: 'MoMo prompt sent to phone.', reference: externalId, payment } });
+    } catch (err) {
+        return res.status(500).json({ error: err.message || 'Error initiating MoMo payment.' });
     }
 });
 

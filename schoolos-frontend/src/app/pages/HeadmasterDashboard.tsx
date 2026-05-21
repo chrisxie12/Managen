@@ -11,8 +11,11 @@ import {
     LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar, Cell, PieChart, Pie, Legend
 } from 'recharts';
+import { Plus, Download, Upload, Smartphone, MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export function HeadmasterDashboard() {
+    const navigate = useNavigate();
     const {
         stats, alerts, finances, attendanceTrend,
         feeStatus, studentTypes, classPerformance, activity,
@@ -35,7 +38,37 @@ export function HeadmasterDashboard() {
                         Is the school financially stable and fully attended today?
                     </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+                    {/* Health Badges */}
+                    <div className="flex items-center gap-2 mr-2">
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 text-green-700 rounded-full text-xs font-medium">
+                            <Smartphone size={14} />
+                            MoMo: Online
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 text-green-700 rounded-full text-xs font-medium">
+                            <MessageSquare size={14} />
+                            WhatsApp: Online
+                        </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => navigate('/dashboard/fees')}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-blue-50 text-blue-700 hover:bg-blue-100"
+                        >
+                            <Plus size={16} />
+                            Collect Fees
+                        </button>
+                        <button
+                            onClick={() => navigate('/dashboard/students/import')}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100"
+                        >
+                            <Upload size={16} />
+                            Import Students
+                        </button>
+                    </div>
+
                     <LiveBadge text="Live Data" />
                 </div>
             </div>

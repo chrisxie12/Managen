@@ -5,6 +5,7 @@ import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
 import { AdminOverview } from "./pages/dashboard/AdminOverview";
 import { StudentsPage } from "./pages/dashboard/StudentsPage";
+import { StudentsImport } from "./pages/dashboard/StudentsImport";
 import { FeesPage } from "./pages/dashboard/FeesPage";
 import { AttendancePage } from "./pages/dashboard/AttendancePage";
 import { ClassesPage } from "./pages/dashboard/ClassesPage";
@@ -110,6 +111,7 @@ export const router = createBrowserRouter([
       { index: true, Component: RoleRouter },
       { path: "admin", Component: AdminOverview },
       { path: "students", Component: StudentsPage },
+      { path: "students/import", Component: StudentsImport },
       { path: "fees", Component: FeesPage },
       { path: "attendance", Component: AttendancePage },
       { path: "classes", Component: ClassesPage },

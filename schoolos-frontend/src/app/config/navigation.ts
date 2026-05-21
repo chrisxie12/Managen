@@ -25,7 +25,7 @@ import {
   Bell,
 } from "lucide-react";
 
-export type UserRole = "super-admin" | "school-admin" | "teacher" | "bursar" | "parent";
+export type UserRole = "super-admin" | "school-admin" | "teacher" | "bursar" | "parent" | "admin" | "school_admin" | "headmaster" | "accountant" | string;
 
 export interface NavSection {
   id: string;
@@ -280,15 +280,20 @@ export const bursarNav: NavSection[] = [
 ];
 
 // Get navigation for a specific role
-export function getNavigation(role: UserRole): NavSection[] {
+export function getNavigation(role: string): NavSection[] {
   switch (role) {
     case "super-admin":
+    case "superadmin":
       return superAdminNav;
     case "school-admin":
+    case "school_admin":
+    case "admin":
+    case "headmaster":
       return schoolAdminNav;
     case "teacher":
       return teacherNav;
     case "bursar":
+    case "accountant":
       return bursarNav;
     case "parent":
       return [];

@@ -16,12 +16,12 @@ export function RoleRouter() {
 
   if (loading) return null;
 
-  if (user?.role === "school_admin" || user?.role === "admin") {
-    return <AdminOverview />;
+  if (user?.role === "school_admin" || user?.role === "admin" || user?.role === "headmaster") {
+    return <Navigate to="/dashboard/headmaster" replace />;
   }
 
   const route = user ? roleRoutes[user.role] : null;
   if (route) return <Navigate to={route} replace />;
 
-  return <AdminOverview />;
+  return <Navigate to="/dashboard/headmaster" replace />;
 }

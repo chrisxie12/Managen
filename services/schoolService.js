@@ -1287,8 +1287,7 @@ class SchoolService {
             throw err;
         }
 
-        const newPaid = Number(invoice.paid_amount) + Number(amount);
-        const newStatus = newPaid >= Number(invoice.total_amount) ? 'paid' : 'issued';
+        const paymentStatus = payload.status || 'completed';
 
         const { data: payment, error: payErr } = await supabase.from('payments')
             .insert({
@@ -1301,7 +1300,7 @@ class SchoolService {
                 reference: reference || null,
                 transaction_id: transaction_id || null,
                 payment_date: payment_date || new Date().toISOString().split('T')[0],
-                status: 'completed',
+                status: paymentStatus,
                 notes: notes || null,
                 received_by: userId || null,
             })
@@ -1309,11 +1308,16 @@ class SchoolService {
             .single();
         if (payErr) throw payErr;
 
-        const { error: updErr } = await supabase.from('invoices')
-            .update({ paid_amount: newPaid, status: newStatus })
-            .eq('id', invoice_id)
-            .eq('school_id', schoolId);
-        if (updErr) throw updErr;
+        if (paymentStatus === 'completed') {
+            const newPaid = Number(invoice.paid_amount) + Number(amount);
+            const newStatus = newPaid >= Number(invoice.total_amount) ? 'paid' : 'issued';
+
+            const { error: updErr } = await supabase.from('invoices')
+                .update({ paid_amount: newPaid, status: newStatus })
+                .eq('id', invoice_id)
+                .eq('school_id', schoolId);
+            if (updErr) throw updErr;
+        }
 
         return payment;
     }
