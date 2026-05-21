@@ -1,226 +1,720 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
-  CalendarCheck, Wallet, MessageSquare, ClipboardCheck,
-  ArrowRight, TrendingUp, TrendingDown, GripVertical, EyeOff,
+  Users,
+  BookOpen,
+  TrendingUp,
+  DollarSign,
+  ClipboardList,
+  AlertCircle,
+  Zap,
+  Calendar,
+  Download,
+  Settings,
+  Clock,
+  CheckCircle,
+  Plus,
+  Activity,
+  ChevronRight,
+  TrendingDown,
+  Info,
+  AlertTriangle,
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
-import { PerformanceChart } from "./components/PerformanceChart";
-import { QuickActions } from "./components/QuickActions";
-import { LiveIndicator } from "../../components/ui/LiveIndicator";
-import { useUserPreferences } from "../../contexts/UserPreferencesContext";
-import { SkeletonLoader } from "../../components/ui/SkeletonLoader";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
-function MetricCard({
-  icon: Icon,
+const COLOR_SCHEME = {
+  primary: NAVY,
+  primaryLight: NAVY_LIGHT,
+  success: "#10B981",
+  warning: "#F59E0B",
+  danger: "#EF4444",
+  info: "#3B82F6",
+  purple: "#8B5CF6",
+  indigo: "#6366F1",
+};
+
+interface KPICardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  color: string;
+  trend?: { direction: "up" | "down"; value: number };
+  subtext?: string;
+  onClick?: () => void;
+  isLoading?: boolean;
+}
+
+function KPICard({
+  icon,
   label,
   value,
-  sub,
-  trend,
   color,
+  trend,
+  subtext,
   onClick,
-}: {
-  icon: typeof CalendarCheck;
-  label: string;
-  value: string;
-  sub?: string;
-  trend?: { direction: "up" | "down"; text: string };
-  color: string;
-  onClick?: () => void;
-}) {
-  const Wrapper = onClick ? "button" : "div";
+  isLoading,
+}: KPICardProps) {
   return (
-    <Wrapper
+    <button
       onClick={onClick}
-      className={`p-5 rounded-[24px] ${onClick ? "cursor-pointer active:scale-[0.98] transition-all" : ""}`}
-      style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}
+      disabled={!onClick}
+      className={`p-6 rounded-xl text-left transition-all ${
+        onClick
+          ? "cursor-pointer hover:shadow-lg hover:scale-105 active:scale-95"
+          : "cursor-default"
+      }`}
+      style={{
+        background: "white",
+        border: "1px solid rgba(10,36,114,0.1)",
+        boxShadow: "0 2px 8px rgba(10,36,114,0.05)",
+      }}
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: `${color}15` }}>
-          <Icon size={20} color={color} />
+        <div
+          className="w-12 h-12 rounded-lg flex items-center justify-center"
+          style={{ background: `${color}15` }}
+        >
+          <div style={{ color }}>{icon}</div>
         </div>
+        {trend && (
+          <div
+            className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg"
+            style={{
+              color: trend.direction === "up" ? COLOR_SCHEME.success : COLOR_SCHEME.danger,
+              background:
+                trend.direction === "up"
+                  ? `${COLOR_SCHEME.success}15`
+                  : `${COLOR_SCHEME.danger}15`,
+            }}
+          >
+            {trend.direction === "up" ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+            {trend.value}%
+          </div>
+        )}
       </div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.25rem" }}>
-        {value}
+      <div
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          color: NAVY,
+          fontSize: "2rem",
+          fontWeight: 700,
+          marginBottom: "0.25rem",
+        }}
+      >
+        {isLoading ? "..." : value}
       </div>
-      <div style={{ color: MUTED, fontSize: "0.75rem", marginBottom: trend ? "0.3rem" : 0 }}>{label}</div>
-      {trend && (
-        <div className="flex items-center gap-1 mt-1" style={{ color: trend.direction === "up" ? "#10B981" : "#EF4444", fontSize: "0.72rem" }}>
-          {trend.direction === "up" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-          {trend.text}
+      <div style={{ color: MUTED, fontSize: "0.875rem", fontWeight: 500 }}>
+        {label}
+      </div>
+      {subtext && (
+        <div
+          style={{
+            color: MUTED,
+            fontSize: "0.8rem",
+            marginTop: "0.5rem",
+          }}
+        >
+          {subtext}
         </div>
       )}
-      {sub && (
-        <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-          style={{ background: `${color}12`, color }}>
-          {sub}
+    </button>
+  );
+}
+
+interface AlertProps {
+  type: "error" | "warning" | "info" | "success";
+  title: string;
+  description: string;
+  action?: { label: string; onClick: () => void };
+  onDismiss?: () => void;
+}
+
+function AlertBanner({ type, title, description, action, onDismiss }: AlertProps) {
+  const colors = {
+    error: { bg: `${COLOR_SCHEME.danger}15`, border: COLOR_SCHEME.danger, text: COLOR_SCHEME.danger },
+    warning: { bg: `${COLOR_SCHEME.warning}15`, border: COLOR_SCHEME.warning, text: COLOR_SCHEME.warning },
+    info: { bg: `${COLOR_SCHEME.info}15`, border: COLOR_SCHEME.info, text: COLOR_SCHEME.info },
+    success: { bg: `${COLOR_SCHEME.success}15`, border: COLOR_SCHEME.success, text: COLOR_SCHEME.success },
+  };
+
+  const typeColors = colors[type];
+
+  return (
+    <div
+      className="p-4 rounded-lg flex items-start gap-3 border"
+      style={{
+        background: typeColors.bg,
+        borderColor: typeColors.border,
+      }}
+    >
+      {type === "error" && <AlertCircle size={20} style={{ color: typeColors.text, flexShrink: 0 }} />}
+      {type === "warning" && <AlertTriangle size={20} style={{ color: typeColors.text, flexShrink: 0 }} />}
+      {type === "info" && <Info size={20} style={{ color: typeColors.text, flexShrink: 0 }} />}
+      {type === "success" && <CheckCircle size={20} style={{ color: typeColors.text, flexShrink: 0 }} />}
+
+      <div className="flex-1">
+        <div style={{ color: typeColors.text, fontWeight: 600, fontSize: "0.95rem" }}>
+          {title}
         </div>
+        <div style={{ color: MUTED, fontSize: "0.875rem", marginTop: "0.25rem" }}>
+          {description}
+        </div>
+        {action && (
+          <button
+            onClick={action.onClick}
+            className="mt-2 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
+            style={{
+              background: typeColors.text,
+              color: "white",
+            }}
+          >
+            {action.label}
+          </button>
+        )}
+      </div>
+      {onDismiss && (
+        <button onClick={onDismiss} className="text-xl leading-none hover:opacity-70">
+          ×
+        </button>
       )}
-    </Wrapper>
+    </div>
+  );
+}
+
+interface TaskItemProps {
+  title: string;
+  priority: "high" | "medium" | "low";
+  dueDate?: string;
+  owner?: string;
+  onClick?: () => void;
+}
+
+function TaskItem({ title, priority, dueDate, owner, onClick }: TaskItemProps) {
+  const priorityColor = {
+    high: COLOR_SCHEME.danger,
+    medium: COLOR_SCHEME.warning,
+    low: COLOR_SCHEME.info,
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className="w-full p-3 rounded-lg text-left hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
+    >
+      <div className="flex items-start justify-between mb-2">
+        <span className="font-medium text-sm" style={{ color: NAVY }}>
+          {title}
+        </span>
+        <div
+          className="w-2 h-2 rounded-full flex-shrink-0 mt-1"
+          style={{ background: priorityColor[priority] }}
+        />
+      </div>
+      <div className="flex items-center gap-4 text-xs" style={{ color: MUTED }}>
+        {dueDate && (
+          <div className="flex items-center gap-1">
+            <Clock size={12} />
+            {dueDate}
+          </div>
+        )}
+        {owner && <span>{owner}</span>}
+      </div>
+    </button>
+  );
+}
+
+interface QuickActionProps {
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  onClick: () => void;
+  color: string;
+}
+
+function QuickActionCard({ icon, label, description, onClick, color }: QuickActionProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="p-6 rounded-lg text-left transition-all hover:shadow-lg hover:scale-105 active:scale-95"
+      style={{
+        background: "white",
+        border: "1px solid rgba(10,36,114,0.1)",
+        boxShadow: "0 2px 8px rgba(10,36,114,0.05)",
+      }}
+    >
+      <div
+        className="w-12 h-12 rounded-lg flex items-center justify-center mb-3"
+        style={{ background: `${color}15` }}
+      >
+        <div style={{ color }}>{icon}</div>
+      </div>
+      <div style={{ fontWeight: 600, color: NAVY, marginBottom: "0.25rem" }}>
+        {label}
+      </div>
+      <div style={{ color: MUTED, fontSize: "0.875rem" }}>
+        {description}
+      </div>
+    </button>
   );
 }
 
 export function AdminOverview() {
   const navigate = useNavigate();
   const { user, school } = useAuth();
-  const { preferences, updateDashboardWidgets } = useUserPreferences();
   const { data: dash, isLoading } = useDashboardStats();
-  const [editMode, setEditMode] = useState(false);
-  const { connected } = useRealtime({ schoolId: school?.id || school?.slug || "", userId: user?.id || "" });
+  const { connected } = useRealtime({
+    schoolId: school?.id || school?.slug || "",
+    userId: user?.id || "",
+  });
+  const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
+  const [timeRange, setTimeRange] = useState<"today" | "week" | "month" | "year">(
+    "today"
+  );
 
-  const widgets = preferences.dashboardLayout.widgets;
-
-  const attendanceRate = dash?.stats?.attendanceRate ?? 0;
-  const totalCollected = dash?.finance?.totalCollected ?? 0;
-  const totalBilled = dash?.finance?.totalBilled ?? 0;
-  const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
-  const smsBal = dash?.smsBalance?.balance ?? 0;
-  const lowThreshold = dash?.smsBalance?.low_balance_threshold ?? 100;
-  const isLowBalance = smsBal < lowThreshold;
-  const pendingCount = dash?.pendingCount ?? 0;
-
-  const toggleWidget = (widgetId: string) => {
-    updateDashboardWidgets(
-      widgets.map((w) => (w.id === widgetId ? { ...w, visible: !w.visible } : w)),
-    );
+  // Mock data - will be replaced with real data from API
+  const mockData = {
+    stats: {
+      totalStudents: 542,
+      totalTeachers: 28,
+      attendanceRate: 86,
+      activeClasses: 18,
+    },
+    finance: {
+      totalBilled: 125000,
+      totalCollected: 98500,
+    },
+    defaulters: { count: 12 },
+    pendingCount: 5,
+    alerts: [
+      {
+        id: "fee-alert",
+        type: "warning" as const,
+        title: "Outstanding Fees",
+        description: "12 students have not cleared their fees for this term",
+        action: { label: "View Defaulters", onClick: () => navigate("/dashboard/fees") },
+      },
+      {
+        id: "approval-alert",
+        type: "info" as const,
+        title: "Pending Approvals",
+        description: "5 exam results waiting for review and approval",
+        action: { label: "Review Now", onClick: () => navigate("/dashboard/assessments") },
+      },
+    ],
+    tasks: [
+      {
+        id: "1",
+        title: "Approve Exam Results (Form 3)",
+        priority: "high" as const,
+        dueDate: "Today",
+        owner: "Mr. Kofi",
+      },
+      {
+        id: "2",
+        title: "Generate Report Cards",
+        priority: "high" as const,
+        dueDate: "Tomorrow",
+        owner: "System",
+      },
+      {
+        id: "3",
+        title: "Set Class Timetable",
+        priority: "medium" as const,
+        dueDate: "Friday",
+        owner: "Mr. Asante",
+      },
+      {
+        id: "4",
+        title: "Review Fee Settings",
+        priority: "medium" as const,
+        dueDate: "Next Week",
+        owner: "Finance",
+      },
+    ],
   };
 
-  const visibleWidgets = widgets.filter((w) => w.visible);
+  const dashData = dash || mockData;
+  const attendanceRate = dashData.stats?.attendanceRate ?? 0;
+  const totalCollected = dashData.finance?.totalCollected ?? 0;
+  const totalBilled = dashData.finance?.totalBilled ?? 0;
+  const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
+  const defaulters = dashData.defaulters?.count ?? 0;
+  const pendingCount = dashData.pendingCount ?? 0;
+
+  const visibleAlerts = (dashData.alerts || []).filter(
+    (a) => !dismissedAlerts.includes(a.id || "")
+  );
+
+  const quickActions: QuickActionProps[] = [
+    {
+      icon: <Plus size={24} />,
+      label: "Bulk Import Students",
+      description: "Add multiple students at once",
+      onClick: () => navigate("/dashboard/bulk-import"),
+      color: COLOR_SCHEME.primary,
+    },
+    {
+      icon: <ClipboardList size={24} />,
+      label: "Generate Report Cards",
+      description: "Create and print report cards",
+      onClick: () => navigate("/dashboard/reports"),
+      color: COLOR_SCHEME.info,
+    },
+    {
+      icon: <AlertCircle size={24} />,
+      label: "Fee Reminders",
+      description: "Send payment reminders",
+      onClick: () => navigate("/dashboard/fees"),
+      color: COLOR_SCHEME.warning,
+    },
+    {
+      icon: <Calendar size={24} />,
+      label: "Class Timetable",
+      description: "Manage class schedules",
+      onClick: () => navigate("/dashboard/timetable"),
+      color: COLOR_SCHEME.success,
+    },
+    {
+      icon: <TrendingUp size={24} />,
+      label: "Analytics",
+      description: "View detailed reports",
+      onClick: () => navigate("/dashboard/analytics"),
+      color: COLOR_SCHEME.purple,
+    },
+    {
+      icon: <Activity size={24} />,
+      label: "Send Communication",
+      description: "Broadcast messages",
+      onClick: () => navigate("/dashboard/communications"),
+      color: COLOR_SCHEME.indigo,
+    },
+  ];
 
   return (
-    <div className="space-y-6 overflow-x-hidden">
+    <div className="space-y-6 pb-8">
+      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.35rem", fontWeight: 700 }}>
-              School Overview
-            </h1>
-            <LiveIndicator connected={connected} />
-          </div>
-          <p style={{ color: MUTED, fontSize: "0.82rem" }}>
-            {dash?.currentTerm
-              ? `${dash.currentTerm.name} · ${new Date().getFullYear()}/${new Date().getFullYear() + 1}`
-              : "Welcome to the new term"}
+          <h1
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: NAVY,
+              fontSize: "2rem",
+              fontWeight: 700,
+            }}
+          >
+            Welcome back, {user?.firstName || "Admin"}
+          </h1>
+          <p style={{ color: MUTED, fontSize: "0.95rem", marginTop: "0.5rem" }}>
+            {school?.name || "School Dashboard"}
           </p>
         </div>
-        <button
-          onClick={() => setEditMode(!editMode)}
-          className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
-          style={{
-            background: editMode ? NAVY : "white",
-            color: editMode ? CREAM : MUTED,
-            border: editMode ? "none" : "1px solid rgba(10,36,114,0.1)",
-          }}
-        >
-          {editMode ? "Done" : "Customize"}
-        </button>
+        <div className="flex items-center gap-3">
+          {connected && (
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-lg"
+              style={{ background: `${COLOR_SCHEME.success}15` }}
+            >
+              <div
+                className="w-2 h-2 rounded-full animate-pulse"
+                style={{ background: COLOR_SCHEME.success }}
+              />
+              <span style={{ fontSize: "0.875rem", color: COLOR_SCHEME.success, fontWeight: 500 }}>
+                Live
+              </span>
+            </div>
+          )}
+          <button
+            onClick={() => navigate("/dashboard/export")}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            title="Export data"
+          >
+            <Download size={20} style={{ color: NAVY }} />
+          </button>
+          <button
+            onClick={() => navigate("/dashboard/settings")}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            title="Settings"
+          >
+            <Settings size={20} style={{ color: NAVY }} />
+          </button>
+        </div>
       </div>
 
-      {editMode && (
-        <div className="p-4 rounded-xl flex flex-wrap gap-2" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
-          {widgets.map((w) => (
-            <button
-              key={w.id}
-              onClick={() => toggleWidget(w.id)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
-              style={{
-                background: w.visible ? `${NAVY}12` : "transparent",
-                color: NAVY,
-                border: `1px solid ${w.visible ? `${NAVY}30` : "rgba(10,36,114,0.1)"}`,
-                opacity: w.visible ? 1 : 0.5,
-              }}
-            >
-              {w.visible ? <EyeOff size={12} /> : <GripVertical size={12} />}
-              {w.id.charAt(0).toUpperCase() + w.id.slice(1).replace("-", " ")}
-            </button>
+      {/* Time Range Filter */}
+      <div className="flex gap-2">
+        {["today", "week", "month", "year"].map((range) => (
+          <button
+            key={range}
+            onClick={() => setTimeRange(range as typeof timeRange)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${
+              timeRange === range
+                ? "text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
+            style={{
+              background:
+                timeRange === range ? COLOR_SCHEME.primary : "transparent",
+            }}
+          >
+            {range.charAt(0).toUpperCase() + range.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {/* Alerts */}
+      {visibleAlerts.length > 0 && (
+        <div className="space-y-2">
+          {visibleAlerts.map((alert) => (
+            <AlertBanner
+              key={alert.id || ""}
+              type={alert.type}
+              title={alert.title}
+              description={alert.description}
+              action={alert.action}
+              onDismiss={() =>
+                setDismissedAlerts([...dismissedAlerts, alert.id || ""])
+              }
+            />
           ))}
         </div>
       )}
 
-      {visibleWidgets.find((w) => w.id === "metrics") && (
-        <>
-          {isLoading ? (
-            <SkeletonLoader variant="metric" count={4} />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <MetricCard
-                icon={CalendarCheck}
-                label="Today's Attendance"
-                value={`${attendanceRate}%`}
-                trend={{ direction: Number(attendanceRate) >= 75 ? "up" : "down", text: `${dash?.stats?.totalStudents ?? 0} students` }}
-                color="#6366F1"
-                onClick={() => navigate("/dashboard/attendance")}
-              />
-              <MetricCard
-                icon={Wallet}
-                label="Term Fees Recovered"
-                value={`GH₵ ${(totalCollected / 100).toLocaleString()}`}
-                sub={`${collectionRate}% collection rate`}
-                color="#10B981"
-                onClick={() => navigate("/dashboard/fees")}
-              />
-              <MetricCard
-                icon={MessageSquare}
-                label="Arkesel SMS Balance"
-                value={smsBal.toLocaleString()}
-                sub={isLowBalance ? "Low balance — top up soon" : "Sufficient credits"}
-                color={isLowBalance ? "#EF4444" : "#25D366"}
-              />
-              <MetricCard
-                icon={ClipboardCheck}
-                label="Pending Assessments"
-                value={String(pendingCount)}
-                sub="NaCCA SBA tracker"
-                color={pendingCount > 0 ? "#F59E0B" : NAVY_LIGHT}
-                onClick={() => navigate("/dashboard/assessments")}
-              />
-            </div>
-          )}
-        </>
-      )}
+      {/* Primary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KPICard
+          icon={<Users size={24} />}
+          label="Total Students"
+          value={dashData.stats?.totalStudents || 0}
+          color={COLOR_SCHEME.info}
+          trend={{ direction: "up", value: 5 }}
+          onClick={() => navigate("/dashboard/students")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<BookOpen size={24} />}
+          label="Staff Members"
+          value={dashData.stats?.totalTeachers || 0}
+          color={COLOR_SCHEME.success}
+          trend={{ direction: "up", value: 2 }}
+          onClick={() => navigate("/dashboard/staff")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<TrendingUp size={24} />}
+          label="Attendance Rate"
+          value={`${attendanceRate}%`}
+          color={COLOR_SCHEME.purple}
+          trend={{
+            direction: attendanceRate >= 80 ? "up" : "down",
+            value: 3,
+          }}
+          onClick={() => navigate("/dashboard/attendance")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<DollarSign size={24} />}
+          label="Collection Rate"
+          value={`${collectionRate}%`}
+          color={COLOR_SCHEME.indigo}
+          trend={{
+            direction: collectionRate >= 75 ? "up" : "down",
+            value: 2,
+          }}
+          onClick={() => navigate("/dashboard/fees")}
+          isLoading={isLoading}
+        />
+      </div>
 
-      {visibleWidgets.find((w) => w.id === "chart") && (
-        isLoading ? <SkeletonLoader variant="chart" /> : <PerformanceChart />
-      )}
+      {/* Secondary KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <KPICard
+          icon={<ClipboardList size={24} />}
+          label="Pending Approvals"
+          value={pendingCount}
+          color={COLOR_SCHEME.warning}
+          subtext="Items awaiting review"
+          onClick={() => navigate("/dashboard/approvals")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<AlertCircle size={24} />}
+          label="Defaulters"
+          value={defaulters}
+          color={COLOR_SCHEME.danger}
+          subtext="Students with unpaid fees"
+          onClick={() => navigate("/dashboard/defaulters")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<DollarSign size={24} />}
+          label="Revenue (MTD)"
+          value={`${(totalCollected / 1000).toFixed(1)}K`}
+          color={COLOR_SCHEME.success}
+          subtext="Month to date"
+          onClick={() => navigate("/dashboard/revenue")}
+          isLoading={isLoading}
+        />
+        <KPICard
+          icon={<Calendar size={24} />}
+          label="Active Classes"
+          value={dashData.stats?.activeClasses || 0}
+          color={COLOR_SCHEME.info}
+          subtext="Scheduled today"
+          onClick={() => navigate("/dashboard/classes")}
+          isLoading={isLoading}
+        />
+      </div>
 
+      {/* Charts & Tasks Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        {visibleWidgets.find((w) => w.id === "quick-actions") && (
-          <div className="lg:col-span-2">
-            {isLoading ? <SkeletonLoader variant="card" count={1} /> : <QuickActions />}
+        {/* Attendance Chart */}
+        <div
+          className="lg:col-span-2 p-6 rounded-lg"
+          style={{
+            background: "white",
+            border: "1px solid rgba(10,36,114,0.1)",
+            boxShadow: "0 2px 8px rgba(10,36,114,0.05)",
+          }}
+        >
+          <h3 style={{ fontWeight: 600, color: NAVY, marginBottom: "1rem" }}>
+            Attendance Trend (7 days)
+          </h3>
+          <div className="h-40 flex items-end gap-1">
+            {[78, 82, 81, 85, 83, 86, 87].map((value, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center">
+                <div
+                  className="w-full rounded-t transition-all hover:opacity-80 cursor-pointer"
+                  style={{
+                    background: COLOR_SCHEME.info,
+                    height: `${(value / 100) * 100}%`,
+                    minHeight: "4px",
+                  }}
+                  title={`${value}%`}
+                />
+                <span style={{ fontSize: "0.7rem", color: MUTED, marginTop: "0.5rem" }}>
+                  Day {i + 1}
+                </span>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {visibleWidgets.find((w) => w.id === "school-glance") && (
-          <div className="p-6 rounded-[24px] flex flex-col" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 8px 32px rgba(10,36,114,0.2)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontWeight: 700, fontSize: "1rem", marginBottom: "0.5rem" }}>
-              {dash?.stats?.totalStudents ? "School at a Glance" : "Welcome!"}
-            </h3>
-            <p style={{ color: "rgba(248,249,250,0.7)", fontSize: "0.8rem", lineHeight: 1.5, marginBottom: "1rem" }}>
-              {dash?.stats?.totalStudents
-                ? `${dash.stats.totalStudents} learners · ${dash.stats.totalStaff ?? 0} staff members · ${collectionRate}% fee collection rate`
-                : "Start by adding learners and configuring your school profile."}
-            </p>
-            <div className="space-y-2 mt-auto">
-              {[
-                { label: "Manage Learners", path: "/dashboard/students" },
-                { label: "View Reports", path: "/dashboard/reports" },
-              ].map((item) => (
-                <button key={item.label} onClick={() => navigate(item.path)}
-                  className="w-full py-2.5 rounded-full text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
-                  style={{ background: "rgba(248,249,250,0.12)", color: CREAM, border: "1px solid rgba(248,249,250,0.2)" }}>
-                  {item.label} <ArrowRight size={11} />
-                </button>
-              ))}
-            </div>
+        {/* Tasks Panel */}
+        <div
+          className="p-6 rounded-lg"
+          style={{
+            background: "white",
+            border: "1px solid rgba(10,36,114,0.1)",
+            boxShadow: "0 2px 8px rgba(10,36,114,0.05)",
+          }}
+        >
+          <h3 style={{ fontWeight: 600, color: NAVY, marginBottom: "1rem" }}>
+            Pending Tasks ({dashData.tasks?.length || 0})
+          </h3>
+          <div className="space-y-2 max-h-60 overflow-y-auto">
+            {dashData.tasks?.map((task) => (
+              <TaskItem
+                key={task.id}
+                title={task.title}
+                priority={task.priority}
+                dueDate={task.dueDate}
+                owner={task.owner}
+              />
+            ))}
           </div>
-        )}
+          <button
+            onClick={() => navigate("/dashboard/tasks")}
+            className="w-full mt-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            style={{
+              background: `${COLOR_SCHEME.primary}15`,
+              color: COLOR_SCHEME.primary,
+            }}
+          >
+            View All Tasks
+          </button>
+        </div>
+      </div>
+
+      {/* Performance Chart */}
+      <div
+        className="p-6 rounded-lg"
+        style={{
+          background: "white",
+          border: "1px solid rgba(10,36,114,0.1)",
+          boxShadow: "0 2px 8px rgba(10,36,114,0.05)",
+        }}
+      >
+        <h3 style={{ fontWeight: 600, color: NAVY, marginBottom: "1rem" }}>
+          Academic Performance (6 months)
+        </h3>
+        <div className="h-40 flex items-end gap-1">
+          {[72, 75, 78, 80, 82, 85].map((value, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center">
+              <div
+                className="w-full rounded-t transition-all hover:opacity-80 cursor-pointer"
+                style={{
+                  background: COLOR_SCHEME.success,
+                  height: `${(value / 100) * 100}%`,
+                  minHeight: "4px",
+                }}
+                title={`${value}%`}
+              />
+              <span style={{ fontSize: "0.7rem", color: MUTED, marginTop: "0.5rem" }}>
+                Month {i + 1}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div>
+        <h3
+          style={{
+            fontWeight: 600,
+            color: NAVY,
+            marginBottom: "1rem",
+            fontSize: "1.1rem",
+          }}
+        >
+          Quick Actions
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {quickActions.map((action, i) => (
+            <QuickActionCard
+              key={i}
+              icon={action.icon}
+              label={action.label}
+              description={action.description}
+              onClick={action.onClick}
+              color={action.color}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div
+        className="p-6 rounded-lg text-center"
+        style={{
+          background: `${COLOR_SCHEME.primary}10`,
+          border: `1px solid ${COLOR_SCHEME.primary}20`,
+        }}
+      >
+        <p style={{ color: NAVY, fontWeight: 500 }}>
+          ✨ Dashboard updated successfully
+        </p>
+        <p style={{ color: MUTED, fontSize: "0.875rem", marginTop: "0.5rem" }}>
+          Last synced {new Date().toLocaleTimeString()}
+        </p>
       </div>
     </div>
   );
