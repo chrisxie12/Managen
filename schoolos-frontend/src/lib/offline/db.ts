@@ -1,105 +1,172 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
+/**
+ * Offline IndexedDB wrapper (no external dependencies)
+ * Used by useSyncManager and sync.ts
+ */
 
-interface SchoolOSDB extends DBSchema {
-  student_cache: {
-    key: string; // "students_className" or "classes"
-    value: any;
-  };
-  attendance_queue: {
-    key: string; // uuid generated for local record
-    value: {
-      id: string;
-      student_id: string;
-      date: string;
-      status: string;
-      class_name: string;
-      notes?: string;
-      synced: false;
-      timestamp: number;
+const DB_NAME = "schoolos-offline-db";
+const DB_VERSION = 1;
+
+function openDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined") {
+      reject(new Error("IndexedDB not available"));
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+
+    req.onupgradeneeded = (event) => {
+      const database = (event.target as IDBOpenDBRequest).result;
+
+      if (!database.objectStoreNames.contains("student_cache")) {
+        database.createObjectStore("student_cache");
+      }
+      if (!database.objectStoreNames.contains("attendance_queue")) {
+        const store = database.createObjectStore("attendance_queue", {
+          keyPath: "id",
+        });
+        store.createIndex("by-date", "date", { unique: false });
+      }
+      if (!database.objectStoreNames.contains("sync_log")) {
+        database.createObjectStore("sync_log", {
+          keyPath: "id",
+          autoIncrement: true,
+        });
+      }
     };
-    indexes: { 'by-date': string };
-  };
-  sync_log: {
-    key: number;
-    value: {
-      id: number;
-      action: string;
-      records_count: number;
-      status: 'success' | 'failed' | 'conflict';
-      error?: string;
-      timestamp: number;
-    };
-  };
-}
 
-let dbPromise: Promise<IDBPDatabase<SchoolOSDB>>;
-
-if (typeof window !== 'undefined') {
-  dbPromise = openDB<SchoolOSDB>('schoolos-offline-db', 1, {
-    upgrade(db) {
-      db.createObjectStore('student_cache');
-      
-      const attendanceStore = db.createObjectStore('attendance_queue', { keyPath: 'id' });
-      attendanceStore.createIndex('by-date', 'date');
-      
-      db.createObjectStore('sync_log', { keyPath: 'id', autoIncrement: true });
-    },
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
   });
 }
 
 export const db = {
-  // --- CACHE (Students & Classes) ---
-  async getCache(key: string) {
-    return (await dbPromise).get('student_cache', key);
-  },
-  async setCache(key: string, val: any) {
-    return (await dbPromise).put('student_cache', val, key);
+  // ─── Cache (Students & Classes, auth tokens) ────────────────────────────────
+  async getCache(key: string): Promise<any> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("student_cache", "readonly");
+      const req = tx.objectStore("student_cache").get(key);
+      req.onsuccess = () => resolve(req.result ?? null);
+      req.onerror = () => reject(req.error);
+    });
   },
 
-  // --- QUEUE (Attendance) ---
-  async addAttendance(record: any) {
+  async setCache(key: string, val: any): Promise<void> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("student_cache", "readwrite");
+      tx.objectStore("student_cache").put(val, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  async deleteCache(key: string): Promise<void> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("student_cache", "readwrite");
+      tx.objectStore("student_cache").delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  // ─── Attendance Queue ────────────────────────────────────────────────────────
+  async addAttendance(record: any): Promise<string> {
+    const database = await openDB();
     const r = {
       ...record,
       id: record.id || crypto.randomUUID(),
       synced: false,
       timestamp: Date.now(),
     };
-    await (await dbPromise).put('attendance_queue', r);
-    return r.id;
-  },
-  async getQueue() {
-    return (await dbPromise).getAll('attendance_queue');
-  },
-  async removeFromQueue(id: string) {
-    return (await dbPromise).delete('attendance_queue', id);
-  },
-  async clearQueue() {
-    return (await dbPromise).clear('attendance_queue');
-  },
-  async removeOldQueue(daysOld = 30) {
-    const d = await this.getQueue();
-    const cutoff = Date.now() - (daysOld * 24 * 60 * 60 * 1000);
-    const tx = (await dbPromise).transaction('attendance_queue', 'readwrite');
-    for (const record of d) {
-      if (record.timestamp < cutoff) {
-        tx.store.delete(record.id);
-      }
-    }
-    await tx.done;
-  },
-
-  // --- SYNC LOG ---
-  async logSync(action: string, records_count: number, status: 'success' | 'failed' | 'conflict', error?: string) {
-    return (await dbPromise).add('sync_log', {
-      action,
-      records_count,
-      status,
-      error,
-      timestamp: Date.now()
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("attendance_queue", "readwrite");
+      tx.objectStore("attendance_queue").put(r);
+      tx.oncomplete = () => resolve(r.id);
+      tx.onerror = () => reject(tx.error);
     });
   },
-  async getSyncLogs(limit = 50) {
-    const logs = await (await dbPromise).getAll('sync_log');
-    return logs.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
-  }
+
+  async getQueue(): Promise<any[]> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("attendance_queue", "readonly");
+      const req = tx.objectStore("attendance_queue").getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  },
+
+  async removeFromQueue(id: string): Promise<void> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("attendance_queue", "readwrite");
+      tx.objectStore("attendance_queue").delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  async clearQueue(): Promise<void> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("attendance_queue", "readwrite");
+      tx.objectStore("attendance_queue").clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  async removeOldQueue(daysOld = 30): Promise<void> {
+    const queue = await db.getQueue();
+    const cutoff = Date.now() - daysOld * 24 * 60 * 60 * 1000;
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("attendance_queue", "readwrite");
+      const store = tx.objectStore("attendance_queue");
+      for (const record of queue) {
+        if (record.timestamp < cutoff) store.delete(record.id);
+      }
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  // ─── Sync Log ────────────────────────────────────────────────────────────────
+  async logSync(
+    action: string,
+    records_count: number,
+    status: "success" | "failed" | "conflict",
+    error?: string
+  ): Promise<void> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("sync_log", "readwrite");
+      tx.objectStore("sync_log").add({
+        action,
+        records_count,
+        status,
+        error,
+        timestamp: Date.now(),
+      });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  async getSyncLogs(limit = 50): Promise<any[]> {
+    const database = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = database.transaction("sync_log", "readonly");
+      const req = tx.objectStore("sync_log").getAll();
+      req.onsuccess = () => {
+        const logs = req.result;
+        resolve(
+          logs.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit)
+        );
+      };
+      req.onerror = () => reject(req.error);
+    });
+  },
 };
