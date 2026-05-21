@@ -4,6 +4,7 @@ const supabase = require('../config/db');
 const whatsappService = require('../services/whatsappService');
 const { generateReportCard } = require('../services/reportPdfService');
 const { uploadToSpaces } = require('../services/storageService');
+const crypto = require('crypto');
 
 // POST /api/workers/process-receipt-queue
 // This endpoint is meant to be hit by an external cron every 30 seconds
@@ -161,24 +162,72 @@ router.post('/process-report-queue', async (req, res) => {
                 }
 
                 for (const sId of studentIds) {
-                    // Generate PDF Buffer and QR Token
-                    const { pdfBuffer, qrToken } = await generateReportCard(job.school_id, job.class_id, job.term_id, sId, false);
-                    
-                    // Upload to Storage
-                    const filename = `term_${job.term_id}/student_${sId}_${Date.now()}.pdf`;
-                    const publicUrl = await uploadToSpaces(pdfBuffer, filename, 'application/pdf');
+                    const { data: school } = await supabase.from('schools').select('*').eq('id', job.school_id).single();
+                    const { data: scores } = await supabase.from('assessment_scores').select('*').eq('student_id', sId).order('id');
+                    const { data: term } = await supabase.from('academic_terms').select('*').eq('id', job.term_id).single();
+                    const { data: student } = await supabase.from('students').select('*').eq('id', sId).single();
 
-                    // Save to report_cards table
-                    await supabase.from('report_cards').upsert({
-                        student_id: sId,
-                        term_id: job.term_id,
-                        pdf_url: publicUrl,
-                        qr_token: qrToken,
-                        status: 'published'
-                    }, { onConflict: 'student_id, term_id' });
+                    const hashInput = JSON.stringify({
+                        scores: scores || [],
+                        schoolLogo: school?.logo_url,
+                        primaryColor: school?.primary_color,
+                        headmasterComment: "Static for now", 
+                        teacherComment: "Static for now",
+                        attendance: "60/62"
+                    });
+                    const scoresHash = crypto.createHash('md5').update(hashInput).digest('hex');
 
-                    // Optionally, trigger WhatsApp message here by inserting into receipt_queue or sending directly
-                    // e.g. await supabase.from('receipt_queue').insert({ parent_phone: ..., message: `Your report card is ready: ${publicUrl}`, channel: 'whatsapp' });
+                    const { data: existingRecords } = await supabase.from('report_cards')
+                        .select('*').eq('student_id', sId).eq('term_id', job.term_id).order('generated_at', { ascending: false });
+                    const existing = existingRecords?.[0];
+
+                    const isLessThan24h = existing && (new Date() - new Date(existing.generated_at)) < 24 * 60 * 60 * 1000;
+                    let pdfUrl = existing?.pdf_url;
+                    let isReprint = false;
+
+                    if (existing && existing.status !== 'archived' && existing.scores_hash === scoresHash && isLessThan24h) {
+                        // Use cached
+                    } else {
+                        if (existing?.status === 'published') isReprint = true;
+                        
+                        const { pdfBuffer, qrToken } = await generateReportCard(job.school_id, job.class_id, job.term_id, sId, false, isReprint);
+                        const filename = `term_${job.term_id}/student_${sId}_${Date.now()}.pdf`;
+                        pdfUrl = await uploadToSpaces(pdfBuffer, filename, 'application/pdf');
+
+                        if (existing?.status === 'archived') {
+                            await supabase.from('report_cards').insert({
+                                student_id: sId, term_id: job.term_id, pdf_url: pdfUrl, qr_token: qrToken,
+                                status: 'published', scores_hash: scoresHash, generated_by: job.generated_by, parent_id: existing.id
+                            });
+                        } else if (existing?.status === 'published') {
+                            await supabase.from('report_cards').update({
+                                pdf_url: pdfUrl, qr_token: qrToken, scores_hash: scoresHash,
+                                generated_by: job.generated_by, generated_at: new Date().toISOString(), reprint_count: existing.reprint_count + 1
+                            }).eq('id', existing.id);
+                        } else {
+                            if (existing?.status === 'draft') {
+                                await supabase.from('report_cards').update({
+                                    pdf_url: pdfUrl, qr_token: qrToken, status: 'published', scores_hash: scoresHash,
+                                    generated_by: job.generated_by, generated_at: new Date().toISOString()
+                                }).eq('id', existing.id);
+                            } else {
+                                await supabase.from('report_cards').insert({
+                                    student_id: sId, term_id: job.term_id, pdf_url: pdfUrl, qr_token: qrToken,
+                                    status: 'published', scores_hash: scoresHash, generated_by: job.generated_by
+                                });
+                            }
+                        }
+                    }
+
+                    if (pdfUrl && student?.parent_phone) {
+                        await supabase.from('receipt_queue').insert({
+                            payment_id: null,
+                            parent_phone: student.parent_phone,
+                            message: `*${school?.name || 'SchoolOS'}* — Report Card Ready!\n\n${student.name}'s ${term?.name} report card is ready.\nView: ${pdfUrl}`,
+                            channel: 'whatsapp',
+                            status: 'pending'
+                        });
+                    }
                 }
 
                 await supabase.from('report_job_queue').update({ status: 'completed' }).eq('id', job.id);

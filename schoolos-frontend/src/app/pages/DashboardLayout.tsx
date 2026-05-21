@@ -8,7 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { HeadmasterDashboardV2 } from "./HeadmasterDashboardV2";
 import { AccountantDashboardV2 } from "./AccountantDashboardV2";
 import { TeacherDashboardV2 } from "./TeacherDashboardV2";
-import { ManaGenSidebar } from "../../components/ui/sidebar-component";
+import { Sidebar } from "../../components/layout/Sidebar";
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 import { UserPreferencesProvider, useUserPreferences } from "../contexts/UserPreferencesContext";
@@ -141,7 +141,18 @@ function DashboardLayoutInner() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM }}>
-      <ManaGenSidebar />
+      <div className="hidden lg:flex">
+        <Sidebar role={(user?.role || "school-admin") as any} />
+      </div>
+
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="relative z-50 h-full bg-white shadow-xl">
+             <Sidebar role={(user?.role || "school-admin") as any} onClose={() => setMobileOpen(false)} />
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"

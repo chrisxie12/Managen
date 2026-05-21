@@ -37,8 +37,8 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
 
   return (
     <div
-      className="fixed inset-y-0 left-0 w-64 flex flex-col shadow-xl z-40 overflow-y-auto"
-      style={{ background: theme === "dark" ? "#1a1a1a" : "white" }}
+      className="w-64 h-full flex flex-col shadow-xl z-40 overflow-y-auto border-r"
+      style={{ background: theme === "dark" ? "#1a1a1a" : "white", borderColor: "rgba(10,36,114,0.07)" }}
     >
       {/* Header */}
       <div
@@ -265,69 +265,4 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
   );
 }
 
-// Mobile Menu Button
-export function SidebarToggle({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-    >
-      {isOpen ? <X size={24} /> : <Menu size={24} />}
-    </button>
-  );
-}
 
-// Layout wrapper with sidebar
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-  role: UserRole;
-}
-
-export function DashboardLayout({ children, role }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <Sidebar role={role} isOpen={true} />
-      </div>
-
-      {/* Mobile Sidebar */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-30 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-50"
-            onClick={() => setSidebarOpen(false)}
-          />
-          <Sidebar role={role} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto flex flex-col">
-        {/* Mobile Header */}
-        <div className="lg:hidden sticky top-0 z-20 p-4 bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between">
-            <h1
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                color: "#0A2472",
-                fontSize: "1.25rem",
-                fontWeight: 700,
-              }}
-            >
-              SchoolOS
-            </h1>
-            <SidebarToggle isOpen={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
-          </div>
-        </div>
-
-        {/* Content */}
-        <main className="flex-1 p-4 lg:p-8">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
-}

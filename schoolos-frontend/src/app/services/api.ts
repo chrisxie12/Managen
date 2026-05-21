@@ -7,6 +7,8 @@
  */
 import * as Sentry from "@sentry/react";
 
+import { db } from '../lib/offline/db';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export interface ApiResponse<T = any> {
@@ -17,6 +19,20 @@ export interface ApiResponse<T = any> {
 const defaultFetchInit: RequestInit = {
   credentials: 'include',
 };
+
+async function getAuthHeaders() {
+  let token = null;
+  if (typeof window !== 'undefined' && (window as any).Clerk?.session) {
+    try {
+      token = await (window as any).Clerk.session.getToken();
+      if (token) await db.setCache('auth_token', token);
+    } catch { /* ignore */ }
+  }
+  if (!token) {
+    try { token = await db.getCache('auth_token'); } catch { /* ignore */ }
+  }
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
 
 /**
  * Handle API responses and errors
@@ -45,12 +61,14 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
  */
 export const api = {
   get: async <T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       ...options,
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
     });
@@ -58,6 +76,7 @@ export const api = {
   },
 
   post: async <T>(endpoint: string, body: any, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       ...options,
@@ -65,6 +84,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
       body: JSON.stringify(body),
@@ -73,6 +93,7 @@ export const api = {
   },
 
   put: async <T>(endpoint: string, body?: any, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       ...options,
@@ -80,6 +101,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -88,6 +110,7 @@ export const api = {
   },
 
   patch: async <T>(endpoint: string, body?: any, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       ...options,
@@ -95,6 +118,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -103,6 +127,7 @@ export const api = {
   },
 
   delete: async <T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       ...options,
@@ -110,6 +135,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeaders,
         ...options.headers,
       },
     });

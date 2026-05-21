@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { DashboardLayout } from "./Sidebar";
 import { type UserRole } from "../../config/navigation";
 
 interface PageTemplateProps {
@@ -25,7 +24,7 @@ export function PageTemplate({
   const userRole = (user?.role || "school-admin") as UserRole;
 
   return (
-    <DashboardLayout role={userRole}>
+    <div className="w-full">
       {/* Breadcrumb */}
       {breadcrumb && breadcrumb.length > 0 && (
         <div className="mb-6 flex items-center gap-2 text-sm">
@@ -74,6 +73,6 @@ export function PageTemplate({
 
       {/* Content */}
       <div className="space-y-6">{children}</div>
-    </DashboardLayout>
+    </div>
   );
 }

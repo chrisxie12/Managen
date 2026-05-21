@@ -794,8 +794,8 @@ export function AdminOverview() {
   );
 
   return (
-    <DashboardLayout role={userRole}>
+    <>
       {dashboardContent}
-    </DashboardLayout>
+    </>
   );
 }

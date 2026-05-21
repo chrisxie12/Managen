@@ -581,6 +581,16 @@ router.post('/attendance', protect, requirePermission('attendance.create', 'atte
     }
 });
 
+// POST /api/school/attendance/bulk
+router.post('/attendance/bulk', protect, requirePermission('attendance.create', 'attendance.edit'), async (req, res) => {
+    try {
+        const result = await schoolService.submitAttendanceBulk(req.tenant.id, req.body.records);
+        return res.status(200).json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error processing bulk attendance.' });
+    }
+});
+
 // GET /api/school/attendance/stats
 router.get('/attendance/stats', protect, async (req, res) => {
     try {

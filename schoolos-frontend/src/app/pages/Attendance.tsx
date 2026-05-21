@@ -3,9 +3,11 @@ import {
   CalendarCheck, Loader2, Search, Check, X, Clock,
   UserCheck, AlertCircle, Users, UserX,
   AlertTriangle, ChevronLeft, ChevronRight, BarChart3,
-  School, List,
+  School, List, Wifi, WifiOff, CloudOff, RefreshCw
 } from "lucide-react";
 import { api } from "../services/api";
+import { db } from "../lib/offline/db";
+import { useSyncManager } from "../hooks/useSyncManager";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
@@ -132,6 +134,19 @@ export function Attendance() {
   const [tab, setTab] = useState("overview");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const { isOnline, syncing, pendingCount, triggerSync, lastResult, clearResult, wifiOnly, toggleWifiOnly } = useSyncManager();
+
+  useEffect(() => {
+    if (lastResult) {
+      if (lastResult.success) {
+        setSuccess(`${lastResult.synced} records synced` + (lastResult.conflicts ? `, ${lastResult.conflicts} conflicts resolved (server version kept).` : '.'));
+      } else {
+        setError(`Sync failed: ${lastResult.error}`);
+      }
+      const t = setTimeout(clearResult, 5000);
+      return () => clearTimeout(t);
+    }
+  }, [lastResult, clearResult]);
 
   return (
     <div>
@@ -140,10 +155,46 @@ export function Attendance() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold" style={{ color: NAVY }}>Attendance</h2>
-          <p className="text-sm" style={{ color: MUTED }}>Track and manage attendance</p>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold" style={{ color: NAVY }}>Attendance</h2>
+            {/* Sync Status Badge */}
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" 
+              style={{ background: isOnline ? '#D1FAE5' : '#FEF2F2', color: isOnline ? '#065F46' : '#991B1B' }}>
+              {isOnline ? <Wifi size={12} /> : <WifiOff size={12} />}
+              {isOnline ? "Online" : "Offline Mode"}
+            </div>
+          </div>
+          <p className="text-sm mt-1" style={{ color: MUTED }}>Track and manage attendance</p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
+          {pendingCount > 0 && (
+            <button onClick={() => triggerSync(true)} disabled={syncing || !isOnline}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium mr-2 disabled:opacity-50"
+              style={{ background: '#FEF3C7', color: '#B45309' }}>
+              <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+              {syncing ? 'Syncing...' : `Sync Now (${pendingCount})`}
+            </button>
+          )}
+          <button onClick={async () => {
+            if (window.confirm('Clear all offline records older than 30 days?')) {
+              await db.removeOldQueue(30);
+              refreshQueue();
+            }
+          }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium mr-2"
+            style={{ background: '#F3F4F6', color: '#4B5563' }}>
+            Clear Old Records
+          </button>
+          <div className="flex items-center gap-2 mr-2">
+            <input 
+              type="checkbox" 
+              id="wifiOnly" 
+              checked={wifiOnly} 
+              onChange={(e) => toggleWifiOnly(e.target.checked)} 
+              className="rounded"
+            />
+            <label htmlFor="wifiOnly" className="text-xs text-gray-600">WiFi-only Sync</label>
+          </div>
           {TABS.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all active:scale-95"
@@ -294,33 +345,56 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
+  const { refreshQueue, isOnline } = useSyncManager();
+  const [offlineStatuses, setOfflineStatuses] = useState<Record<string, boolean>>({});
 
   const loadClasses = useCallback(async () => {
     try {
-      const res = await api.get<{ data: { classes: ClassOption[] } }>("/api/school/classes");
-      const cls = res.data?.data?.classes || [];
-      setClasses(cls);
-      if (cls.length > 0 && !selectedClass) setSelectedClass(cls[0].name);
+      if (isOnline) {
+        const res = await api.get<{ data: { classes: ClassOption[] } }>("/api/school/classes");
+        const cls = res.data?.data?.classes || [];
+        setClasses(cls);
+        await db.setCache("classes", cls); // Cache for offline
+        if (cls.length > 0 && !selectedClass) setSelectedClass(cls[0].name);
+      } else {
+        const cached = await db.getCache("classes");
+        if (cached) {
+          setClasses(cached);
+          if (cached.length > 0 && !selectedClass) setSelectedClass(cached[0].name);
+        } else {
+          setError("No offline data available. Connect to internet first.");
+        }
+      }
     } catch { /* ignore */ }
-  }, [selectedClass]);
+  }, [selectedClass, isOnline, setError]);
 
   const loadStudents = useCallback(async () => {
     if (!selectedClass) return;
     try {
-      const res = await api.get<{ data: { students: Student[]; total: number } }>(
-        `/api/school/students?className=${encodeURIComponent(selectedClass)}&limit=100`
-      );
-      const list = res.data?.data?.students || [];
+      let list: Student[] = [];
+      if (isOnline) {
+        const res = await api.get<{ data: { students: Student[]; total: number } }>(
+          `/api/school/students?className=${encodeURIComponent(selectedClass)}&limit=100`
+        );
+        list = res.data?.data?.students || [];
+        await db.setCache(`students_${selectedClass}`, list);
+      } else {
+        const cached = await db.getCache(`students_${selectedClass}`);
+        list = cached || [];
+        if (!cached) setError(`No offline data for ${selectedClass}`);
+      }
+
       setStudents(list);
       const defaultStatus: Record<string, string> = {};
       const defaultNotes: Record<string, string> = {};
       list.forEach(s => { defaultStatus[s.id] = "Present"; defaultNotes[s.id] = ""; });
       setAttendance(defaultStatus);
       setNotes(defaultNotes);
+      setOfflineStatuses({});
     } catch (err: any) {
       setError(err.message || "Failed to load students");
     }
-  }, [selectedClass, setError]);
+  }, [selectedClass, isOnline, setError]);
 
   useEffect(() => {
     setLoading(true);
@@ -338,16 +412,54 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
 
   const submitAttendance = async () => {
     if (!selectedClass) return;
+    
+    // Prevent future dates
+    const today = new Date().toISOString().split("T")[0];
+    if (selectedDate > today) {
+      setError("Cannot mark attendance for future dates.");
+      return;
+    }
+    
+    // Prevent past dates > 48h
+    const selectedTime = new Date(selectedDate).getTime();
+    const nowTime = new Date().getTime();
+    if (nowTime - selectedTime > 48 * 60 * 60 * 1000) {
+      setError("Cannot edit past dates older than 48 hours without headmaster override.");
+      return;
+    }
+
     setSaving(true);
     setError("");
     setSuccess("");
+    
     try {
       const records = Object.entries(attendance).map(([student_id, status]) => ({
         student_id, date: selectedDate, status, class_name: selectedClass,
         notes: notes[student_id] || undefined,
       }));
-      await api.post("/api/school/attendance", { records });
-      setSuccess(`Attendance saved for ${records.length} students on ${selectedDate}`);
+
+      if (isOnline) {
+        try {
+          await api.post("/api/school/attendance/bulk", { records });
+          setSuccess(`Attendance saved for ${records.length} students on ${selectedDate}`);
+        } catch (err) {
+          // Fallback to queue if API fails
+          console.warn("API failed, falling back to offline queue");
+          for (const r of records) await db.addAttendance(r);
+          setSuccess(`Saved ${records.length} offline (API unreachable)`);
+          refreshQueue();
+        }
+      } else {
+        // Offline: save to queue
+        const offStatuses: Record<string, boolean> = {};
+        for (const r of records) {
+          await db.addAttendance(r);
+          offStatuses[r.student_id] = true;
+        }
+        setOfflineStatuses(offStatuses);
+        setSuccess(`Saved ${records.length} records offline (Pending Sync)`);
+        refreshQueue();
+      }
     } catch (err: any) {
       setError(err.message || "Failed to save attendance");
     } finally {
@@ -409,9 +521,12 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
                   <tr key={student.id} className="text-sm" style={{ borderBottom: "1px solid rgba(10,36,114,0.05)" }}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                        <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold relative"
                           style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, color: CREAM }}>
                           {student.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
+                          {offlineStatuses[student.id] && (
+                            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full border-2 border-white" style={{ background: '#F59E0B' }} title="Saved offline" />
+                          )}
                         </div>
                         <span className="font-medium" style={{ color: NAVY }}>{student.name}</span>
                       </div>
