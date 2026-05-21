@@ -8,6 +8,7 @@ const roleRoutes: Record<string, string> = {
   teacher: "/dashboard/teacher",
   student: "/dashboard/student",
   parent: "/dashboard/parent",
+  librarian: "/dashboard/librarian",
 };
 
 export function RoleRouter() {

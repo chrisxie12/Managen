@@ -39,6 +39,7 @@ const healthRoutes        = require('./routes/health');
 const settingsRoutes      = require('./routes/settings');
 const featureRoutes       = require('./routes/features');
 const userRoutes          = require('./routes/users');
+const dashboardRoutes     = require('./routes/dashboard');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -271,6 +272,7 @@ app.use('/api/school/features', tenantMiddleware, featureRoutes);
 app.use('/api/user', tenantMiddleware, userRoutes);
 app.use('/api/grades', tenantMiddleware, require('./routes/grades'));
 app.use('/api/school/ai', tenantMiddleware, require('./routes/ai'));
+app.use('/api/school', tenantMiddleware, dashboardRoutes);
 
 // ─── Health / Queues Endpoint ──────────────────────────────────
 app.get('/health/queues', async (req, res) => {

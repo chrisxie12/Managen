@@ -13,6 +13,7 @@ import { TeacherDashboard } from "./pages/TeacherDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
 import { StudentDetails } from "./pages/StudentDetails";
 import { ParentDashboard } from "./pages/ParentDashboard";
+import { LibrarianDashboard } from "./pages/LibrarianDashboard";
 import { ParentChildDetails } from "./pages/ParentChildDetails";
 import { ParentLayout } from "./pages/parent/ParentLayout";
 import { ParentHome } from "./pages/parent/ParentHome";
@@ -120,6 +121,7 @@ export const router = createBrowserRouter([
       { path: "student/details", Component: StudentDetails },
       { path: "student/details/:id", Component: StudentDetails },
       { path: "parent", Component: ParentDashboard },
+      { path: "librarian", Component: LibrarianDashboard },
       { path: "parent/child/:id", Component: ParentChildDetails },
       { path: "inbox", Component: Inbox },
       { path: "notifications", Component: NotificationsPage },
