@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
+import { motion } from "motion/react";
 import {
   ArrowRight, BookOpen, BarChart3, MessageSquare,
   CheckCircle2, GraduationCap, Wallet, Bell, Menu, X,
@@ -86,21 +87,7 @@ export function LandingPage() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const isStagger = entry.target.dataset.stagger === "true";
-            entry.target.classList.add(isStagger ? "reveal-group" : "reveal");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+  // Scroll animations now handled by motion's whileInView
 
   useEffect(() => {
     if (!statsRef.current) return;
@@ -186,20 +173,6 @@ export function LandingPage() {
         @keyframes slideRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
         @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        .reveal { animation: fadeUp 0.6s ease-out both; }
-        .reveal-1 { animation-delay: 0.1s; }
-        .reveal-2 { animation-delay: 0.2s; }
-        .reveal-3 { animation-delay: 0.3s; }
-        .reveal-4 { animation-delay: 0.4s; }
-        .reveal-5 { animation-delay: 0.5s; }
-        .reveal-6 { animation-delay: 0.6s; }
-        .reveal-group > * { animation: slideUp 0.5s ease-out both; }
-        .reveal-group > *:nth-child(1) { animation-delay: 0s; }
-        .reveal-group > *:nth-child(2) { animation-delay: 0.1s; }
-        .reveal-group > *:nth-child(3) { animation-delay: 0.2s; }
-        .reveal-group > *:nth-child(4) { animation-delay: 0.3s; }
-        .reveal-group > *:nth-child(5) { animation-delay: 0.4s; }
-        .reveal-group > *:nth-child(6) { animation-delay: 0.5s; }
         .modal-overlay { animation: fadeIn 0.2s ease-out; }
         .modal-content { animation: fadeUp 0.3s ease-out; }
         .hero-icon { animation: iconFloat 3s ease-in-out infinite; }
@@ -278,36 +251,80 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="reveal reveal-1">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
                 <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-6" style={{ background: AMBER_LIGHT, color: NAVY }}>
                   &#x1F1EC;&#x1F1ED; Built for Ghanaian Schools
                 </div>
-              </div>
-              <h1 className="reveal reveal-1 text-4xl md:text-6xl font-bold leading-tight" style={{ color: NAVY }}>
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+                className="text-4xl md:text-6xl font-bold leading-tight"
+                style={{ color: NAVY }}
+              >
                 The All-in-One School Management<br />System Built for Ghana
-              </h1>
-              <p className="reveal reveal-2 mt-4 max-w-lg" style={{ fontSize: "1.1rem", lineHeight: 1.75, color: "#6B7280" }}>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+                className="mt-4 max-w-lg"
+                style={{ fontSize: "1.1rem", lineHeight: 1.75, color: "#6B7280" }}
+              >
                 From attendance and fees to exams and WhatsApp reports -- Managen puts everything in one place. No spreadsheets. No chaos. Trusted by 50+ schools across Ghana.
-              </p>
-              <div className="reveal reveal-3 mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
+                className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4"
+              >
                 <button onClick={() => navigate("/auth?mode=signup")} className="px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform w-full sm:w-auto" style={{ background: AMBER, color: NAVY, boxShadow: "0 4px 14px rgba(255,186,8,0.3)" }}>
                   Start Free Trial <ArrowRight size={16} />
                 </button>
                 <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-xl font-semibold active:scale-95 transition-transform w-full sm:w-auto flex items-center justify-center" style={{ background: "white", border: `1.5px solid ${NAVY}`, color: NAVY }}>
                   Request Demo
                 </button>
-              </div>
-              <p className="reveal reveal-4 text-sm mt-4" style={{ color: "#9CA3AF" }}>
+              </motion.div>
+              <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.4 }}
+                className="text-sm mt-4"
+                style={{ color: "#9CA3AF" }}
+              >
                 &#x2713; No credit card required  &#x2713; 7-day free trial  &#x2713; Setup in 10 minutes
-              </p>
-              <div className="reveal reveal-5 mt-8 flex items-center flex-wrap gap-2">
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
+                className="mt-8 flex items-center flex-wrap gap-2"
+              >
                 <span className="text-xs mr-1" style={{ color: "#9CA3AF" }}>Works with</span>
                 {["WAEC", "BECE", "Paystack", "WhatsApp"].map((name) => (
                   <span key={name} className="rounded-full bg-white border px-3 py-1 text-xs shadow-sm" style={{ borderColor: "#E5E7EB", color: "#6B7280" }}>{name}</span>
                 ))}
-              </div>
+              </motion.div>
             </div>
-            <div className="relative hidden lg:block">
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+              className="relative hidden lg:block"
+            >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ height: '480px' }}>
                 <img
                   src={heroImg}
@@ -321,7 +338,7 @@ export function LandingPage() {
                   }}
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -347,11 +364,24 @@ export function LandingPage() {
       {/* STATS */}
       <section className="py-16 px-6 bg-white border-y" style={{ borderColor: "#F3F4F6" }} ref={statsRef}>
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10 reveal reveal-1">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5 }}
+          >
             <h2 className="text-2xl md:text-3xl font-bold" style={{ color: NAVY }}>Trusted by Schools Across Ghana</h2>
-          </div>
+          </motion.div>
           <div className="grid grid-cols-2 gap-6 max-w-2xl mx-auto">
-            <div className="reveal reveal-1 rounded-2xl p-4 sm:p-6 md:p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+            <motion.div
+              className="rounded-2xl p-4 sm:p-6 md:p-8 text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: 0 }}
+              style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}
+            >
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ background: AMBER_LIGHT }}>
                 <GraduationCap size={20} color={AMBER} />
               </div>
@@ -363,14 +393,21 @@ export function LandingPage() {
                 )}
               </div>
               <div className="text-sm sm:text-base" style={{ color: MUTED }}>Schools Active Across Ghana</div>
-            </div>
-            <div className="reveal reveal-2 rounded-2xl p-4 sm:p-6 md:p-8 text-center" style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
+            </motion.div>
+            <motion.div
+              className="rounded-2xl p-4 sm:p-6 md:p-8 text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              style={{ background: "white", border: "1px solid #E5E7EB", boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}
+            >
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ background: AMBER_LIGHT }}>
                 <Clock size={20} color={AMBER} />
               </div>
               <div className="text-2xl sm:text-3xl md:text-4xl" style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontWeight: 700 }}>{(countUptime / 10).toFixed(1)}%</div>
               <div className="text-sm sm:text-base" style={{ color: MUTED }}>Guaranteed Uptime</div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -378,7 +415,13 @@ export function LandingPage() {
       {/* HOW MANAGEN WORKS */}
       <section className="py-24 px-6" style={{ background: "#F3F4F6" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16" data-reveal>
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Simple by design
             </div>
@@ -386,9 +429,9 @@ export function LandingPage() {
             <p className="mt-3 max-w-2xl mx-auto" style={{ color: "#6B7280" }}>
               Set up your school, track everything, and get insights -- all in one place.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative" data-reveal data-stagger="true">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative">
             <div className="hidden md:block absolute top-1/3 left-[16.67%] right-[16.67%] h-0.5" style={{ background: AMBER, opacity: 0.3 }} />
             {[
               {
@@ -407,7 +450,15 @@ export function LandingPage() {
                 items: ["WhatsApp reports sent to parents automatically", "Term-end report card generation", "Fee collection analytics", "Multi-school performance overview"]
               }
             ].map((step, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden bg-white border hover:shadow-lg transition-all duration-300 group relative" style={{ borderColor: "#E5E7EB" }}>
+              <motion.div
+                key={i}
+                className="rounded-2xl overflow-hidden bg-white border hover:shadow-lg transition-all duration-300 group relative"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                style={{ borderColor: "#E5E7EB" }}
+              >
                 <div className="h-36 relative flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)` }}>
                   <span className="absolute select-none font-bold leading-none" style={{ fontSize: "8rem", color: "white", opacity: 0.08, top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{step.num}</span>
                   <div className="w-16 h-16 rounded-xl flex items-center justify-center relative z-10" style={{ background: AMBER }}>
@@ -430,7 +481,7 @@ export function LandingPage() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -439,7 +490,13 @@ export function LandingPage() {
       {/* BENTO GRID FEATURES */}
       <section id="features" className="py-24 px-6" style={{ background: "white" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16" data-reveal>
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Everything your school needs
             </div>
@@ -447,11 +504,17 @@ export function LandingPage() {
             <p className="mt-3 max-w-2xl mx-auto" style={{ color: "#6B7280" }}>
               Not adapted from software made elsewhere. Every feature designed for Ghanaian classrooms.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5" data-reveal data-stagger="true">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Card 1: NaCCA Compliance Core (2 cols) */}
-            <div className="md:col-span-2 rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border">
+            <motion.div
+              className="md:col-span-2 rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden card-amber-border"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5 }}
+            >
               <div className="flex items-start justify-between mb-6">
                 <div>
                   <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: AMBER_LIGHT, color: NAVY }}>
@@ -491,10 +554,16 @@ export function LandingPage() {
                   </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 2: Instant MoMo Rails (1 col) */}
-            <div className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
+            <motion.div
+              className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <Wallet className="size-3" /> Payments
               </span>
@@ -525,10 +594,16 @@ export function LandingPage() {
                   <div className="mt-1 text-xs text-slate-400 text-right">78% of daily target</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 3: Arkesel Automated SMS (1 col) */}
-            <div className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border">
+            <motion.div
+              className="rounded-2xl border bg-white p-4 sm:p-5 md:p-7 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col card-amber-border"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold w-fit" style={{ background: AMBER_LIGHT, color: NAVY }}>
                 <MessageSquare className="size-3" /> Communications
               </span>
@@ -557,12 +632,18 @@ export function LandingPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 4: ROI Calculator (2 cols) */}
-            <div className="md:col-span-2">
+            <motion.div
+              className="md:col-span-2"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
               <RoiCalculator />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -570,9 +651,21 @@ export function LandingPage() {
       {/* DASHBOARD PREVIEW */}
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-2xl sm:rounded-[48px] overflow-hidden relative p-5 sm:p-8 lg:p-12" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.25)" }}>
+          <motion.div
+            className="rounded-2xl sm:rounded-[48px] overflow-hidden relative p-5 sm:p-8 lg:p-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+            style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.25)" }}
+          >
             <div className="grid lg:grid-cols-2 gap-10 items-center">
-              <div className="reveal">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5 }}
+              >
                 <p className="text-sm uppercase tracking-widest mb-4" style={{ color: "rgba(248,249,250,0.6)" }}>Live Dashboard</p>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
                   A Command Center for Your Institution
@@ -583,8 +676,14 @@ export function LandingPage() {
                 <button onClick={() => setDemoOpen(true)} className="px-6 py-3 rounded-full flex items-center gap-2 active:scale-95 transition-transform font-bold" style={{ background: AMBER, color: NAVY, fontSize: "0.95rem" }}>
                   See It In Action <ArrowRight size={16} />
                 </button>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
+              </motion.div>
+              <motion.div
+                className="grid grid-cols-2 gap-3"
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
                 {[
                   { label: "Schools Managed", value: stats.schools ? `${stats.schools}` : "--", icon: Building2, color: "#6366F1" },
                   { label: "Automated Tasks", value: "Track fees, grades, attendance", icon: Zap, color: "#10B981" },
@@ -599,16 +698,22 @@ export function LandingPage() {
                     <div style={{ color: "rgba(248,249,250,0.6)", fontSize: "0.75rem" }}>{card.label}</div>
                   </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* SCHOOL TYPES */}
       <section id="school-types" className="py-24 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16" data-reveal>
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Trusted by schools across Africa
             </div>
@@ -616,10 +721,17 @@ export function LandingPage() {
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
               Whether you run a single classroom or a network of campuses, Managen scales with you.
             </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal data-stagger="true">
-            {schoolTypes.map((s) => (
-              <div key={s.title} className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition bg-white overflow-hidden">
+          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {schoolTypes.map((s, i) => (
+              <motion.div
+                key={s.title}
+                className="rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition bg-white overflow-hidden"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
                 <div className="h-36 overflow-hidden relative flex items-center justify-center"
                   style={{ background: s.gradient }}>
                   <s.icon size={56} className="text-white opacity-30" />
@@ -640,22 +752,33 @@ export function LandingPage() {
                     {s.example2 && <p>{s.example2}</p>}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-          <div className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap" data-reveal>
+          <motion.div
+            className="mt-12 py-8 bg-gray-50 rounded-2xl flex justify-center items-center gap-4 flex-wrap"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="text-sm text-gray-500">Join schools across Ghana managing their institutions with Managen</span>
             <button onClick={() => navigate("/auth?mode=signup")} className="text-sm font-bold flex items-center gap-1 px-4 py-2 rounded-full" style={{ background: AMBER, color: NAVY }}>
               Start Free Trial <ArrowRight size={14} />
             </button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* SOCIAL PROOF */}
       <section className="py-24 px-6" style={{ background: NAVY_DARK }}>
         <div className="max-w-7xl mx-auto text-center">
-          <div data-reveal>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4"
               style={{ background: 'rgba(255,186,8,0.15)', color: AMBER }}>
               Growing fast
@@ -666,43 +789,63 @@ export function LandingPage() {
             <p className="mt-3 max-w-2xl mx-auto" style={{ color: 'rgba(248,249,250,0.65)' }}>
               From primary schools to large school groups, Managen is the platform Ghanaian educators trust.
             </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16" data-reveal data-stagger="true">
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
             {[
               { icon: GraduationCap, count: "12+", label: "Primary Schools" },
               { icon: BookOpen, count: "18+", label: "JHS & SHS" },
               { icon: Globe, count: "5+", label: "International Schools" },
               { icon: Building2, count: "3+", label: "School Groups" },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl p-6" style={{
-                background: '#0C1A3A',
-                border: '1px solid rgba(255,186,8,0.2)',
-                boxShadow: '0 4px 24px rgba(0,0,0,0.2)'
-              }}>
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                className="rounded-2xl p-6"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{
+                  background: '#0C1A3A',
+                  border: '1px solid rgba(255,186,8,0.2)',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.2)'
+                }}
+              >
                 <item.icon size={32} className="mx-auto mb-3" style={{ color: AMBER }} />
                 <div style={{ fontFamily: "'Playfair Display', serif", color: AMBER, fontSize: "2rem", fontWeight: 700 }}>{item.count}</div>
                 <div style={{ color: 'rgba(248,249,250,0.6)', fontSize: "0.85rem" }}>{item.label}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
-          <div className="mt-12" data-reveal>
+          <motion.div
+            className="mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <button onClick={() => navigate("/auth?mode=signup")} className="px-8 py-4 rounded-full font-bold active:scale-95 transition-transform" style={{ background: AMBER, color: NAVY, fontSize: "1rem", boxShadow: "0 8px 24px rgba(255,186,8,0.3)" }}>
               Join Them -- Start Free Trial <ArrowRight size={16} className="inline ml-1" />
             </button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* PRICING */}
       <section id="pricing" className="py-24 px-6" style={{ background: "#F9FAFB" }}>
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-6 reveal">
+          <motion.div
+            className="text-center mb-6"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Simple, transparent pricing
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mt-2" style={{ color: NAVY }}>Plans that grow with your school</h2>
             <p className="mt-3" style={{ color: "#6B7280" }}>Start free. Upgrade when you're ready.</p>
-          </div>
+          </motion.div>
           <div className="flex justify-center mb-12">
             <div className="flex rounded-full p-1" style={{ background: "white", border: "1px solid #E5E7EB" }}>
               {(["monthly", "annual"] as const).map((b) => (
@@ -710,7 +853,7 @@ export function LandingPage() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal data-stagger="true">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {pricingPlans.map((plan, i) => {
               const isAnnual = billing === "annual";
               const showSaveBadge = isAnnual && (plan.name === "Growth" || plan.name === "Pro");
@@ -719,11 +862,19 @@ export function LandingPage() {
               const isFree = plan.price === "Free";
               const isCustom = plan.price === "Custom";
               return (
-              <div key={plan.name} className={`p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[32px] relative reveal reveal-${i + 1}`} style={{
-                background: "white",
-                border: plan.highlighted ? `2px solid ${AMBER}` : "1px solid #E5E7EB",
-                boxShadow: plan.highlighted ? `0 24px 60px rgba(255,186,8,0.15)` : "0 4px 24px rgba(10,36,114,0.06)",
-              }}>
+              <motion.div
+                key={plan.name}
+                className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[32px] relative"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{
+                  background: "white",
+                  border: plan.highlighted ? `2px solid ${AMBER}` : "1px solid #E5E7EB",
+                  boxShadow: plan.highlighted ? `0 24px 60px rgba(255,186,8,0.15)` : "0 4px 24px rgba(10,36,114,0.06)",
+                }}
+              >
                 {plan.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold" style={{ background: AMBER, color: NAVY }}>Most Popular</div>}
                 {showSaveBadge && <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "#10B981", color: "white" }}>Save 20%</div>}
                 <h3 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.3rem" }}>{plan.name}</h3>
@@ -743,7 +894,7 @@ export function LandingPage() {
                   ))}
                 </div>
                 <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-3 rounded-full active:scale-95 transition-transform text-sm font-bold" style={{ background: plan.highlighted ? AMBER : NAVY, color: plan.highlighted ? NAVY : "white" }}>{plan.cta}</button>
-              </div>
+              </motion.div>
               );
             })}
           </div>
@@ -753,23 +904,37 @@ export function LandingPage() {
       {/* FAQ */}
       <section id="faq" className="py-24 px-6 bg-white">
         <div className="max-w-[768px] mx-auto">
-          <div className="text-center mb-16 reveal">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold mb-4" style={{ background: AMBER_LIGHT, color: NAVY }}>
               Questions and answers
             </div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 700, marginBottom: "0.5rem" }}>Frequently asked questions</h2>
             <p style={{ color: MUTED, fontSize: "0.9rem" }}>Everything you need to know before getting started</p>
-          </div>
+          </motion.div>
           <div className="space-y-3">
             {faqs.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className={`rounded-2xl overflow-hidden transition-all duration-300`} style={{
-                  background: isOpen ? AMBER_LIGHT : "white",
-                  border: isOpen ? `1px solid ${AMBER}` : "1px solid #E5E7EB",
-                  boxShadow: isOpen ? "0 4px 20px rgba(255,186,8,0.1)" : "0 2px 12px rgba(10,36,114,0.04)",
-                  borderLeft: isOpen ? `4px solid ${AMBER}` : "4px solid transparent"
-                }}>
+                <motion.div
+                  key={i}
+                  className="rounded-2xl overflow-hidden transition-all duration-300"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  style={{
+                    background: isOpen ? AMBER_LIGHT : "white",
+                    border: isOpen ? `1px solid ${AMBER}` : "1px solid #E5E7EB",
+                    boxShadow: isOpen ? "0 4px 20px rgba(255,186,8,0.1)" : "0 2px 12px rgba(10,36,114,0.04)",
+                    borderLeft: isOpen ? `4px solid ${AMBER}` : "4px solid transparent"
+                  }}
+                >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
                     className="w-full flex items-center justify-between p-5 text-left active:scale-[0.99] transition-transform"
@@ -781,7 +946,7 @@ export function LandingPage() {
                   <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-96" : "max-h-0"}`}>
                     <div className="px-5 pb-5" style={{ color: MUTED, fontSize: "0.88rem", lineHeight: 1.7 }}>{faq.a}</div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -791,7 +956,14 @@ export function LandingPage() {
       {/* CTA BANNER */}
       <section className="py-12 sm:py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center py-12 sm:py-20 px-5 sm:px-8 rounded-2xl sm:rounded-[48px]" style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.3)" }}>
+          <motion.div
+            className="text-center py-12 sm:py-20 px-5 sm:px-8 rounded-2xl sm:rounded-[48px]"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+            style={{ background: `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_LIGHT} 100%)`, boxShadow: "0 24px 80px rgba(10,36,114,0.3)" }}
+          >
             <Award size={36} color="rgba(248,249,250,0.7)" className="mx-auto mb-5" />
             <h2 style={{ fontFamily: "'Playfair Display', serif", color: CREAM, fontSize: "clamp(1.8rem, 4vw, 3rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
               Your School Deserves Better Tools
@@ -807,14 +979,20 @@ export function LandingPage() {
                 Or request a free demo &rarr;
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer id="contact" className="py-12 px-4 sm:px-6" style={{ background: CHARCOAL }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-8 sm:py-12">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <motion.div
+            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: AMBER }}>
                 <GraduationCap size={15} color={NAVY} />
@@ -828,9 +1006,15 @@ export function LandingPage() {
                 <SadexLogo size={18} variant="dark" />
               </div>
             </div>
-          </div>
+          </motion.div>
           <hr className="mb-8" style={{ borderColor: "rgba(255,255,255,0.08)" }} />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.5 }}
+          >
             <div>
               <h4 className="font-semibold text-sm mb-4" style={{ color: "#9CA3AF" }}>Product</h4>
               <div className="flex flex-col gap-2.5">
@@ -866,15 +1050,22 @@ export function LandingPage() {
                 Accra, Ghana.
               </p>
             </div>
-          </div>
-          <div className="mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          </motion.div>
+          <motion.div
+            className="mt-8 pt-6 flex flex-col md:flex-row items-center justify-between gap-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.5 }}
+            style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+          >
             <span className="text-xs" style={{ color: "#6B7280" }}>&copy; 2026 Managen. All rights reserved.</span>
             <span className="text-xs" style={{ color: "#6B7280" }}>Made for African schools &#x1F30D;</span>
             <div className="flex gap-4 text-xs">
               <a href="/privacy" style={{ color: "#9CA3AF" }} className="hover-amber">Privacy Policy</a>
               <a href="/terms" style={{ color: "#9CA3AF" }} className="hover-amber">Terms of Service</a>
             </div>
-          </div>
+          </motion.div>
         </div>
       </footer>
 
