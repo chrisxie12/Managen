@@ -287,8 +287,6 @@ export function AdminOverview() {
     | "bursar"
     | "parent";
 
-  const dashboardContent = (
-
   // Mock data - will be replaced with real data from API
   const mockData = {
     stats: {
@@ -794,7 +792,6 @@ export function AdminOverview() {
       </div>
     </div>
   );
-  };
 
   return (
     <DashboardLayout role={userRole}>

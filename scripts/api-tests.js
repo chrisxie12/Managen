@@ -14,7 +14,6 @@ process.env.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS || 'http://localhost:3
 const db = {
     schools: [],
     tenants: [],
-    schools: [],
     users: [],
     students: [],
     attendance: [],
@@ -392,6 +391,7 @@ const loginSchool = async (subdomain) => request('/api/auth/login', {
 const flushTenantRedis = async () => {
     try {
         const redis = require('../config/redis');
+        if (!redis || typeof redis.isRedisConfigured !== 'function' || !redis.isRedisConfigured() || redis.status === 'unconfigured') return;
         for (let i = 0; i < 20; i += 1) {
             if (redis.status === 'ready') break;
             await new Promise((r) => setTimeout(r, 50));

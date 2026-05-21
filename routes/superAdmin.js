@@ -30,7 +30,7 @@ const MEMORY_CACHE = {
     mfaConfig: new Map()
 };
 
-const isRedisHealthy = () => redis && redis.status === 'ready';
+const isRedisHealthy = () => redis && typeof redis.isReady === 'function' && redis.isReady();
 
 const cleanupMemoryCache = () => {
     const now = Date.now();

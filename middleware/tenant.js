@@ -1,7 +1,7 @@
 const supabase = require('../config/db');
 const redis = require('../config/redis');
 
-const isRedisReady = () => redis && redis.status === 'ready';
+const isRedisReady = () => redis && typeof redis.isReady === 'function' && redis.isReady();
 
 const extractSubdomain = (host) => {
     if (!host) return null;
