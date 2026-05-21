@@ -6,7 +6,7 @@ import { SectionError } from '../components/shared/SectionError';
 import { LiveBadge } from '../components/shared/LiveBadge';
 import { ProgressBar } from '../components/shared/ProgressBar';
 
-export default function StudentDashboard() {
+export function StudentDashboard() {
     const {
         stats, timetable, results, homework, exams, materials, notices,
         loading, error

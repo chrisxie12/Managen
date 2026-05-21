@@ -12,7 +12,7 @@ import {
     BarChart, Bar, Cell, PieChart, Pie, Legend
 } from 'recharts';
 
-export default function HeadmasterDashboard() {
+export function HeadmasterDashboard() {
     const {
         stats, alerts, finances, attendanceTrend,
         feeStatus, studentTypes, classPerformance, activity,

@@ -11,7 +11,7 @@ import {
     BarChart, Bar, Cell
 } from 'recharts';
 
-export default function LibrarianDashboard() {
+export function LibrarianDashboard() {
     const {
         stats, circulationTrend, overdueBreakdown, overdueItems, activity, lowStock, topBooks,
         loading, error

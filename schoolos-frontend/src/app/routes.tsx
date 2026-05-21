@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { LandingPage } from "./pages/LandingPage";
+import { LandingPageV2 } from "./pages/LandingPageV2_improved";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
@@ -69,7 +69,7 @@ import { RoleRouter } from "./components/RoleRouter";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: LandingPage,
+    Component: LandingPageV2,
   },
   {
     path: "/login",

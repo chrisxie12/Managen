@@ -11,7 +11,7 @@ import {
     PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 
-export default function AccountantDashboard() {
+export function AccountantDashboard() {
     const {
         stats, feeTrend, paymentModes, incomeExpense, feeStatusDetail, classCollection,
         loading, error

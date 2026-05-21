@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../../services/api'; // Assuming a standard api service exists or fetch
+import { api } from '../services/api'; // Assuming a standard api service exists or fetch
 
 export interface HeadmasterStats {
     totalStudents: number;

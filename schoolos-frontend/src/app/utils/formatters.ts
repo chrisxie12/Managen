@@ -5,6 +5,12 @@ export const formatMoney = (amount: number, currency: string = 'GHS'): string =>
   }).format(amount);
 };
 
+export const formatCurrency = formatMoney;
+
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US').format(value);
+};
+
 export const formatPercent = (value: number): string => {
   return `${value.toFixed(1)}%`;
 };

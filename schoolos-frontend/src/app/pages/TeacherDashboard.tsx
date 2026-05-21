@@ -9,7 +9,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
-export default function TeacherDashboard() {
+export function TeacherDashboard() {
     const {
         stats, timetable, performance, homework, exams, attendance,
         loading, error

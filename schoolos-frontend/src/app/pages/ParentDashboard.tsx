@@ -7,7 +7,7 @@ import { AvatarInitials } from '../components/shared/AvatarInitials';
 import { ProgressBar } from '../components/shared/ProgressBar';
 import { formatCurrency } from '../utils/formatters';
 
-export default function ParentDashboard() {
+export function ParentDashboard() {
     const {
         children, selectedChildId, setSelectedChildId,
         summary, weekSummary, attendance, fees, results, homework, exams, notices,
