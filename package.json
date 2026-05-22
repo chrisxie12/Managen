@@ -34,6 +34,7 @@
     "bullmq": "^5.76.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "date-fns": "^4.2.1",
     "dd-trace": "^5.103.0",
     "docx-templates": "^4.15.0",
     "dotenv": "^17.4.2",

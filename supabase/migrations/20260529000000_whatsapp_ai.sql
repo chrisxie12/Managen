@@ -47,4 +47,12 @@ ALTER TABLE report_cards ADD COLUMN IF NOT EXISTS comments JSONB DEFAULT '[]'::j
 ALTER TABLE report_cards ADD COLUMN IF NOT EXISTS comment_approved TEXT;
 
 -- 5. Enable Realtime for whatsapp_conversations (for admin viewing)
-ALTER PUBLICATION supabase_realtime ADD TABLE whatsapp_conversations;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'whatsapp_conversations'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE whatsapp_conversations;
+  END IF;
+END $$;

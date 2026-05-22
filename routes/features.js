@@ -7,6 +7,7 @@ const multer = require('multer');
 const supabase = require('../config/db');
 const featureService = require('../services/featureService');
 const { requirePermission } = require('../middleware/permission');
+const { protect } = require('./school');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -36,7 +37,7 @@ const parseInteger = (value, fallback, min = 1, max = 1000) => {
 // ─── Feature 1: Geofenced Attendance Link ───────────────────────
 
 // POST /api/school/features/attendance-link/generate
-router.post('/attendance-link/generate', requirePermission('attendance.create', 'attendance.edit'), async (req, res) => {
+router.post('/attendance-link/generate', protect, requirePermission('attendance.create', 'attendance.edit'), async (req, res) => {
     try {
         const link = await featureService.generateAttendanceLink(req.tenant.id, req.user.userId || req.user.id, req.body);
         return res.status(201).json({ data: { link, message: 'Attendance link generated successfully.' } });
@@ -46,7 +47,7 @@ router.post('/attendance-link/generate', requirePermission('attendance.create', 
 });
 
 // POST /api/school/features/attendance-link/verify
-router.post('/attendance-link/verify', async (req, res) => {
+router.post('/attendance-link/verify', protect, async (req, res) => {
     try {
         const { linkCode, latitude, longitude } = req.body;
         const userId = req.user?.userId || req.user?.id;
@@ -62,7 +63,7 @@ router.post('/attendance-link/verify', async (req, res) => {
 });
 
 // GET /api/school/features/attendance-links
-router.get('/attendance-links', requirePermission('attendance.view'), async (req, res) => {
+router.get('/attendance-links', protect, requirePermission('attendance.view'), async (req, res) => {
     try {
         const links = await featureService.getAttendanceLinks(req.tenant.id);
         return res.json({ data: { links } });
@@ -72,7 +73,7 @@ router.get('/attendance-links', requirePermission('attendance.view'), async (req
 });
 
 // GET /api/school/features/geofence-attendance
-router.get('/geofence-attendance', requirePermission('attendance.view'), async (req, res) => {
+router.get('/geofence-attendance', protect, requirePermission('attendance.view'), async (req, res) => {
     try {
         const result = await featureService.getGeofenceAttendanceRecords(req.tenant.id, req.query);
         return res.json({ data: result });
@@ -98,7 +99,7 @@ router.post('/report-card/upload-template', requirePermission('settings.edit'), 
 });
 
 // GET /api/school/features/report-card/templates
-router.get('/report-card/templates', async (req, res) => {
+router.get('/report-card/templates', protect, async (req, res) => {
     try {
         const templates = await featureService.getReportCardTemplates(req.tenant.id);
         return res.json({ data: { templates } });
@@ -118,7 +119,7 @@ router.post('/report-card/generate', requirePermission('grades.create', 'grades.
 });
 
 // GET /api/school/features/report-cards
-router.get('/report-cards', async (req, res) => {
+router.get('/report-cards', protect, async (req, res) => {
     try {
         const cards = await featureService.getStudentReportCards(req.tenant.id, req.query);
         return res.json({ data: { cards } });
@@ -179,7 +180,7 @@ router.get('/students', requirePermission('students.view'), async (req, res) => 
 });
 
 // GET /api/school/features/teachers
-router.get('/teachers', async (req, res) => {
+router.get('/teachers', protect, async (req, res) => {
     try {
         const result = await featureService.getTeachersEnhanced(req.tenant.id, req.query);
         return res.json({ data: result });
@@ -189,7 +190,7 @@ router.get('/teachers', async (req, res) => {
 });
 
 // GET /api/school/features/non-teaching-staff
-router.get('/non-teaching-staff', async (req, res) => {
+router.get('/non-teaching-staff', protect, async (req, res) => {
     try {
         const result = await featureService.getNonTeachingStaff(req.tenant.id, req.query);
         return res.json({ data: result });
@@ -257,7 +258,7 @@ router.get('/daily-attendance', requirePermission('attendance.view'), async (req
 });
 
 // GET /api/school/features/daily-attendance/current-links
-router.get('/daily-attendance/current-links', async (req, res) => {
+router.get('/daily-attendance/current-links', protect, async (req, res) => {
     try {
         const links = await featureService.getCurrentDailyLinks(req.tenant.id);
         return res.json({ data: { links } });

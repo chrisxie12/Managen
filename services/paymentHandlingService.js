@@ -257,9 +257,16 @@ class PaymentHandlingService {
     });
 
     // Deduct from credit balance
+    const { data: creditRow } = await supabase
+      .from('credit_balances')
+      .select('balance')
+      .eq('school_id', schoolId)
+      .eq('student_id', studentId)
+      .single();
+    const newBalance = Math.max(0, (creditRow?.balance || 0) - creditToApply);
     await supabase
       .from('credit_balances')
-      .update({ balance: supabase.raw(`balance - ${creditToApply}`) })
+      .update({ balance: newBalance })
       .eq('school_id', schoolId)
       .eq('student_id', studentId);
 

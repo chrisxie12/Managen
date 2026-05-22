@@ -214,7 +214,6 @@ router.get('/notifications', protect, async (req, res) => {
         return res.json({ data: { notifications } });
     } catch (err) { return res.status(500).json({ error: 'Error fetching notifications.' }); }
 });
-});
 
 // ─── In-App Notifications (Realtime-enabled) ──────────────────
 

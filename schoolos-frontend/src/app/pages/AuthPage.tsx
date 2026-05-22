@@ -620,7 +620,7 @@ export function AuthPage() {
               </>
             )}
 
-            {mode !== "login" && (<>
+            {(mode === "signup" || mode === "superadmin") && (<>
             <div>
               <label
                 style={{

@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT false;
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();
+
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_school ON notifications(school_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(user_id, is_read);
@@ -23,6 +26,10 @@ CREATE INDEX IF NOT EXISTS idx_notifications_created ON notifications(created_at
 
 -- Enable RLS
 ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS notifications_select_policy ON notifications;
+DROP POLICY IF EXISTS notifications_update_policy ON notifications;
 
 -- RLS: users can only see their own notifications
 CREATE POLICY notifications_select_policy ON notifications
@@ -37,7 +44,15 @@ CREATE POLICY notifications_update_policy ON notifications
 -- Enable Realtime replication
 ALTER TABLE notifications REPLICA IDENTITY FULL;
 
--- Add to publication
-ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
+-- Add to publication (safe: only if not already a member)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'notifications'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
+  END IF;
+END $$;
 
 COMMIT;
