@@ -411,7 +411,7 @@ export function AdminOverview() {
             {greeting}, {(user as any)?.firstName || (user?.fullName?.split(" ")[0]) || "Admin"} 👋
           </h1>
           <p style={{ color: MUTED, fontSize: "0.88rem", marginTop: "0.4rem" }}>
-            {school?.name || "School Dashboard"} · Term 2, 2025/2026
+            {school?.name || "School Dashboard"}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -733,7 +733,7 @@ export function AdminOverview() {
         <div className="flex items-center gap-2">
           <Activity size={15} style={{ color: NAVY }} />
           <span style={{ color: NAVY, fontSize: "0.82rem", fontWeight: 500 }}>
-            Last synced {new Date().toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" })}
+            Dashboard loaded at {new Date().toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" })}
           </span>
         </div>
         <button

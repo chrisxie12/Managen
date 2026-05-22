@@ -74,48 +74,52 @@ export function DashboardHome() {
     attendanceRate: number | string;
   } | null>(null);
 
-  // PHASE 1: Replace legacy fee data with new finance endpoints
-  // PHASE 2-4: Add staff, attendance trend, academic data
-  // PHASE 5: Replace activity feed
   useEffect(() => {
     const load = async () => {
-      try {
-        const [dashRes, finSumRes, finMonthRes, finBreakRes, staffRes,
-          attTrendRes, termsRes, auditRes] = await Promise.all([
-          api.get<{ totalStudents: number; totalTeachers: number; attendanceRate: number | string }>("/api/school/dashboard"),
-          api.get<FinanceSummary>("/api/school/finance/summary"),
-          api.get<{ monthly: MonthlyRevenue[] }>("/api/school/finance/monthly?months=6"),
-          api.get<{ breakdown: PaymentBreakdown[] }>("/api/school/finance/payment-status-breakdown"),
-          api.get<StaffSummary>("/api/school/staff/summary"),
-          api.get<AttTrendItem[]>("/api/school/analytics/attendance-trend?days=30"),
-          api.get<{ terms: { id: string; name: string; is_current: boolean }[] }>("/api/school/terms"),
-          api.get<{ logs: AuditLog[] }>("/api/school/audit?limit=10"),
-        ]);
+      setLoading(true);
 
-        if (dashRes.data) setStats(dashRes.data);
-        if (finSumRes.data) setFinanceSummary(finSumRes.data);
-        if (finMonthRes.data) setMonthlyRevenue(finMonthRes.data?.monthly || []);
-        if (finBreakRes.data) setPaymentBreakdown(finBreakRes.data?.breakdown || []);
-        if (staffRes.data) setStaffSummary(staffRes.data);
-        if (attTrendRes.data) setAttendanceTrend(attTrendRes.data);
-        if (auditRes.data) setAuditLogs(auditRes.data?.logs || []);
-
-        // PHASE 4: Fetch academic endpoints that need term_id
-        const currentTerm = (termsRes.data?.terms || []).find(t => t.is_current);
-        if (currentTerm && finSumRes.data) {
-          const [classRes, topRes, riskRes] = await Promise.all([
-            api.get<ClassComparisonItem[]>(`/api/school/analytics/class-comparison?term_id=${currentTerm.id}`),
-            api.get<{ top: TopPerformer[]; bottom: any[] }>(`/api/school/analytics/top-bottom?term_id=${currentTerm.id}&limit=5`),
-            api.get<{ alerts: RiskAlert[]; openInterventions: any[] }>("/api/school/analytics/risk-alerts"),
-          ]);
-          if (classRes.data) setClassComparison(classRes.data);
-          if (topRes.data) setTopPerformers(topRes.data?.top || []);
-          if (riskRes.data) setRiskAlerts(riskRes.data?.alerts || []);
+      const safeFetch = async <T,>(url: string): Promise<T | null> => {
+        try {
+          const res = await api.get<T>(url);
+          return res.data ?? null;
+        } catch {
+          return null;
         }
-      } catch {
-      } finally {
-        setLoading(false);
+      };
+
+      const [dashData, finSum, finMonth, finBreak, staffSum,
+        attTrend, termsData, auditData] = await Promise.all([
+        safeFetch<{ totalStudents: number; totalTeachers: number; attendanceRate: number | string }>("/api/school/dashboard"),
+        safeFetch<FinanceSummary>("/api/school/finance/summary"),
+        safeFetch<{ monthly: MonthlyRevenue[] }>("/api/school/finance/monthly?months=6"),
+        safeFetch<{ breakdown: PaymentBreakdown[] }>("/api/school/finance/payment-status-breakdown"),
+        safeFetch<StaffSummary>("/api/school/staff/summary"),
+        safeFetch<AttTrendItem[]>("/api/school/analytics/attendance-trend?days=30"),
+        safeFetch<{ terms: { id: string; name: string; is_current: boolean }[] }>("/api/school/terms"),
+        safeFetch<{ logs: AuditLog[] }>("/api/school/audit?limit=10"),
+      ]);
+
+      if (dashData) setStats(dashData);
+      if (finSum) setFinanceSummary(finSum);
+      if (finMonth) setMonthlyRevenue(finMonth.monthly || []);
+      if (finBreak) setPaymentBreakdown(finBreak.breakdown || []);
+      if (staffSum) setStaffSummary(staffSum);
+      if (attTrend) setAttendanceTrend(attTrend);
+      if (auditData) setAuditLogs(auditData.logs || []);
+
+      const currentTerm = (termsData?.terms || []).find(t => t.is_current);
+      if (currentTerm && finSum) {
+        const [classRes, topRes, riskRes] = await Promise.all([
+          safeFetch<ClassComparisonItem[]>(`/api/school/analytics/class-comparison?term_id=${currentTerm.id}`),
+          safeFetch<{ top: TopPerformer[]; bottom: any[] }>(`/api/school/analytics/top-bottom?term_id=${currentTerm.id}&limit=5`),
+          safeFetch<{ alerts: RiskAlert[]; openInterventions: any[] }>("/api/school/analytics/risk-alerts"),
+        ]);
+        if (classRes) setClassComparison(classRes);
+        if (topRes) setTopPerformers(topRes.top || []);
+        if (riskRes) setRiskAlerts(riskRes.alerts || []);
       }
+
+      setLoading(false);
     };
     load();
   }, []);

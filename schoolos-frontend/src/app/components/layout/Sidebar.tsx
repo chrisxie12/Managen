@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { getNavigation, UserRole } from "../../config/navigation";
@@ -139,7 +138,6 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
           <button className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-slate-300 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-150 mb-2">
             <Bell className="w-[18px] h-[18px] stroke-[2] text-slate-400" />
             <span className="text-[13px] font-medium">Notifications</span>
-            <div className="w-2 h-2 rounded-full bg-red-500 ml-auto" />
           </button>
         )}
         
@@ -150,7 +148,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
           {!collapsed && (
             <>
               <div className="text-left overflow-hidden">
-                <div className="text-[13px] text-white font-medium truncate">{user?.fullName || "Kofi Mensah"}</div>
+                <div className="text-[13px] text-white font-medium truncate">{user?.fullName || "User"}</div>
                 <div className="text-[11px] text-slate-500 truncate capitalize">{userRoleStr}</div>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-500 ml-auto flex-shrink-0" />

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { api } from "../services/api";
 
 export interface ServiceHealth {
   status: "active" | "error" | "unknown";
@@ -14,9 +15,28 @@ export interface HealthStatus {
 }
 
 async function fetchHealth(): Promise<HealthStatus> {
-  const res = await fetch("/health", { cache: "no-store" });
+  try {
+    const res = await api.get<HealthStatus>("/health");
+    const data = res.data;
 
-  if (!res.ok) {
+    if (!data) {
+      return {
+        momo: { status: "error", latency_ms: 0 },
+        whatsapp: { status: "error", latency_ms: 0 },
+        db: false,
+        redis: "error",
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    return {
+      momo: data.momo ?? { status: "unknown", latency_ms: 0 },
+      whatsapp: data.whatsapp ?? { status: "unknown", latency_ms: 0 },
+      db: (data as any)?.db === true || (data as any)?.data?.db === true,
+      redis: (data as any)?.redis || (data as any)?.data?.redis || "unknown",
+      timestamp: (data as any)?.timestamp || new Date().toISOString(),
+    };
+  } catch {
     return {
       momo: { status: "error", latency_ms: 0 },
       whatsapp: { status: "error", latency_ms: 0 },
@@ -25,20 +45,6 @@ async function fetchHealth(): Promise<HealthStatus> {
       timestamp: new Date().toISOString(),
     };
   }
-
-  const data = await res.json();
-
-  // New shape: { momo: {status, latency_ms}, whatsapp: {status, latency_ms}, data: {...} }
-  // Legacy shape: { status, data: { db, redis, ... } }
-  return {
-    momo: data.momo ?? { status: data.status === "ok" ? "active" : "error", latency_ms: 0 },
-    whatsapp: data.whatsapp ?? { status: data.status === "ok" ? "active" : "error", latency_ms: 0 },
-    db: data.data?.db === true,
-    redis: data.data?.redis || "unknown",
-    timestamp: data.data?.timestamp
-      ? new Date(data.data.timestamp).toISOString()
-      : new Date().toISOString(),
-  };
 }
 
 export function useHealthStatus() {

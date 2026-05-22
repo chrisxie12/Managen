@@ -6,6 +6,7 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
 import { Sidebar } from "../components/layout/Sidebar";
+
 import { SetupChecklist } from "../../components/SetupChecklist";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 import { UserPreferencesProvider, useUserPreferences } from "../contexts/UserPreferencesContext";
@@ -117,6 +118,7 @@ function DashboardLayoutInner() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [pilotDismissed, setPilotDismissed] = useState(() => sessionStorage.getItem("pilotBannerDismissed") === "true");
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
   const [syncing, setSyncing] = useState(false);
 
@@ -173,8 +175,6 @@ function DashboardLayoutInner() {
     (installPrompt as any).userChoice.then(() => setInstallPrompt(null));
   };
 
-  const role = user?.role || "";
-  void role; // used for sidebar
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "SA";
@@ -195,18 +195,18 @@ function DashboardLayoutInner() {
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM }}>
       {/* Desktop: full sidebar */}
       <div className="hidden lg:flex">
-        <Sidebar role={(user?.role || "school-admin") as any} />
+        <Sidebar role={user?.role || "school-admin"} />
       </div>
       {/* Tablet: icon-only collapsed sidebar */}
       <div className="hidden md:flex lg:hidden">
-        <Sidebar role={(user?.role || "school-admin") as any} collapsed={true} />
+        <Sidebar role={user?.role || "school-admin"} collapsed={true} />
       </div>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
           <div className="relative z-50 h-full bg-white shadow-xl">
-             <Sidebar role={(user?.role || "school-admin") as any} onClose={() => setMobileOpen(false)} />
+             <Sidebar role={user?.role || "school-admin"} onClose={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
@@ -222,7 +222,7 @@ function DashboardLayoutInner() {
               <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }}>
                 {pageTitle}
               </h1>
-              <p style={{ color: MUTED, fontSize: "0.75rem" }}>Term 2, 2025/2026 Academic Year</p>
+              <p style={{ color: MUTED, fontSize: "0.75rem" }}>{school?.name || "School"} Dashboard</p>
             </div>
           </div>
 
@@ -307,8 +307,7 @@ function DashboardLayoutInner() {
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
-          {/* Global Pilot Banner */}
-          {!sessionStorage.getItem("pilotBannerDismissed") && (
+          {!pilotDismissed && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg mb-6 p-4 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div className="flex-1">
@@ -318,10 +317,9 @@ function DashboardLayoutInner() {
                 </p>
               </div>
               <button 
-                onClick={(e) => {
+                onClick={() => {
                   sessionStorage.setItem("pilotBannerDismissed", "true");
-                  const target = e.currentTarget.parentElement;
-                  if (target) target.style.display = "none";
+                  setPilotDismissed(true);
                 }}
                 className="text-amber-800 hover:text-amber-900 text-sm font-medium px-2 py-1 rounded hover:bg-amber-100/50 transition-colors"
               >
