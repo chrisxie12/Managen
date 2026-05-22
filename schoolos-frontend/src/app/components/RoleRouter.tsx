@@ -8,7 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 const roleHomeRoutes: Record<string, string> = {
   school_admin: "/dashboard/admin",
   admin: "/dashboard/admin",
-  headmaster: "/dashboard/admin",
+  headmaster: "/dashboard/headmaster",
   accountant: "/dashboard/accountant",
   teacher: "/dashboard/teacher",
   student: "/dashboard/student",

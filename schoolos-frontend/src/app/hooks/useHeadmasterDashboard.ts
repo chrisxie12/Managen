@@ -93,15 +93,15 @@ export function useHeadmasterDashboard() {
                     statsRes, alertsRes, financesRes, attendanceRes, 
                     feeRes, typesRes, classRes, activityRes, bdayRes
                 ] = await Promise.all([
-                    api.get('/school/dashboard/stats'),
-                    api.get('/school/dashboard/alerts'),
-                    api.get('/school/dashboard/financial-performance?days=30'),
-                    api.get('/school/dashboard/attendance-trend'),
-                    api.get('/school/dashboard/fee-status'),
-                    api.get('/school/dashboard/student-types'),
-                    api.get('/school/dashboard/class-performance'),
-                    api.get('/school/dashboard/activity'),
-                    api.get('/school/dashboard/birthdays')
+                    api.get('/api/school/dashboard/stats'),
+                    api.get('/api/school/dashboard/alerts'),
+                    api.get('/api/school/dashboard/financial-performance?days=30'),
+                    api.get('/api/school/dashboard/attendance-trend'),
+                    api.get('/api/school/dashboard/fee-status'),
+                    api.get('/api/school/dashboard/student-types'),
+                    api.get('/api/school/dashboard/class-performance'),
+                    api.get('/api/school/dashboard/activity'),
+                    api.get('/api/school/dashboard/birthdays')
                 ]);
 
                 setStats(statsRes.data?.data || null);
