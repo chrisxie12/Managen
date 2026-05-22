@@ -8,6 +8,33 @@ const { requirePermission } = require('../middleware/permission');
 const parsePage = (v) => Math.max(1, Number.parseInt(v) || 1);
 const parseLimit = (v) => Math.min(500, Math.max(1, Number.parseInt(v) || 50));
 
+// ─── Generate Report Cards (Queue) ──────────────────────────────
+router.post('/generate', protect, requirePermission('reports.manage'), async (req, res) => {
+    try {
+        const schoolId = req.tenant.id;
+        const { class_id, term_id, student_id } = req.body;
+
+        if (!class_id || !term_id) {
+            return res.status(400).json({ error: 'class_id and term_id are required' });
+        }
+
+        // Insert job into queue
+        const { data, error } = await supabase.from('report_job_queue').insert({
+            school_id: schoolId,
+            class_id,
+            term_id,
+            student_id: student_id || null // if null, generates for whole class
+        }).select().single();
+
+        if (error) throw error;
+
+        return res.status(202).json({ message: 'Report generation queued successfully', jobId: data.id });
+    } catch (err) {
+        console.error('Report generate error:', err);
+        return res.status(500).json({ error: 'Failed to queue report generation' });
+    }
+});
+
 // ─── Student Attendance Report ──────────────────────────────────
 router.get('/attendance', protect, requirePermission('reports.view', 'attendance.view'), async (req, res) => {
     try {

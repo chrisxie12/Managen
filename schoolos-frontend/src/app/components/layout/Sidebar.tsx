@@ -1,333 +1,161 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router";
-import { ChevronDown, Menu, X, Settings, LogOut, BarChart3, Sun, Moon } from "lucide-react";
-import { getNavigation, type UserRole, type NavSection } from "../../config/navigation";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
-
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
-const CREAM = "#F8F9FA";
-const MUTED = "#6B7280";
+import { getNavigation, UserRole } from "../../config/navigation";
+import { GraduationCap, ChevronRight, Bell } from "lucide-react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 interface SidebarProps {
   role: UserRole;
   isOpen?: boolean;
   onClose?: () => void;
+  /** Icon-only mode for tablet (md breakpoint) */
+  collapsed?: boolean;
 }
 
-export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
+export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, school, logout } = useAuth();
-  const [expandedSections, setExpandedSections] = useState<string[]>(["command-center"]);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
+  const { user } = useAuth();
   const navigation = getNavigation(role);
 
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(sectionId) ? prev.filter((id) => id !== sectionId) : [...prev, sectionId]
-    );
-  };
+  const isPathActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(path + "/");
 
   const handleNavigation = (path: string) => {
     navigate(path);
     if (onClose) onClose();
   };
 
+  const sidebarWidth = collapsed ? "w-16" : "w-[260px]";
+
+  // User card info
+  const initials = user?.fullName
+    ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "SA";
+  const userRoleStr = role.replace("-", " ").replace("_", " ");
+
   return (
-    <div
-      className="fixed inset-y-0 left-0 w-64 flex flex-col shadow-xl z-40 overflow-y-auto"
-      style={{ background: theme === "dark" ? "#1a1a1a" : "white" }}
+    <aside
+      className={`fixed inset-y-0 left-0 ${sidebarWidth} bg-slate-900 border-r border-slate-800 flex flex-col overflow-y-auto h-screen scrollbar-thin transition-all duration-200 z-50`}
     >
       {/* Header */}
-      <div
-        className="p-6 border-b"
-        style={{
-          borderColor: "rgba(10,36,114,0.1)",
-          background: NAVY,
-        }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h1
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              color: CREAM,
-              fontSize: "1.1rem",
-              fontWeight: 700,
-            }}
-          >
-            SchoolOS
-          </h1>
-          {onClose && (
-            <button onClick={onClose} className="lg:hidden text-white hover:opacity-75">
-              <X size={20} />
-            </button>
-          )}
-        </div>
-        <p
-          style={{
-            color: "rgba(248,249,250,0.7)",
-            fontSize: "0.8rem",
-            fontWeight: 500,
-            textTransform: "uppercase",
-          }}
-        >
-          {role.replace("-", " ")}
-        </p>
+      <div className={`h-14 px-4 flex items-center gap-3 border-b border-slate-800 flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
+        <GraduationCap className="w-7 h-7 text-white flex-shrink-0" />
+        {!collapsed && (
+          <>
+            <span className="text-white font-semibold text-base tracking-tight truncate">SchoolOS</span>
+            <span className="ml-auto flex-shrink-0 text-[10px] bg-primary-600 text-white px-1.5 py-0.5 rounded font-medium">Pro</span>
+          </>
+        )}
       </div>
 
-      {/* School Info (if school admin or higher) */}
-      {["school-admin", "teacher", "bursar"].includes(role) && school && (
-        <div
-          className="p-4 border-b"
-          style={{
-            borderColor: "rgba(10,36,114,0.1)",
-            background: "rgba(10,36,114,0.02)",
-          }}
-        >
-          <p style={{ color: NAVY, fontWeight: 600, fontSize: "0.9rem" }}>
-            {school.name}
-          </p>
-          <p style={{ color: MUTED, fontSize: "0.75rem", marginTop: "0.25rem" }}>
-            {school.region || "Ghana"}
-          </p>
-        </div>
-      )}
-
-      {/* Navigation Sections */}
-      <div className="flex-1 overflow-y-auto py-4">
+      {/* Nav */}
+      <nav className={`flex-1 ${collapsed ? "px-2" : "px-3"} py-2 space-y-0.5`}>
         {navigation.map((section) => (
           <div key={section.id} className="mb-2">
-            {/* Section Header */}
-            <button
-              onClick={() => toggleSection(section.id)}
-              className={`w-full px-4 py-2 flex items-center justify-between text-left transition-all ${
-                expandedSections.includes(section.id) ? "bg-opacity-100" : "hover:bg-opacity-50"
-              }`}
-              style={{
-                background:
-                  expandedSections.includes(section.id)
-                    ? "rgba(10,36,114,0.08)"
-                    : "transparent",
-              }}
-            >
-              <div className="flex items-center gap-3 flex-1">
-                <section.icon
-                  size={18}
-                  style={{ color: NAVY, flexShrink: 0 }}
-                />
-                <span
-                  style={{
-                    color: NAVY,
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                  }}
-                >
-                  {section.label}
-                </span>
-              </div>
-              <ChevronDown
-                size={16}
-                style={{
-                  color: MUTED,
-                  transform: expandedSections.includes(section.id)
-                    ? "rotate(0deg)"
-                    : "rotate(-90deg)",
-                  transition: "transform 0.2s",
-                }}
-              />
-            </button>
-
-            {/* Section Status Badge */}
-            {section.status === "coming-soon" && !expandedSections.includes(section.id) && (
-              <div
-                className="absolute right-4 px-2 py-0.5 text-xs rounded"
-                style={{
-                  background: "rgba(245,158,11,0.15)",
-                  color: "#F59E0B",
-                  fontWeight: 600,
-                }}
-              >
-                Soon
+            {/* Group Label */}
+            {!collapsed && (
+              <div className="px-3 pt-5 pb-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                {section.label}
               </div>
             )}
 
-            {/* Subsections */}
-            {expandedSections.includes(section.id) && section.subsections && (
-              <div className="mt-1 space-y-1">
-                {section.subsections.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      if (item.status !== "coming-soon") {
-                        handleNavigation(item.path);
-                      }
-                    }}
-                    disabled={item.status === "coming-soon"}
-                    className={`w-full px-6 py-2 text-left text-sm transition-all flex items-center justify-between ${
-                      item.status === "coming-soon"
-                        ? "opacity-50 cursor-not-allowed"
-                        : location.pathname === item.path
-                        ? "bg-opacity-100"
-                        : "hover:bg-opacity-50"
-                    }`}
-                    style={{
-                      color:
-                        location.pathname === item.path
-                          ? NAVY
-                          : item.status === "coming-soon"
-                          ? MUTED
-                          : MUTED,
-                      background:
-                        location.pathname === item.path
-                          ? `rgba(10,36,114,0.1)`
-                          : "transparent",
-                      fontWeight:
-                        location.pathname === item.path ? 600 : 500,
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    {item.status === "coming-soon" && (
-                      <span
-                        className="text-xs px-2 py-0.5 rounded"
-                        style={{
-                          background: "rgba(245,158,11,0.2)",
-                          color: "#F59E0B",
-                          fontWeight: 600,
-                        }}
-                      >
-                        Soon
-                      </span>
-                    )}
-                  </button>
-                ))}
+            {/* Flat Items */}
+            {section.subsections && (
+              <div className="space-y-0.5">
+                {section.subsections.map((item) => {
+                  const active = isPathActive(item.path);
+                  const isDisabled = item.status === "coming-soon";
+                  const Icon = item.icon || section.icon;
+
+                  if (collapsed) {
+                    return (
+                      <Tooltip.Provider key={item.id} delayDuration={200}>
+                        <Tooltip.Root>
+                          <Tooltip.Trigger asChild>
+                            <button
+                              onClick={() => { if (!isDisabled) handleNavigation(item.path); }}
+                              disabled={isDisabled}
+                              className={`w-full h-10 flex items-center justify-center rounded-md transition-colors duration-150 ${
+                                isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                              } ${
+                                active
+                                  ? "bg-slate-800 border-l-[3px] border-primary-500"
+                                  : "hover:bg-slate-800/50"
+                              }`}
+                            >
+                              <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-white" : "text-slate-400"}`} />
+                            </button>
+                          </Tooltip.Trigger>
+                          <Tooltip.Portal>
+                            <Tooltip.Content
+                              side="right"
+                              sideOffset={8}
+                              className="z-50 text-white text-xs font-medium bg-slate-800 px-2 py-1 rounded shadow-lg"
+                            >
+                              {item.label}
+                              {isDisabled && " (Soon)"}
+                              <Tooltip.Arrow className="fill-slate-800" />
+                            </Tooltip.Content>
+                          </Tooltip.Portal>
+                        </Tooltip.Root>
+                      </Tooltip.Provider>
+                    );
+                  }
+
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => { if (!isDisabled) handleNavigation(item.path); }}
+                      disabled={isDisabled}
+                      className={`w-full h-9 px-3 flex items-center gap-2.5 rounded-md transition-colors duration-150 ${
+                        isDisabled ? "opacity-50 cursor-not-allowed text-slate-500" : "cursor-pointer"
+                      } ${
+                        active
+                          ? "bg-slate-800 text-white border-l-[3px] border-primary-500 -ml-[3px]"
+                          : "text-slate-300 hover:bg-slate-800/50 hover:text-slate-200"
+                      }`}
+                    >
+                      <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-white" : "text-slate-400"}`} />
+                      <span className="text-[13px] font-medium">{item.label}</span>
+                      {isDisabled && (
+                        <span className="ml-auto text-[9px] uppercase tracking-wider font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                          Soon
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
         ))}
-      </div>
+      </nav>
 
-      {/* Footer */}
-      <div
-        className="border-t p-4 space-y-2"
-        style={{
-          borderColor: "rgba(10,36,114,0.1)",
-          background: "rgba(10,36,114,0.02)",
-        }}
-      >
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          {theme === "light" ? (
-            <Moon size={18} style={{ color: NAVY }} />
-          ) : (
-            <Sun size={18} style={{ color: NAVY }} />
+      {/* Bottom Section */}
+      <div className="mt-auto border-t border-slate-800 px-3 py-3 space-y-0.5 flex-shrink-0">
+        {!collapsed && (
+          <button className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-slate-300 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-150 mb-2">
+            <Bell className="w-[18px] h-[18px] stroke-[2] text-slate-400" />
+            <span className="text-[13px] font-medium">Notifications</span>
+          </button>
+        )}
+        
+        <button className={`w-full ${collapsed ? "h-12 justify-center px-0" : "h-10 px-2 gap-3"} flex items-center rounded-md hover:bg-slate-800/50 transition-colors`}>
+          <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
+            {initials}
+          </div>
+          {!collapsed && (
+            <>
+              <div className="text-left overflow-hidden">
+                <div className="text-[13px] text-white font-medium truncate">{user?.fullName || "User"}</div>
+                <div className="text-[11px] text-slate-500 truncate capitalize">{userRoleStr}</div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-500 ml-auto flex-shrink-0" />
+            </>
           )}
-          <span style={{ color: NAVY, fontSize: "0.875rem", fontWeight: 500 }}>
-            {theme === "light" ? "Dark" : "Light"} Mode
-          </span>
-        </button>
-
-        {/* Profile */}
-        <button
-          onClick={() => navigate("/profile")}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          <Settings size={18} style={{ color: NAVY }} />
-          <div style={{ textAlign: "left", flex: 1 }}>
-            <p style={{ color: NAVY, fontSize: "0.875rem", fontWeight: 500 }}>
-              {user?.firstName} {user?.lastName}
-            </p>
-            <p style={{ color: MUTED, fontSize: "0.75rem" }}>Profile</p>
-          </div>
-        </button>
-
-        {/* Logout */}
-        <button
-          onClick={() => {
-            logout();
-            navigate("/login");
-          }}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors"
-        >
-          <LogOut size={18} style={{ color: "#EF4444" }} />
-          <span style={{ color: "#EF4444", fontSize: "0.875rem", fontWeight: 500 }}>
-            Logout
-          </span>
         </button>
       </div>
-    </div>
-  );
-}
-
-// Mobile Menu Button
-export function SidebarToggle({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-    >
-      {isOpen ? <X size={24} /> : <Menu size={24} />}
-    </button>
-  );
-}
-
-// Layout wrapper with sidebar
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-  role: UserRole;
-}
-
-export function DashboardLayout({ children, role }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <Sidebar role={role} isOpen={true} />
-      </div>
-
-      {/* Mobile Sidebar */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-30 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-50"
-            onClick={() => setSidebarOpen(false)}
-          />
-          <Sidebar role={role} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto flex flex-col">
-        {/* Mobile Header */}
-        <div className="lg:hidden sticky top-0 z-20 p-4 bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between">
-            <h1
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                color: "#0A2472",
-                fontSize: "1.25rem",
-                fontWeight: 700,
-              }}
-            >
-              SchoolOS
-            </h1>
-            <SidebarToggle isOpen={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} />
-          </div>
-        </div>
-
-        {/* Content */}
-        <main className="flex-1 p-4 lg:p-8">
-          {children}
-        </main>
-      </div>
-    </div>
+    </aside>
   );
 }

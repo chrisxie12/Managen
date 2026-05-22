@@ -1,19 +1,34 @@
+import React from 'react';
+
 interface ProgressBarProps {
-  value: number;
-  max: number;
-  color?: string;
-  height?: number;
+  progress: number; // 0 to 100
+  colorClass?: string; // e.g., 'bg-green-500'
+  heightClass?: string; // e.g., 'h-1.5'
+  showLabel?: boolean;
 }
 
-export function ProgressBar({ value, max, color = '#6366f1', height = 6 }: ProgressBarProps) {
-  const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
+export const ProgressBar: React.FC<ProgressBarProps> = ({ 
+  progress, 
+  colorClass = 'bg-blue-500', 
+  heightClass = 'h-1.5',
+  showLabel = false
+}) => {
+  const safeProgress = Math.min(Math.max(progress, 0), 100);
 
   return (
-    <div className="w-full bg-gray-200 rounded-full overflow-hidden" style={{ height }}>
-      <div
-        className="rounded-full transition-all duration-500"
-        style={{ width: `${pct}%`, height, backgroundColor: color }}
-      />
+    <div className="w-full">
+      {showLabel && (
+        <div className="flex justify-between text-xs mb-1">
+          <span className="text-gray-500">Progress</span>
+          <span className="font-medium text-gray-700">{safeProgress.toFixed(0)}%</span>
+        </div>
+      )}
+      <div className={`w-full bg-gray-100 rounded-full overflow-hidden ${heightClass}`}>
+        <div 
+          className={`${heightClass} ${colorClass} transition-all duration-500 ease-in-out`}
+          style={{ width: `${safeProgress}%` }}
+        />
+      </div>
     </div>
   );
-}
+};

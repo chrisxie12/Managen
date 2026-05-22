@@ -55,11 +55,9 @@ export function useRealtime({ schoolId, userId }: RealtimeConfig) {
     },
   ];
 
-  const invalidateAll = useCallback(() => {
-    for (const t of tables) {
-      for (const key of t.queryKeys) {
-        queryClient.invalidateQueries({ queryKey: key });
-      }
+  const invalidateKeys = useCallback((keysToInvalidate: string[][]) => {
+    for (const key of keysToInvalidate) {
+      queryClient.invalidateQueries({ queryKey: key });
     }
   }, [queryClient]);
 
@@ -87,7 +85,7 @@ export function useRealtime({ schoolId, userId }: RealtimeConfig) {
             "postgres_changes",
             { event: "INSERT", schema: "public", table: t.table, filter: t.filter },
             (payload) => {
-              invalidateAll();
+              invalidateKeys(t.queryKeys);
               t.onInsert?.(payload);
             },
           );
@@ -117,7 +115,7 @@ export function useRealtime({ schoolId, userId }: RealtimeConfig) {
         supabaseRef.current = null;
       }
     };
-  }, [schoolId, userId, invalidateAll]);
+  }, [schoolId, userId, invalidateKeys]);
 
   return { connected };
 }

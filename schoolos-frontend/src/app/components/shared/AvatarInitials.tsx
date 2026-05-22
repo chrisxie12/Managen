@@ -1,18 +1,33 @@
-import { getInitials } from '../../utils/formatters';
+import React from 'react';
+import { getInitials, getAvatarColor } from '../../utils/formatters';
 
 interface AvatarInitialsProps {
   name: string;
-  color: string;
-  size?: number;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
-export function AvatarInitials({ name, color, size = 36 }: AvatarInitialsProps) {
+export const AvatarInitials: React.FC<AvatarInitialsProps> = ({ 
+  name, 
+  size = 'md',
+  className = ''
+}) => {
+  const sizeClasses = {
+    sm: 'w-6 h-6 text-[10px]',
+    md: 'w-8 h-8 text-xs',
+    lg: 'w-12 h-12 text-sm',
+  };
+
+  const backgroundColor = getAvatarColor(name);
+  const initials = getInitials(name);
+
   return (
-    <div
-      className="flex items-center justify-center rounded-full text-white font-bold"
-      style={{ backgroundColor: color, width: size, height: size, fontSize: size * 0.4 }}
+    <div 
+      className={`rounded-full flex items-center justify-center text-white font-bold shrink-0 ${sizeClasses[size]} ${className}`}
+      style={{ backgroundColor }}
+      title={name}
     >
-      {getInitials(name)}
+      {initials}
     </div>
   );
-}
+};

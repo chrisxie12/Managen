@@ -2,8 +2,14 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ClerkProvider } from "@clerk/react";
 import * as Sentry from "@sentry/react";
+import { registerSW } from "virtual:pwa-register";
 import App from "./app/App.tsx";
 import "./styles/index.css";
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  registerSW({ immediate: true });
+}
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;

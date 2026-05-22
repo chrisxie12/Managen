@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 import {
   Users, Wallet, TrendingUp, AlertCircle, Clock, CheckCircle2, 
   ArrowUpRight, ArrowDownRight, Activity, MessageSquare, FileText,
-  BarChart3, Calendar, Filter, Settings, Download, Bell, Search,
+  BarChart3, Calendar, Settings, Download, Bell, Search,
   ChevronRight, MoreHorizontal, Zap, DollarSign, BookOpen,
-  GraduationCap, ClipboardList, LucideIcon, Eye, EyeOff
+  GraduationCap, ClipboardList, LucideIcon
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
@@ -556,7 +556,7 @@ export function AdminOverviewV3() {
           value={`${collectionRate}%`}
           color="amber"
           trend={{ direction: "up", value: 5 }}
-          subtext="KES {totalCollected.toLocaleString()}"
+          subtext={`KES ${totalCollected.toLocaleString()}`}
           onClick={() => navigate("/dashboard/finance")}
           isLoading={isLoading}
         />
@@ -687,7 +687,7 @@ export function AdminOverviewV3() {
           📊 Tip: Your school is performing above average. Keep the great work!
         </p>
         <p style={{ color: "#9CA3AF", fontSize: "0.75rem" }}>
-          Last updated: {new Date().toLocaleTimeString()}
+          Dashboard loaded at {new Date().toLocaleTimeString()}
         </p>
       </div>
     </div>

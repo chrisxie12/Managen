@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, Fragment } from "react";
 import {
   Loader2, ChevronDown, ChevronRight, RefreshCw, FileSpreadsheet,
-  AlertCircle, School, Calendar,
+  AlertCircle, School, Calendar, Lock
 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../services/api";
@@ -193,7 +193,14 @@ export function WeightedGradebook() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Weighted Gradebook</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Weighted Gradebook</h1>
+          {hasData && (
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+              <Lock size={14}/> Grades Locked (Read-Only)
+            </div>
+          )}
+        </div>
         <div className="flex gap-2">
           <button
             onClick={fetchGradebook}

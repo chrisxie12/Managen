@@ -1,7 +1,13 @@
-export function CriticalBadge() {
+import React from 'react';
+
+interface CriticalBadgeProps {
+  label?: string;
+}
+
+export const CriticalBadge: React.FC<CriticalBadgeProps> = ({ label = 'CRITICAL' }) => {
   return (
-    <span className="inline-flex text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-red-600 text-white">
-      CRITICAL
+    <span className="bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+      {label}
     </span>
   );
-}
+};

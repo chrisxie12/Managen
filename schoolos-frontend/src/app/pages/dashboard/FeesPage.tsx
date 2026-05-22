@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Search, Filter, Download, DollarSign, AlertCircle } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../lib/api"; // Assuming there is an api module for making requests
 
 const NAVY = "#0A2472";
 const MUTED = "#6B7280";
@@ -65,6 +66,57 @@ export function FeesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [fees] = useState(mockFees);
   const [filterStatus, setFilterStatus] = useState<"all" | "paid" | "partial" | "outstanding">("all");
+
+  const [selectedFee, setSelectedFee] = useState<FeeRecord | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"MoMo" | "Cash" | "Bank">("MoMo");
+  const [paymentAmount, setPaymentAmount] = useState<string>("");
+  const [momoPhone, setMomoPhone] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayment = async () => {
+    if (!selectedFee) return;
+    setIsProcessing(true);
+    try {
+      if (paymentMethod === "MoMo") {
+        await fetch('http://localhost:5000/api/school/payments/momo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Adjust based on auth logic
+          },
+          body: JSON.stringify({
+            amount: Number(paymentAmount),
+            phone: momoPhone,
+            studentId: selectedFee.id,
+            studentName: selectedFee.studentName,
+            invoiceId: selectedFee.id, // Assuming fee.id is invoice id for this mock
+          })
+        });
+        alert("MoMo prompt sent successfully to " + momoPhone);
+      } else {
+        await fetch('http://localhost:5000/api/school/payments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            amount: Number(paymentAmount),
+            payment_method: paymentMethod.toLowerCase(),
+            student_id: selectedFee.id,
+            invoice_id: selectedFee.id,
+          })
+        });
+        alert(paymentMethod + " payment recorded successfully.");
+      }
+      setSelectedFee(null);
+    } catch (err) {
+      alert("Error processing payment.");
+      console.error(err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const filteredFees = fees.filter(
     (fee) =>
@@ -367,9 +419,10 @@ export function FeesPage() {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <button
-                      onClick={() =>
-                        navigate(`/dashboard/fees/collect/${fee.id}`)
-                      }
+                      onClick={() => {
+                        setSelectedFee(fee);
+                        setPaymentAmount(fee.balance.toString());
+                      }}
                       className="text-xs font-medium px-3 py-1 rounded transition-colors"
                       style={{
                         color: PRIMARY,
@@ -398,6 +451,78 @@ export function FeesPage() {
           Showing <strong>{filteredFees.length}</strong> of <strong>{fees.length}</strong> fee records
         </p>
       </div>
+
+      {/* Payment Modal */}
+      {selectedFee && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-1">Process Payment</h3>
+            <p className="text-sm text-gray-500 mb-4">
+              Collecting fees for <span className="font-semibold text-gray-800">{selectedFee.studentName}</span>
+            </p>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Amount (₵)</label>
+              <input
+                type="number"
+                value={paymentAmount}
+                onChange={(e) => setPaymentAmount(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+              <div className="flex gap-2">
+                {["MoMo", "Cash", "Bank"].map((method) => (
+                  <button
+                    key={method}
+                    onClick={() => setPaymentMethod(method as any)}
+                    className={`flex-1 py-2 rounded font-medium text-sm transition-colors border ${
+                      paymentMethod === method
+                        ? "bg-blue-50 border-blue-600 text-blue-700"
+                        : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    {method}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {paymentMethod === "MoMo" && (
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">MTN Mobile Number</label>
+                <input
+                  type="tel"
+                  placeholder="e.g. 024XXXXXXX"
+                  value={momoPhone}
+                  onChange={(e) => setMomoPhone(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setSelectedFee(null)}
+                className="px-4 py-2 rounded font-medium text-sm text-gray-600 hover:bg-gray-100"
+                disabled={isProcessing}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="px-4 py-2 rounded font-medium text-sm text-white"
+                style={{ background: PRIMARY, opacity: isProcessing ? 0.7 : 1 }}
+              >
+                {isProcessing ? "Processing..." : paymentMethod === "MoMo" ? "Send Prompt" : "Record Payment"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageTemplate>
   );
 }

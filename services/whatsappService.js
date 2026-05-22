@@ -1,64 +1,68 @@
-const { attemptRequest, wrapServiceCall } = require('./notificationUtils');
+// services/whatsappService.js
+const { wrapServiceCall } = require('./notificationUtils');
 
-let twilioClient;
-try {
-    const twilio = require('twilio');
-    twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-} catch (err) {
-    // twilio may not be installed/configured in all environments
-    twilioClient = null;
+async function sendReceipt(parentPhone, receiptData) {
+  const response = await fetch('https://api.arkesel.com/v2/sms/whatsapp/send', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.ARKESEL_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      sender: receiptData.schoolName.replace(/\s/g, ''),
+      recipient: [parentPhone],
+      message: buildReceiptMessage(receiptData)
+    })
+  });
+  return response.json();
 }
 
-const FROM = process.env.TWILIO_WHATSAPP_FROM; // e.g. whatsapp:+1415...
+async function sendSms(parentPhone, message, senderName = 'SchoolOS') {
+  const response = await fetch('https://sms.arkesel.com/api/v2/sms/send', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.ARKESEL_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      sender: senderName.substring(0, 11).replace(/\s/g, ''), // SMS sender max 11 chars
+      message: message,
+      recipients: [parentPhone]
+    })
+  });
+  return response.json();
+}
 
-async function sendWhatsApp({ to, body }) {
-    if (!twilioClient || !FROM) {
-        throw new Error('Twilio WhatsApp not configured (TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_WHATSAPP_FROM)');
-    }
+function buildReceiptMessage(data) {
+  return `*${data.schoolName}* — Fee Receipt ✅\n\n` +
+    `Student: ${data.studentName}\n` +
+    `Class: ${data.className}\n` +
+    `Amount: GHS ${data.amount}\n` +
+    `Method: ${data.method}\n` +
+    `Date: ${data.date}\n` +
+    `Ref: ${data.reference}\n\n` +
+    `Thank you for your payment!`;
+}
 
-    const payload = {
-        from: FROM,
-        to: to.startsWith('whatsapp:') ? to : `whatsapp:${to}`,
-        body,
+// Keep the interface similar for backward compatibility
+async function sendPaymentReceipt(params) {
+    // Transform old params to new receiptData if needed, or just pass it
+    const receiptData = {
+        schoolName: params.schoolName || 'SchoolOS',
+        studentName: params.name || 'Student',
+        className: params.className || 'Class',
+        amount: params.amount,
+        method: params.method || 'Cash',
+        date: new Date().toLocaleDateString(),
+        reference: params.invoiceId || 'N/A'
     };
-
-    return attemptRequest(() => twilioClient.messages.create(payload));
-}
-
-async function sendWelcome({ to, name, schoolName }) {
-    const body = `Welcome ${name || ''} to ${schoolName || 'Managen'}! Login at your subdomain to get started.`;
-    return wrapServiceCall(sendWhatsApp({ to, body }), 'sendWelcome whatsapp');
-}
-
-async function sendTrialReminder({ to, name, daysLeft, schoolName }) {
-    const body = `Hi ${name || ''}, your trial for ${schoolName || 'Managen'} ends in ${daysLeft} day(s). Please add payment to avoid suspension.`;
-    return wrapServiceCall(sendWhatsApp({ to, body }), 'sendTrialReminder whatsapp');
-}
-
-async function sendPaymentReceipt({ to, name, amount, currency = 'GHS', invoiceId, schoolName }) {
-    const body = `Payment received: ${amount} ${currency} for ${schoolName || ''}. Invoice ${invoiceId}. Thank you.`;
-    return wrapServiceCall(sendWhatsApp({ to, body }), 'sendPaymentReceipt whatsapp');
-}
-
-async function sendPaymentFailed({ to, name, amount, currency = 'GHS', invoiceId, schoolName }) {
-    const body = `Payment failed: ${amount} ${currency} for ${schoolName || ''}. Invoice ${invoiceId}. Please update payment method.`;
-    return wrapServiceCall(sendWhatsApp({ to, body }), 'sendPaymentFailed whatsapp');
-}
-
-async function sendFeeReminder({ to, message }) {
-    return wrapServiceCall(sendWhatsApp({ to, body: message }), 'sendFeeReminder whatsapp');
-}
-
-async function send({ to, body }) {
-    return wrapServiceCall(sendWhatsApp({ to, body }), 'whatsapp');
+    return wrapServiceCall(sendReceipt(params.to, receiptData), 'sendPaymentReceipt whatsapp');
 }
 
 module.exports = {
-    sendWelcome,
-    sendTrialReminder,
-    sendPaymentReceipt,
-    sendPaymentFailed,
-    sendFeeReminder,
-    send,
+  sendReceipt,
+  sendSms,
+  buildReceiptMessage,
+  sendPaymentReceipt
 };
 

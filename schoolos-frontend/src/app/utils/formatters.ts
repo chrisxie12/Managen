@@ -1,73 +1,59 @@
-export function formatCurrency(amount: number, currency = 'GHS'): string {
-  return `${currency} ${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-}
+export const formatMoney = (amount: number, currency: string = 'GHS'): string => {
+  return new Intl.NumberFormat('en-GH', {
+    style: 'currency',
+    currency,
+  }).format(amount);
+};
 
-export function formatShortCurrency(amount: number): string {
-  if (amount >= 1_000_000) return `GHS ${(amount / 1_000_000).toFixed(1)}M`;
-  if (amount >= 1_000) return `GHS ${(amount / 1_000).toFixed(1)}K`;
-  return `GHS ${amount.toLocaleString()}`;
-}
+export const formatCurrency = formatMoney;
 
-export function formatNumber(value: number): string {
-  return value.toLocaleString();
-}
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US').format(value);
+};
 
-export function formatPercentage(value: number): string {
-  return `${value}%`;
-}
+export const formatPercent = (value: number): string => {
+  return `${value.toFixed(1)}%`;
+};
 
-export function formatDate(date: Date | string, options?: Intl.DateTimeFormatOptions): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('en-US', options || { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-}
+export const formatDate = (date: string | Date): string => {
+  const d = new Date(date);
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(d);
+};
 
-export function formatShortDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
+export const timeAgo = (date: string | Date): string => {
+  const diff = Date.now() - new Date(date).getTime();
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
-export function formatTime(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-}
+  if (days > 0) return `${days}d ago`;
+  if (hours > 0) return `${hours}h ago`;
+  if (minutes > 0) return `${minutes}m ago`;
+  return 'Just now';
+};
 
-export function formatTime24(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-}
+export const getInitials = (name: string): string => {
+  if (!name) return '';
+  return name
+    .split(' ')
+    .filter(n => n.length > 0)
+    .map(n => n[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
+};
 
-export function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good Morning,';
-  if (hour < 17) return 'Good Afternoon,';
-  return 'Good Evening,';
-}
-
-export function getCurrentTerm(): string {
-  const month = new Date().getMonth();
-  const term = month >= 8 ? 1 : month >= 4 ? 2 : 3;
-  const year = new Date().getFullYear();
-  const nextYear = year + 1;
-  return `Term ${term} — ${year}/${nextYear}`;
-}
-
-export function getInitials(name: string): string {
-  if (!name) return '?';
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-}
-
-export function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-}
-
-export function daysUntil(date: Date | string): number {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  const diff = d.getTime() - now.getTime();
-  return Math.ceil(diff / (1000 * 60 * 60 * 24));
-}
-
-export function classNames(...classes: (string | boolean | undefined | null)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+export const getAvatarColor = (name: string): string => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash) % 360;
+  // Use HSL for better, vibrant, consistent colors (s=70%, l=50%)
+  return `hsl(${h}, 70%, 50%)`;
+};

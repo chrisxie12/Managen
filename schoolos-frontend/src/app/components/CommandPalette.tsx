@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router";
 import {
   CommandDialog,
   CommandInput,
@@ -58,28 +59,40 @@ const QUICK_ACTIONS: QuickActionItem[] = [
 ];
 
 export function CommandPalette() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<{ id: string; name: string; class_name: string; path: string }[]>([]);
   const [searching, setSearching] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
+    if (abortRef.current) abortRef.current.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     const timer = setTimeout(async () => {
       setSearching(true);
       try {
         const res = await api.get<{ data: { students: { id: string; name: string; class_name: string; path: string }[] } }>(`/api/school/search?q=${encodeURIComponent(query)}`);
-        setResults(res.data?.students || []);
-      } catch { setResults([]); }
-      finally { setSearching(false); }
+        if (!controller.signal.aborted) {
+          setResults(res.data?.students || []);
+        }
+      } catch {
+        if (!controller.signal.aborted) setResults([]);
+      }
+      finally { if (!controller.signal.aborted) setSearching(false); }
     }, 300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query]);
 
   const handleSelect = useCallback((path: string) => {
     setOpen(false);
-    window.location.href = path;
-  }, []);
+    navigate(path);
+  }, [navigate]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -30,11 +30,13 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
+  const focusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
   useEffect(() => {
     if (open) {
       setQuery("");
       setResults([]);
-      setTimeout(() => inputRef.current?.focus(), 100);
+      focusTimeoutRef.current = setTimeout(() => inputRef.current?.focus(), 100);
       const stored = localStorage.getItem("managen-recent-searches");
       if (stored) {
         try {
@@ -43,7 +45,28 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         } catch { /* ignore */ }
       }
     }
+    return () => {
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  const safeSearchFetch = async <T,>(url: string): Promise<T | null> => {
+    try {
+      const res = await api.get<T>(url);
+      return res.data ?? null;
+    } catch {
+      return null;
+    }
+  };
 
   const doSearch = useCallback(async (q: string) => {
     if (!q.trim()) {
@@ -53,20 +76,20 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
     setLoading(true);
     try {
       const [studentsRes, staffRes, classesRes] = await Promise.all([
-        api.get<{ data: { students: { id: string; name: string; admission_no?: string; class_name?: string }[] } }>(
+        safeSearchFetch<{ data: { students: { id: string; name: string; admission_no?: string; class_name?: string }[] } }>(
           `/api/school/students?search=${encodeURIComponent(q)}&limit=5`,
         ),
-        api.get<{ data: { teachers: { id: string; name: string; email?: string }[] } }>(
+        safeSearchFetch<{ data: { teachers: { id: string; name: string; email?: string }[] } }>(
           `/api/school/teachers?search=${encodeURIComponent(q)}&limit=5`,
-        ).catch(() => null),
-        api.get<{ data: { classes: { id?: string; name: string }[] } }>(
+        ),
+        safeSearchFetch<{ data: { classes: { id?: string; name: string }[] } }>(
           `/api/school/classes?search=${encodeURIComponent(q)}&limit=5`,
-        ).catch(() => null),
+        ),
       ]);
 
       const items: SearchResult[] = [];
 
-      const students = studentsRes.data?.data?.students || [];
+      const students = studentsRes?.data?.students || [];
       students.forEach((s) => {
         items.push({
           id: `student-${s.id}`,
@@ -77,7 +100,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         });
       });
 
-      const staff = staffRes?.data?.data?.teachers || [];
+      const staff = staffRes?.data?.teachers || [];
       staff.forEach((t) => {
         items.push({
           id: `staff-${t.id}`,
@@ -88,7 +111,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         });
       });
 
-      const classes = classesRes?.data?.data?.classes || [];
+      const classes = classesRes?.data?.classes || [];
       classes.forEach((c) => {
         items.push({
           id: `class-${c.id || c.name}`,

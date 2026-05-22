@@ -224,7 +224,87 @@ class SchoolService {
             .insert(payload)
             .select();
         if (error) throw error;
+        
+        await this._enqueueAttendanceAlerts(tenantId, payload);
+        
         return data;
+    }
+    
+    async _enqueueAttendanceAlerts(tenantId, insertedRecords) {
+        try {
+            const absentees = insertedRecords.filter(r => r.status === 'Absent' || r.status === 'Late');
+            if (absentees.length > 0) {
+                const { data: students } = await supabase.from('students')
+                    .select('id, name, parent_phone')
+                    .in('id', absentees.map(a => a.student_id));
+                
+                if (students && students.length > 0) {
+                    const messages = [];
+                    for (const a of absentees) {
+                        const student = students.find(s => s.id === a.student_id);
+                        if (student && student.parent_phone) {
+                            messages.push({
+                                tenant_id: tenantId,
+                                channel: 'whatsapp',
+                                parent_phone: student.parent_phone,
+                                message: `SchoolOS Alert: ${student.name} was marked ${a.status} for class today (${a.date}).`,
+                                status: 'pending',
+                                retries: 0
+                            });
+                        }
+                    }
+                    if (messages.length > 0) {
+                        await supabase.from('receipt_queue').insert(messages);
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Failed to enqueue attendance alerts:', err);
+        }
+    }
+
+    async submitAttendanceBulk(tenantId, records) {
+        // Find existing records to detect conflicts
+        const dates = [...new Set(records.map(r => r.date))];
+        const studentIds = [...new Set(records.map(r => r.student_id))];
+
+        const { data: existing, error: fetchErr } = await supabase.from('attendance')
+            .select('student_id, date, status')
+            .eq('tenant_id', tenantId)
+            .in('date', dates)
+            .in('student_id', studentIds);
+
+        if (fetchErr) throw fetchErr;
+
+        const existingMap = new Set(existing.map(e => `${e.student_id}_${e.date}`));
+        
+        const conflicts = [];
+        const toInsert = [];
+
+        for (const r of records) {
+            const key = `${r.student_id}_${r.date}`;
+            if (existingMap.has(key)) {
+                conflicts.push(r);
+            } else {
+                toInsert.push({
+                    id: crypto.randomUUID(),
+                    ...r,
+                    tenant_id: tenantId
+                });
+            }
+        }
+
+        if (toInsert.length > 0) {
+            const { error: insertErr } = await supabase.from('attendance').insert(toInsert);
+            if (insertErr) throw insertErr;
+            
+            await this._enqueueAttendanceAlerts(tenantId, toInsert);
+        }
+
+        return {
+            inserted: toInsert.length,
+            conflicts
+        };
     }
 
     // ─── Library ─────────────────────────────────────────────────
@@ -1287,8 +1367,7 @@ class SchoolService {
             throw err;
         }
 
-        const newPaid = Number(invoice.paid_amount) + Number(amount);
-        const newStatus = newPaid >= Number(invoice.total_amount) ? 'paid' : 'issued';
+        const paymentStatus = payload.status || 'completed';
 
         const { data: payment, error: payErr } = await supabase.from('payments')
             .insert({
@@ -1301,7 +1380,7 @@ class SchoolService {
                 reference: reference || null,
                 transaction_id: transaction_id || null,
                 payment_date: payment_date || new Date().toISOString().split('T')[0],
-                status: 'completed',
+                status: paymentStatus,
                 notes: notes || null,
                 received_by: userId || null,
             })
@@ -1309,11 +1388,16 @@ class SchoolService {
             .single();
         if (payErr) throw payErr;
 
-        const { error: updErr } = await supabase.from('invoices')
-            .update({ paid_amount: newPaid, status: newStatus })
-            .eq('id', invoice_id)
-            .eq('school_id', schoolId);
-        if (updErr) throw updErr;
+        if (paymentStatus === 'completed') {
+            const newPaid = Number(invoice.paid_amount) + Number(amount);
+            const newStatus = newPaid >= Number(invoice.total_amount) ? 'paid' : 'issued';
+
+            const { error: updErr } = await supabase.from('invoices')
+                .update({ paid_amount: newPaid, status: newStatus })
+                .eq('id', invoice_id)
+                .eq('school_id', schoolId);
+            if (updErr) throw updErr;
+        }
 
         return payment;
     }

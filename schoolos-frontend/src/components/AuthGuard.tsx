@@ -10,7 +10,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!isSignedIn && !user) return <Navigate to="/auth" replace />;
 
-  if (!user) return <div>Loading...</div>;
+  // Clerk signed in but backend user not found — exchange/fetch failed
+  if (!user) return <Navigate to="/auth" replace />;
 
   return <>{children}</>;
 }

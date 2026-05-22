@@ -15,7 +15,7 @@ const MUTED = "#6B7280";
 import { useSignUp, useClerk } from "@clerk/react";
 import { api } from "../services/api";
 import { toast } from "sonner";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth, storeSubdomain } from "../contexts/AuthContext";
 
 const benefits = [
   "No credit card required for trial",
@@ -82,6 +82,7 @@ export function AuthPage() {
     if (sub) {
       const s = sub.trim().toLowerCase();
       setForm((f) => ({ ...f, subdomain: s }));
+      storeSubdomain(s);
     }
   }, [searchParams]);
 
@@ -121,9 +122,11 @@ export function AuthPage() {
           });
         }
 
-        toast.success("Account created! Please sign in.");
-        setMode("login");
-        setForm((f) => ({ ...f, subdomain: res.data!.slug || "" }));
+        storeSubdomain(res.data!.slug || "");
+
+        await refresh();
+        toast.success("Account created! Welcome to Managen.");
+        navigate("/dashboard");
       } else if (mode === "superadmin") {
         await api.post("/api/superadmin/login", {
           email: form.email,
@@ -156,6 +159,7 @@ export function AuthPage() {
         if (!tenant) {
           return toast.error("Please enter your school subdomain");
         }
+        storeSubdomain(tenant);
         const headers: Record<string, string> = {};
         if (tenant) headers["x-tenant-subdomain"] = tenant;
 
