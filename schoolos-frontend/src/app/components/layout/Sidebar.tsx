@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { ChevronDown, Menu, X, Settings, LogOut, BarChart3, Sun, Moon } from "lucide-react";
-import { getNavigation, type UserRole, type NavSection } from "../../config/navigation";
+import { ChevronDown, X, Settings, LogOut, Sun, Moon } from "lucide-react";
+import { getNavigation, type UserRole } from "../../config/navigation";
 import { useAuth } from "../../contexts/AuthContext";
 
 const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -15,7 +14,7 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
-export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
+export function Sidebar({ role, onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school, logout } = useAuth();
@@ -78,7 +77,7 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
       </div>
 
       {/* School Info (if school admin or higher) */}
-      {["school-admin", "teacher", "bursar"].includes(role) && school && (
+      {["school-admin", "school_admin", "admin", "headmaster", "teacher", "bursar", "accountant"].includes(role) && school && (
         <div
           className="p-4 border-b"
           style={{
@@ -90,7 +89,7 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
             {school.name}
           </p>
           <p style={{ color: MUTED, fontSize: "0.75rem", marginTop: "0.25rem" }}>
-            {school.region || "Ghana"}
+            {(school as any).region || (school as any).location || "Ghana"}
           </p>
         </div>
       )}
@@ -235,13 +234,13 @@ export function Sidebar({ role, isOpen = true, onClose }: SidebarProps) {
 
         {/* Profile */}
         <button
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate("/dashboard/profile")}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
           <Settings size={18} style={{ color: NAVY }} />
           <div style={{ textAlign: "left", flex: 1 }}>
             <p style={{ color: NAVY, fontSize: "0.875rem", fontWeight: 500 }}>
-              {user?.firstName} {user?.lastName}
+              {user?.fullName || `${(user as any)?.firstName || ""} ${(user as any)?.lastName || ""}`.trim() || "User"}
             </p>
             <p style={{ color: MUTED, fontSize: "0.75rem" }}>Profile</p>
           </div>

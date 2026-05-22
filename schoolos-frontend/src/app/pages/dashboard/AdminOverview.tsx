@@ -23,7 +23,7 @@ import {
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
-import { DashboardLayout } from "../../components/layout/Sidebar";
+
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";

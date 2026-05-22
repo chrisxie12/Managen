@@ -1,9 +1,14 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
-import { AdminOverview } from "../pages/dashboard/AdminOverview";
 
-const roleRoutes: Record<string, string> = {
-  headmaster: "/dashboard/headmaster",
+/**
+ * Index route handler — redirects each role to their home page.
+ * All pages render inside DashboardLayout's <Outlet />.
+ */
+const roleHomeRoutes: Record<string, string> = {
+  school_admin: "/dashboard/admin",
+  admin: "/dashboard/admin",
+  headmaster: "/dashboard/admin",
   accountant: "/dashboard/accountant",
   teacher: "/dashboard/teacher",
   student: "/dashboard/student",
@@ -16,12 +21,9 @@ export function RoleRouter() {
 
   if (loading) return null;
 
-  if (user?.role === "school_admin" || user?.role === "admin" || user?.role === "headmaster") {
-    return <Navigate to="/dashboard/headmaster" replace />;
-  }
-
-  const route = user ? roleRoutes[user.role] : null;
+  const route = user ? roleHomeRoutes[user.role] : null;
   if (route) return <Navigate to={route} replace />;
 
-  return <Navigate to="/dashboard/headmaster" replace />;
+  // Fallback
+  return <Navigate to="/dashboard/admin" replace />;
 }
