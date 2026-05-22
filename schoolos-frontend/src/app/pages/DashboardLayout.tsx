@@ -306,7 +306,7 @@ function DashboardLayoutInner() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 max-w-7xl w-full mx-auto">
           {!pilotDismissed && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg mb-6 p-4 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />

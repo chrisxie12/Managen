@@ -2,6 +2,27 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { useAuth as useClerkAuth, useUser } from "@clerk/react";
 import { api } from "../services/api";
 
+const SUBDOMAIN_KEY = "managen_subdomain";
+
+export function storeSubdomain(subdomain: string) {
+  try { localStorage.setItem(SUBDOMAIN_KEY, subdomain); } catch {}
+}
+
+function getSubdomainHeader(): Record<string, string> {
+  try {
+    const host = window.location.hostname;
+    if (host.endsWith(".getschoolos.me")) {
+      return { "x-school-subdomain": host.split(".")[0] };
+    }
+    if (host.endsWith(".localhost") && host.split(".").length === 2) {
+      return { "x-school-subdomain": host.split(".")[0] };
+    }
+    const stored = localStorage.getItem(SUBDOMAIN_KEY);
+    if (stored) return { "x-school-subdomain": stored };
+  } catch {}
+  return {};
+}
+
 export interface User {
   id: string;
   fullName: string;
@@ -68,8 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSchool(null);
         return;
       }
-      await api.post("/api/auth/clerk-exchange", { clerkToken });
-      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
+      const subdomainHeader = getSubdomainHeader();
+      await api.post("/api/auth/clerk-exchange", { clerkToken }, { headers: subdomainHeader });
+      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: subdomainHeader });
       if (res.data) {
         setUserFromApi(res.data);
       }
@@ -83,7 +105,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loadFromCookie = useCallback(async () => {
     try {
-      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me");
+      const subdomainHeader = getSubdomainHeader();
+      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: subdomainHeader });
       if (res.data) {
         setUserFromApi(res.data);
       }
