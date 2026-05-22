@@ -17,21 +17,14 @@ import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
 import { processSyncQueue } from "../lib/offlineSync";
 import { api } from "../services/api";
 import type { SyncItem } from "../lib/offlineSync";
+import { useHealthStatus } from "../hooks/useHealthStatus";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
-const roleLabels: Record<string, string> = {
-  school_admin: "Administrator",
-  admin: "Administrator",
-  headmaster: "Headmaster",
-  accountant: "Accountant",
-  teacher: "Teacher",
-  student: "Student",
-  parent: "Parent",
-};
+
 
 const topLevelPaths: Record<string, string> = {
   "/dashboard/admin": "Dashboard",
@@ -52,12 +45,86 @@ const topLevelPaths: Record<string, string> = {
   "/dashboard/inbox": "Inbox",
 };
 
+// ─── Health Badge ──────────────────────────────────────────────────────────────
+type BadgeStatus = "green" | "yellow" | "red";
+
+function HealthBadge({
+  label,
+  status,
+  latency,
+}: {
+  label: string;
+  status: "active" | "error" | "unknown";
+  latency: number;
+}) {
+  const badgeStatus: BadgeStatus =
+    status === "active" && latency < 3000
+      ? "green"
+      : status === "active"
+      ? "yellow"
+      : "red";
+
+  const dotColor =
+    badgeStatus === "green" ? "#10B981" : badgeStatus === "yellow" ? "#F59E0B" : "#EF4444";
+  const labelText =
+    badgeStatus === "green" ? label : badgeStatus === "yellow" ? `${label} Slow` : `${label} Down`;
+
+  return (
+    <div
+      title={`${label}: ${latency}ms`}
+      className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-default"
+      style={{ background: `${dotColor}12`, border: `1px solid ${dotColor}30` }}
+    >
+      <span
+        className={badgeStatus === "green" ? "animate-pulse" : ""}
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: dotColor,
+          display: "inline-block",
+          flexShrink: 0,
+        }}
+      />
+      <span style={{ fontSize: "0.7rem", fontWeight: 600, color: dotColor }}>
+        {labelText}
+      </span>
+    </div>
+  );
+}
+
+function SyncBadge({ isOnline }: { isOnline: boolean }) {
+  const color = isOnline ? "#10B981" : "#F59E0B";
+  return (
+    <div
+      className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-default"
+      style={{ background: `${color}12`, border: `1px solid ${color}30` }}
+      title={isOnline ? "Connected to internet" : "Offline — changes will sync when reconnected"}
+    >
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: color,
+          display: "inline-block",
+          flexShrink: 0,
+        }}
+      />
+      <span style={{ fontSize: "0.7rem", fontWeight: 600, color }}>
+        {isOnline ? "Online" : "Syncing..."}
+      </span>
+    </div>
+  );
+}
+
 function DashboardLayoutInner() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, school } = useAuth();
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
-  const { preferences, addRecentItem } = useUserPreferences();
+  const { addRecentItem } = useUserPreferences();
+  const { data: health } = useHealthStatus();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
@@ -119,7 +186,7 @@ function DashboardLayoutInner() {
   };
 
   const role = user?.role || "";
-  const roleLabel = roleLabels[role] || "Administrator";
+  void role; // used for sidebar
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "SA";
@@ -138,8 +205,13 @@ function DashboardLayoutInner() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM }}>
+      {/* Desktop: full sidebar */}
       <div className="hidden lg:flex">
         <Sidebar role={(user?.role || "school-admin") as any} />
+      </div>
+      {/* Tablet: icon-only collapsed sidebar */}
+      <div className="hidden md:flex lg:hidden">
+        <Sidebar role={(user?.role || "school-admin") as any} collapsed={true} />
       </div>
 
       {mobileOpen && (
@@ -167,7 +239,26 @@ function DashboardLayoutInner() {
           </div>
 
           <div className="flex items-center gap-3">
-            {installPrompt && (
+            <div className="flex items-center gap-2">
+            {/* Health Badges — only show after first successful poll */}
+            {health && (
+              <>
+                <HealthBadge
+                  label="MoMo"
+                  status={health.momo.status}
+                  latency={health.momo.latency_ms}
+                />
+                <HealthBadge
+                  label="WhatsApp"
+                  status={health.whatsapp.status}
+                  latency={health.whatsapp.latency_ms}
+                />
+                <SyncBadge isOnline={navigator.onLine} />
+              </>
+            )}
+          </div>
+
+          {installPrompt && (
               <button onClick={handleInstall}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium"
                 style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", color: NAVY }}>
