@@ -23,6 +23,9 @@ import {
   ChevronRight,
   School,
   Bell,
+  Building,
+  Upload,
+  FileText,
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
@@ -317,6 +320,50 @@ function TaskItem({ title, priority, dueDate, owner, onClick }: {
   );
 }
 
+const OnboardingWizard = ({ children }: { children: React.ReactNode }) => (
+  <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm mt-6">
+    <h1 className="text-2xl font-bold text-slate-900">
+      Welcome to SchoolOS. Every great school starts with one student.
+    </h1>
+    <p className="text-slate-500 mt-2 mb-8">
+      Set up your school in 5 minutes. No technical skills needed.
+    </p>
+    <div className="mt-8 space-y-3 max-w-md">
+      {children}
+    </div>
+  </div>
+);
+
+const Step = ({ number, label, description, href, icon: Icon, completed }: {
+  number: number;
+  label: string;
+  description: string;
+  href: string;
+  icon: React.ElementType;
+  completed?: boolean;
+}) => {
+  const navigate = useNavigate();
+  return (
+    <div 
+      onClick={() => navigate(href)}
+      className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer border border-transparent hover:border-slate-100 group"
+    >
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold shrink-0 transition-colors ${
+        completed ? "bg-green-100 text-green-700" : "bg-primary-100 text-primary-700"
+      }`}>
+        {completed ? <CheckCircle size={16} /> : number}
+      </div>
+      <div>
+        <div className="flex items-center gap-2">
+          <Icon size={16} className={`transition-colors ${completed ? "text-green-700" : "text-slate-500 group-hover:text-slate-700"}`} />
+          <h4 className="text-sm font-medium text-slate-900">{label}</h4>
+        </div>
+        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+      </div>
+    </div>
+  );
+};
+
 // ─── Admin Overview ──────────────────────────────────────────────────────────
 export function AdminOverview() {
   const navigate = useNavigate();
@@ -335,46 +382,16 @@ export function AdminOverview() {
     return candidate < now ? new Date(now.getFullYear() + 1, 4, 20) : candidate;
   }, [school]);
 
-  // Mock data — replaced by real data from useDashboardStats
-  const mockData = {
-    stats: { totalStudents: 542, totalTeachers: 28, attendanceRate: 86, activeClasses: 18 },
-    finance: { totalBilled: 125000, totalCollected: 98500 },
-    defaulters: { count: 12 },
-    pendingCount: 5,
-    alerts: [
-      {
-        id: "fee-alert",
-        type: "warning" as const,
-        title: "Outstanding Fees",
-        description: "12 students have not cleared their fees for this term.",
-        action: { label: "View Defaulters", onClick: () => navigate("/dashboard/fees") },
-      },
-      {
-        id: "approval-alert",
-        type: "info" as const,
-        title: "Pending Approvals",
-        description: "5 exam results are waiting for review and approval.",
-        action: { label: "Review Now", onClick: () => navigate("/dashboard/assessments") },
-      },
-    ],
-    tasks: [
-      { id: "1", title: "Approve Exam Results (Form 3)", priority: "high" as const, dueDate: "Today", owner: "Mr. Kofi" },
-      { id: "2", title: "Generate Report Cards", priority: "high" as const, dueDate: "Tomorrow", owner: "System" },
-      { id: "3", title: "Set Class Timetable", priority: "medium" as const, dueDate: "Friday", owner: "Mr. Asante" },
-      { id: "4", title: "Review Fee Settings", priority: "medium" as const, dueDate: "Next Week", owner: "Finance" },
-    ],
-  };
-
-  const dashData = dash || mockData;
+  const dashData = dash || {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const anyDash = dashData as any;
-  const attendanceRate = Number(dashData.stats?.attendanceRate ?? 0);
-  const totalCollected = dashData.finance?.totalCollected ?? 0;
-  const totalBilled = dashData.finance?.totalBilled ?? 0;
+  const attendanceRate = Number(anyDash.stats?.attendanceRate ?? 0);
+  const totalCollected = anyDash.finance?.totalCollected ?? 0;
+  const totalBilled = anyDash.finance?.totalBilled ?? 0;
   const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
   const defaulters = anyDash.defaulters?.count ?? 0;
   const pendingCount = anyDash.pendingCount ?? 0;
-  const totalStudents = dashData.stats?.totalStudents ?? 0;
+  const totalStudents = anyDash.stats?.totalStudents ?? 0;
 
   const visibleAlerts = ((anyDash.alerts || []) as Array<any>).filter((a) => !dismissedAlerts.includes(a.id || ""));
 
@@ -417,6 +434,7 @@ export function AdminOverview() {
       <BeceCountdown beceDate={beceDate} unreadyCount={Math.max(0, Math.floor(totalStudents * 0.08))} />
 
       {/* ── Alerts ── */}
+
       {visibleAlerts.length > 0 && (
         <div className="space-y-2">
           {visibleAlerts.map((alert) => (
@@ -432,13 +450,55 @@ export function AdminOverview() {
         </div>
       )}
 
-      {/* ── Quick Actions (prominently placed, FIRST thing after alerts) ── */}
-      <QuickActionsPanel />
+      {/* ── Main Content Switch: Onboarding vs Dashboard ── */}
+      {totalStudents === 0 && !isLoading ? (
+        <OnboardingWizard>
+          <Step 
+            number={1} 
+            label="Add your school profile" 
+            description="Name, GES registration, academic calendar"
+            href="/dashboard/settings/school" 
+            icon={Building} 
+            completed={(school as any)?.name ? true : false}
+          />
+          <Step 
+            number={2} 
+            label="Import your students" 
+            description="Upload your register or add one by one"
+            href="/dashboard/students/import" 
+            icon={Upload} 
+          />
+          <Step 
+            number={3} 
+            label="Set your fee structure" 
+            description="Tuition, PTA, exam fees per class"
+            href="/dashboard/fees/structure" 
+            icon={Banknote} 
+          />
+          <Step 
+            number={4} 
+            label="Mark today's attendance" 
+            description="Start with your first class"
+            href="/dashboard/attendance" 
+            icon={CheckCircle} 
+          />
+          <Step 
+            number={5} 
+            label="Generate your first report card" 
+            description="NaCCA-compliant, ready to print"
+            href="/dashboard/report-cards" 
+            icon={FileText} 
+          />
+        </OnboardingWizard>
+      ) : (
+        <>
+          {/* ── Quick Actions (prominently placed, FIRST thing after alerts) ── */}
+          <QuickActionsPanel />
 
-      {/* ── Time Range Filter ── */}
-      <div className="flex items-center gap-2">
-        <span style={{ color: MUTED, fontSize: "0.78rem", fontWeight: 500 }}>Showing:</span>
-        {(["today", "week", "month", "year"] as const).map((range) => (
+          {/* ── Time Range Filter ── */}
+          <div className="flex items-center gap-2">
+            <span style={{ color: MUTED, fontSize: "0.78rem", fontWeight: 500 }}>Showing:</span>
+            {(["today", "week", "month", "year"] as const).map((range) => (
           <button
             key={range}
             onClick={() => setTimeRange(range)}
@@ -468,7 +528,7 @@ export function AdminOverview() {
         <KPICard
           icon={<BookOpen size={22} />}
           label="Staff Members"
-          value={dashData.stats?.totalTeachers || 0}
+          value={anyDash.stats?.totalTeachers || 0}
           color={COLOR_SCHEME.success}
           trend={{ direction: "up", value: 2 }}
           onClick={() => navigate("/dashboard/staff")}
@@ -662,6 +722,8 @@ export function AdminOverview() {
           ))}
         </div>
       </div>
+      </>
+      )}
 
       {/* ── Footer Status ── */}
       <div

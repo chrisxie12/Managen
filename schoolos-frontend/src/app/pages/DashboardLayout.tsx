@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Bell, Search, Menu, Download,
+  Bell, Search, Menu, Download, AlertTriangle
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
@@ -45,38 +45,26 @@ const topLevelPaths: Record<string, string> = {
   "/dashboard/inbox": "Inbox",
 };
 
-// ─── Health Badge ──────────────────────────────────────────────────────────────
-type BadgeStatus = "green" | "yellow" | "red";
-
 function HealthBadge({
   label,
   status,
-  latency,
+  tooltip,
 }: {
   label: string;
-  status: "active" | "error" | "unknown";
-  latency: number;
+  status: "active" | "error" | "pilot";
+  tooltip?: string;
 }) {
-  const badgeStatus: BadgeStatus =
-    status === "active" && latency < 3000
-      ? "green"
-      : status === "active"
-      ? "yellow"
-      : "red";
-
-  const dotColor =
-    badgeStatus === "green" ? "#10B981" : badgeStatus === "yellow" ? "#F59E0B" : "#EF4444";
-  const labelText =
-    badgeStatus === "green" ? label : badgeStatus === "yellow" ? `${label} Slow` : `${label} Down`;
+  const dotColor = status === "active" ? "#10B981" : status === "pilot" ? "#F59E0B" : "#EF4444";
+  const labelText = status === "active" ? "Online" : status === "pilot" ? "Pilot" : "Down";
 
   return (
     <div
-      title={`${label}: ${latency}ms`}
+      title={tooltip}
       className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-default"
       style={{ background: `${dotColor}12`, border: `1px solid ${dotColor}30` }}
     >
       <span
-        className={badgeStatus === "green" ? "animate-pulse" : ""}
+        className={status === "active" ? "animate-pulse" : ""}
         style={{
           width: 6,
           height: 6,
@@ -87,7 +75,7 @@ function HealthBadge({
         }}
       />
       <span style={{ fontSize: "0.7rem", fontWeight: 600, color: dotColor }}>
-        {labelText}
+        {label}: {labelText}
       </span>
     </div>
   );
@@ -243,16 +231,20 @@ function DashboardLayoutInner() {
             {/* Health Badges — only show after first successful poll */}
             {health && (
               <>
-                <HealthBadge
-                  label="MoMo"
-                  status={health.momo.status}
-                  latency={health.momo.latency_ms}
-                />
-                <HealthBadge
-                  label="WhatsApp"
-                  status={health.whatsapp.status}
-                  latency={health.whatsapp.latency_ms}
-                />
+              {health?.momo && (
+                  <HealthBadge
+                    label="MoMo"
+                    status="pilot"
+                    tooltip="Connect MTN MoMo API to go live"
+                  />
+                )}
+                {health?.whatsapp && (
+                  <HealthBadge
+                    label="WhatsApp"
+                    status="pilot"
+                    tooltip="Connect Arkesel to go live"
+                  />
+                )}
                 <SyncBadge isOnline={navigator.onLine} />
               </>
             )}
@@ -315,6 +307,28 @@ function DashboardLayoutInner() {
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6">
+          {/* Global Pilot Banner */}
+          {!sessionStorage.getItem("pilotBannerDismissed") && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg mb-6 p-4 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h5 className="text-amber-800 font-medium mb-1">Pilot Mode</h5>
+                <p className="text-amber-700 text-sm">
+                  You're seeing a preview of SchoolOS. MoMo payments and WhatsApp messages are simulated. Your real data will appear once your school is connected.
+                </p>
+              </div>
+              <button 
+                onClick={(e) => {
+                  sessionStorage.setItem("pilotBannerDismissed", "true");
+                  const target = e.currentTarget.parentElement;
+                  if (target) target.style.display = "none";
+                }}
+                className="text-amber-800 hover:text-amber-900 text-sm font-medium px-2 py-1 rounded hover:bg-amber-100/50 transition-colors"
+              >
+                Got it
+              </button>
+            </div>
+          )}
           <SetupChecklist />
           <Breadcrumbs />
           <Outlet />

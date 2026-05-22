@@ -1,5 +1,5 @@
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { getNavigation, UserRole } from "../../config/navigation";
 import { GraduationCap, ChevronRight, Bell } from "lucide-react";

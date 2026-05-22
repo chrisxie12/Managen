@@ -8,6 +8,26 @@ import { ProgressBar } from '../components/shared/ProgressBar';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { useDashboardStats } from '../hooks/useDashboardStats';
+import { Clock } from 'lucide-react';
+
+const EmptyState = ({ icon, title, description, action }: any) => (
+  <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+    <div className="bg-slate-50 p-6 rounded-full mb-6">
+      {icon}
+    </div>
+    <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
+    <p className="text-slate-500 max-w-md mb-8">{description}</p>
+    {action && (
+      <button 
+        onClick={action.onClick}
+        className="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
+      >
+        {action.label}
+      </button>
+    )}
+  </div>
+);
 
 export function TeacherDashboard() {
     const {
@@ -15,8 +35,28 @@ export function TeacherDashboard() {
         loading, error
     } = useTeacherDashboard();
 
+    const { data: dashData, isLoading: dashLoading } = useDashboardStats();
+    const totalStudents = dashData?.stats?.totalStudents ?? 0;
+
     if (loading) return <DashboardSkeleton sections={3} cardsPerSection={4} />;
     if (error) return <div className="p-6"><SectionError message={error} /></div>;
+
+    if (totalStudents === 0 && !dashLoading) {
+        return (
+            <div className="p-4 md:p-8 bg-white min-h-screen">
+                <EmptyState 
+                  icon={<Clock className="w-12 h-12 text-slate-400" />}
+                  title="Your school is being set up"
+                  description="The headmaster is configuring SchoolOS. You'll be able to mark attendance and enter grades once students are added."
+                  action={{ 
+                    label: "Contact Headmaster", 
+                    onClick: () => window.open('https://wa.me/', '_blank') 
+                  }}
+                />
+            </div>
+        );
+    }
+
     if (!stats) return <div className="p-6">No data available</div>;
 
     const nextClass = timetable.find(t => t.status === 'NOW') || timetable.find(t => t.status === 'UPCOMING');

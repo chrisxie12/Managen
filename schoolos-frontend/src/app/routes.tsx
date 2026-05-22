@@ -1,5 +1,6 @@
-import { createBrowserRouter, Navigate } from "react-router";
-import { LandingPageV2 } from "./pages/LandingPageV2_improved";
+import { createBrowserRouter, Navigate, Outlet, useRouteError, isRouteErrorResponse } from "react-router";
+import { Toaster } from "./components/ui/sonner";
+import { LandingPage } from "./pages/LandingPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { HeadmasterDashboard } from "./pages/HeadmasterDashboard";
@@ -68,137 +69,198 @@ import { ProfileGuard } from "../components/ProfileGuard";
 import { Onboarding } from "./pages/Onboarding";
 import { RoleRouter } from "./components/RoleRouter";
 
+const NAVY = "#0A2472";
+
+function RootLayout() {
+  return (
+    <>
+      <Outlet />
+      <Toaster />
+    </>
+  );
+}
+
+function RouteErrorBoundary() {
+  const error = useRouteError();
+
+  let title = "Unexpected error";
+  let message = "Something went wrong. Please try again.";
+
+  if (isRouteErrorResponse(error)) {
+    title = `${error.status} ${error.statusText}`;
+    message = error.data?.message || message;
+  } else if (error instanceof Error) {
+    title = "Application error";
+    message = error.message;
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-8" style={{ background: "#F8F9FA" }}>
+      <div className="max-w-md text-center">
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+          style={{ background: "rgba(239,68,68,0.1)" }}
+        >
+          <span className="text-2xl">!</span>
+        </div>
+        <h1
+          className="text-2xl font-bold mb-2"
+          style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}
+        >
+          {title}
+        </h1>
+        <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          {message}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all active:scale-95 hover:opacity-90"
+          style={{ background: NAVY }}
+        >
+          Reload Page
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export const router = createBrowserRouter([
   {
-    path: "/",
-    Component: LandingPageV2,
-  },
-  {
-    path: "/login",
-    element: <Navigate to="/auth" replace />,
-  },
-  {
-    path: "/auth/login",
-    element: <Navigate to="/auth" replace />,
-  },
-  {
-    path: "/architecture",
-    Component: ManagenFlow,
-  },
-  {
-    path: "/auth",
-    Component: AuthPage,
-  },
-  {
-    path: "/onboarding",
-    element: (
-      <AuthGuard>
-        <Onboarding />
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/dashboard",
-    element: (
-      <AuthGuard>
-        <OnboardingGuard>
-          <ProfileGuard>
-            <DashboardLayout />
-          </ProfileGuard>
-        </OnboardingGuard>
-      </AuthGuard>
-    ),
+    element: <RootLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
-      { index: true, Component: RoleRouter },
-      { path: "admin", Component: AdminOverview },
-      { path: "students", Component: StudentsPage },
-      { path: "students/import", Component: StudentsImport },
-      { path: "fees", Component: FeesPage },
-      { path: "attendance", Component: AttendancePage },
-      { path: "classes", Component: ClassesPage },
-      { path: "headmaster", Component: HeadmasterDashboard },
-      { path: "accountant", Component: AccountantDashboard },
-      { path: "teacher", Component: TeacherDashboard },
-      { path: "teacher/classes", Component: TeacherClassManagement },
-      { path: "student", Component: StudentDashboard },
-      { path: "student/details", Component: StudentDetails },
-      { path: "student/details/:id", Component: StudentDetails },
-      { path: "parent", Component: ParentDashboard },
-      { path: "librarian", Component: LibrarianDashboard },
-      { path: "parent/child/:id", Component: ParentChildDetails },
-      { path: "inbox", Component: Inbox },
-      { path: "notifications", Component: NotificationsPage },
-      { path: "attendance-links", Component: AttendanceLinks },
-      { path: "report-cards", Component: ReportCards },
-      { path: "bulk-import", Component: BulkImport },
-      { path: "staff", Component: StaffDirectory },
-      { path: "daily-signin", Component: DailySignIn },
-      { path: "assessments", Component: Assessments },
-      { path: "weighted-gradebook", Component: WeightedGradebook },
-      { path: "assessments/entry", Component: AssessmentsEntry },
-      { path: "timetable-scheduler", Component: TimetableScheduler },
-      { path: "analytics", Component: AnalyticsDashboard },
-      { path: "academics", Component: Academics },
-      { path: "finance", Component: Finance },
-      { path: "gradebook", Component: GradebookGrid },
-      { path: "reports", Component: Reports },
-      { path: "audit-logs", Component: AuditLogs },
-      { path: "fee-reminders", Component: SmartFeeReminders },
-      { path: "communication", Component: Communication },
-      { path: "system-health", Component: SystemHealth },
-      
-      // New Navigation Mappings
-      { path: "whatsapp", Component: Communication },
-      { path: "notices", Component: Communication },
-      { path: "fees/collect", Component: FeesPage },
-      { path: "fees/structure", Component: FeesPage },
-      { path: "fees/reports", Component: Reports },
-      { path: "setup/profile", Component: SchoolSettings },
-      { path: "setup/staff", Component: StaffDirectory },
-      { path: "setup/branding", Component: SchoolSettings },
-      { path: "setup/nacca", Component: SchoolSettings },
-      { path: "setup/integrations", Component: SchoolSettings },
-      { path: "setup/data", Component: SchoolSettings },
-      { path: "profile", Component: AdminProfile },
-      { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SchoolSettings /></RequireRole> },
-      { path: "users", element: <RequireRole roles={["school_admin", "admin"]}><AdminUsers /></RequireRole> },
-      { path: "roles", element: <RequireRole roles={["school_admin", "admin"]}><AdminRoles /></RequireRole> },
-    ],
-  },
-  {
-    path: "/parent",
-    element: (
-      <AuthGuard>
-        <ParentGuard>
-          <ParentLayout />
-        </ParentGuard>
-      </AuthGuard>
-    ),
-    children: [
-      { index: true, Component: ParentHome },
-      { path: "child", Component: ParentChild },
-      { path: "fees", Component: ParentFees },
-      { path: "reports", Component: ParentReports },
-      { path: "profile", Component: ParentProfile },
-    ],
-  },
-  {
-    path: "/payment/verify",
-    Component: PaymentVerify,
-  },
-  {
-    path: "/superadmin",
-    element: (
-      <SuperAdminAuthGuard>
-        <SuperAdminLayout />
-      </SuperAdminAuthGuard>
-    ),
-    children: [
-      { index: true, Component: SuperAdminDashboard },
-        { path: "overview", Component: SuperAdminOverview },
-      { path: "schools", Component: SuperAdminSchools },
-      { path: "billing", Component: SuperAdminBilling },
-      { path: "report-cards", Component: SuperAdminReportCards },
+      {
+        path: "/",
+        Component: LandingPage,
+      },
+      {
+        path: "/login",
+        element: <Navigate to="/auth" replace />,
+      },
+      {
+        path: "/auth/login",
+        element: <Navigate to="/auth" replace />,
+      },
+      {
+        path: "/architecture",
+        Component: ManagenFlow,
+      },
+      {
+        path: "/auth",
+        Component: AuthPage,
+      },
+      {
+        path: "/onboarding",
+        element: (
+          <AuthGuard>
+            <Onboarding />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/dashboard",
+        element: (
+          <AuthGuard>
+            <OnboardingGuard>
+              <ProfileGuard>
+                <DashboardLayout />
+              </ProfileGuard>
+            </OnboardingGuard>
+          </AuthGuard>
+        ),
+        children: [
+          { index: true, Component: RoleRouter },
+          { path: "admin", Component: AdminOverview },
+          { path: "students", Component: StudentsPage },
+          { path: "students/import", Component: StudentsImport },
+          { path: "fees", Component: FeesPage },
+          { path: "attendance", Component: AttendancePage },
+          { path: "classes", Component: ClassesPage },
+          { path: "headmaster", Component: HeadmasterDashboard },
+          { path: "accountant", Component: AccountantDashboard },
+          { path: "teacher", Component: TeacherDashboard },
+          { path: "teacher/classes", Component: TeacherClassManagement },
+          { path: "student", Component: StudentDashboard },
+          { path: "student/details", Component: StudentDetails },
+          { path: "student/details/:id", Component: StudentDetails },
+          { path: "parent", Component: ParentDashboard },
+          { path: "librarian", Component: LibrarianDashboard },
+          { path: "parent/child/:id", Component: ParentChildDetails },
+          { path: "inbox", Component: Inbox },
+          { path: "notifications", Component: NotificationsPage },
+          { path: "attendance-links", Component: AttendanceLinks },
+          { path: "report-cards", Component: ReportCards },
+          { path: "bulk-import", Component: BulkImport },
+          { path: "staff", Component: StaffDirectory },
+          { path: "daily-signin", Component: DailySignIn },
+          { path: "assessments", Component: Assessments },
+          { path: "weighted-gradebook", Component: WeightedGradebook },
+          { path: "assessments/entry", Component: AssessmentsEntry },
+          { path: "timetable-scheduler", Component: TimetableScheduler },
+          { path: "analytics", Component: AnalyticsDashboard },
+          { path: "academics", Component: Academics },
+          { path: "finance", Component: Finance },
+          { path: "gradebook", Component: GradebookGrid },
+          { path: "reports", Component: Reports },
+          { path: "audit-logs", Component: AuditLogs },
+          { path: "fee-reminders", Component: SmartFeeReminders },
+          { path: "communication", Component: Communication },
+          { path: "system-health", Component: SystemHealth },
+
+          // New Navigation Mappings
+          { path: "whatsapp", Component: Communication },
+          { path: "notices", Component: Communication },
+          { path: "fees/collect", Component: FeesPage },
+          { path: "fees/structure", Component: FeesPage },
+          { path: "fees/reports", Component: Reports },
+          { path: "setup/profile", Component: SchoolSettings },
+          { path: "setup/staff", Component: StaffDirectory },
+          { path: "setup/branding", Component: SchoolSettings },
+          { path: "setup/nacca", Component: SchoolSettings },
+          { path: "setup/integrations", Component: SchoolSettings },
+          { path: "setup/data", Component: SchoolSettings },
+          { path: "profile", Component: AdminProfile },
+          { path: "settings", element: <RequireRole roles={["school_admin", "admin", "headmaster"]}><SchoolSettings /></RequireRole> },
+          { path: "users", element: <RequireRole roles={["school_admin", "admin"]}><AdminUsers /></RequireRole> },
+          { path: "roles", element: <RequireRole roles={["school_admin", "admin"]}><AdminRoles /></RequireRole> },
+        ],
+      },
+      {
+        path: "/parent",
+        element: (
+          <AuthGuard>
+            <ParentGuard>
+              <ParentLayout />
+            </ParentGuard>
+          </AuthGuard>
+        ),
+        children: [
+          { index: true, Component: ParentHome },
+          { path: "child", Component: ParentChild },
+          { path: "fees", Component: ParentFees },
+          { path: "reports", Component: ParentReports },
+          { path: "profile", Component: ParentProfile },
+        ],
+      },
+      {
+        path: "/payment/verify",
+        Component: PaymentVerify,
+      },
+      {
+        path: "/superadmin",
+        element: (
+          <SuperAdminAuthGuard>
+            <SuperAdminLayout />
+          </SuperAdminAuthGuard>
+        ),
+        children: [
+          { index: true, Component: SuperAdminDashboard },
+          { path: "overview", Component: SuperAdminOverview },
+          { path: "schools", Component: SuperAdminSchools },
+          { path: "billing", Component: SuperAdminBilling },
+          { path: "report-cards", Component: SuperAdminReportCards },
+        ],
+      },
     ],
   },
 ]);
