@@ -6,7 +6,7 @@ CREATE TYPE queue_status AS ENUM ('pending', 'processing', 'sent', 'failed');
 CREATE TABLE IF NOT EXISTS receipt_queue (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     payment_id UUID NOT NULL REFERENCES payments(id) ON DELETE CASCADE,
-    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    tenant_id UUID,
     parent_phone TEXT NOT NULL,
     message TEXT NOT NULL,
     channel delivery_channel NOT NULL DEFAULT 'whatsapp',
@@ -22,7 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_receipt_queue_status_created ON receipt_queue(sta
 CREATE TABLE IF NOT EXISTS pending_receipts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     payment_id UUID NOT NULL REFERENCES payments(id) ON DELETE CASCADE,
-    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    tenant_id UUID,
     parent_phone TEXT NOT NULL,
     message TEXT NOT NULL,
     failure_reason TEXT,
