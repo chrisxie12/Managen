@@ -12,13 +12,13 @@ function getSubdomainHeader(): Record<string, string> {
   try {
     const host = window.location.hostname;
     if (host.endsWith(".getschoolos.me")) {
-      return { "x-school-subdomain": host.split(".")[0] };
+      return { "x-tenant-subdomain": host.split(".")[0] };
     }
     if (host.endsWith(".localhost") && host.split(".").length === 2) {
-      return { "x-school-subdomain": host.split(".")[0] };
+      return { "x-tenant-subdomain": host.split(".")[0] };
     }
     const stored = localStorage.getItem(SUBDOMAIN_KEY);
-    if (stored) return { "x-school-subdomain": stored };
+    if (stored) return { "x-tenant-subdomain": stored };
   } catch {}
   return {};
 }

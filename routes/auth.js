@@ -81,10 +81,11 @@ router.post('/login', validate(loginSchema), async (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
         );
 
+        const isProduction = process.env.NODE_ENV === 'production';
         res.cookie('schoolos_token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: isProduction,
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
             path: '/',
         });
@@ -280,7 +281,7 @@ router.post('/clerk-exchange', async (req, res) => {
         res.cookie('schoolos_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: '/',
         });

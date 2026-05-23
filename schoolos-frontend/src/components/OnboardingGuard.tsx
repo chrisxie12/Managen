@@ -1,21 +1,11 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import { useAuth } from "../app/contexts/AuthContext";
 import { useOnboardingStatus } from "../hooks/useOnboardingStatus";
 
 export function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const { user, school, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation();
   const { onboardingCompleted, loading } = useOnboardingStatus(school?.slug);
-
-  useEffect(() => {
-    if (authLoading || loading) return;
-    if (!user) return;
-    if (user.role === "superadmin") return;
-    if (!onboardingCompleted && window.location.pathname !== "/onboarding") {
-      navigate("/onboarding", { replace: true });
-    }
-  }, [authLoading, loading, onboardingCompleted, user, navigate]);
 
   if (authLoading || loading) {
     return (
@@ -25,7 +15,11 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!onboardingCompleted && window.location.pathname !== "/onboarding") return null;
+  if (!user) return <>{children}</>;
+  if (user.role === "superadmin") return <>{children}</>;
+  if (!onboardingCompleted && location.pathname !== "/onboarding") {
+    return <Navigate to="/onboarding" replace />;
+  }
 
   return <>{children}</>;
 }

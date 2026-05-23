@@ -374,12 +374,7 @@ app.use('/api/workers', require('./routes/workers'));
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/billing',    billingRoutes);
 app.use('/api/cron',       cronRoutes);
-app.use('/api/approvals',  approvalRoutes);
-app.use('/api/reports',    reportRoutes);
-app.use('/api/audit',      auditRoutes);
-app.use('/api/cron',       cronRoutes);
 app.use('/api/public',     publicRoutes);
-app.use('/api/assessments', assessmentsRoutes);
 
 // ─── Tenant Middleware (only for school-scoped routes) ─────────
 const { tenantMiddleware } = require('./middleware/tenant');

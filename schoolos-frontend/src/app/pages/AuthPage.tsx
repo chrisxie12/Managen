@@ -62,7 +62,7 @@ export function AuthPage() {
   const [verified, setVerified] = useState(false);
   const { signUp } = useSignUp();
   const clerk = useClerk();
-  const { refresh } = useAuth();
+  const { refresh, user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(form.password));
@@ -125,6 +125,10 @@ export function AuthPage() {
         storeSubdomain(res.data!.slug || "");
 
         await refresh();
+        if (!user) {
+          window.location.href = "/dashboard";
+          return;
+        }
         toast.success("Account created! Welcome to Managen.");
         navigate("/dashboard");
       } else if (mode === "superadmin") {
@@ -163,7 +167,7 @@ export function AuthPage() {
         const headers: Record<string, string> = {};
         if (tenant) headers["x-tenant-subdomain"] = tenant;
 
-        await api.post(
+        const loginRes = await api.post<{ data: { token: string } }>(
           "/api/auth/login",
           {
             email: form.email,
@@ -174,8 +178,18 @@ export function AuthPage() {
         );
 
         await refresh();
+
+        if (!user) {
+          const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers });
+          if (retryRes.data) {
+            window.location.href = "/dashboard";
+            return;
+          }
+          throw new Error("Session was created but could not be verified. Please try again.");
+        }
+
         toast.success("Welcome back!");
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");

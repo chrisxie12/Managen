@@ -82,7 +82,8 @@ router.get('/info', protect, (req, res) => {
                 maxStudents: getPlanConfig(req.tenant.plan).maxStudents,
                 trialEndsAt: null,
             }
-    }
+        }
+    });
 });
 
 // ─── Onboarding ──────────────────────────────────────────────
@@ -213,7 +214,6 @@ router.get('/notifications', protect, async (req, res) => {
         const notifications = await schoolService.getUserNotifications(req.tenant.id, userId, req.query);
         return res.json({ data: { notifications } });
     } catch (err) { return res.status(500).json({ error: 'Error fetching notifications.' }); }
-});
 });
 
 // ─── In-App Notifications (Realtime-enabled) ──────────────────
