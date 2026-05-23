@@ -42,6 +42,7 @@ const tenantMiddleware = async (req, res, next) => {
         ).trim().toLowerCase() || null;
 
         let subdomain = subdomainFromHost || fallbackSubdomain;
+        let tenant = null;
 
         if (!subdomain && req.cookies?.schoolos_token) {
             try {
@@ -81,7 +82,6 @@ const tenantMiddleware = async (req, res, next) => {
         }
 
         const cacheKey = `tenant:${subdomain}`;
-        let tenant = null;
 
         if (isRedisReady()) {
             try {

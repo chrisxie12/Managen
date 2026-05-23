@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import { Upload, Download, FileText, AlertCircle, CheckCircle, X } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../services/api";
 
 const NAVY = "#0A2472";
 const PRIMARY = "#0A2472";
@@ -106,21 +107,9 @@ export function StudentsImport() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/school/students/import', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: formData
-      });
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to upload.');
-      }
-      
-      if (data.data.errors) {
-        setErrors(data.data.errors);
+      const res = await api.upload('/api/school/students/import', formData);
+      if (res.data?.errors) {
+        setErrors(res.data.errors);
       } else {
         setUploadSuccess(true);
       }

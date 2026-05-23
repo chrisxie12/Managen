@@ -85,7 +85,7 @@ router.get('/geofence-attendance', protect, requirePermission('attendance.view')
 // ─── Feature 2: Report Card Generation ──────────────────────────
 
 // POST /api/school/features/report-card/upload-template
-router.post('/report-card/upload-template', requirePermission('settings.edit'), upload.single('template'), async (req, res) => {
+router.post('/report-card/upload-template', protect, requirePermission('settings.edit'), upload.single('template'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'A .docx file is required.' });
         if (!req.file.originalname.endsWith('.docx')) {
@@ -109,7 +109,7 @@ router.get('/report-card/templates', protect, async (req, res) => {
 });
 
 // POST /api/school/features/report-card/generate
-router.post('/report-card/generate', requirePermission('grades.create', 'grades.edit'), async (req, res) => {
+router.post('/report-card/generate', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
         const result = await featureService.generateReportCards(req.tenant.id, req.body);
         return res.json({ data: { ...result, message: `Generated ${result.generated} report cards.` } });
@@ -129,7 +129,7 @@ router.get('/report-cards', protect, async (req, res) => {
 });
 
 // GET /api/school/features/report-cards/download-zip
-router.get('/report-cards/download-zip', requirePermission('reports.view'), async (req, res) => {
+router.get('/report-cards/download-zip', protect, requirePermission('reports.view'), async (req, res) => {
     try {
         const { zipPath, count } = await featureService.downloadReportCardsZip(req.tenant.id, req.query);
         res.download(zipPath, `report_cards_${Date.now()}.zip`, (err) => {
@@ -144,7 +144,7 @@ router.get('/report-cards/download-zip', requirePermission('reports.view'), asyn
 // ─── Feature 3: Bulk Data Import ───────────────────────────────
 
 // POST /api/school/features/import/preview
-router.post('/import/preview', requirePermission('students.create', 'students.edit'), upload.single('file'), async (req, res) => {
+router.post('/import/preview', protect, requirePermission('students.create', 'students.edit'), upload.single('file'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'A spreadsheet file is required.' });
         const entityType = req.body.entityType || 'students';
@@ -156,7 +156,7 @@ router.post('/import/preview', requirePermission('students.create', 'students.ed
 });
 
 // POST /api/school/features/import/confirm
-router.post('/import/confirm', requirePermission('students.create', 'students.edit'), upload.single('file'), async (req, res) => {
+router.post('/import/confirm', protect, requirePermission('students.create', 'students.edit'), upload.single('file'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'A spreadsheet file is required.' });
         const entityType = req.body.entityType || 'students';
@@ -170,7 +170,7 @@ router.post('/import/confirm', requirePermission('students.create', 'students.ed
 // ─── Feature 4: Enhanced Students/Staff Queries ────────────────
 
 // GET /api/school/features/students
-router.get('/students', requirePermission('students.view'), async (req, res) => {
+router.get('/students', protect, requirePermission('students.view'), async (req, res) => {
     try {
         const result = await featureService.getStudentsEnhanced(req.tenant.id, req.query);
         return res.json({ data: result });
@@ -202,7 +202,7 @@ router.get('/non-teaching-staff', protect, async (req, res) => {
 // ─── Feature 5: Daily Staff Sign-in/Sign-out ───────────────────
 
 // POST /api/school/features/daily-attendance/generate-links (admin/cron)
-router.post('/daily-attendance/generate-links', requirePermission('attendance.create'), async (req, res) => {
+router.post('/daily-attendance/generate-links', protect, requirePermission('attendance.create'), async (req, res) => {
     try {
         const links = await featureService.generateDailyAttendanceLinks(req.tenant.id);
         return res.status(201).json({ data: { links, message: 'Daily attendance links generated.' } });
@@ -212,7 +212,7 @@ router.post('/daily-attendance/generate-links', requirePermission('attendance.cr
 });
 
 // POST /api/school/features/daily-attendance/signin (public link)
-router.post('/daily-attendance/signin', async (req, res) => {
+router.post('/daily-attendance/signin', protect, async (req, res) => {
     try {
         const { linkCode } = req.body;
         const userId = req.user?.userId || req.user?.id;
@@ -225,7 +225,7 @@ router.post('/daily-attendance/signin', async (req, res) => {
 });
 
 // POST /api/school/features/daily-attendance/signout (public link)
-router.post('/daily-attendance/signout', async (req, res) => {
+router.post('/daily-attendance/signout', protect, async (req, res) => {
     try {
         const { linkCode } = req.body;
         const userId = req.user?.userId || req.user?.id;
@@ -238,7 +238,7 @@ router.post('/daily-attendance/signout', async (req, res) => {
 });
 
 // PUT /api/school/features/daily-attendance/override/:id
-router.put('/daily-attendance/override/:id', requirePermission('attendance.edit'), async (req, res) => {
+router.put('/daily-attendance/override/:id', protect, requirePermission('attendance.edit'), async (req, res) => {
     try {
         const record = await featureService.overrideStaffAttendance(req.tenant.id, req.params.id, req.user.userId || req.user.id, req.body);
         return res.json({ data: { record, message: 'Attendance record updated.' } });
@@ -248,7 +248,7 @@ router.put('/daily-attendance/override/:id', requirePermission('attendance.edit'
 });
 
 // GET /api/school/features/daily-attendance
-router.get('/daily-attendance', requirePermission('attendance.view'), async (req, res) => {
+router.get('/daily-attendance', protect, requirePermission('attendance.view'), async (req, res) => {
     try {
         const result = await featureService.getDailyStaffAttendance(req.tenant.id, req.query);
         return res.json({ data: result });

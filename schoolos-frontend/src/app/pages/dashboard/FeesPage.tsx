@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Search, Filter, Download, DollarSign, AlertCircle } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
-import { api } from "../../lib/api"; // Assuming there is an api module for making requests
+import { api } from "../../services/api";
 
 const NAVY = "#0A2472";
 const MUTED = "#6B7280";
@@ -78,34 +78,20 @@ export function FeesPage() {
     setIsProcessing(true);
     try {
       if (paymentMethod === "MoMo") {
-        await fetch('http://localhost:5000/api/school/payments/momo', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Adjust based on auth logic
-          },
-          body: JSON.stringify({
-            amount: Number(paymentAmount),
-            phone: momoPhone,
-            studentId: selectedFee.id,
-            studentName: selectedFee.studentName,
-            invoiceId: selectedFee.id, // Assuming fee.id is invoice id for this mock
-          })
+        await api.post('/api/school/payments/momo', {
+          amount: Number(paymentAmount),
+          phone: momoPhone,
+          studentId: selectedFee.id,
+          studentName: selectedFee.studentName,
+          invoiceId: selectedFee.id,
         });
         alert("MoMo prompt sent successfully to " + momoPhone);
       } else {
-        await fetch('http://localhost:5000/api/school/payments', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({
-            amount: Number(paymentAmount),
-            payment_method: paymentMethod.toLowerCase(),
-            student_id: selectedFee.id,
-            invoice_id: selectedFee.id,
-          })
+        await api.post('/api/school/payments', {
+          amount: Number(paymentAmount),
+          payment_method: paymentMethod.toLowerCase(),
+          student_id: selectedFee.id,
+          invoice_id: selectedFee.id,
         });
         alert(paymentMethod + " payment recorded successfully.");
       }

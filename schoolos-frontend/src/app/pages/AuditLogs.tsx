@@ -415,7 +415,11 @@ export function AuditLogs() {
       if (dateFrom) params.set("date_from", dateFrom);
       if (dateTo) params.set("date_to", dateTo);
 
-      const res = await fetch(`/api/school/audit-logs/export?${params.toString()}`, { credentials: "include" });
+      const subdomain = localStorage.getItem('managen_subdomain');
+      const res = await fetch(`/api/school/audit-logs/export?${params.toString()}`, {
+        credentials: "include",
+        headers: subdomain ? { 'x-tenant-subdomain': subdomain } : {},
+      });
       if (!res.ok) { setAlert({ type: "error", message: "Export failed." }); return; }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
