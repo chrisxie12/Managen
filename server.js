@@ -5,8 +5,11 @@ if (process.env.DD_ENABLED) {
   require('./config/datadog');
 }
 
-const Sentry = require('@sentry/node');
-if (process.env.SENTRY_DSN) {
+let Sentry;
+try {
+  Sentry = require('@sentry/node');
+} catch (_) { /* optional dependency */ }
+if (Sentry && process.env.SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.NODE_ENV || 'development',
@@ -46,7 +49,7 @@ const publicRoutes        = require('./routes/public');
 const app = express();
 app.set('trust proxy', 1);
 
-if (process.env.SENTRY_DSN) {
+if (Sentry && process.env.SENTRY_DSN) {
   app.use(Sentry.Handlers.requestHandler({ transaction: true }));
   app.use(Sentry.Handlers.tracingHandler());
 }
@@ -449,7 +452,7 @@ app.use((req, res) => {
 });
 
 // ─── Global Error Handler ─────────────────────────────────────
-if (process.env.SENTRY_DSN) {
+if (Sentry && process.env.SENTRY_DSN) {
   app.use(Sentry.Handlers.errorHandler());
 }
 app.use((err, req, res, next) => {
