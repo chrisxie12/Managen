@@ -1,482 +1,437 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 import {
-  ArrowRight, BookOpen, BarChart3, MessageSquare, CheckCircle2, GraduationCap,
-  Wallet, Bell, Menu, X, Zap, Clock, Award, Lock, TrendingUp, Users, Globe,
-  Sun, Moon, Shield, PlayCircle, Star, ChevronDown, ChevronUp,
+  ArrowRight, Menu, X, Star, ChevronDown, Check, GraduationCap,
+  Bell, Search, Moon, Users, BookOpen, Wallet, BarChart3,
+  MessageSquare, Library, Home, Bus, UserPlus, Briefcase,
+  Twitter, Linkedin, Facebook, Instagram, Settings, Zap,
 } from "lucide-react";
-import { api } from "../services/api";
-import { toast } from "sonner";
-import { ROICalculator } from "../components/ROICalculator";
 
-const COLORS = {
-  NAVY: "#0A2472",
-  NAVY_LIGHT: "#0C2D8A",
-  AMBER: "#FFBA08",
-  AMBER_LIGHT: "#FFF8E1",
-  CREAM: "#F8F9FA",
-  MUTED: "#6B7280",
-  GREEN: "#10B981",
-  RED: "#EF4444",
+const C = {
+  bg1: "#DFE3F5", bg2: "#F4F5FC",
+  glass: "rgba(255,255,255,0.82)",
+  glassBorder: "rgba(255,255,255,0.65)",
+  white: "#FFFFFF",
+  blue: "#6B9FFF", purple: "#A78BFA", teal: "#4DD9C0", navy: "#1A1A2E",
+  green: "#34D399", amber: "#FBBF24",
+  muted: "#6B7280", dark: "#0F1729", dark2: "#111827",
+  divider: "#F3F4F6", label: "#9CA3AF",
+  progressFrom: "#60A5FA", progressTo: "#A78BFA",
 };
+
+const modules = [
+  { icon: Zap, title: "Attendance Management", desc: "QR-based daily tracking for students and staff", cat: "Academic", catColor: C.blue },
+  { icon: Wallet, title: "Fees Management", desc: "Invoicing, payments, receipts, and arrears tracking", cat: "Finance", catColor: C.teal },
+  { icon: BookOpen, title: "Examinations", desc: "Schedule, grade, and publish results online", cat: "Academic", catColor: C.blue },
+  { icon: Library, title: "Library", desc: "Book catalog, issue/return, and fine management", cat: "Operations", catColor: C.purple },
+  { icon: Home, title: "Hostel", desc: "Room allocation, occupancy, and resident tracking", cat: "Operations", catColor: C.purple },
+  { icon: Bus, title: "Transport", desc: "Route management and student bus allocation", cat: "Operations", catColor: C.purple },
+  { icon: UserPlus, title: "Admissions", desc: "Online applications, shortlisting, and enrollment", cat: "Academic", catColor: C.blue },
+  { icon: MessageSquare, title: "Communication", desc: "In-app chat, announcements, and parent alerts", cat: "General", catColor: C.teal },
+  { icon: Briefcase, title: "Payroll", desc: "Staff salary, deductions, and payslip generation", cat: "Finance", catColor: C.teal },
+];
+
+const testimonials = [
+  { quote: "Managen cut our fee collection time by 60%. Parents can now pay from their phones and we get instant confirmation.", name: "Mrs. Adjoa Mensah", role: "Bursar, Accra Academy", rating: 5 },
+  { quote: "The QR attendance system eliminated proxy signing completely. Our teachers love it.", name: "Mr. Kwame Asante", role: "Headmaster, Presec Legon", rating: 5 },
+  { quote: "Having payroll, hostel, and transport all in one dashboard has transformed how we run operations.", name: "Dr. Efua Boateng", role: "Director, Aburi Girls", rating: 5 },
+];
+
+const pricing = [
+  { name: "Starter", price: "$49", sub: "Up to 300 students", badge: null, highlighted: false, features: ["Core modules (Attendance, Fees, Exams, Library)", "3 admin accounts", "Email support", "Basic reports"], cta: "Get Started" },
+  { name: "Growth", price: "$99", sub: "Up to 1,000 students", badge: "Most Popular", highlighted: true, features: ["Everything in Starter +", "Hostel, Transport, Payroll, Chat", "10 admin accounts", "Priority support", "Advanced analytics"], cta: "Start Free Trial" },
+  { name: "Enterprise", price: "Custom", sub: "Unlimited students", badge: null, highlighted: false, features: ["Everything in Growth +", "Custom modules", "Dedicated support", "API access", "SLA guarantee, On-premise option"], cta: "Contact Sales" },
+];
+
+const faqs = [
+  { q: "How long does it take to set up Managen?", a: "Most schools go live within 24 hours. Our onboarding team helps you import data, configure modules, and train staff in a single session." },
+  { q: "Can parents access the platform?", a: "Yes. Parents receive a dedicated portal where they can view attendance, fees, report cards, and communicate with teachers." },
+  { q: "Is student data secure and private?", a: "Absolutely. All data is encrypted in transit and at rest. Each school's data is fully isolated. We follow industry best practices for security." },
+  { q: "Can we import our existing student records?", a: "Yes. We provide bulk import templates for students, staff, classes, and fee structures. Our support team can assist with migration." },
+  { q: "Do you offer training for staff?", a: "Yes. Every plan includes onboarding training. We provide video tutorials, documentation, and live training sessions for your team." },
+  { q: "What happens if we exceed our student limit?", a: "We'll notify you before you hit your limit. You can upgrade your plan at any time to accommodate more students without any downtime." },
+];
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function Crosshair({ className }: { className?: string }) {
+  return <svg className={className} width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#9CA3AF" strokeWidth="1"/><line x1="7" y1="0" x2="7" y2="3" stroke="#9CA3AF" strokeWidth="1"/><line x1="7" y1="11" x2="7" y2="14" stroke="#9CA3AF" strokeWidth="1"/><line x1="0" y1="7" x2="3" y2="7" stroke="#9CA3AF" strokeWidth="1"/><line x1="11" y1="7" x2="14" y2="7" stroke="#9CA3AF" strokeWidth="1"/></svg>;
+}
+
+function Blob({ className, size = 400, color = "#C7CDEF", opacity = 0.06 }: { className?: string; size?: number; color?: string; opacity?: number }) {
+  return <div className={className} style={{ width: size, height: size, background: `radial-gradient(ellipse at 30% 40%, ${color}, transparent 70%)`, opacity, filter: "blur(60px)", pointerEvents: "none", borderRadius: "50%" }} />;
+}
+
+function FaintRing({ className, size = 300 }: { className?: string; size?: number }) {
+  return <svg className={className} width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" style={{ opacity: 0.08, pointerEvents: "none" }}><circle cx={size / 2} cy={size / 2} r={size * 0.4} stroke="white" strokeWidth="1.5"/><circle cx={size / 2} cy={size / 2} r={size * 0.28} stroke="#C7CDEF" strokeWidth="1"/></svg>;
+}
+
+function useCountUp(target: number, duration = 2000, start = false) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let raf: number;
+    const t0 = performance.now();
+    function frame(now: number) {
+      const p = Math.min((now - t0) / duration, 1);
+      setVal(Math.floor(p * target));
+      if (p < 1) raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration, start]);
+  return val;
+}
+
+function useOnScreen(threshold = 0.3) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible] as const;
+}
 
 export function LandingPage() {
   const navigate = useNavigate();
-  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [demoOpen, setDemoOpen] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [demoForm, setDemoForm] = useState({ name: "", email: "", schoolName: "" });
-  const [stats, setStats] = useState({ schools: 340, uptime: 99.7 });
-  const [openFaqId, setOpenFaqId] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [pricingAnnual, setPricingAnnual] = useState(false);
 
   useEffect(() => {
-    const root = document.documentElement;
-    dark ? root.classList.add("dark") : root.classList.remove("dark");
-    localStorage.setItem("theme", dark ? "dark" : "light");
-  }, [dark]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      if (window.scrollY > 50 && mobileOpen) setMobileOpen(false);
-    };
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => { setScrolled(window.scrollY > 80); if (window.scrollY > 50 && mobileOpen) setMobileOpen(false); };
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [mobileOpen]);
 
-  const submitDemo = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!demoForm.name || !demoForm.email || !demoForm.schoolName) {
-      return toast.error("Please fill in all fields");
-    }
-    setSending(true);
-    try {
-      await api.post("/api/onboard/demo-request", demoForm);
-      toast.success("Demo request sent! We'll contact you within 24 hours.");
-      setDemoOpen(false);
-      setDemoForm({ name: "", email: "", schoolName: "" });
-    } catch (err: any) {
-      toast.error(err.message || "Failed to send request");
-    } finally {
-      setSending(false);
-    }
-  };
+  const [statsRef, statsVisible] = useOnScreen(0.4);
+  const schools = useCountUp(500, 2200, statsVisible);
+  const students = useCountUp(200, 2400, statsVisible);
+  const modulesCount = useCountUp(40, 1800, statsVisible);
+  const uptime = useCountUp(999, 2000, statsVisible);
 
-  const testimonials = [
-    {
-      quote: "Managen cut our administrative workload by 60%. Parents get real-time updates, and we have peace of mind.",
-      author: "Mr. Kwaku Mensah",
-      role: "Headmaster, Accra Academy",
-      avatar: "KM",
-      color: "#3B82F6",
-    },
-    {
-      quote: "The fee collection system is incredible. We went from 40% collection rate to 92% in two terms.",
-      author: "Mrs. Ama Osei",
-      role: "Accountant, Sunshine Primary",
-      avatar: "AO",
-      color: "#10B981",
-    },
-    {
-      quote: "Exam scheduling and result publishing that used to take a week now takes hours. Game changer.",
-      author: "Dr. David Owusu",
-      role: "Principal, Mfantsipim School",
-      avatar: "DO",
-      color: "#F59E0B",
-    },
-  ];
+  const scrollTo = useCallback((id: string) => {
+    setMobileOpen(false);
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }, []);
 
-  const schoolLogos = [
-    "Accra Academy", "Sunshine Primary", "Cape Coast Scholars",
-    "Kumasi Prep", "Lincoln Community", "Ridge Church",
-  ];
-
-  // OUTCOME-FOCUSED FEATURES
-  const features = [
-    {
-      icon: Users,
-      title: "Stop Missing Attendance Patterns",
-      desc: "One-tap daily attendance with automatic parent notifications and AI-powered absorbency alerts.",
-      color: "#3B82F6",
-    },
-    {
-      icon: Wallet,
-      title: "Collect Fees, Not Excuses",
-      desc: "Automated reminders turn 40% → 92% collection in two terms. Payment tracking & reconciliation in minutes.",
-      color: "#10B981",
-    },
-    {
-      icon: BarChart3,
-      title: "Publish Results in Hours, Not Weeks",
-      desc: "WAEC/BECE templates, automatic grading, instant WhatsApp reports to parents.",
-      color: "#F59E0B",
-    },
-    {
-      icon: MessageSquare,
-      title: "Cut Admin Workload by 60%",
-      desc: "Parents get real-time updates automatically. No manual emails or calls needed.",
-      color: "#8B5CF6",
-    },
-    {
-      icon: TrendingUp,
-      title: "See What's Really Happening",
-      desc: "Visual dashboards showing attendance trends, fee patterns, and academic performance in real-time.",
-      color: "#EC4899",
-    },
-    {
-      icon: Shield,
-      title: "Sleep Soundly. Your Data is Safe.",
-      desc: "Bank-grade encryption, isolated per school, daily backups. Comply with data regulations.",
-      color: "#EF4444",
-    },
-  ];
-
-  const pricing = [
-    {
-      name: "Free Trial",
-      price: "Free",
-      duration: "7 days",
-      students: 50,
-      cta: "Start Now",
-      highlighted: false,
-      features: ["Up to 50 students", "Attendance & fees", "Basic reports", "No credit card required"],
-    },
-    {
-      name: "Growth",
-      price: "GHS 499",
-      priceMo: "GHS 399/yr",
-      duration: "per month",
-      students: 300,
-      cta: "Get Started",
-      highlighted: true,
-      badge: "Most Popular",
-      features: ["Up to 300 students", "Fee invoicing", "Exams", "WhatsApp reports", "Priority support"],
-    },
-    {
-      name: "Pro",
-      price: "GHS 999",
-      priceMo: "GHS 799/yr",
-      duration: "per month",
-      students: 800,
-      cta: "Get Started",
-      highlighted: false,
-      features: ["Up to 800 students", "Library & transport", "Payroll", "Unlimited reports", "API access"],
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      duration: "",
-      students: null,
-      cta: "Contact Sales",
-      highlighted: false,
-      features: ["Unlimited students", "All modules", "Custom domain", "Account manager", "SLA guarantee"],
-    },
-  ];
-
-  const workflow = [
-    { step: 1, title: "Import your data", desc: "Bulk upload student list and staff in 5 minutes" },
-    { step: 2, title: "Set up modules", desc: "Choose which features (attendance, fees, exams) to activate" },
-    { step: 3, title: "Invite staff & parents", desc: "Send WhatsApp links for instant onboarding" },
-    { step: 4, title: "Go live", desc: "Start taking attendance and collecting fees the same day" },
-  ];
-
-  const faqs = [
-    {
-      q: "Is there really no credit card required for the free trial?",
-      a: "Correct. The 7-day Free Trial gives you full access with no payment details required. You only provide billing information when you upgrade.",
-    },
-    {
-      q: "What happens when my free trial ends?",
-      a: "Your account is paused—no data deleted. You can upgrade anytime to reactivate. We'll send reminders before and after the trial ends.",
-    },
-    {
-      q: "Can I switch plans later?",
-      a: "Yes. Upgrade or downgrade anytime from your dashboard. Changes take effect at the start of your next billing cycle.",
-    },
-    {
-      q: "Does Managen support the Ghanaian curriculum?",
-      a: "Yes. Built specifically for Ghanaian schools with full support for WAEC, BECE, and local curriculum structures. Pricing in GHS.",
-    },
-    {
-      q: "How does the WhatsApp reporting work?",
-      a: "Integrated with WhatsApp Business API to send automated reports—attendance summaries, fee reminders, exam results—directly to parents.",
-    },
-    {
-      q: "Is our school data secure?",
-      a: "Yes. End-to-end encryption, isolated per school, daily backups. No school can access another school's data. GDPR-ready infrastructure.",
-    },
-    {
-      q: "What student limit on each plan?",
-      a: "Free Trial: 50. Growth: 300. Pro: 800. Enterprise: Unlimited. Need a custom limit? Contact our team.",
-    },
-    {
-      q: "Can I get a live demo?",
-      a: "Absolutely. Click 'Request Demo' and our team will schedule a personalized walkthrough for your school.",
-    },
-  ];
+  const navLinks = ["Home", "Features", "Modules", "Pricing", "Contact"];
 
   return (
-    <div
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-      className={`min-h-screen transition-colors duration-300 ${
-        dark ? "bg-gray-950 text-gray-100" : "bg-white text-gray-900"
-      }`}
-    >
+    <div style={{ fontFamily: "'Inter', 'DM Sans', sans-serif" }} className="min-h-screen overflow-x-hidden">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @keyframes float { 0%, 100% { transform: translateY(-8px) rotate(-2deg); } 50% { transform: translateY(0px) rotate(-2deg); } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .reveal { animation: fadeUp 0.6s ease-out both; }
-        .reveal-1 { animation-delay: 0.1s; }
-        .reveal-2 { animation-delay: 0.2s; }
-        .reveal-3 { animation-delay: 0.3s; }
-        .hover-lift { transition: all 0.3s ease; }
-        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+        @keyframes blobFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(20px, -30px) scale(1.05); } 66% { transform: translate(-10px, 20px) scale(0.95); } }
+        @keyframes progressGrow { from { width: 0%; } }
+        .anim-fade { opacity: 0; }
+        .anim-fade.show { animation: fadeUp 0.6s ease-out both; }
+        .anim-delay-1 { animation-delay: 0.1s; }
+        .anim-delay-2 { animation-delay: 0.2s; }
+        .anim-delay-3 { animation-delay: 0.3s; }
+        .anim-delay-4 { animation-delay: 0.4s; }
+        .anim-delay-5 { animation-delay: 0.5s; }
+        .hover-lift { transition: all 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(100,110,180,0.15); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(100,110,180,0.12); }
+        .accordion-content { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
+        .accordion-content.open { max-height: 200px; }
+        .glass { background: rgba(255,255,255,0.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.65); border-radius: 24px; box-shadow: 0 8px 32px rgba(100,110,180,0.10); }
+        .mockup-sidebar-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; font-size: 12px; color: #6B7280; border-radius: 6px; cursor: default; transition: all 0.15s; }
+        .mockup-sidebar-item.active { color: #1A1A2E; font-weight: 600; background: rgba(77,217,192,0.08); border-left: 2px solid #4DD9C0; border-radius: 0 6px 6px 0; padding-left: 10px; }
+        .stat-card { border-radius: 16px; padding: 16px; color: white; display: flex; flex-direction: column; justify-content: space-between; }
+        .stat-card .label { font-size: 11px; opacity: 0.85; }
+        .stat-card .value { font-size: 24px; font-weight: 800; margin-top: 4px; }
+        @media (max-width: 640px) { .stat-card .value { font-size: 20px; } }
       `}</style>
 
-      {/* NAV */}
-      <nav
-        className="fixed top-0 inset-x-0 z-40 transition-all duration-300"
-        style={{
-          background: dark
-            ? scrolled
-              ? "rgba(17,24,39,0.95)"
-              : "rgba(17,24,39,0.4)"
-            : scrolled
-            ? "rgba(255,255,255,0.95)"
-            : "rgba(255,255,255,0.4)",
-          backdropFilter: "blur(12px)",
-          borderBottom: `1px solid ${dark ? "rgba(55,65,81,0.3)" : "rgba(0,0,0,0.05)"}`,
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <button
-            onClick={() => navigate("/")}
-            className="flex items-center gap-2 cursor-pointer font-bold text-xl hover:opacity-70 transition-opacity"
-            style={{ color: COLORS.NAVY }}
-            aria-label="Managen home"
-          >
-            <GraduationCap size={28} />
-            <span className="hidden sm:inline">Managen</span>
+      {/* ─── BACKGROUND ─────────── */}
+      <div className="fixed inset-0 -z-10" style={{ background: "radial-gradient(ellipse at 70% 30%, #DFE3F5, #F4F5FC 80%)" }}>
+        <FaintRing className="absolute -top-20 -right-20" size={480} />
+        <FaintRing className="absolute top-1/3 -left-32" size={600} />
+        <FaintRing className="absolute bottom-1/4 right-1/4" size={300} />
+        <Blob className="absolute top-1/4 left-1/6" size={500} color="#A78BFA" opacity={0.05} style={{ animation: "blobFloat 20s ease-in-out infinite" }} />
+        <Blob className="absolute bottom-1/3 right-1/5" size={400} color="#6B9FFF" opacity={0.04} style={{ animation: "blobFloat 25s ease-in-out infinite reverse" }} />
+        <Crosshair className="absolute top-24 left-8" />
+        <Crosshair className="absolute top-24 right-8" />
+        <Crosshair className="absolute bottom-24 left-8" />
+        <Crosshair className="absolute bottom-24 right-8" />
+      </div>
+
+      {/* ─── NAV ─────────── */}
+      <nav className={`fixed top-0 left-1/2 -translate-x-1/2 z-40 transition-all duration-300`} style={{ marginTop: scrolled ? 8 : 16 }}>
+        <div className="flex items-center" style={{ background: C.navy, borderRadius: 999, padding: "10px 28px", boxShadow: "0 8px 32px rgba(26,26,46,0.18)", maxWidth: "90vw" }}>
+          <button onClick={() => navigate("/")} className="flex items-center gap-2 cursor-pointer mr-8">
+            <GraduationCap size={22} color={C.teal} />
+            <span className="text-white font-bold text-sm whitespace-nowrap">Managen</span>
           </button>
-
-          <div className="hidden md:flex items-center gap-8">
-            {["Features", "Pricing", "Security", "FAQ"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                style={{ color: COLORS.NAVY }}
-                className="text-sm font-medium hover:opacity-70 transition-opacity"
-              >
-                {item}
-              </a>
-            ))}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((l) => {
+              const active = l === "Home";
+              return (
+                <button key={l} onClick={() => l === "Home" ? scrollTo("hero") : scrollTo(l.toLowerCase())}
+                  className="px-3 py-1.5 text-sm font-medium transition-all whitespace-nowrap"
+                  style={{
+                    background: active ? C.white : "transparent",
+                    color: active ? C.navy : "rgba(255,255,255,0.8)",
+                    borderRadius: 999,
+                  }}
+                >{l}</button>
+              );
+            })}
           </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => setDark(!dark)}
-              className="p-2 hover:opacity-70"
-              style={{ color: COLORS.NAVY }}
-              aria-label="Toggle dark mode"
-            >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
-              onClick={() => navigate("/auth")}
-              style={{ color: COLORS.NAVY }}
-              className="px-4 py-2 text-sm font-medium hover:opacity-70"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => navigate("/auth?mode=signup")}
-              className="px-5 py-2 rounded-lg text-sm font-bold text-white"
-              style={{ background: COLORS.AMBER }}
-              aria-label="Start free trial"
-            >
-              Start Free
-            </button>
+          <div className="hidden md:flex items-center gap-2 ml-auto">
+            <button onClick={() => navigate("/auth")} style={{ border: "1px solid rgba(255,255,255,0.6)", color: "white", borderRadius: 999, padding: "6px 16px", fontSize: 13, fontWeight: 500 }} className="hover-lift">Log In</button>
+            <button onClick={() => navigate("/auth?mode=signup")} style={{ background: C.teal, color: C.dark, borderRadius: 999, padding: "6px 16px", fontSize: 13, fontWeight: 700, border: "none" }} className="hover-lift">Get Started Free</button>
           </div>
-
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden"
-            style={{ color: COLORS.NAVY }}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden ml-auto" style={{ color: "white" }} aria-label="Menu">{mobileOpen ? <X size={20} /> : <Menu size={20} />}</button>
         </div>
-
         {mobileOpen && (
-          <div
-            className="md:hidden border-t"
-            style={{ borderColor: `${COLORS.NAVY}10`, background: dark ? "rgba(17,24,39,0.8)" : "rgba(255,255,255,0.8)" }}
-          >
-            <div className="px-6 py-4 flex flex-col gap-4">
-              {["Features", "Pricing", "Security", "FAQ"].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} style={{ color: COLORS.NAVY }} className="text-sm font-medium">
-                  {item}
-                </a>
-              ))}
-              <button
-                onClick={() => navigate("/auth?mode=signup")}
-                className="px-5 py-2 rounded-lg text-sm font-bold text-white w-full"
-                style={{ background: COLORS.AMBER }}
-              >
-                Start Free Trial
-              </button>
+          <div className="md:hidden mt-2" style={{ background: C.navy, borderRadius: 24, padding: 16, boxShadow: "0 8px 32px rgba(26,26,46,0.25)" }}>
+            {navLinks.map((l) => (
+              <button key={l} onClick={() => scrollTo(l === "Home" ? "hero" : l.toLowerCase())} className="block w-full text-left px-3 py-2 text-sm" style={{ color: "rgba(255,255,255,0.8)" }}>{l}</button>
+            ))}
+            <div className="mt-3 pt-3 flex flex-col gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+              <button onClick={() => navigate("/auth")} className="w-full py-2 rounded-full text-sm font-medium" style={{ border: "1px solid rgba(255,255,255,0.4)", color: "white" }}>Log In</button>
+              <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-2 rounded-full text-sm font-bold" style={{ background: C.teal, color: C.dark }}>Get Started Free</button>
             </div>
           </div>
         )}
       </nav>
 
-      {/* HERO - OUTCOME FOCUSED */}
-      <section className="pt-32 pb-16 px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="reveal reveal-1 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
-                style={{ background: `${COLORS.AMBER}20`, color: COLORS.AMBER }}>
-                ✨ Built for Ghanaian schools
-              </div>
-
-              <h1 className="reveal reveal-1 text-5xl md:text-6xl font-bold leading-tight"
-                style={{ color: COLORS.NAVY }}>
-                Collect ₵50K More This Term
-              </h1>
-
-              <p className="reveal reveal-2 text-lg" style={{ color: COLORS.MUTED, maxWidth: "500px" }}>
-                From 40% to 92% fee collection. Real results in two terms. Managen handles attendance, fees, exams, and parent updates—all automated. Trusted by 340+ schools.
-              </p>
-
-              <div className="reveal reveal-3 flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => navigate("/auth?mode=signup")}
-                  className="px-6 py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2 hover-lift"
-                  style={{ background: COLORS.AMBER }}
-                >
-                  Start Free Trial
-                  <ArrowRight size={18} />
-                </button>
-                <button
-                  onClick={() => setDemoOpen(true)}
-                  className="px-6 py-3 rounded-lg font-bold border-2 flex items-center justify-center gap-2 hover-lift"
-                  style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}
-                >
-                  <PlayCircle size={18} />
-                  Watch Demo
-                </button>
-              </div>
-
-              <div className="reveal reveal-4 flex flex-wrap gap-4 text-sm pt-4"
-                style={{ color: COLORS.MUTED }}>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: COLORS.GREEN }} />
-                  No credit card required
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: COLORS.GREEN }} />
-                  Free forever tier
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: COLORS.GREEN }} />
-                  7-day trial
-                </div>
-              </div>
+      {/* ─── HERO ─────────── */}
+      <section id="hero" className="relative pt-40 pb-16 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-[55fr_45fr] gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider" style={{ background: C.teal, color: "white", marginBottom: 20 }}>
+              SCHOOL MANAGEMENT REIMAGINED
             </div>
-
-            <div className="reveal reveal-2 relative hidden lg:block">
-              <div
-                className="absolute inset-0 rounded-2xl opacity-20 blur-3xl"
-                style={{ background: `radial-gradient(circle, ${COLORS.AMBER}, transparent)` }}
-              />
-              <div
-                className="relative rounded-2xl p-8 border-2"
-                style={{
-                  background: dark ? "rgba(30,41,59,0.8)" : "rgba(248,249,250,1)",
-                  borderColor: `${COLORS.AMBER}40`,
-                }}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div style={{ color: COLORS.NAVY }} className="font-bold">Dashboard</div>
-                    <div className="w-3 h-3 rounded-full" style={{ background: COLORS.GREEN }} />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {["Students", "Fees Collected", "Attendance", "Pending"].map((label) => (
-                      <div key={label} className="p-3 rounded-lg"
-                        style={{ background: dark ? "rgba(55,65,81,0.5)" : "#F3F4F6" }}>
-                        <div className="text-xs" style={{ color: COLORS.MUTED }}>{label}</div>
-                        <div className="text-lg font-bold mt-1" style={{ color: COLORS.NAVY }}>
-                          {label === "Students" ? "1,250" : label === "Fees Collected" ? "92%" : label === "Attendance" ? "94%" : "3"}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight" style={{ color: C.dark, fontSize: "clamp(42px, 5vw, 60px)" }}>
+              Manage Your School.<br />Effortlessly.
+            </h1>
+            <p className="mt-5 text-base leading-relaxed" style={{ color: C.muted, maxWidth: 480, lineHeight: 1.7 }}>
+              One powerful platform for attendance, exams, fees, hostel, payroll, transport, and 40+ more modules — built for modern schools.
+            </p>
+            <div className="flex flex-wrap gap-4 mt-8">
+              <button onClick={() => navigate("/auth?mode=signup")} style={{ background: C.navy, color: "white", borderRadius: 12, padding: "12px 24px", fontSize: 14, fontWeight: 700, border: "none" }} className="hover-lift">Request a Demo</button>
+              <button onClick={() => scrollTo("features")} style={{ background: "white", color: C.dark, borderRadius: 12, padding: "12px 24px", fontSize: 14, fontWeight: 600, border: "1px solid #E5E7EB" }} className="hover-lift">Explore Features →</button>
             </div>
+            <div className="flex flex-wrap gap-5 mt-8 text-xs" style={{ color: C.muted }}>
+              <span className="flex items-center gap-1.5"><Check size={12} color={C.teal} /> 40+ Modules</span>
+              <span className="flex items-center gap-1.5"><Check size={12} color={C.teal} /> Role-Based Access</span>
+              <span className="flex items-center gap-1.5"><Check size={12} color={C.teal} /> Cloud-Based</span>
+            </div>
+          </div>
+          <div className="relative" style={{ animation: "float 3s ease-in-out infinite" }}>
+            <div className="glass p-4" style={{ transform: "rotate(-2deg)", boxShadow: "0 24px 64px rgba(100,110,200,0.18)" }}>
+              <DashboardPreviewMini />
+            </div>
+            <svg className="absolute -bottom-8 -left-8" width="120" height="60" viewBox="0 0 120 60" fill="none" style={{ opacity: 0.3, pointerEvents: "none" }}>
+              <path d="M10 50 Q 40 10, 70 40 T 110 10" stroke="#0F1729" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            </svg>
           </div>
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section className="py-12 px-6 border-y"
-        style={{ borderColor: dark ? "rgba(55,65,81,0.3)" : `${COLORS.NAVY}10` }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>TRUSTED BY SCHOOLS ACROSS GHANA</p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            {schoolLogos.map((logo) => (
-              <div key={logo} className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm"
-                  style={{ background: `${COLORS.AMBER}20`, color: COLORS.AMBER }}>
-                  {logo[0]}
+      {/* ─── STATS ─────────── */}
+      <section className="px-6 pb-20" ref={statsRef}>
+        <div className="glass mx-auto" style={{ maxWidth: 900, borderRadius: 20, padding: "32px 16px" }}>
+          <div className="flex flex-wrap justify-center">
+            {[
+              { val: schools, label: "Schools Onboarded", sub: "Across 12 countries", suffix: "+" },
+              { val: students, label: "Students Managed", sub: "Active profiles", suffix: "K+" },
+              { val: modulesCount, label: "Modules Available", sub: "Fully integrated", suffix: "+" },
+              { val: uptime, label: "Uptime Guaranteed", sub: "Cloud reliability", suffix: "%", decimal: true },
+            ].map((s, i) => (
+              <div key={i} className="flex-1 min-w-[140px] text-center px-4 py-6" style={{ borderRight: i < 3 ? "1px solid #F3F4F6" : "none" }}>
+                <div className="text-4xl font-extrabold" style={{ color: C.dark2, fontSize: "clamp(28px, 3vw, 36px)" }}>
+                  {s.decimal ? <>{statsVisible ? (s.val / 10).toFixed(1) : "0"}<span style={{ fontSize: "0.6em", verticalAlign: "super" }}>%</span></>
+                    : <>{s.val}{s.suffix}</>}
                 </div>
-                <span className="text-sm font-medium" style={{ color: COLORS.NAVY }}>{logo}</span>
+                <div className="text-xs font-semibold mt-2" style={{ color: C.label }}>{s.label}</div>
+                <div className="text-[10px] mt-0.5" style={{ color: "#D1D5DB" }}>{s.sub}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 px-6">
+      {/* ─── INTEGRATION ─────────── */}
+      <section className="px-6 pb-20">
+        <div className="glass mx-auto p-8 relative" style={{ maxWidth: 1000 }}>
+          <Crosshair className="absolute top-4 left-4" />
+          <Crosshair className="absolute top-4 right-4" />
+          <Crosshair className="absolute bottom-4 left-4" />
+          <Crosshair className="absolute bottom-4 right-4" />
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="md:w-2/5">
+              <h3 className="text-xl font-bold" style={{ color: C.dark2 }}>Connects with tools your school already uses</h3>
+              <p className="text-sm mt-2" style={{ color: C.muted }}>Seamlessly sync with payment gateways, communication tools, and government portals</p>
+            </div>
+            <div className="md:w-3/5 flex flex-wrap items-center justify-center gap-8">
+              {["Paystack", "Flutterwave", "Google", "Zoom", "WhatsApp", "SMS"].map((name) => (
+                <div key={name} className="flex items-center gap-2 opacity-40 hover:opacity-100 transition-all duration-300 cursor-default">
+                  <div className="w-7 h-7 rounded" style={{ background: C.divider }} />
+                  <span className="text-xs font-medium" style={{ color: C.muted }}>{name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FEATURES ─────────── */}
+      <section id="features" className="px-6 pb-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>WHAT HEADMASTERS SAY</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Loved by school leaders
-            </h2>
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold" style={{ background: C.teal, color: "white", marginBottom: 16 }}>
+              WHAT WE OFFER
+            </div>
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2, fontSize: "clamp(30px, 3vw, 38px)" }}>Everything your school needs, in one place</h2>
+            <p className="text-sm mt-4 mx-auto" style={{ color: C.muted, maxWidth: 540 }}>From admissions to graduation — every workflow is covered</p>
           </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {modules.map((m, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 card-hover anim-fade show" style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.055)", animationDelay: `${i * 50}ms` }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style={{ background: `${m.catColor}18`, color: m.catColor }}>
+                  <m.icon size={20} />
+                </div>
+                <h3 className="text-base font-semibold" style={{ color: C.dark2 }}>{m.title}</h3>
+                <p className="text-sm mt-1.5" style={{ color: C.muted }}>{m.desc}</p>
+                <div className="mt-3 inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold" style={{ background: `${m.catColor}12`, color: m.catColor }}>{m.cat}</div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <button onClick={() => scrollTo("pricing")} className="text-sm font-semibold hover:opacity-70 transition-opacity" style={{ color: C.teal }}>Explore All 40+ Modules →</button>
+          </div>
+        </div>
+      </section>
 
+      {/* ─── DASHBOARD PREVIEW ─────────── */}
+      <section className="px-6 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold" style={{ background: C.purple, color: "white", marginBottom: 16 }}>
+              LIVE PREVIEW
+            </div>
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2 }}>A dashboard built for clarity</h2>
+            <p className="text-sm mt-2" style={{ color: C.muted }}>Real-time insights across every department — always one click away</p>
+          </div>
+          <div className="glass relative p-1" style={{ borderRadius: 24 }}>
+            <Crosshair className="absolute top-3 left-3 z-10" />
+            <Crosshair className="absolute top-3 right-3 z-10" />
+            <Crosshair className="absolute bottom-3 left-3 z-10" />
+            <Crosshair className="absolute bottom-3 right-3 z-10" />
+            <DashboardPreviewFull />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TESTIMONIALS ─────────── */}
+      <section className="px-6 pb-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold" style={{ background: C.amber, color: C.dark, marginBottom: 16 }}>
+              TRUSTED BY SCHOOLS
+            </div>
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2 }}>What school administrators are saying</h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
-              <div key={i} className="p-6 rounded-xl border hover-lift"
-                style={{
-                  background: dark ? "rgba(30,41,59,0.8)" : "rgba(255,255,255,1)",
-                  borderColor: `${t.color}30`,
-                }}>
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} size={16} fill={t.color} style={{ color: t.color }} />
+              <div key={i} className="bg-white rounded-2xl p-6 card-hover" style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.055)" }}>
+                <div className="text-5xl leading-none mb-3" style={{ color: C.teal, opacity: 0.5 }}>"</div>
+                <p className="text-sm italic leading-relaxed mb-5" style={{ color: C.dark2 }}>{t.quote}</p>
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(t.rating)].map((_, j) => <Star key={j} size={14} fill={C.amber} style={{ color: C.amber }} />)}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: C.blue }}>{t.name.split(" ").map(w => w[0]).join("")}</div>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: C.dark2 }}>{t.name}</div>
+                    <div className="text-xs" style={{ color: C.muted }}>{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── PRICING ─────────── */}
+      <section id="pricing" className="px-6 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold" style={{ background: C.teal, color: "white", marginBottom: 16 }}>
+              SIMPLE PRICING
+            </div>
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2 }}>Choose the plan that fits your school</h2>
+            <div className="inline-flex items-center gap-3 mt-6 p-1 rounded-full" style={{ background: C.divider }}>
+              <button onClick={() => setPricingAnnual(false)} className="px-4 py-1.5 rounded-full text-sm font-medium transition-all" style={{ background: pricingAnnual ? "transparent" : "white", color: pricingAnnual ? C.muted : C.dark2, boxShadow: pricingAnnual ? "none" : "0 2px 8px rgba(0,0,0,0.08)" }}>Monthly</button>
+              <button onClick={() => setPricingAnnual(true)} className="px-4 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2" style={{ background: pricingAnnual ? "white" : "transparent", color: pricingAnnual ? C.dark2 : C.muted, boxShadow: pricingAnnual ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>
+                Annual <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: C.green, color: "white" }}>Save 20%</span>
+              </button>
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {pricing.map((p, i) => (
+              <div key={i} className="relative rounded-2xl p-8 card-hover" style={{
+                background: p.highlighted ? `linear-gradient(135deg, ${C.blue}08, ${C.purple}08)` : "white",
+                border: p.highlighted ? "2px solid transparent" : "1px solid #F3F4F6",
+                boxShadow: p.highlighted ? "0 8px 32px rgba(107,159,255,0.15)" : "0 4px 20px rgba(0,0,0,0.055)",
+                backgroundClip: p.highlighted ? "padding-box" : "unset",
+              }}>
+                {p.badge && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold" style={{ background: C.teal, color: "white", whiteSpace: "nowrap" }}>{p.badge}</div>}
+                <h3 className="text-lg font-bold" style={{ color: C.dark2 }}>{p.name}</h3>
+                <div className="mt-4">
+                  <span className="text-4xl font-extrabold" style={{ color: C.dark2 }}>{p.price}</span>
+                  {p.price !== "Custom" && <span className="text-sm ml-1" style={{ color: C.muted }}>/mo</span>}
+                </div>
+                <div className="text-xs mt-1" style={{ color: C.muted }}>{p.sub}</div>
+                <button onClick={() => navigate("/auth?mode=signup")} className="w-full mt-6 py-2.5 rounded-xl text-sm font-bold transition-all hover-lift" style={{
+                  background: p.highlighted ? C.navy : "white",
+                  color: p.highlighted ? "white" : C.dark2,
+                  border: p.highlighted ? "none" : "1px solid #E5E7EB",
+                }}>{p.cta}</button>
+                <div className="mt-6 space-y-3">
+                  {p.features.map((f, j) => (
+                    <div key={j} className="flex items-start gap-2 text-xs" style={{ color: C.muted }}>
+                      <Check size={14} color={C.teal} className="flex-shrink-0 mt-0.5" />
+                      <span>{f}</span>
+                    </div>
                   ))}
                 </div>
-                <p className="mb-6 leading-relaxed" style={{ color: COLORS.MUTED }}>"{t.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm"
-                    style={{ background: t.color }}>
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold" style={{ color: COLORS.NAVY }}>{t.author}</div>
-                    <div className="text-sm" style={{ color: COLORS.MUTED }}>{t.role}</div>
-                  </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ ─────────── */}
+      <section id="faq" className="px-6 pb-24">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2 }}>Frequently asked questions</h2>
+            <p className="text-sm mt-2" style={{ color: C.muted }}>Can't find your answer? Contact our support team</p>
+          </div>
+          <div className="glass p-2" style={{ borderRadius: 20 }}>
+            {faqs.map((faq, i) => (
+              <div key={i} style={{ borderBottom: i < faqs.length - 1 ? "1px solid #F3F4F6" : "none" }}>
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between text-left px-5 py-4 text-sm font-semibold transition-all" style={{ color: C.dark2 }}>
+                  <span>{faq.q}</span>
+                  <ChevronDown size={16} color={C.teal} style={{ transform: openFaq === i ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s ease", flexShrink: 0, marginLeft: 12 }} />
+                </button>
+                <div className={`accordion-content ${openFaq === i ? "open" : ""}`}>
+                  <p className="px-5 pb-4 text-sm" style={{ color: C.muted, lineHeight: 1.7 }}>{faq.a}</p>
                 </div>
               </div>
             ))}
@@ -484,337 +439,247 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* FEATURES - OUTCOME FOCUSED */}
-      <section id="features" className="py-24 px-6"
-        style={{ background: dark ? "rgba(17,24,39,0.5)" : `${COLORS.AMBER}05` }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>SOLVE REAL PROBLEMS</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Features that matter
-            </h2>
-            <p className="mt-4 text-lg" style={{ color: COLORS.MUTED, maxWidth: "600px", margin: "1rem auto" }}>
-              Every feature designed around the actual pain points African schools face.
+      {/* ─── CTA BANNER ─────────── */}
+      <section className="px-6 pb-24">
+        <div className="relative overflow-hidden rounded-3xl p-16 text-center" style={{ background: "radial-gradient(ellipse at 50% 40%, #A78BFA20, #6B9FFF10)" }}>
+          <Blob className="absolute inset-0" size={800} color="#A78BFA" opacity={0.08} />
+          <div className="relative">
+            <h2 className="text-4xl font-bold" style={{ color: C.dark2, fontSize: "clamp(32px, 3.5vw, 44px)" }}>Ready to transform how your school operates?</h2>
+            <p className="mt-4 text-base" style={{ color: C.muted }}>Join 500+ schools already running smarter with Managen</p>
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <button onClick={() => navigate("/auth?mode=signup")} style={{ background: C.navy, color: "white", borderRadius: 12, padding: "12px 28px", fontSize: 14, fontWeight: 700, border: "none" }} className="hover-lift">Request a Free Demo</button>
+              <button onClick={() => scrollTo("features")} style={{ background: "white", color: C.dark, borderRadius: 12, padding: "12px 28px", fontSize: 14, fontWeight: 600, border: "1px solid #E5E7EB" }} className="hover-lift">View All Modules</button>
+            </div>
+            <p className="mt-6 text-xs" style={{ color: C.muted }}>
+              <span role="img" aria-label="lock">🔒</span> No credit card required · Setup in 24 hours · Cancel anytime
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <div key={i} className="p-6 rounded-xl border hover-lift reveal"
-                style={{
-                  animationDelay: `${i * 50}ms`,
-                  background: dark ? "rgba(30,41,59,0.8)" : "rgba(255,255,255,1)",
-                  borderColor: `${f.color}20`,
-                }}>
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-                  style={{ background: `${f.color}15`, color: f.color }}>
-                  <f.icon size={24} />
-                </div>
-                <h3 className="font-bold text-lg mb-2" style={{ color: COLORS.NAVY }}>{f.title}</h3>
-                <p style={{ color: COLORS.MUTED }}>{f.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* ROI CALCULATOR */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>QUICK MATH</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              What's your ROI?
-            </h2>
+      {/* ─── FOOTER ─────────── */}
+      <footer style={{ background: "#F9FAFB", borderTop: "1px solid #F3F4F6" }}>
+        <div className="max-w-7xl mx-auto px-6 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <GraduationCap size={20} color={C.teal} />
+              <span className="font-bold text-sm" style={{ color: C.dark2 }}>Managen</span>
+            </div>
+            <p className="text-xs leading-relaxed" style={{ color: C.muted, maxWidth: 240 }}>The all-in-one school management platform built for Africa and beyond.</p>
+            <div className="flex gap-3 mt-5">
+              {[Twitter, Linkedin, Facebook, Instagram].map((Icon, i) => (
+                <button key={i} className="p-1.5 rounded-lg transition-all hover:opacity-60" style={{ color: C.muted }}><Icon size={16} /></button>
+              ))}
+            </div>
           </div>
-          <ROICalculator />
+          {[
+            { title: "Product", links: ["Features", "Modules", "Pricing", "Changelog", "Roadmap"] },
+            { title: "Company", links: ["About Us", "Blog", "Careers", "Press", "Contact"] },
+            { title: "Support", links: ["Documentation", "Help Center", "API Reference", "Status Page", "Privacy Policy"] },
+          ].map((col) => (
+            <div key={col.title}>
+              <h4 className="text-sm font-semibold mb-4" style={{ color: C.dark2 }}>{col.title}</h4>
+              <ul className="space-y-2.5">
+                {col.links.map((l) => (
+                  <li key={l}><button onClick={() => scrollTo(l.toLowerCase())} className="text-xs transition-all hover:opacity-60" style={{ color: C.muted }}>{l}</button></li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className="py-24 px-6"
-        style={{ background: dark ? "rgba(17,24,39,0.5)" : `${COLORS.NAVY}08` }}>
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>SETUP IN 1 HOUR</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Go live fast
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {workflow.map((w) => (
-              <div key={w.step} className="text-center">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg"
-                  style={{ background: COLORS.AMBER, color: COLORS.NAVY }}>
-                  {w.step}
-                </div>
-                <h3 className="font-bold mb-2" style={{ color: COLORS.NAVY }}>{w.title}</h3>
-                <p className="text-sm" style={{ color: COLORS.MUTED }}>{w.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section id="pricing" className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>TRANSPARENT PRICING</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Choose your plan
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pricing.map((plan, i) => (
-              <div
-                key={i}
-                className="rounded-xl border relative hover-lift overflow-hidden"
-                style={{
-                  background: plan.highlighted
-                    ? dark
-                      ? `${COLORS.AMBER}15`
-                      : `${COLORS.AMBER}08`
-                    : dark
-                    ? "rgba(30,41,59,0.8)"
-                    : "rgba(255,255,255,1)",
-                  borderColor: plan.highlighted ? COLORS.AMBER : `${COLORS.NAVY}15`,
-                  borderWidth: plan.highlighted ? "2px" : "1px",
-                }}
-              >
-                {plan.badge && (
-                  <div
-                    className="absolute top-0 left-0 right-0 py-1.5 text-center text-xs font-bold"
-                    style={{ background: COLORS.AMBER, color: COLORS.NAVY }}
-                  >
-                    ⭐ {plan.badge}
-                  </div>
-                )}
-                <div className={`p-6 ${plan.badge ? "mt-6" : ""}`}>
-                  <h3 className="font-bold text-lg" style={{ color: COLORS.NAVY }}>
-                    {plan.name}
-                  </h3>
-                  <div className="mt-4">
-                    <div className="text-4xl font-bold" style={{ color: COLORS.NAVY }}>
-                      {plan.price}
-                    </div>
-                    <div className="text-sm mt-1" style={{ color: COLORS.MUTED }}>
-                      {plan.duration}
-                    </div>
-                    {plan.priceMo && (
-                      <div className="text-xs mt-2" style={{ color: COLORS.GREEN }}>
-                        or {plan.priceMo}
-                      </div>
-                    )}
-                  </div>
-                  {plan.students && (
-                    <div className="mt-4 text-sm" style={{ color: COLORS.MUTED }}>
-                      Up to {plan.students.toLocaleString()} students
-                    </div>
-                  )}
-                  <button
-                    onClick={() => navigate("/auth?mode=signup")}
-                    className="w-full mt-6 py-2.5 rounded-lg font-bold"
-                    style={{
-                      background: plan.highlighted ? COLORS.AMBER : `${COLORS.NAVY}10`,
-                      color: plan.highlighted ? COLORS.NAVY : COLORS.NAVY,
-                    }}
-                  >
-                    {plan.cta}
-                  </button>
-                  <div className="mt-6 space-y-3">
-                    {plan.features.map((f, j) => (
-                      <div key={j} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 size={16} style={{ color: COLORS.GREEN, marginTop: "2px" }} />
-                        <span>{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2" style={{ borderTop: "1px solid #F3F4F6" }}>
+          <span className="text-[11px]" style={{ color: C.label }}>© 2025 Managen. All rights reserved.</span>
+          <div className="flex gap-4 text-[11px]" style={{ color: C.label }}>
+            <button className="hover:opacity-60 transition-opacity">Terms of Service</button>
+            <button className="hover:opacity-60 transition-opacity">Privacy Policy</button>
+            <button className="hover:opacity-60 transition-opacity">Cookie Policy</button>
           </div>
         </div>
-      </section>
+      </footer>
 
-      {/* SECURITY */}
-      <section id="security" className="py-24 px-6"
-        style={{ background: dark ? "rgba(17,24,39,0.5)" : `${COLORS.NAVY}08` }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>YOUR DATA IS SAFE</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Enterprise-grade security
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Lock, title: "End-to-End Encryption", desc: "All data encrypted in transit and at rest" },
-              { icon: Shield, title: "School Isolation", desc: "Each school's data completely isolated from others" },
-              { icon: Clock, title: "Automatic Backups", desc: "Daily backups with point-in-time recovery" },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
-                <div className="w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-4"
-                  style={{ background: `${COLORS.AMBER}20`, color: COLORS.AMBER }}>
-                  <item.icon size={32} />
-                </div>
-                <h3 className="font-bold text-lg mb-2" style={{ color: COLORS.NAVY }}>{item.title}</h3>
-                <p style={{ color: COLORS.MUTED }}>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm font-semibold" style={{ color: COLORS.AMBER }}>COMMON QUESTIONS</p>
-            <h2 className="text-4xl font-bold mt-4" style={{ color: COLORS.NAVY }}>
-              Frequently asked
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, i) => (
-              <div key={i} className="rounded-lg border p-6"
-                style={{
-                  background: dark ? "rgba(30,41,59,0.8)" : "rgba(255,255,255,1)",
-                  borderColor: `${COLORS.NAVY}10`,
-                }}>
-                <button
-                  onClick={() => setOpenFaqId(openFaqId === i ? null : i)}
-                  className="w-full flex items-start justify-between text-left font-semibold"
-                  style={{ color: COLORS.NAVY }}
-                  aria-expanded={openFaqId === i}
-                >
-                  <span>{faq.q}</span>
-                  {openFaqId === i ? (
-                    <ChevronUp size={20} className="flex-shrink-0 ml-4" />
-                  ) : (
-                    <ChevronDown size={20} className="flex-shrink-0 ml-4" />
-                  )}
-                </button>
-                {openFaqId === i && (
-                  <p className="mt-4" style={{ color: COLORS.MUTED }}>
-                    {faq.a}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FOOTER */}
-      <section className="py-16 px-6" style={{ background: `linear-gradient(135deg, ${COLORS.NAVY}, ${COLORS.NAVY_LIGHT})` }}>
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-4xl font-bold" style={{ color: COLORS.CREAM }}>
-            Ready to collect more fees this term?
-          </h2>
-          <p className="text-lg" style={{ color: "rgba(248,249,250,0.8)" }}>
-            Join 340+ schools already using Managen. 7-day free trial. No credit card required.
-          </p>
-          <button
-            onClick={() => navigate("/auth?mode=signup")}
-            className="px-8 py-3.5 rounded-lg font-bold text-lg inline-flex items-center gap-2"
-            style={{ background: COLORS.AMBER, color: COLORS.NAVY }}
-          >
-            Start Your Free Trial
-            <ArrowRight size={20} />
-          </button>
-        </div>
-      </section>
-
-      {/* MOBILE STICKY FOOTER CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 border-t z-30"
-        style={{
-          background: dark ? "rgba(17,24,39,0.95)" : "rgba(255,255,255,0.95)",
-          borderColor: dark ? "rgba(55,65,81,0.3)" : "rgba(0,0,0,0.05)",
-          backdropFilter: "blur(12px)",
-        }}>
-        <button
-          onClick={() => navigate("/auth?mode=signup")}
-          className="w-full py-3 rounded-lg font-bold text-white flex items-center justify-center gap-2"
-          style={{ background: COLORS.AMBER }}
-        >
-          Start Free Trial
-          <ArrowRight size={18} />
-        </button>
+      {/* ─── MOBILE CTA ─────────── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderTop: "1px solid #F3F4F6" }}>
+        <button onClick={() => navigate("/auth?mode=signup")} className="w-full py-2.5 rounded-full text-sm font-bold" style={{ background: C.teal, color: C.dark }}>Get Started Free</button>
       </div>
+      <div className="md:hidden h-16" />
+    </div>
+  );
+}
 
-      {/* Padding for mobile footer */}
-      <div className="md:hidden h-20" />
+/* ─── DASHBOARD MOCKUP (MINI) ─────────── */
+function DashboardPreviewMini() {
+  return (
+    <div style={{ borderRadius: 16, overflow: "hidden", background: "white", fontSize: 10 }}>
+      <div className="flex items-center justify-between px-3 py-2" style={{ background: C.navy }}>
+        <div className="flex items-center gap-1.5"><div style={{ width: 14, height: 14, borderRadius: 4, background: C.teal }} /><span className="text-white font-bold" style={{ fontSize: 10 }}>Managen</span></div>
+        <div style={{ width: 40, height: 12, borderRadius: 6, background: "rgba(255,255,255,0.15)" }} />
+      </div>
+      <div className="p-3 space-y-2.5">
+        <div style={{ fontSize: 12, fontWeight: 700, color: C.dark }}>Good morning, Admin 👋</div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { label: "Students", value: "1,240", bg: "linear-gradient(135deg,#6B9FFF,#89B4FF)" },
+            { label: "Present", value: "1,089", bg: "linear-gradient(135deg,#A78BFA,#C4B5FD)" },
+            { label: "Fees", value: "₵84.2K", bg: "linear-gradient(135deg,#4DD9C0,#6EE7D9)" },
+            { label: "Pending", value: "₵12.4K", bg: "linear-gradient(135deg,#FBBF24,#FCD34D)" },
+          ].map((s, i) => (
+            <div key={i} style={{ background: s.bg, borderRadius: 8, padding: "8px 10px", color: "white" }}>
+              <div style={{ fontSize: 8, opacity: 0.8 }}>{s.label}</div>
+              <div style={{ fontSize: 15, fontWeight: 800 }}>{s.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-      {/* DEMO MODAL */}
-      {demoOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setDemoOpen(false)}>
-          <div
-            className="rounded-2xl p-6 max-w-md w-full"
-            style={{ background: dark ? "rgba(30,41,59,1)" : "rgba(255,255,255,1)" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-2xl font-bold mb-4" style={{ color: COLORS.NAVY }}>Request Demo</h2>
-            <form onSubmit={submitDemo} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Your name"
-                value={demoForm.name}
-                onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border outline-none"
-                style={{
-                  borderColor: `${COLORS.NAVY}15`,
-                  background: dark ? "rgba(55,65,81,0.5)" : "#F3F4F6",
-                }}
-              />
-              <input
-                type="email"
-                placeholder="Your email"
-                value={demoForm.email}
-                onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border outline-none"
-                style={{
-                  borderColor: `${COLORS.NAVY}15`,
-                  background: dark ? "rgba(55,65,81,0.5)" : "#F3F4F6",
-                }}
-              />
-              <input
-                type="text"
-                placeholder="School name"
-                value={demoForm.schoolName}
-                onChange={(e) => setDemoForm({ ...demoForm, schoolName: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg border outline-none"
-                style={{
-                  borderColor: `${COLORS.NAVY}15`,
-                  background: dark ? "rgba(55,65,81,0.5)" : "#F3F4F6",
-                }}
-              />
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setDemoOpen(false)}
-                  className="flex-1 px-4 py-2 rounded-lg border"
-                  style={{ borderColor: `${COLORS.NAVY}15`, color: COLORS.NAVY }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className="flex-1 px-4 py-2 rounded-lg font-bold text-white"
-                  style={{ background: COLORS.AMBER, opacity: sending ? 0.7 : 1 }}
-                >
-                  {sending ? "Sending..." : "Send"}
-                </button>
-              </div>
-            </form>
+/* ─── DASHBOARD MOCKUP (FULL) ─────────── */
+function DashboardPreviewFull() {
+  return (
+    <div style={{ borderRadius: 22, overflow: "hidden", background: "white", fontSize: 11 }}>
+      <div style={{ display: "flex", minHeight: 400 }}>
+        {/* Sidebar */}
+        <div style={{ width: 170, background: "#FAFBFC", borderRight: "1px solid #F3F4F6", padding: 16, flexShrink: 0 }}>
+          <div className="flex items-center gap-1.5 mb-6"><div style={{ width: 16, height: 16, borderRadius: 4, background: C.teal }} /><span style={{ fontWeight: 700, color: C.dark, fontSize: 12 }}>Managen</span></div>
+          {[
+            ["MENU", ["Dashboard", "Students", "Teachers", "Classes", "Timetable"]],
+            ["ACADEMICS", ["Exams", "Attendance", "Library"]],
+            ["FINANCE", ["Fees", "Payroll"]],
+            ["OPERATIONS", ["Hostel", "Transport", "Admissions"]],
+          ].map(([group, items]: any) => (
+            <div key={group} className="mb-4">
+              <div style={{ fontSize: 9, fontWeight: 600, color: C.label, letterSpacing: 0.5, marginBottom: 4, paddingLeft: 12 }}>{group}</div>
+              {items.map((item: string) => (
+                <div key={item} className={`mockup-sidebar-item ${item === "Dashboard" ? "active" : ""}`}>
+                  {item === "Dashboard" && <div style={{ width: 4, height: 4, borderRadius: "50%", background: C.teal }} />}
+                  {item}
+                </div>
+              ))}
+            </div>
+          ))}
+          <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid #F3F4F6" }}>
+            <div className="mockup-sidebar-item"><Moon size={11} /> Dark Mode</div>
           </div>
         </div>
-      )}
+        {/* Main */}
+        <div style={{ flex: 1, padding: 16, overflow: "hidden" }}>
+          {/* Top bar */}
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div style={{ background: "#E0F2FE", borderRadius: 999, padding: "3px 10px", fontSize: 10, fontWeight: 600, color: "#0369A1" }}>Notifications 3</div>
+              <span style={{ fontSize: 10, color: C.teal, fontWeight: 600, cursor: "default" }}>View All</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div style={{ background: C.divider, borderRadius: 6, padding: "4px 10px", display: "flex", alignItems: "center", gap: 4 }}>
+                <Search size={10} style={{ color: C.muted }} />
+                <span style={{ fontSize: 10, color: C.label }}>Search...</span>
+              </div>
+              <Bell size={12} style={{ color: C.muted }} />
+              <div style={{ width: 20, height: 20, borderRadius: "50%", background: C.blue, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 8, fontWeight: 700 }}>A</div>
+            </div>
+          </div>
+          {/* Greeting */}
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.dark, marginBottom: 12 }}>Good morning, Admin 👋</div>
+          {/* Stats row */}
+          <div className="grid grid-cols-4 gap-3 mb-5">
+            {[
+              { label: "Total Students", value: "1,240", bg: "linear-gradient(135deg,#6B9FFF,#89B4FF)" },
+              { label: "Present Today", value: "1,089", bg: "linear-gradient(135deg,#A78BFA,#C4B5FD)" },
+              { label: "Fee Collected", value: "₵84,200", bg: "linear-gradient(135deg,#4DD9C0,#6EE7D9)" },
+              { label: "Pending Fees", value: "₵12,400", bg: "linear-gradient(135deg,#FBBF24,#FCD34D)" },
+            ].map((s, i) => (
+              <div key={i} className="stat-card" style={{ background: s.bg }}>
+                <div className="label">{s.label}</div>
+                <div className="value">{s.value}</div>
+              </div>
+            ))}
+          </div>
+          {/* Bottom: table + chart */}
+          <div className="flex gap-4">
+            <div className="flex-1">
+              {/* Attendance Table */}
+              <div style={{ fontSize: 12, fontWeight: 600, color: C.dark, marginBottom: 6 }}>Today's Attendance <span style={{ color: C.teal, fontWeight: 500, cursor: "default" }}>View All →</span></div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10 }}>
+                <thead><tr style={{ color: C.label, borderBottom: "1px solid #F3F4F6" }}>
+                  <th style={{ textAlign: "left", padding: "4px 6px", fontWeight: 500 }}>Class</th>
+                  <th style={{ textAlign: "right", padding: "4px 6px", fontWeight: 500 }}>Present</th>
+                  <th style={{ textAlign: "right", padding: "4px 6px", fontWeight: 500 }}>Absent</th>
+                  <th style={{ textAlign: "right", padding: "4px 6px", fontWeight: 500 }}>Rate</th>
+                </tr></thead>
+                <tbody>
+                  {[
+                    ["JHS 1A", "38", "2", "95%"],
+                    ["JHS 2B", "35", "5", "88%"],
+                    ["SHS 1 Science", "42", "1", "98%"],
+                    ["SHS 2 General", "29", "8", "78%"],
+                    ["SHS 3 Business", "33", "3", "92%"],
+                  ].map((row, i) => (
+                    <tr key={i} style={{ borderBottom: "1px solid #F3F4F6" }}>
+                      {row.map((c, j) => {
+                        const isRate = j === 3;
+                        const rateVal = parseInt(c);
+                        let rateColor = C.green;
+                        if (rateVal < 90 && rateVal >= 75) rateColor = C.amber;
+                        else if (rateVal < 75) rateColor = "#EF4444";
+                        return <td key={j} style={{ padding: "5px 6px", textAlign: j === 0 ? "left" : "right", color: isRate ? "white" : C.muted, fontWeight: isRate ? 600 : 400 }}>
+                          {isRate ? <span style={{ background: rateColor, borderRadius: 999, padding: "1px 8px", fontSize: 9 }}>{c}</span> : c}
+                        </td>;
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {/* Term Progress */}
+              <div className="mt-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span style={{ fontSize: 12, fontWeight: 600, color: C.dark }}>Term Progress</span>
+                  <span style={{ fontSize: 9, fontWeight: 600, background: C.navy, color: "white", borderRadius: 999, padding: "2px 8px", cursor: "default" }}>Check Schedule</span>
+                </div>
+                <div style={{ height: 8, borderRadius: 999, background: C.divider, overflow: "hidden" }}>
+                  <div style={{ width: "65%", height: "100%", borderRadius: 999, background: `linear-gradient(90deg, ${C.progressFrom}, ${C.progressTo})` }} />
+                </div>
+                <div className="flex justify-between mt-1 text-[9px]" style={{ color: C.label }}>
+                  <span>Week 1</span><span>Week 4</span><span>Week 8</span><span>Week 12</span><span>End</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1">
+              {/* Fee Collection Chart */}
+              <div className="flex items-center justify-between mb-3">
+                <span style={{ fontSize: 12, fontWeight: 600, color: C.dark }}>Fee Collection Trend</span>
+                <div className="flex items-center gap-1">
+                  <span style={{ fontSize: 9, color: C.muted }}>Monthly ▾</span>
+                  <Settings size={10} style={{ color: C.muted }} />
+                </div>
+              </div>
+              <svg viewBox="0 0 280 120" style={{ width: "100%", height: 100 }}>
+                <defs>
+                  <linearGradient id="collectedGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#93C5FD" stopOpacity="0.4" /><stop offset="100%" stopColor="#93C5FD" stopOpacity="0" /></linearGradient>
+                  <linearGradient id="pendingGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.4" /><stop offset="100%" stopColor="#C4B5FD" stopOpacity="0" /></linearGradient>
+                </defs>
+                <path d="M10,100 Q40,90 60,70 T100,50 T130,40 T160,35 T190,30 T220,32 T250,28 T270,30" fill="none" stroke="#93C5FD" strokeWidth="2" />
+                <path d="M10,100 Q40,90 60,70 T100,50 T130,40 T160,35 T190,30 T220,32 T250,28 T270,30 L270,100 Z" fill="url(#collectedGrad)" />
+                <path d="M10,105 Q40,98 60,85 T100,70 T130,55 T160,50 T190,45 T220,48 T250,40 T270,42" fill="none" stroke="#C4B5FD" strokeWidth="2" strokeDasharray="3 2" />
+                <path d="M10,105 Q40,98 60,85 T100,70 T130,55 T160,50 T190,45 T220,48 T250,40 T270,42 L270,105 Z" fill="url(#pendingGrad)" />
+              </svg>
+              <div className="flex items-center gap-4 text-[9px] mb-4" style={{ color: C.label }}>
+                <span className="flex items-center gap-1"><span style={{ width: 8, height: 2, borderRadius: 1, background: "#93C5FD" }} /> Collected</span>
+                <span className="flex items-center gap-1"><span style={{ width: 8, height: 2, borderRadius: 1, background: "#C4B5FD" }} /> Pending</span>
+              </div>
+              {/* CTA Card */}
+              <div style={{ background: "radial-gradient(ellipse at 60% 40%, #A78BFA15, #6B9FFF08)", borderRadius: 14, padding: 14, position: "relative", overflow: "hidden" }}>
+                <Blob className="absolute -right-8 -top-8" size={120} color="#A78BFA" opacity={0.1} />
+                <div style={{ position: "relative" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: C.dark, marginBottom: 4 }}>Ready to go paperless?</div>
+                  <div style={{ fontSize: 9, color: C.muted, marginBottom: 8, lineHeight: 1.5 }}>Switch to digital records and save 10+ hours weekly</div>
+                  <div style={{ display: "inline-flex", padding: "5px 12px", borderRadius: 999, background: C.navy, color: "white", fontSize: 9, fontWeight: 600, cursor: "default" }}>Book a Demo →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
