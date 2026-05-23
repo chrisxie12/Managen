@@ -1,5 +1,6 @@
 const supabase = require('../config/db');
 const redis = require('../config/redis');
+const jwt = require('jsonwebtoken');
 
 const isRedisReady = () => redis && typeof redis.isReady === 'function' && redis.isReady();
 
@@ -40,7 +41,14 @@ const tenantMiddleware = async (req, res, next) => {
             req.headers['x-tenant-subdomain'] || req.query.subdomain || req.query.slug || ''
         ).trim().toLowerCase() || null;
 
-        const subdomain = subdomainFromHost || fallbackSubdomain;
+        let subdomain = subdomainFromHost || fallbackSubdomain;
+
+        if (!subdomain && req.cookies?.schoolos_token) {
+            try {
+                const decoded = jwt.verify(req.cookies.schoolos_token, process.env.JWT_SECRET);
+                subdomain = decoded?.slug || decoded?.subdomain || null;
+            } catch {}
+        }
 
         if (!subdomain) {
             return next();

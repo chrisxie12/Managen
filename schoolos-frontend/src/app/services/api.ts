@@ -20,6 +20,21 @@ const defaultFetchInit: RequestInit = {
   credentials: 'include',
 };
 
+function getTenantHeader(): Record<string, string> {
+  try {
+    const host = window.location.hostname;
+    if (host.endsWith('.getschoolos.me')) {
+      return { 'x-tenant-subdomain': host.split('.')[0] };
+    }
+    if (host.endsWith('.localhost') && host.split('.').length === 2) {
+      return { 'x-tenant-subdomain': host.split('.')[0] };
+    }
+    const subdomain = localStorage.getItem('managen_subdomain');
+    if (subdomain) return { 'x-tenant-subdomain': subdomain };
+  } catch {}
+  return {};
+}
+
 async function getAuthHeaders() {
   let token = null;
   if (typeof window !== 'undefined' && (window as any).Clerk?.session) {
@@ -68,6 +83,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...getTenantHeader(),
         ...authHeaders,
         ...options.headers,
       },
@@ -84,6 +100,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...getTenantHeader(),
         ...authHeaders,
         ...options.headers,
       },
@@ -101,6 +118,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...getTenantHeader(),
         ...authHeaders,
         ...options.headers,
       },
@@ -118,6 +136,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...getTenantHeader(),
         ...authHeaders,
         ...options.headers,
       },
@@ -135,6 +154,7 @@ export const api = {
       credentials: options.credentials ?? defaultFetchInit.credentials,
       headers: {
         'Content-Type': 'application/json',
+        ...getTenantHeader(),
         ...authHeaders,
         ...options.headers,
       },
@@ -146,6 +166,9 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       method: 'POST',
+      headers: {
+        ...getTenantHeader(),
+      },
       body: formData,
     });
     return handleResponse<T>(response);
