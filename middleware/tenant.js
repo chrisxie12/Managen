@@ -47,6 +47,32 @@ const tenantMiddleware = async (req, res, next) => {
             try {
                 const decoded = jwt.verify(req.cookies.schoolos_token, process.env.JWT_SECRET);
                 subdomain = decoded?.slug || decoded?.subdomain || null;
+                if (!subdomain) {
+                    const schoolId = decoded?.schoolId || decoded?.tenantId;
+                    if (schoolId) {
+                        const { data: schoolByTenantId, error: schoolIdError } = await supabase
+                            .from('schools')
+                            .select('*')
+                            .eq('id', schoolId)
+                            .maybeSingle();
+                        if (!schoolIdError && schoolByTenantId) {
+                            if (schoolByTenantId.is_active === false) {
+                                return res.status(403).json({ error: 'School account is inactive.' });
+                            }
+                            tenant = schoolByTenantId;
+                            if (isRedisReady()) {
+                                try {
+                                    await redis.setex(`tenant:id:${schoolId}`, 300, JSON.stringify(tenant));
+                                } catch (redisErr) {
+                                    console.error('Redis tenant cache set error:', redisErr.message || redisErr);
+                                }
+                            }
+                            req.tenant = tenant;
+                            req.tenantId = tenant.id;
+                            return next();
+                        }
+                    }
+                }
             } catch {}
         }
 

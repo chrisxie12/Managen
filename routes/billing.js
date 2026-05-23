@@ -12,12 +12,24 @@ const paymentWebhookService = require('../services/paymentWebhookService');
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
     try {
         const token = req.cookies?.schoolos_token;
         if (!token)
             return res.status(401).json({ error: 'No token provided.' });
         req.user = jwt.verify(token, process.env.JWT_SECRET);
+        if (!req.tenant && (req.user?.schoolId || req.user?.tenantId)) {
+            const schoolId = req.user.schoolId || req.user.tenantId;
+            const { data: fallbackTenant, error } = await supabase
+                .from('schools')
+                .select('*')
+                .eq('id', schoolId)
+                .maybeSingle();
+            if (!error && fallbackTenant) {
+                req.tenant = fallbackTenant;
+                req.tenantId = fallbackTenant.id;
+            }
+        }
         next();
     } catch (err) {
         return res.status(401).json({ error: 'Invalid or expired token.' });

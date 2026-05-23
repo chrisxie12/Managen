@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const supabase = require('../config/db');
 
 const headmasterService = require('../services/dashboardService');
 const teacherService = require('../services/teacherDashboardService');
@@ -18,12 +19,24 @@ const ensureMatchingTenant = (decoded, tenant) => {
     }
 };
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
     try {
         const token = req.cookies?.schoolos_token;
         if (!token) return res.status(401).json({ error: 'No token provided.' });
         req.user = jwt.verify(token, process.env.JWT_SECRET);
         ensureMatchingTenant(req.user, req.tenant);
+        if (!req.tenant && (req.user?.schoolId || req.user?.tenantId)) {
+            const schoolId = req.user.schoolId || req.user.tenantId;
+            const { data: fallbackTenant, error } = await supabase
+                .from('schools')
+                .select('*')
+                .eq('id', schoolId)
+                .maybeSingle();
+            if (!error && fallbackTenant) {
+                req.tenant = fallbackTenant;
+                req.tenantId = fallbackTenant.id;
+            }
+        }
         next();
     } catch (err) {
         const statusCode = err.statusCode || 401;
