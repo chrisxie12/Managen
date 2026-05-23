@@ -40,7 +40,7 @@ function Input({ label, required, value, onChange, placeholder, type, error }: a
       </label>
       <input type={type || "text"} value={value} onChange={onChange} placeholder={placeholder}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
+        style={{ background: "#F8F9FA", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
       />
       {error && <p className="text-xs mt-1 text-red-500">{error}</p>}
     </div>
@@ -55,7 +55,7 @@ function Textarea({ label, required, value, onChange, placeholder, error }: any)
       </label>
       <textarea value={value} onChange={onChange} placeholder={placeholder} rows={3}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all resize-none"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
+        style={{ background: "#F8F9FA", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: NAVY }}
       />
       {error && <p className="text-xs mt-1 text-red-500">{error}</p>}
     </div>
@@ -70,7 +70,7 @@ function Select({ label, required, value, onChange, options, error }: any) {
       </label>
       <select value={value} onChange={onChange}
         className="w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all"
-        style={{ background: "#f9fafb", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: value ? NAVY : MUTED }}
+        style={{ background: "#F8F9FA", border: error ? "1px solid #ef4444" : "1px solid #e5e7eb", color: value ? NAVY : MUTED }}
       >
         <option value="" disabled>Select {label.toLowerCase()}...</option>
         {options.map((o: any) => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -103,7 +103,6 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
     autoSaveTimer.current = setInterval(() => {
       try {
         localStorage.setItem("schoolos_onboarding_form", JSON.stringify(form));
-        toast.success("Progress saved");
       } catch {}
     }, 30000);
     return () => clearInterval(autoSaveTimer.current);
@@ -157,13 +156,15 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
   };
 
   return (
-    <div className="py-4">
-      <h2 className="text-2xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
-        Set up your school profile
-      </h2>
-      <p className="text-sm text-center mb-6" style={{ color: MUTED }}>
-        This information will appear across your entire platform.
-      </p>
+    <div>
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
+          Set up your school profile
+        </h2>
+        <p className="text-sm mt-1" style={{ color: MUTED }}>
+          This information will appear across your entire platform.
+        </p>
+      </div>
 
       <div className="flex items-center justify-center gap-2 mb-8">
         <div className="h-2 flex-1 max-w-xs rounded-full bg-gray-100 overflow-hidden">
@@ -226,9 +227,8 @@ export function SchoolSetupStep({ surveyAnswers, onNext, onBack }: {
                 ) : (
                   <div>
                     <Upload size={24} color={MUTED} className="mx-auto mb-2" />
-                    <p className="text-sm font-medium" style={{ color: NAVY }}>Drag & drop your school logo here</p>
-                    <p className="text-xs mt-1" style={{ color: MUTED }}>or click to browse</p>
-                    <p className="text-xs mt-2" style={{ color: MUTED }}>Supported: PNG, JPG, SVG (Max 2MB)</p>
+                    <p className="text-sm font-medium" style={{ color: NAVY }}>Upload your school logo</p>
+                    <p className="text-xs mt-1" style={{ color: MUTED }}>PNG, JPG, SVG (Max 2MB)</p>
                   </div>
                 )}
                 <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleLogoUpload} className="hidden" />

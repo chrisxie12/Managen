@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { Check, FileText, Settings, Sparkles } from "lucide-react";
+import { GraduationCap, Check } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding/index";
@@ -12,10 +12,11 @@ const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 
 const STEPS = [
-  { id: 0, label: "Welcome", icon: Sparkles },
-  { id: 1, label: "Survey", icon: FileText },
-  { id: 2, label: "Setup", icon: Settings },
-  { id: 3, label: "Done", icon: Check },
+  { id: 0, label: "Welcome" },
+  { id: 1, label: "Survey" },
+  { id: 2, label: "Setup" },
+  { id: 3, label: "Saving" },
+  { id: 4, label: "Done" },
 ];
 
 export function Onboarding() {
@@ -98,65 +99,42 @@ export function Onboarding() {
 
   if (checkingResume) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-white">
+      <div className="flex items-center justify-center min-h-screen" style={{ background: "#F8F9FA" }}>
         <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: INDIGO, borderTopColor: "transparent" }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      <div className="hidden md:flex flex-col w-64 bg-gray-50 border-r border-gray-100 p-8">
-        <div className="mb-10">
-          <h1 className="text-xl font-bold" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>SchoolOS</h1>
-          <p className="text-xs mt-1" style={{ color: MUTED }}>Onboarding</p>
-        </div>
-        <div className="space-y-6">
-          {STEPS.map((step) => {
-            const Icon = step.icon;
-            const isActive = currentStep >= step.id;
-            const isCurrent = currentStep === step.id;
-            return (
-              <div key={step.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
-                  style={{
-                    background: isActive ? `linear-gradient(135deg, ${INDIGO}, #4f46e5)` : "#f3f4f6",
-                    color: isActive ? "white" : MUTED,
-                    boxShadow: isCurrent ? `0 0 0 3px rgba(99,102,241,0.2)` : "none",
-                  }}>
-                  {currentStep > step.id ? <Check size={14} /> : <Icon size={14} />}
-                </div>
-                <span className="text-sm font-medium" style={{ color: isActive ? NAVY : MUTED }}>
-                  {step.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-6 py-10">
-          <div className="flex md:hidden items-center justify-center gap-2 mb-8">
-            {STEPS.map((step) => (
-              <div key={step.id}
-                className="w-3 h-3 rounded-full transition-all"
-                style={{
+    <div className="min-h-screen" style={{ background: "#F8F9FA", fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="max-w-3xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2">
+            <GraduationCap size={22} color={NAVY} />
+            <span className="font-bold text-lg" style={{ color: NAVY }}>SchoolOS</span>
+          </div>
+          <div className="flex items-center gap-3">
+            {STEPS.slice(0, -1).map((step, i) => (
+              <div key={step.id} className="flex items-center gap-1">
+                <div className="w-2 h-2 rounded-full" style={{
                   background: currentStep >= step.id ? INDIGO : "#e5e7eb",
-                  transform: currentStep === step.id ? "scale(1.3)" : "scale(1)",
-                }}
-              />
+                  transition: "background 0.3s",
+                }} />
+                {i < STEPS.length - 2 && <div className="w-4 h-px" style={{ background: currentStep > step.id ? INDIGO : "#e5e7eb" }} />}
+              </div>
             ))}
           </div>
+        </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.2 }}
-            >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className="rounded-3xl bg-white p-8 md:p-10" style={{ boxShadow: "0 4px 24px rgba(10,36,114,0.06)" }}>
               {currentStep === 0 && (
                 <WelcomeStep
                   adminName={user?.fullName || "Admin"}
@@ -201,9 +179,9 @@ export function Onboarding() {
                   onDone={handleCelebrationDone}
                 />
               )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

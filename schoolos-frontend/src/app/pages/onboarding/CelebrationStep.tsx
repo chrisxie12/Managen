@@ -41,7 +41,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
   }, []);
 
   return (
-    <div className="text-center py-8">
+    <div className="text-center">
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -53,7 +53,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
       </motion.div>
 
       <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: NAVY }}>
-        {schoolName} is ready! 🎉
+        {schoolName} is ready!
       </h1>
       <p className="text-sm mb-8 max-w-md mx-auto" style={{ color: MUTED }}>
         Your school management system is fully configured and ready to use.
@@ -71,7 +71,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + i * 0.1 }}
             className="p-4 rounded-2xl text-left"
-            style={{ background: "white", border: "1px solid rgba(0,0,0,0.06)" }}
+            style={{ background: "#F8F9FA", border: "1px solid rgba(0,0,0,0.04)" }}
           >
             <item.icon size={16} color={INDIGO} className="mb-1" />
             <p className="text-xs mt-1" style={{ color: MUTED }}>{item.label}</p>
@@ -107,7 +107,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
         className="px-8 py-3 rounded-xl text-sm font-semibold active:scale-95 transition-transform"
         style={{ background: `linear-gradient(135deg, ${INDIGO}, #4f46e5)`, color: "white" }}
       >
-        Open My Dashboard →
+        Open My Dashboard
       </motion.button>
 
       <p className="text-xs mt-3" style={{ color: MUTED }}>

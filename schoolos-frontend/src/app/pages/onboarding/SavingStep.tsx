@@ -66,7 +66,7 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-8">
       <div className="w-full max-w-md">
         <div className="h-2 rounded-full bg-gray-100 overflow-hidden mb-10">
           <div className="h-full rounded-full transition-all duration-500 ease-out"
