@@ -188,7 +188,7 @@ export function Onboarding() {
                   logoData={schoolData.logo || null}
                   primaryColor={schoolData.primary_color || INDIGO}
                   onComplete={handleSavingComplete}
-                  onError={() => toast.error("Something went wrong. Please try again.")}
+                  onError={(msg) => toast.error(msg || "Something went wrong. Please try again.")}
                 />
               )}
               {currentStep === 4 && (

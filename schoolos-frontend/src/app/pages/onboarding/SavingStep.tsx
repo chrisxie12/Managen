@@ -16,7 +16,7 @@ const STEPS = [
 
 export function SavingStep({ schoolData, logoData, onComplete, onError }: {
   schoolData: any; surveyAnswers: any; logoData: string | null;
-  primaryColor: string; onComplete: () => void; onError: () => void;
+  primaryColor: string; onComplete: () => void; onError: (msg: string) => void;
 }) {
   const [completed, setCompleted] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
@@ -55,8 +55,10 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
           await new Promise(r => setTimeout(r, 400));
           onComplete();
         }
-      } catch {
-        if (!cancelled) onError();
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        console.error('SavingStep error:', msg);
+        if (!cancelled) onError(msg);
       }
     };
     run();
