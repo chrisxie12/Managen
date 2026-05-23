@@ -211,7 +211,7 @@ function DashboardLayoutInner() {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px] md:ml-16">
         <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"
           style={{ background: "rgba(248,249,250,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
           <div className="flex items-center gap-3">
