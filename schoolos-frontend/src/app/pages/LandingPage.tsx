@@ -17,42 +17,42 @@ const C = {
 };
 
 const modules = [
-  { icon: Users, title: "Attendance", desc: "QR-based tracking with instant reports & real-time insights", cat: "Academic", catColor: C.blue },
-  { icon: Wallet, title: "Fees", desc: "Invoicing, payments, receipts & arrears tracking", cat: "Finance", catColor: C.green },
-  { icon: BookOpen, title: "Examinations", desc: "Schedule, grade & publish results with auto-marking", cat: "Academic", catColor: C.purple },
-  { icon: Library, title: "Library", desc: "Catalog, issue/return tracking & fine management", cat: "Operations", catColor: C.amber },
-  { icon: Home, title: "Hostel", desc: "Room allocation, occupancy & resident management", cat: "Operations", catColor: C.teal },
-  { icon: Bus, title: "Transport", desc: "Route management, vehicle tracking & allocation", cat: "Operations", catColor: C.blue },
-  { icon: UserPlus, title: "Admissions", desc: "Online applications, shortlisting & enrollment", cat: "Operations", catColor: C.purple },
-  { icon: MessageSquare, title: "Communication", desc: "Chat, announcements & automated parent alerts", cat: "Academic", catColor: C.pink },
-  { icon: Briefcase, title: "Payroll", desc: "Salary processing, deductions & digital payslips", cat: "Finance", catColor: C.green },
+  { icon: Users, title: "Attendance", desc: "QR-based tracking with geofencing, real-time reports & proxy-proof sign-in", cat: "Academic", catColor: C.blue },
+  { icon: Wallet, title: "Fees & Payments", desc: "Mobile Money, card & bank payments with automated receipts, arrears & reconciliation", cat: "Finance", catColor: C.green },
+  { icon: BookOpen, title: "Examinations", desc: "Schedule, auto-grade & publish results following NaCCA/GES government formats", cat: "Academic", catColor: C.purple },
+  { icon: MessageSquare, title: "WhatsApp Comms", desc: "Send fees, results & announcements via WhatsApp Business API — no email needed", cat: "Academic", catColor: C.pink },
+  { icon: Library, title: "Library", desc: "Book catalog, issue/return tracking & fine management", cat: "Operations", catColor: C.amber },
+  { icon: Home, title: "Hostel", desc: "Room allocation, occupancy & resident management for boarding schools", cat: "Operations", catColor: C.teal },
+  { icon: Bus, title: "Transport", desc: "Route management, vehicle tracking & student bus allocation", cat: "Operations", catColor: C.blue },
+  { icon: UserPlus, title: "Admissions", desc: "Online applications, shortlisting & enrollment with document upload", cat: "Operations", catColor: C.purple },
+  { icon: Briefcase, title: "Payroll", desc: "Salary processing, PAYE deductions & digital payslips for staff", cat: "Finance", catColor: C.green },
 ];
 
 const howItWorks = [
-  { icon: Upload, title: "Import Your Data", desc: "Upload existing records — students, staff, classes. We support Excel, CSV, and API imports.", time: "Day 1", color: C.blue },
-  { icon: Settings2, title: "Configure Modules", desc: "Enable only what your school needs. Set permissions, fee structures, timetables.", time: "Day 2–3", color: C.purple },
-  { icon: Rocket, title: "Go Live", desc: "Launch with full onboarding support. Train staff and start managing digitally.", time: "Day 4–7", color: C.teal },
+  { icon: Upload, title: "Import Data", desc: "Upload your existing student records, staff profiles and class lists. We support Excel, CSV and direct migration.", time: "Day 1", color: C.blue },
+  { icon: Settings2, title: "Configure School", desc: "Set up fee structures, timetables, grading scales (NaCCA/WAEC), and enable only the modules you need.", time: "Day 2–3", color: C.purple },
+  { icon: Rocket, title: "Go Live", desc: "Launch with full onboarding. Train your staff, connect MoMo & WhatsApp, and start managing your school digitally.", time: "Day 4–7", color: C.teal },
 ];
 
 const testimonials = [
-  { quote: "SchoolSync cut our fee collection time by 60%. Parents pay from their phones and we get instant confirmation — no more queues.", name: "Mrs. Adjoa Mensah", role: "Bursar, Accra Academy", initials: "AM" },
-  { quote: "The QR attendance system eliminated proxy signing completely. Staff love it, and we have full verified records every day.", name: "Mr. Kwame Asante", role: "Headmaster, Presec Legon", initials: "KA" },
-  { quote: "Payroll, hostel, and transport in a single dashboard has completely transformed how we run our school operations.", name: "Dr. Efua Boateng", role: "Director, Aburi Girls", initials: "EB" },
+  { quote: "SchoolOS cut our fee collection time by 60%. Parents pay via MoMo from their phones and we get instant confirmation — no more long queues.", name: "Mrs. Adjoa Mensah", role: "Bursar, Accra Academy", initials: "AM" },
+  { quote: "The QR attendance system eliminated proxy signing completely. Staff love it, and we have full verified records at the close of every day.", name: "Mr. Kwame Asante", role: "Headmaster, Presec Legon", initials: "KA" },
+  { quote: "Having payroll, hostel and transport in a single dashboard has transformed how we run our school. MoMo fee collection alone saved us hours.", name: "Dr. Efua Boateng", role: "Director, Aburi Girls", initials: "EB" },
 ];
 
 const pricing = [
-  { name: "Starter", price: "$49", sub: "Up to 300 students", badge: null, highlighted: false, features: ["Attendance, Fees, Exams, Library", "3 admin accounts", "Email support", "Basic reports"], cta: "Get Started" },
-  { name: "Growth", price: "$99", sub: "Up to 1,000 students", badge: "Most Popular", highlighted: true, features: ["Everything in Starter +", "Hostel, Transport, Payroll, Chat", "10 admin accounts", "Priority support", "Advanced analytics", "Parent portal"], cta: "Start Free Trial" },
-  { name: "Enterprise", price: "Custom", sub: "Unlimited students", badge: null, highlighted: false, features: ["Everything in Growth +", "Custom modules", "Dedicated manager", "Full API access", "SLA guarantee", "On-premise option"], cta: "Contact Sales" },
+  { name: "Starter", price: "GH¢499", sub: "Up to 300 students", badge: null, highlighted: false, features: ["Attendance, Fees, Exams + Library", "3 admin accounts", "Email & SMS support", "Basic reports"], cta: "Get Started" },
+  { name: "Growth", price: "GH¢999", sub: "Up to 1,000 students", badge: "Most Popular", highlighted: true, features: ["Everything in Starter +", "Hostel, Transport, Payroll, WhatsApp", "10 admin accounts", "Priority support", "Advanced analytics + MoMo", "Parent portal & WhatsApp alerts"], cta: "Start Free Trial" },
+  { name: "Enterprise", price: "Custom", sub: "Unlimited students", badge: null, highlighted: false, features: ["Everything in Growth +", "Custom modules & integrations", "Dedicated account manager", "Full API access", "SLA guarantee + on-premise option", "Multi-campus & multi-currency support"], cta: "Contact Sales" },
 ];
 
 const faqs = [
-  { q: "How long does setup take?", a: "Most schools go live within 7 days. Our team handles data migration, configuration, and staff training." },
-  { q: "Can parents and students access the platform?", a: "Yes. Parents get a portal for attendance, results, fees, and announcements. Students access records and timetables." },
-  { q: "Is our data secure?", a: "All data encrypted at rest (AES-256) and in transit (TLS 1.3). GDPR compliant. Never shared with third parties." },
-  { q: "Can we import from Excel?", a: "Absolutely. Bulk import from Excel/CSV for students, staff, classes, and fee records with field mapping." },
-  { q: "Do you offer training?", a: "Every plan includes onboarding sessions, video tutorials, and documentation. Growth+ gets dedicated support managers." },
-  { q: "What if we need a custom module?", a: "Enterprise clients get custom development. We also add new modules regularly based on school feedback." },
+  { q: "How long does setup take?", a: "Most schools go live within 7 days. Our team handles data migration, fee structure setup, and staff training — no technical expertise needed on your end." },
+  { q: "How do parents pay fees?", a: "Parents pay via Mobile Money (MoMo), card or bank transfer. Invoices are sent via WhatsApp or SMS and payments reflect instantly. Over 80% of our parents use MoMo." },
+  { q: "Do parents need the app?", a: "No. Parents receive attendance, fees and results updates directly via WhatsApp — the #1 messaging platform in Africa. No separate app or portal to check." },
+  { q: "Do you support the Ghana curriculum?", a: "Yes. Report cards follow NaCCA/GES government formats. We also support WAEC grading for schools preparing students for BECE and WASSCE." },
+  { q: "Can you migrate our existing data?", a: "Absolutely. We import student records, staff profiles, class lists and fee histories from Excel, CSV or your current system — with field mapping and validation." },
+  { q: "Is SchoolOS available outside Ghana?", a: "Yes — we're live in Ghana and expanding to Nigeria in 2026 with NGN currency, WAEC/NECO support, and Termii SMS integration. Kenya follows in 2027." },
 ];
 
 function useCountUp(target: number, duration = 2000, start = false) {
@@ -176,7 +176,7 @@ export function LandingPage() {
             <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#6366F1,#14B8A6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GraduationCap size={16} color="white" />
             </div>
-            <span className="text-white font-bold whitespace-nowrap" style={{ fontSize: 15, letterSpacing: "-0.02em" }}>SchoolSync</span>
+            <span className="text-white font-bold whitespace-nowrap" style={{ fontSize: 15, letterSpacing: "-0.02em" }}>SchoolOS</span>
           </button>
           <div className="hide-mobile flex items-center gap-1">
             {navLinks.map((l) => {
@@ -223,14 +223,14 @@ export function LandingPage() {
         <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-[1fr_1fr] gap-16 items-center">
           <div style={{ animation: "fadeUp 0.8s ease-out" }}>
             <div className="badge" style={{ background: "rgba(20,184,166,0.12)", color: C.teal, marginBottom: 24, width: "fit-content" }}>
-              <Zap size={12} /> SCHOOL MANAGEMENT REIMAGINED
+              <Zap size={12} /> BUILT FOR AFRICAN SCHOOLS
             </div>
             <h1 style={{ fontSize: "clamp(40px, 5.5vw, 60px)", fontWeight: 800, lineHeight: 1.1, letterSpacing: "-0.03em", color: "#0A0B1E" }}>
-              Manage Your School.<br />
-              <span style={{ background: "linear-gradient(135deg,#6366F1,#14B8A6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Effortlessly.</span>
+              School Management,<br />
+              <span style={{ background: "linear-gradient(135deg,#6366F1,#14B8A6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Built for Africa.</span>
             </h1>
-            <p style={{ fontSize: 17, color: C.muted, maxWidth: 480, lineHeight: 1.7, marginTop: 20 }}>
-              One powerful platform for attendance, exams, fees, hostel, payroll, transport, and 40+ more modules — built for modern schools.
+            <p style={{ fontSize: 17, color: C.muted, maxWidth: 520, lineHeight: 1.7, marginTop: 20 }}>
+              Attendance, fees (MoMo), exams (NaCCA/WAEC), WhatsApp communication, hostel, payroll, transport — one platform that works the way African schools do.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <button className="btn btn-primary" style={{ padding: "14px 32px", fontSize: 15 }} onClick={() => navigate("/auth?mode=signup")}>Request a Demo</button>
@@ -238,9 +238,9 @@ export function LandingPage() {
             </div>
             <div className="flex flex-wrap gap-6 mt-8" style={{ fontSize: 13, color: C.muted }}>
               {[
-                { icon: Zap, text: "40+ Modules" },
-                { icon: Shield, text: "Role-Based Access" },
-                { icon: Cloud, text: "Cloud-Based" },
+                { icon: Zap, text: "MoMo Fee Collection" },
+                { icon: MessageSquare, text: "WhatsApp Alerts" },
+                { icon: Shield, text: "NaCCA/WAEC Compliant" },
               ].map(({ icon: Icon, text }) => (
                 <span key={text} className="flex items-center gap-2">
                   <span style={{ width: 20, height: 20, borderRadius: 6, background: "rgba(20,184,166,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -264,7 +264,7 @@ export function LandingPage() {
         <div className="glass mx-auto" style={{ maxWidth: 900, borderRadius: 20, padding: "32px 24px" }}>
           <div className="flex flex-wrap justify-center">
             {[
-              { val: schools, label: "Schools Onboarded", sub: "Across 12 countries", suffix: "+" },
+              { val: schools, label: "Schools Onboarded", sub: "Across Ghana & Nigeria", suffix: "+" },
               { val: students, label: "Students Managed", sub: "Active profiles", suffix: "K+" },
               { val: modulesCount, label: "Modules Available", sub: "Fully integrated", suffix: "+" },
               { val: uptime, label: "Uptime Guaranteed", sub: "Cloud reliability", suffix: "%", decimal: true },
@@ -288,10 +288,10 @@ export function LandingPage() {
           <div className="card" style={{ borderRadius: 0, padding: "28px 32px", display: "flex", flexWrap: "wrap", gap: 24, alignItems: "center" }}>
             <div style={{ flex: "0 0 35%", minWidth: 220 }}>
               <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0A0B1E" }}>Connects with tools you already use</h3>
-              <p style={{ fontSize: 13, color: C.muted, marginTop: 6 }}>Sync with payment gateways, communication tools & government portals</p>
+              <p style={{ fontSize: 13, color: C.muted, marginTop: 6 }}>Mobile Money, payment gateways, WhatsApp & SMS — integrated and ready</p>
             </div>
             <div style={{ flex: 1, display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-              {["Paystack", "Flutterwave", "Google", "Zoom", "WhatsApp", "SMS"].map((name) => (
+              {["MTN MoMo", "Paystack", "Flutterwave", "WhatsApp", "Arkesel SMS", "Google"].map((name) => (
                 <div key={name} style={{ padding: "6px 14px", borderRadius: 999, background: "#F3F4F6", fontSize: 12, color: "#6B7280", display: "flex", alignItems: "center", gap: 6, transition: "all 0.3s", opacity: 0.5, cursor: "default" }}
                   onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.background = "#EEF2FF"; e.currentTarget.style.color = "#6366F1"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.5"; e.currentTarget.style.background = "#F3F4F6"; e.currentTarget.style.color = "#6B7280"; }}
@@ -310,7 +310,7 @@ export function LandingPage() {
               <Zap size={12} /> WHAT WE OFFER
             </div>
             <h2 style={{ fontSize: "clamp(30px, 3vw, 38px)", fontWeight: 700, color: "#0A0B1E", letterSpacing: "-0.02em" }}>Everything your school needs</h2>
-            <p style={{ fontSize: 15, color: C.muted, maxWidth: 500, margin: "8px auto 0" }}>From admissions to graduation — every workflow covered in one place</p>
+            <p style={{ fontSize: 15, color: C.muted, maxWidth: 500, margin: "8px auto 0" }}>From admissions to graduation — purpose-built for Ghana and expanding across Africa</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {modules.map((m, i) => (
@@ -504,7 +504,7 @@ export function LandingPage() {
             <h2 style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, color: "white", maxWidth: 600, margin: "0 auto", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
               Ready to transform your school?
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginTop: 12 }}>Join 500+ schools already running smarter with SchoolSync</p>
+            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginTop: 12 }}>Join 500+ schools across Ghana already running smarter with SchoolOS</p>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <button className="btn btn-primary" style={{ padding: "14px 32px", fontSize: 15, boxShadow: "0 8px 32px rgba(99,102,241,0.3)" }} onClick={() => navigate("/auth?mode=signup")}>Request a Free Demo</button>
               <button className="btn btn-ghost" style={{ padding: "14px 28px", fontSize: 15, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", color: "white" }} onClick={() => scrollTo("features")}>View All Modules</button>
@@ -523,9 +523,9 @@ export function LandingPage() {
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#6366F1,#14B8A6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <GraduationCap size={18} color="white" />
                 </div>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "white" }}>SchoolSync</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: "white" }}>SchoolOS</span>
               </div>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 260 }}>The all-in-one school management platform built for modern institutions.</p>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, maxWidth: 260 }}>The all-in-one school management platform built for African schools. Live in Ghana — expanding across the continent.</p>
               <div className="flex gap-3 mt-5">
                 {[Twitter, Linkedin, Facebook, Instagram].map((Icon, i) => (
                   <button key={i} style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.06)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.4)", transition: "all 0.2s" }}
@@ -556,7 +556,7 @@ export function LandingPage() {
             ))}
           </div>
           <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>© 2025 SchoolSync. All rights reserved.</span>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.3)" }}>© 2025 SchoolOS. All rights reserved.</span>
             <div style={{ display: "flex", gap: 12, fontSize: 12, color: "rgba(255,255,255,0.3)" }}>
               <button style={{ color: "inherit", cursor: "pointer", background: "none", border: "none", padding: 0, transition: "color 0.2s" }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "#6366F1"}
@@ -591,7 +591,7 @@ function DashboardPreviewMini() {
           <div style={{ width: 18, height: 18, borderRadius: 5, background: "linear-gradient(135deg,#6366F1,#14B8A6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <GraduationCap size={10} color="white" />
           </div>
-          <span style={{ color: "white", fontWeight: 700, fontSize: 11 }}>SchoolSync</span>
+          <span style={{ color: "white", fontWeight: 700, fontSize: 11 }}>SchoolOS</span>
         </div>
         <div style={{ display: "flex", gap: 4 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#14B8A6" }} />
@@ -629,7 +629,7 @@ function DashboardPreviewFull({ progressVisible, progressRef }: { progressVisibl
             <div style={{ width: 20, height: 20, borderRadius: 6, background: "linear-gradient(135deg,#6366F1,#14B8A6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <GraduationCap size={11} color="white" />
             </div>
-            <span style={{ fontWeight: 700, color: "#0A0B1E", fontSize: 13 }}>SchoolSync</span>
+            <span style={{ fontWeight: 700, color: "#0A0B1E", fontSize: 13 }}>SchoolOS</span>
           </div>
           {[["MENU",["Dashboard","Students","Teachers","Classes","Timetable"]],["ACADEMICS",["Exams","Attendance","Library"]],["FINANCE",["Fees","Payroll"]],["OPERATIONS",["Hostel","Transport","Admissions"]]].map(([g, items]: any) => (
             <div key={g} style={{ marginTop: g === "MENU" ? 0 : 20 }}>
