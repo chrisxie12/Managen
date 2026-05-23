@@ -1,16 +1,25 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from './App';
+import { vi } from 'vitest';
+
+vi.mock('@clerk/react', () => ({
+  useAuth: () => ({ getToken: vi.fn().mockResolvedValue('mock-token'), signOut: vi.fn() }),
+  useUser: () => ({ isLoaded: true, isSignedIn: false }),
+  ClerkProvider: ({ children }) => children,
+  useClerk: () => ({ openSignIn: vi.fn(), openSignUp: vi.fn() }),
+}));
+
+import App from './app/App';
 
 const mockFetch = (response) => {
-  global.fetch = jest.fn().mockResolvedValue({
+  global.fetch = vi.fn().mockResolvedValue({
     ok: response.ok,
     json: async () => response.body,
   });
 };
 
 const mockFetchSequence = (...responses) => {
-  global.fetch = jest.fn();
+  global.fetch = vi.fn();
   responses.forEach((response) => {
     global.fetch.mockResolvedValueOnce({
       ok: response.ok,
@@ -22,7 +31,7 @@ const mockFetchSequence = (...responses) => {
 describe('Managen auth flows', () => {
   beforeEach(() => {
     localStorage.clear();
-    global.fetch = jest.fn();
+    global.fetch = vi.fn();
   });
 
   test('creates a school through the onboarding form and returns to login with the subdomain filled in', async () => {

@@ -56,9 +56,7 @@ export default defineConfig({
     telemetry: false,
   }) : null,].filter(Boolean),
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+    alias: { '@': path.resolve(__dirname, './src') }
   },
   build: {
     outDir: 'dist',
@@ -78,3 +76,4 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts'
   }
 })
+
