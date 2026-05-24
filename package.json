@@ -26,6 +26,7 @@
     "@clerk/backend": "^3.4.9",
     "@google/generative-ai": "^0.24.1",
     "@sentry/node": "^10.53.1",
+    "@sentry/react": "^10.53.1",
     "@supabase/supabase-js": "^2.105.1",
     "@upstash/redis": "^1.38.0",
     "archiver": "^8.0.0",

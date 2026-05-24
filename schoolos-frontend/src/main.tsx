@@ -18,12 +18,13 @@ if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,
     environment: import.meta.env.MODE || "development",
+    sendDefaultPii: true,
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false }),
       Sentry.httpClientIntegration(),
     ],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.2,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
   });
