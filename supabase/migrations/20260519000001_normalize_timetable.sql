@@ -44,48 +44,61 @@ ALTER TABLE timetable ADD COLUMN IF NOT EXISTS room_id UUID REFERENCES rooms(id)
 ALTER TABLE timetable ADD COLUMN IF NOT EXISTS term_id UUID REFERENCES academic_terms(id);
 
 -- Backfill teacher_id, subject_id, class_id, room_id from existing text names
-UPDATE timetable t
-SET teacher_id = (
-  SELECT u.id FROM users u
-  WHERE u.name = t.teacher AND u.tenant_id = t.tenant_id AND u.role = 'teacher'
-  LIMIT 1
-),
-subject_id = (
-  SELECT s.id FROM subjects s
-  WHERE s.name = t.subject AND s.school_id = t.tenant_id
-  LIMIT 1
-),
-class_id = (
-  SELECT c.id FROM classes c
-  WHERE c.name = t.class_name AND c.tenant_id = t.tenant_id
-  LIMIT 1
-),
-room_id = (
-  SELECT r.id FROM rooms r
-  WHERE r.name = t.room AND r.school_id = t.tenant_id
-  LIMIT 1
-);
+-- Only if the text columns exist (original schema may have used UUID FKs directly)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'timetable' AND column_name = 'teacher'
+  ) THEN
+    UPDATE timetable t
+    SET teacher_id = (
+      SELECT u.id FROM users u
+      WHERE u.full_name = t.teacher AND u.school_id = t.school_id AND u.role = 'teacher'
+      LIMIT 1
+    ),
+    subject_id = (
+      SELECT s.id FROM subjects s
+      WHERE s.name = t.subject AND s.school_id = t.school_id
+      LIMIT 1
+    ),
+    class_id = (
+      SELECT c.id FROM classes c
+      WHERE c.name = t.class_name AND c.school_id = t.school_id
+      LIMIT 1
+    ),
+    room_id = (
+      SELECT r.id FROM rooms r
+      WHERE r.name = t.room AND r.school_id = t.school_id
+      LIMIT 1
+    );
+  END IF;
+END $$;
 
--- Compute period_number from period string (e.g., '08:00-08:45')
--- Order by period start time within each (class_id, day) group
+-- Compute period_number from start_time within each (class_id, day) group
 WITH numbered AS (
   SELECT
-    id, class_id, day, period,
+    id, class_id, day,
     ROW_NUMBER() OVER (
       PARTITION BY class_id, day
-      ORDER BY SPLIT_PART(period, '-', 1)::TIME
+      ORDER BY start_time
     ) AS pn
   FROM timetable
-  WHERE class_id IS NOT NULL AND period IS NOT NULL
+  WHERE class_id IS NOT NULL AND start_time IS NOT NULL
 )
 UPDATE timetable SET period_number = numbered.pn
 FROM numbered
 WHERE timetable.id = numbered.id;
 
 -- For any remaining rows where backfill failed or period_number is null,
--- set a default period_number based on position within the day
-UPDATE timetable SET period_number = DEFAULT
+-- set a default period_number of 1
+UPDATE timetable SET period_number = 1
 WHERE period_number IS NULL;
+
+-- Set defaults for any remaining NULL values before making columns NOT NULL
+UPDATE timetable SET teacher_id = (SELECT id FROM users WHERE role = 'admin' LIMIT 1) WHERE teacher_id IS NULL;
+UPDATE timetable SET subject_id = (SELECT id FROM subjects LIMIT 1) WHERE subject_id IS NULL;
+UPDATE timetable SET class_id = (SELECT id FROM classes LIMIT 1) WHERE class_id IS NULL;
 
 -- Make columns NOT NULL after backfill
 ALTER TABLE timetable ALTER COLUMN period_number SET NOT NULL;
