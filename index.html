@@ -2598,7 +2598,7 @@
         const eased=1-Math.pow(1-p,4);
         const val=eased*target;
         el.textContent=(Number.isInteger(target)?Math.floor(val):val.toFixed(1))+suffix;
-        if(p<<1)requestAnimationFrame(update);
+        if(p<1)requestAnimationFrame(update);
         else el.textContent=target+suffix;
       };
       if(!prefersReducedMotion)requestAnimationFrame(update);
