@@ -589,12 +589,6 @@ nav.scrolled {
 .ticker-item .flag { font-size: 15px; }
 .ticker-sep { color: var(--orange); font-size: 6px; margin: 0 4px; }
 
-/* ===================== SECTION DIVIDERS ===================== */
-.divider-orange {
-  height: 4px;
-  background: linear-gradient(90deg, transparent, var(--orange) 30%, var(--teal) 70%, transparent);
-  border: none; margin: 0;
-}
 .section-with-accent { position: relative; }
 .section-accent-line {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
@@ -1128,6 +1122,10 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 .foot-legal a { font-size: 13px; color: rgba(245,243,238,0.3); transition: color 0.18s; }
 .foot-legal a:hover { color: rgba(245,243,238,0.7); }
 
+/* ===================== EXIT MODAL ===================== */
+.exit-modal { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); align-items:center; justify-content:center; }
+.exit-modal.show { display:flex; }
+
 /* ===================== BACK TO TOP ===================== */
 .btt {
   position: fixed; bottom: 80px; right: 24px; z-index: 800;
@@ -1458,8 +1456,6 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </div>
 
-<hr class="divider-orange">
-
 <!-- =================== HOW IT WORKS =================== -->
 <section class="how-section">
   <div class="how-bg-pattern"></div>
@@ -1493,6 +1489,37 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="how-step-title">Go Live with Support</div>
         <p class="how-step-desc">Invite your staff and go live. Our onboarding team stays with you through the entire process — live chat, phone, and WhatsApp support included.</p>
         <div class="how-step-time" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:rgba(245,243,238,0.6);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Live within 24 hours</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== BEFORE VS AFTER =================== -->
+<section style="background:var(--bg-2);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;" class="reveal">
+      <div class="section-eyebrow" style="justify-content:center;">BEFORE & AFTER</div>
+      <h2 class="section-title" style="text-align:center;">What changes when you switch to ManaGEN?</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">Schools don't buy software — they buy outcomes. Here's what happens when you automate.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="reveal delay-1">
+      <div style="background:var(--white);border:2px solid #E24B4A;border-radius:var(--r-xl);padding:32px;position:relative;">
+        <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#E24B4A;color:#fff;font-size:11px;font-weight:700;padding:4px 20px;border-radius:99px;white-space:nowrap;">BEFORE ManaGEN</div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">📋</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Manual attendance sheets</div><div style="font-size:12px;color:var(--text-3);">30+ minutes per class per day</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">🧾</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Paper receipt queues</div><div style="font-size:12px;color:var(--text-3);">3 days to collect term fees</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">📊</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Spreadsheet grade tracking</div><div style="font-size:12px;color:var(--text-3);">Prone to errors, hard to audit</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;"><span style="font-size:20px;">📞</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Phone-based parent updates</div><div style="font-size:12px;color:var(--text-3);">Time-consuming, inconsistent</div></div></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border:2px solid var(--teal);border-radius:var(--r-xl);padding:32px;position:relative;">
+        <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:4px 20px;border-radius:99px;white-space:nowrap;">AFTER ManaGEN</div>
+        <div style="margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">✅</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">QR attendance — 30 seconds per class</div><div style="font-size:12px;color:var(--teal);font-weight:600;">Zero proxy, real-time records</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">✅</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">MoMo fee collection — instant</div><div style="font-size:12px;color:var(--teal);font-weight:600;">80% of parents pay via mobile money</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">✅</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Auto-generated report cards</div><div style="font-size:12px;color:var(--teal);font-weight:600;">NaCCA/GES format, one click</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;"><span style="font-size:20px;">✅</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">WhatsApp parent alerts — automated</div><div style="font-size:12px;color:var(--teal);font-weight:600;">Attendance, fees, results pushed instantly</div></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1756,6 +1783,39 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </section>
 
+<!-- =================== SECURITY & COMPLIANCE =================== -->
+<section style="background:var(--bg);">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px;" class="reveal">
+      <div class="section-eyebrow" style="justify-content:center;">SECURITY & COMPLIANCE</div>
+      <h2 class="section-title" style="text-align:center;">Your data is safe with us.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">Student data is the most sensitive asset a school holds. We treat it that way.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" class="reveal delay-1">
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px;">🔐</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">AES-256 Encryption</div>
+        <div style="font-size:11px;color:var(--text-3);">Bank-grade encryption at rest and in transit</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px;">🇪🇺</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">GDPR Compliant</div>
+        <div style="font-size:11px;color:var(--text-3);">Full GDPR framework — student data never sold</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px;">🌍</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">Local Data Residency</div>
+        <div style="font-size:11px;color:var(--text-3);">Host your data in Africa — Ghana, Nigeria, Kenya</div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:12px;">📋</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">99.9% Uptime SLA</div>
+        <div style="font-size:11px;color:var(--text-3);">Enterprise-grade infrastructure with monitoring</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- =================== TESTIMONIALS =================== -->
 <section class="testi-section">
   <div class="container">
@@ -1812,6 +1872,22 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="toggle">
         <button class="tog-btn on" onclick="setPricing('monthly',this)">Monthly</button>
         <button class="tog-btn" onclick="setPricing('annual',this)">Annual <span class="save-tag">Save 20%</span></button>
+      </div>
+    </div>
+    <div class="calc-wrap reveal" style="text-align:center;margin-bottom:40px;">
+      <div style="display:inline-flex;align-items:center;gap:20px;background:var(--bg-3);padding:20px 32px;border-radius:var(--r-lg);border:1px solid var(--border);flex-wrap:wrap;">
+        <div style="text-align:left;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">How many students?</div>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <input type="range" id="studentSlider" min="50" max="5000" value="300" step="50" style="width:200px;accent-color:var(--orange);">
+            <span id="studentCount" style="font-family:var(--ff-display);font-size:24px;font-weight:900;color:var(--orange);min-width:60px;">300</span>
+          </div>
+        </div>
+        <div class="calc-price" style="text-align:left;border-left:1px solid var(--border);padding-left:20px;">
+          <div style="font-size:13px;color:var(--text-3);">Your price</div>
+          <div style="font-family:var(--ff-display);font-size:28px;font-weight:900;color:var(--text);"><span id="calcPrice">$49</span><span style="font-size:16px;font-weight:400;color:var(--text-3);">/mo</span></div>
+          <div style="font-size:12px;color:var(--teal);font-weight:600;" id="calcPlan">Starter plan recommended</div>
+        </div>
       </div>
     </div>
     <div class="pricing-grid">
@@ -1973,63 +2049,21 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="form-title">Start your free trial</div>
           <div class="form-subtitle">No credit card required · Go live in 24 hours</div>
           <form id="leadForm" onsubmit="handleSubmit(event)" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="fname">First Name *</label>
-                <input class="form-input" id="fname" type="text" placeholder="Kwame" required>
-                <div class="field-error" id="err-fname">Please enter your first name</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="lname">Last Name *</label>
-                <input class="form-input" id="lname" type="text" placeholder="Asante" required>
-                <div class="field-error" id="err-lname">Please enter your last name</div>
-              </div>
-            </div>
             <div class="form-group">
               <label class="form-label" for="email">Work Email *</label>
               <input class="form-input" id="email" type="email" placeholder="kwame@school.edu.gh" required>
               <div class="field-error" id="err-email">Please enter a valid email address</div>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="school">School Name *</label>
-              <input class="form-input" id="school" type="text" placeholder="Accra Academy" required>
-              <div class="field-error" id="err-school">Please enter your school name</div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="role">Your Role *</label>
-                <select class="form-input form-select" id="role" required>
-                  <option value="">Select role…</option>
-                  <option>Headmaster / Principal</option>
-                  <option>Bursar / Accountant</option>
-                  <option>IT Administrator</option>
-                  <option>School Owner</option>
-                  <option>Other</option>
-                </select>
-                <div class="field-error" id="err-role">Please select your role</div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="students">No. of Students</label>
-                <select class="form-input form-select" id="students">
-                  <option value="">Select range…</option>
-                  <option>Under 100</option>
-                  <option>100–300</option>
-                  <option>300–1,000</option>
-                  <option>1,000–5,000</option>
-                  <option>Over 5,000</option>
-                </select>
-              </div>
-            </div>
             <div class="form-privacy">
               <svg class="icon icon-sm" style="color:var(--teal);margin-top:2px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Your data is encrypted and never shared. By submitting you agree to our <a href="#" style="color:var(--orange);">Privacy Policy</a>.
+              Your data is encrypted. We'll ask for school details during onboarding.
             </div>
-            <button type="submit" class="form-submit" id="submitBtn"><span class="btn-text">Start Free Trial — No Credit Card</span><div class="form-spinner"></div></button>
+            <button type="submit" class="form-submit" id="submitBtn"><span class="btn-text">Get Started Free</span><div class="form-spinner"></div></button>
           </form>
           <div class="form-success" id="formSuccess">
             <div class="form-success-icon">🎉</div>
             <h3>You are in! Welcome to ManaGEN.</h3>
-            <p>Check your email for your login link. Our onboarding team will WhatsApp you within the hour to get your school set up.</p>
+            <p>Check your email for your login link. We'll collect your school details during setup.</p>
           </div>
         </div>
       </div>
@@ -2103,6 +2137,21 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 <!-- MOBILE STICKY CTA -->
 <div class="mob-sticky">
   <a href="#" class="btn-primary">Start Free — No Credit Card Required</a>
+</div>
+
+<!-- EXIT-INTENT MODAL -->
+<div id="exitModal" class="exit-modal" onclick="if(event.target===this)closeExit()">
+  <div style="background:var(--bg);border-radius:var(--r-xl);padding:40px;max-width:480px;width:90%;position:relative;box-shadow:var(--shadow-lg);text-align:center;">
+    <button onclick="closeExit()" style="position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--bg-2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text-3);">×</button>
+    <div style="font-size:48px;margin-bottom:16px;">📋</div>
+    <h3 style="font-family:var(--ff-display);font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;">Free School Management Checklist</h3>
+    <p style="font-size:14px;color:var(--text-2);margin-bottom:24px;">Download our 10-point evaluation checklist for choosing the right school management system. Used by 500+ schools across Africa.</p>
+    <form onsubmit="event.preventDefault();closeExit();alert('Checklist sent! Check your email.');" style="display:flex;flex-direction:column;gap:12px;">
+      <input type="email" placeholder="Your work email" required style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:15px;font-family:var(--ff-body);">
+      <button type="submit" class="btn-primary" style="justify-content:center;width:100%;">Send Me the Checklist</button>
+    </form>
+    <p style="font-size:11px;color:var(--text-3);margin-top:16px;">No spam. Unsubscribe anytime.</p>
+  </div>
 </div>
 
 <script>
@@ -2213,21 +2262,29 @@ const countObs = new IntersectionObserver(entries => {
 document.querySelectorAll("[data-target]").forEach(el => countObs.observe(el));
 
 /* ========== PRICING TOGGLE ========== */
+function calcPrice() {
+  const slider = document.getElementById("studentSlider");
+  const count = parseInt(slider.value);
+  const type = document.querySelector(".tog-btn.on")?.textContent.trim().toLowerCase().startsWith("monthly") ? "monthly" : "annual";
+  document.getElementById("studentCount").textContent = count;
+  const mult = type === "monthly" ? 1 : 0.8;
+  let plan, price;
+  if (count <= 300) { plan = "Starter"; price = Math.round(Math.max(29, count * 0.16) * mult); }
+  else if (count <= 1000) { plan = "Growth"; price = Math.round(Math.max(79, count * 0.1) * mult); }
+  else { plan = "Enterprise"; price = 0; }
+  document.getElementById("calcPrice").textContent = price > 0 ? "$" + price : "Custom";
+  document.getElementById("calcPlan").textContent = price > 0 ? plan + " plan recommended" : "Custom pricing — contact sales";
+  const starter = document.querySelector(".p-card:not(.featured):not(:last-child) .p-price[data-monthly]");
+  const growth = document.querySelector(".p-card.featured .p-price[data-monthly]");
+  const sBase = count <= 300 ? 49 : Math.round(49 + (count - 300) * 0.05);
+  const gBase = count <= 1000 ? 99 : 99 + Math.round((count - 1000) * 0.03);
+  if (starter) { const v = Math.round((type === "monthly" ? Math.min(sBase, 199) : Math.min(sBase, 199) * 0.8)); starter.innerHTML = "$" + v + "<span class=\"p-price-mo\">/mo</span>"; }
+  if (growth) { const v = Math.round((type === "monthly" ? Math.min(gBase, 499) : Math.min(gBase, 499) * 0.8)); growth.innerHTML = "$" + v + "<span class=\"p-price-mo\">/mo</span>"; }
+}
 function setPricing(type, btn) {
   document.querySelectorAll(".tog-btn").forEach(b => b.classList.remove("on"));
   btn.classList.add("on");
-  document.querySelectorAll(".p-price[data-monthly]").forEach(p => {
-    const v = type === "monthly" ? p.dataset.monthly : p.dataset.annual;
-    const c = p.dataset.currency || "$";
-    p.style.opacity = "0";
-    p.style.transform = "translateY(8px)";
-    setTimeout(() => {
-      p.innerHTML = c + v + "<span class=\"p-price-mo\">/mo</span>";
-      p.style.transition = "opacity 0.35s, transform 0.35s";
-      p.style.opacity = "1";
-      p.style.transform = "translateY(0)";
-    }, 180);
-  });
+  calcPrice();
 }
 
 /* ========== FAQ ========== */
@@ -2275,32 +2332,42 @@ function validateField(input, errId) {
   if (err) err.classList.toggle("show", !valid && input.value !== "");
   return valid;
 }
-["fname","lname","email","school","role"].forEach(id => {
-  const input = document.getElementById(id);
-  if (input) {
-    input.addEventListener("blur", () => validateField(input, "err-" + id));
-    input.addEventListener("input", () => { if (input.classList.contains("invalid")) validateField(input, "err-" + id); });
-  }
-});
+document.getElementById("email").addEventListener("blur", () => validateField(document.getElementById("email"), "err-email"));
+document.getElementById("email").addEventListener("input", () => { const e = document.getElementById("email"); if (e.classList.contains("invalid")) validateField(e, "err-email"); });
 function handleSubmit(e) {
   e.preventDefault();
-  const fields = [{id:"fname",err:"err-fname"},{id:"lname",err:"err-lname"},{id:"email",err:"err-email"},{id:"school",err:"err-school"},{id:"role",err:"err-role"}];
-  let allValid = true;
-  fields.forEach(f => { const input = document.getElementById(f.id); if (!validateField(input, f.err)) allValid = false; });
-  if (!allValid) return;
+  const input = document.getElementById("email");
+  if (!validateField(input, "err-email")) return;
   const btn = document.getElementById("submitBtn");
   btn.classList.add("loading");
   setTimeout(() => {
     document.getElementById("leadForm").style.display = "none";
     document.getElementById("formSuccess").classList.add("show");
     document.getElementById("formCard").style.borderColor = "rgba(27,184,154,0.4)";
-  }, 1400);
+  }, 1200);
 }
 
 /* ========== VIDEO DEMO ========== */
 function playDemo() {
   const thumb = document.getElementById("videoThumb");
   thumb.innerHTML = "<div style=\"width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:600;\"><div style=\"text-align:center;opacity:0.6;\"><div style=\"font-size:48px;margin-bottom:12px;\"><svg style=\"width:48px;height:48px;stroke:#fff;stroke-width:1.5;\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"10 8 16 12 10 16 10 8\" fill=\"currentColor\" stroke=\"none\"/></svg></div>Demo video would load here</div></div>";
+}
+
+/* ========== PRICING CALCULATOR ========== */
+const slider = document.getElementById("studentSlider");
+if (slider) { slider.addEventListener("input", calcPrice); calcPrice(); }
+
+/* ========== EXIT-INTENT MODAL ========== */
+let exitShown = false;
+document.addEventListener("mouseleave", (e) => {
+  if (exitShown || e.clientY > 0) return;
+  exitShown = true;
+  const modal = document.getElementById("exitModal");
+  if (modal) modal.classList.add("show");
+});
+function closeExit() {
+  const modal = document.getElementById("exitModal");
+  if (modal) modal.classList.remove("show");
 }
 
 /* ========== HERO PARALLAX (desktop only) ========== */
