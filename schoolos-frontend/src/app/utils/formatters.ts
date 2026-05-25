@@ -15,9 +15,9 @@ export const formatPercent = (value: number): string => {
   return `${value.toFixed(1)}%`;
 };
 
-export const formatDate = (date: string | Date): string => {
+export const formatDate = (date: string | Date, options?: Intl.DateTimeFormatOptions): string => {
   const d = new Date(date);
-  return new Intl.DateTimeFormat('en-GB', {
+  return new Intl.DateTimeFormat('en-GB', options ?? {
     day: '2-digit',
     month: 'short',
     year: 'numeric'
@@ -46,6 +46,39 @@ export const getInitials = (name: string): string => {
     .join('')
     .substring(0, 2)
     .toUpperCase();
+};
+
+export const formatShortDate = (date: string | Date): string => {
+  const d = new Date(date);
+  return new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(d);
+};
+
+export const getCurrentTerm = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  let term: string;
+  if (month >= 0 && month <= 3) term = 'Term 1';
+  else if (month >= 4 && month <= 7) term = 'Term 2';
+  else term = 'Term 3';
+  return `${year} - ${term}`;
+};
+
+export const getGreeting = (): string => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+};
+
+export const formatTime = (date: Date): string => {
+  return new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: '2-digit', hour12: true }).format(date);
+};
+
+export const truncate = (str: string, maxLen: number): string => {
+  if (!str) return '';
+  if (str.length <= maxLen) return str;
+  return str.slice(0, maxLen) + '...';
 };
 
 export const getAvatarColor = (name: string): string => {

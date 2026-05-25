@@ -85,8 +85,8 @@ export const api = {
         'Content-Type': 'application/json',
         ...getTenantHeader(),
         ...authHeaders,
-        ...options.headers,
-      },
+        ...(options.headers as Record<string, string>),
+      } as Record<string, string>,
     });
     return handleResponse<T>(response);
   },
@@ -102,8 +102,8 @@ export const api = {
         'Content-Type': 'application/json',
         ...getTenantHeader(),
         ...authHeaders,
-        ...options.headers,
-      },
+        ...(options.headers as Record<string, string>),
+      } as Record<string, string>,
       body: JSON.stringify(body),
     });
     return handleResponse<T>(response);
@@ -120,8 +120,8 @@ export const api = {
         'Content-Type': 'application/json',
         ...getTenantHeader(),
         ...authHeaders,
-        ...options.headers,
-      },
+        ...(options.headers as Record<string, string>),
+      } as Record<string, string>,
       body: body ? JSON.stringify(body) : undefined,
     });
     return handleResponse<T>(response);
@@ -138,8 +138,8 @@ export const api = {
         'Content-Type': 'application/json',
         ...getTenantHeader(),
         ...authHeaders,
-        ...options.headers,
-      },
+        ...(options.headers as Record<string, string>),
+      } as Record<string, string>,
       body: body ? JSON.stringify(body) : undefined,
     });
     return handleResponse<T>(response);
@@ -156,8 +156,8 @@ export const api = {
         'Content-Type': 'application/json',
         ...getTenantHeader(),
         ...authHeaders,
-        ...options.headers,
-      },
+        ...(options.headers as Record<string, string>),
+      } as Record<string, string>,
     });
     return handleResponse<T>(response);
   },

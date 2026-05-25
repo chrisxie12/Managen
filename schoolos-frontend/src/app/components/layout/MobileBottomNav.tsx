@@ -35,7 +35,7 @@ const roleBottomNav: Record<string, Array<{ icon: any; label: string; path: stri
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/teacher" },
     { icon: CalendarCheck, label: "Attend.", path: "/dashboard/attendance" },
     { icon: BookOpen, label: "Grades", path: "/dashboard/gradebook" },
-    { icon: Clock, label: "Timetable", path: "/dashboard/timetable" },
+    { icon: Clock, label: "Timetable", path: "/dashboard/timetable-scheduler" },
     { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
   ],
   accountant: [

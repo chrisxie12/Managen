@@ -3,6 +3,12 @@
 :root {
   --font-size: 16px;
   --background: #F8F9FA;
+  --bg: var(--background);
+  --text: var(--foreground);
+  --surface: var(--card);
+  --danger: #EF4444;
+  --amber: #F59E0B;
+  --faint: #94A3B8;
   --foreground: #0A2472;
   --card: #ffffff;
   --card-foreground: #0A2472;
@@ -56,6 +62,12 @@
 .dark {
   --background: #0C1A3A;
   --foreground: #F8F9FA;
+  --bg: var(--background);
+  --text: var(--foreground);
+  --surface: var(--card);
+  --danger: #EF4444;
+  --amber: #F59E0B;
+  --faint: #64748B;
   --card: #0C1A3A;
   --card-foreground: #F8F9FA;
   --popover: #0C1A3A;

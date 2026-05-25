@@ -22,7 +22,20 @@ export function HeadmasterDashboard() {
         loading, error
     } = useHeadmasterDashboard();
 
-    if (loading) return <DashboardSkeleton sections={4} cardsPerSection={4} />;
+    if (loading) return (
+      <div className="space-y-6">
+        <DashboardSkeleton layout="cards" count={4} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <DashboardSkeleton layout="chart" />
+          <DashboardSkeleton layout="chart" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <DashboardSkeleton layout="list" />
+          <DashboardSkeleton layout="chart" />
+          <DashboardSkeleton layout="table" />
+        </div>
+      </div>
+    );
     if (error) return <div className="p-6"><SectionError message={error} /></div>;
     if (!stats) return <div className="p-6">No data available</div>;
 

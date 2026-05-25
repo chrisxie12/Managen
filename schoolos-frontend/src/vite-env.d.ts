@@ -28,6 +28,10 @@ interface ImportMetaEnv {
   readonly VITE_PAYMENT_API_BASE_URL?: string;
 }
 
+declare module 'virtual:pwa-register' {
+  export function registerSW(options?: { immediate?: boolean }): (reloadPage?: boolean) => Promise<void>;
+}
+
 interface Window {
   PaystackPop?: new () => {
     newTransaction: (options: PaystackCheckoutOptions) => void;

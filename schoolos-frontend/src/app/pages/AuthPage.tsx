@@ -446,7 +446,7 @@ export function AuthPage() {
                 <div className="relative">
                   <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
-                    onChange={(e) => setField("email", e.target.value)} required
+                    onChange={(e) => setField("email", e.target.value)} required autoComplete="email"
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                     style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                 </div>
@@ -457,7 +457,7 @@ export function AuthPage() {
                   <div className="relative">
                     <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                     <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
-                      onChange={(e) => setField("subdomain", e.target.value)}
+                      onChange={(e) => setField("subdomain", e.target.value)} autoComplete="off"
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                       style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   </div>
@@ -485,7 +485,7 @@ export function AuthPage() {
                 <div className="relative">
                   <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type={showPassword ? "text" : "password"} placeholder="New password (min 6 chars)"
-                    value={form.password} onChange={(e) => setField("password", e.target.value)} required minLength={6}
+                    value={form.password} onChange={(e) => setField("password", e.target.value)} required minLength={6} autoComplete="new-password"
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
                     style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -525,7 +525,7 @@ export function AuthPage() {
                 <div className="relative">
                   <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type="text" placeholder="e.g. accra-ridge" value={form.subdomain}
-                    onChange={(e) => setField("subdomain", e.target.value)} required
+                    onChange={(e) => setField("subdomain", e.target.value)} required autoComplete="off"
                     className="w-full pl-10 pr-28 py-3.5 rounded-2xl outline-none text-sm text-ellipsis"
                     style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold whitespace-nowrap" style={{ color: MUTED }}>.getschoolos.me</span>
@@ -539,7 +539,7 @@ export function AuthPage() {
                 <div className="relative">
                   <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type="email" placeholder="admin@yourschool.edu.gh" value={form.email}
-                    onChange={(e) => setField("email", e.target.value)} required
+                    onChange={(e) => setField("email", e.target.value)} required autoComplete="email"
                     className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                     style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                 </div>
@@ -552,7 +552,7 @@ export function AuthPage() {
                 <div className="relative">
                   <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2" color={MUTED} />
                   <input type={showPassword ? "text" : "password"} placeholder="••••••••••" value={form.password}
-                    onChange={(e) => setField("password", e.target.value)} required
+                    onChange={(e) => setField("password", e.target.value)} required autoComplete="current-password"
                     className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
                     style={{ background: "white", border: "1.5px solid rgba(10,36,114,0.12)", color: NAVY }} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -592,7 +592,7 @@ export function AuthPage() {
                       placeholder="e.g. Kwame Mensah"
                       value={form.name}
                       onChange={(e) => setField("name", e.target.value)}
-                      required
+                      required autoComplete="name"
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                       style={{
                         background: "white",
@@ -662,7 +662,7 @@ export function AuthPage() {
                   placeholder={emailPlaceholder}
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
-                  required
+                  required autoComplete="email"
                   className="w-full pl-10 pr-4 py-3.5 rounded-2xl outline-none text-sm"
                   style={{
                     background: "white",
@@ -696,7 +696,7 @@ export function AuthPage() {
                   placeholder="••••••••••"
                   value={form.password}
                   onChange={(e) => setField("password", e.target.value)}
-                  required
+                  required autoComplete="new-password"
                   className="w-full pl-10 pr-12 py-3.5 rounded-2xl outline-none text-sm"
                   style={{
                     background: "white",

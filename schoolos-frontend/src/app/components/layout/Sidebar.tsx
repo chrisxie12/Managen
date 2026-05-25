@@ -135,13 +135,13 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
       {/* Bottom Section */}
       <div className="mt-auto border-t border-slate-800 px-3 py-3 space-y-0.5 flex-shrink-0">
         {!collapsed && (
-          <button className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-slate-300 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-150 mb-2">
+          <button onClick={() => navigate("/dashboard/notifications")} className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-slate-300 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-150 mb-2">
             <Bell className="w-[18px] h-[18px] stroke-[2] text-slate-400" />
             <span className="text-[13px] font-medium">Notifications</span>
           </button>
         )}
         
-        <button className={`w-full ${collapsed ? "h-12 justify-center px-0" : "h-10 px-2 gap-3"} flex items-center rounded-md hover:bg-slate-800/50 transition-colors`}>
+        <button onClick={() => navigate("/dashboard/profile")} className={`w-full ${collapsed ? "h-12 justify-center px-0" : "h-10 px-2 gap-3"} flex items-center rounded-md hover:bg-slate-800/50 transition-colors`}>
           <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
             {initials}
           </div>

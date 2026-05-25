@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { Check, School, BookOpen, Palette, Bell } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -19,8 +19,6 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
   schoolName: string; currentTerm: string; academicYear: string;
   primaryColor: string; communicationMethod: string; onDone: () => void;
 }) {
-  const [countdown, setCountdown] = useState(5);
-
   useEffect(() => {
     const duration = 2000;
     const end = Date.now() + duration;
@@ -30,14 +28,6 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
       if (Date.now() < end) requestAnimationFrame(frame);
     };
     frame();
-
-    const timer = setInterval(() => {
-      setCountdown(c => {
-        if (c <= 1) { clearInterval(timer); onDone(); return 0; }
-        return c - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -111,7 +101,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
       </motion.button>
 
       <p className="text-xs mt-3" style={{ color: MUTED }}>
-        Opening dashboard in {countdown}...
+        Redirecting to your dashboard...
       </p>
     </div>
   );

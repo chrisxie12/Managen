@@ -6,8 +6,8 @@ import {
   School, List, Wifi, WifiOff, CloudOff, RefreshCw
 } from "lucide-react";
 import { api } from "../services/api";
-import { db } from "../lib/offline/db";
-import { useSyncManager } from "../hooks/useSyncManager";
+import { db } from "../../lib/offline/db";
+import { useSyncManager } from "../../hooks/useSyncManager";
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";

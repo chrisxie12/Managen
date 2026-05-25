@@ -1,5 +1,5 @@
 import { db } from './db';
-import { api } from '../../services/api';
+import { api } from '../../app/services/api';
 
 export async function pingServer(): Promise<boolean> {
   try {

@@ -1,5 +1,5 @@
 import type { AnnouncementItem } from '../../hooks/useDashboardData';
-import { formatDate, truncate } from '../../../../utils/formatters';
+import { formatDate } from '../../../../utils/formatters';
 
 interface OfficialNoticesWidgetProps {
   notices?: AnnouncementItem[] | null;
