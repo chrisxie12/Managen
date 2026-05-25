@@ -3,861 +3,2315 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ManaGEN - School Management Platform</title>
-<meta name="description" content="ManaGEN is the all-in-one school management platform that streamlines administration, learning, and communication.">
+<title>ManaGEN — Pan-African School Management Platform</title>
+<meta name="description" content="ManaGEN is the all-in-one school management system built for African institutions. 40+ modules, real-time analytics, and AI-powered insights.">
+<meta property="og:title" content="ManaGEN — Pan-African School Management Platform">
+<meta property="og:description" content="The all-in-one school management system built for African institutions. 40+ modules, real-time analytics, go live in days.">
+<meta property="og:image" content="https://school.pyringh.com/og-image.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ManaGEN — School Management for Africa">
+<meta name="twitter:description" content="40+ modules. Real-time analytics. Built for African schools.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23FF6B35'/><path d='M8 22L16 10l8 12' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='16' cy='10' r='2' fill='white'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ManaGEN",
+  "description": "Pan-African school management platform with 40+ modules",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "49",
+    "priceCurrency": "USD"
+  }
+}
+</script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#ffffff;--bg-alt:#f8f9fc;--bg-card:#ffffff;--text:#1a1a2e;--text-secondary:#6b7280;--text-muted:#9ca3af;--primary:#4f46e5;--primary-light:#818cf8;--primary-dark:#3730a3;--primary-bg:#eef2ff;--secondary:#0ea5e9;--accent:#f59e0b;--success:#10b981;--border:#e5e7eb;--border-light:#f3f4f6;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.06);--shadow-lg:0 10px 25px rgba(0,0,0,0.1),0 6px 10px rgba(0,0,0,0.08);--shadow-xl:0 20px 40px rgba(0,0,0,0.12);--radius-sm:6px;--radius:10px;--radius-lg:16px;--radius-xl:24px;--nav-height:70px;--font:'Inter',-apple-system,sans-serif;--transition:0.3s cubic-bezier(0.4,0,0.2,1);--gradient:linear-gradient(135deg,#4f46e5,#0ea5e9);--gradient-warm:linear-gradient(135deg,#4f46e5,#f59e0b);--gradient-hero:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)}[data-theme="dark"]{--bg:#0f172a;--bg-alt:#1e293b;--bg-card:#1e293b;--text:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--primary:#818cf8;--primary-light:#a5b4fc;--primary-dark:#4f46e5;--primary-bg:#1e1b4b;--border:#334155;--border-light:#1e293b;--shadow:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 6px rgba(0,0,0,0.4);--shadow-lg:0 10px 25px rgba(0,0,0,0.5);--shadow-xl:0 20px 40px rgba(0,0,0,0.6)}html{scroll-behavior:smooth}body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;transition:background var(--transition),color var(--transition)}a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container{max-width:1200px;margin:0 auto;padding:0 24px}.section{padding:100px 0}.section-label{display:inline-flex;align-items:center;gap:8px;background:var(--primary-bg);color:var(--primary);font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:20px;margin-bottom:16px}.section-title{font-size:2.5rem;font-weight:800;line-height:1.2;margin-bottom:16px;letter-spacing:-0.5px}.section-title .highlight{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.section-subtitle{font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 48px;line-height:1.7}.text-center{text-align:center}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;font-size:0.95rem;font-weight:600;border-radius:var(--radius);border:none;cursor:pointer;transition:all var(--transition);font-family:var(--font);white-space:nowrap}.btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 15px rgba(79,70,229,0.35)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,0.45)}.btn-secondary{background:var(--bg-card);color:var(--text);border:1.5px solid var(--border)}.btn-secondary:hover{background:var(--bg-alt);border-color:var(--primary)}.btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.3)}.btn-outline:hover{background:rgba(255,255,255,0.1);border-color:#fff}.btn-ghost{background:transparent;color:var(--text-secondary);padding:8px 16px}.btn-ghost:hover{color:var(--primary);background:var(--primary-bg)}.btn-sm{padding:8px 20px;font-size:0.85rem}.btn-lg{padding:16px 36px;font-size:1.05rem}.btn-lg i{font-size:1.2rem}
+/* ===================== DESIGN TOKENS ===================== */
+:root {
+  --bg: #FAFAF8;
+  --bg-2: #F2F0EC;
+  --bg-3: #E8E5DE;
+  --white: #ffffff;
+  --dark: #0F0E0C;
+  --dark-2: #1C1B18;
+  --dark-3: #2C2B27;
+  --orange: #FF6B35;
+  --orange-dk: #E5531F;
+  --orange-lt: #FFF3EE;
+  --orange-mid: #FFD4C2;
+  --orange-glow: rgba(255,107,53,0.18);
+  --teal: #1BB89A;
+  --teal-dk: #14967E;
+  --teal-lt: #E2F8F3;
+  --teal-glow: rgba(27,184,154,0.15);
+  --text: #1A1A18;
+  --text-2: #55534C;
+  --text-3: #95928A;
+  --text-inv: #F5F3EE;
+  --border: #E4E2DA;
+  --border-2: #CBC8BF;
+  --border-dk: rgba(255,255,255,0.1);
+  --ff-display: 'Bricolage Grotesque', sans-serif;
+  --ff-body: 'DM Sans', sans-serif;
+  --ff-mono: 'SF Mono','Fira Code','Cascadia Code',monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --r: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.08);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,0.12);
+  --shadow-orange: 0 8px 32px rgba(255,107,53,0.22);
+}
 
-/* Nav */
-.nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;z-index:1000;transition:all var(--transition)}[data-theme="dark"] .nav{background:rgba(15,23,42,0.85)}.nav.scrolled{background:rgba(255,255,255,0.95);border-bottom-color:var(--border);box-shadow:var(--shadow)}[data-theme="dark"] .nav.scrolled{background:rgba(15,23,42,0.95)}.nav .container{display:flex;align-items:center;justify-content:space-between;height:100%}.nav-logo{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;color:var(--text)}.nav-logo .logo-icon{width:36px;height:36px;background:var(--gradient);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;font-weight:700}.nav-links{display:flex;align-items:center;gap:8px;list-style:none}.nav-links a{padding:8px 16px;font-size:0.9rem;font-weight:500;color:var(--text-secondary);border-radius:var(--radius-sm);transition:all var(--transition)}.nav-links a:hover{color:var(--text);background:var(--bg-alt)}.nav-actions{display:flex;align-items:center;gap:12px}.theme-toggle{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--text-secondary);transition:all var(--transition)}.theme-toggle:hover{border-color:var(--primary);color:var(--primary)}.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all var(--transition)}.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.active span:nth-child(2){opacity:0}.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+[data-theme="dark"] {
+  --bg: #0F0E0C;
+  --bg-2: #181714;
+  --bg-3: #222018;
+  --white: #1C1B18;
+  --dark: #F5F3EE;
+  --dark-2: #E8E5DC;
+  --dark-3: #D0CEC5;
+  --text: #F0EDE6;
+  --text-2: #A8A59D;
+  --text-3: #6A6760;
+  --text-inv: #1A1A18;
+  --border: #2A2924;
+  --border-2: #3A3830;
+  --orange-lt: rgba(255,107,53,0.12);
+  --orange-mid: rgba(255,107,53,0.25);
+  --teal-lt: rgba(27,184,154,0.12);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,0.5);
+}
 
-/* Hero */
-.hero{min-height:100vh;display:flex;align-items:center;padding-top:var(--nav-height);background:var(--gradient-hero);position:relative;overflow:hidden}.hero-bg-shapes{position:absolute;inset:0;overflow:hidden}.hero-bg-shapes .shape{position:absolute;border-radius:50%;opacity:0.08}.hero-bg-shapes .shape:nth-child(1){width:600px;height:600px;background:#4f46e5;top:-200px;right:-200px}.hero-bg-shapes .shape:nth-child(2){width:400px;height:400px;background:#0ea5e9;bottom:-100px;left:-100px}.hero-bg-shapes .shape:nth-child(3){width:300px;height:300px;background:#f59e0b;top:40%;left:60%}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);padding:8px 20px;border-radius:50px;font-size:0.85rem;color:rgba(255,255,255,0.9);margin-bottom:24px}.hero-badge i{color:var(--accent)}.hero h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;letter-spacing:-1px;margin-bottom:20px}.hero h1 .highlight{background:var(--gradient-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{font-size:1.15rem;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.7;margin-bottom:32px}.hero-buttons{display:flex;gap:16px;flex-wrap:wrap}.hero-stats{display:flex;gap:40px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.1)}.hero-stat h3{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:-0.5px}.hero-stat p{font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:0}
+/* ===================== RESET & BASE ===================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: var(--ff-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.65;
+  font-size: 16px;
+  transition: background 0.4s, color 0.4s;
+}
+body.locked { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+button { font-family: var(--ff-body); }
 
-/* Dashboard mockup */
-.hero-dashboard{position:relative}.dashboard-mockup{background:#1e293b;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);overflow:hidden;border:1px solid rgba(255,255,255,0.1);transform:perspective(1000px) rotateY(-5deg) rotateX(2deg);transition:transform 0.6s ease}.dashboard-mockup:hover{transform:perspective(1000px) rotateY(0deg) rotateX(0deg)}.mockup-header{display:flex;align-items:center;gap:12px;padding:16px 20px;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.08)}.mockup-dots{display:flex;gap:6px}.mockup-dots span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2)}.mockup-dots span:nth-child(1){background:#ef4444}.mockup-dots span:nth-child(2){background:#f59e0b}.mockup-dots span:nth-child(3){background:#10b981}.mockup-header-text{font-size:0.8rem;color:rgba(255,255,255,0.4)}.mockup-body{padding:24px}.mockup-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.mockup-cell{background:rgba(255,255,255,0.04);border-radius:var(--radius-sm);padding:16px;border:1px solid rgba(255,255,255,0.06)}.mockup-cell .bar{height:8px;border-radius:4px;margin-bottom:8px;background:rgba(255,255,255,0.08)}.mockup-cell .bar:nth-child(1){width:60%;background:rgba(79,70,229,0.4)}.mockup-cell .bar:nth-child(2){width:85%;background:rgba(14,165,233,0.3)}.mockup-cell .bar:nth-child(3){width:45%}.mockup-cell .badge-bar{width:40px;height:40px;border-radius:var(--radius-sm);margin-bottom:12px}.badge-bar.purple{background:rgba(79,70,229,0.3)}.badge-bar.blue{background:rgba(14,165,233,0.3)}.badge-bar.green{background:rgba(16,185,129,0.3)}.badge-bar.amber{background:rgba(245,158,11,0.3)}.mockup-chart{display:flex;align-items:flex-end;gap:6px;height:60px;padding-top:8px}.mockup-chart .chart-bar{flex:1;border-radius:3px 3px 0 0;background:rgba(79,70,229,0.3);transition:height 0.5s ease}.mockup-chart .chart-bar:nth-child(1){height:35%}.mockup-chart .chart-bar:nth-child(2){height:55%}.mockup-chart .chart-bar:nth-child(3){height:70%;background:rgba(79,70,229,0.5)}.mockup-chart .chart-bar:nth-child(4){height:45%}.mockup-chart .chart-bar:nth-child(5){height:85%;background:rgba(14,165,233,0.4)}.mockup-chart .chart-bar:nth-child(6){height:60%}.mockup-chart .chart-bar:nth-child(7){height:90%;background:rgba(16,185,129,0.4)}
-.mockup-bottom{display:flex;gap:12px;margin-top:16px}.mockup-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);flex-shrink:0}.mockup-text{flex:1}.mockup-text .bar{height:8px;border-radius:4px;margin-bottom:6px;background:rgba(255,255,255,0.06)}.mockup-text .bar:nth-child(1){width:50%}.mockup-text .bar:nth-child(2){width:30%}.hero-float-card{position:absolute;background:var(--bg-card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:12px;font-size:0.85rem;color:var(--text);animation:float 3s ease-in-out infinite;border:1px solid var(--border)}.hero-float-card .fc-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem}.hero-float-card.fc1{top:10%;right:-30px;animation-delay:0s}.hero-float-card.fc1 .fc-icon{background:rgba(16,185,129,0.15);color:#10b981}.hero-float-card.fc2{bottom:15%;left:-40px;animation-delay:1.5s}.hero-float-card.fc2 .fc-icon{background:rgba(245,158,11,0.15);color:#f59e0b}.hero-float-card.fc3{top:50%;right:-50px;animation-delay:0.8s}.hero-float-card.fc3 .fc-icon{background:rgba(79,70,229,0.15);color:#4f46e5}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 99px; opacity: 0.4; }
 
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+/* ===================== ICON SYSTEM ===================== */
+.icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+}
+.icon-sm { width: 16px; height: 16px; stroke-width: 2; }
+.icon-lg { width: 24px; height: 24px; }
+.icon-xl { width: 32px; height: 32px; stroke-width: 1.5; }
 
-/* Ticker */
-.ticker-wrap{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;padding:16px 0;position:relative}.ticker-track{display:flex;gap:60px;animation:tick 30s linear infinite;width:max-content}.ticker-item{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:0.9rem;font-weight:500;white-space:nowrap}.ticker-item i{font-size:1.2rem;color:var(--primary)}.ticker-item strong{color:var(--text)}.ticker-wrap:hover .ticker-track{animation-play-state:paused}@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ===================== LAYOUT ===================== */
+.container { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+section { padding: 110px 0; }
 
-/* How it works */
-.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative}.how-step{text-align:center;padding:40px 28px;border-radius:var(--radius-lg);background:var(--bg-card);border:1px solid var(--border);position:relative;transition:all var(--transition)}.how-step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary-bg)}.step-number{width:56px;height:56px;border-radius:50%;background:var(--gradient);color:#fff;font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}.how-step h3{font-size:1.2rem;font-weight:700;margin-bottom:10px;color:var(--text)}.how-step p{font-size:0.9rem;color:var(--text-secondary);line-height:1.6}.step-connector{display:none}@media(min-width:768px){.step-connector{display:block;position:absolute;top:68px;left:calc(50% + 40px);width:calc(100% - 80px);height:2px;background:linear-gradient(to right,var(--primary-bg),var(--border),var(--primary-bg));z-index:-1}}
+/* ===================== TYPOGRAPHY ===================== */
+.section-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--orange); margin-bottom: 18px;
+}
+.section-eyebrow::before {
+  content: ''; display: block; width: 24px; height: 2px;
+  background: var(--orange); border-radius: 1px;
+}
+.section-title {
+  font-family: var(--ff-display);
+  font-size: clamp(30px, 4vw, 50px);
+  font-weight: 800; line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 17px; color: var(--text-2);
+  line-height: 1.8; font-weight: 300;
+  max-width: 560px;
+}
+.highlight-orange { color: var(--orange); }
+.highlight-teal { color: var(--teal); }
+.underline-orange {
+  text-decoration: underline;
+  text-decoration-color: var(--orange);
+  text-underline-offset: 8px;
+  text-decoration-thickness: 3px;
+}
 
-/* Features */
-.features{background:var(--bg-alt)}.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.feature-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:36px 28px;border:1px solid var(--border);transition:all var(--transition);position:relative;overflow:hidden}.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);transform:scaleX(0);transition:transform var(--transition);transform-origin:left}.feature-card:hover::before{transform:scaleX(1)}.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.feature-icon{width:52px;height:52px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:20px}.feature-icon.purple{background:rgba(79,70,229,0.12);color:#4f46e5}.feature-icon.blue{background:rgba(14,165,233,0.12);color:#0ea5e9}.feature-icon.green{background:rgba(16,185,129,0.12);color:#10b981}.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:10px;color:var(--text)}.feature-card p{font-size:0.9rem;color:var(--text-secondary);line-height:1.65}.feature-list{list-style:none;margin-top:18px}.feature-list li{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px}.feature-list li i{color:var(--success);font-size:0.75rem}
+/* ===================== ANIMATIONS ===================== */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes slide-up { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fade-in { from{opacity:0} to{opacity:1} }
+@keyframes pulse-ring { 0%{transform:scale(1);opacity:0.4} 100%{transform:scale(1.6);opacity:0} }
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes grain {
+  0%,100%{transform:translate(0,0)}
+  10%{transform:translate(-2%,-3%)}
+  20%{transform:translate(3%,2%)}
+  30%{transform:translate(-2%,3%)}
+  40%{transform:translate(2%,-1%)}
+  50%{transform:translate(-3%,2%)}
+  60%{transform:translate(2%,3%)}
+  70%{transform:translate(-1%,-2%)}
+  80%{transform:translate(3%,1%)}
+  90%{transform:translate(-2%,3%)}
+}
 
-/* Stats */
-.stats{background:var(--gradient-hero);position:relative;overflow:hidden}.stats::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;z-index:1}.stat-item{text-align:center;padding:20px}.stat-item .stat-number{font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px}.stat-item .stat-label{font-size:0.9rem;color:rgba(255,255,255,0.6)}.stat-item .stat-icon{font-size:2rem;margin-bottom:12px;opacity:0.3}
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal.vis { opacity: 1; transform: translateY(0); }
+.reveal.delay-1 { transition-delay: 100ms; }
+.reveal.delay-2 { transition-delay: 200ms; }
+.reveal.delay-3 { transition-delay: 300ms; }
+.reveal.delay-4 { transition-delay: 400ms; }
 
-/* Demo */
-.demo-video-wrap{max-width:800px;margin:0 auto;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);position:relative;background:var(--bg-card);border:1px solid var(--border)}.demo-video-placeholder{width:100%;aspect-ratio:16/9;background:var(--gradient-hero);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;position:relative;transition:all var(--transition)}.demo-video-placeholder:hover{filter:brightness(1.1)}.demo-play-btn{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;transition:all var(--transition)}.demo-video-placeholder:hover .demo-play-btn{background:var(--primary);border-color:var(--primary);transform:scale(1.1)}.demo-placeholder-text{color:rgba(255,255,255,0.7);font-size:0.9rem;font-weight:500}.demo-caption{padding:20px 24px;display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--text-secondary)}.demo-caption i{color:var(--primary)}
+/* ===================== BUTTONS ===================== */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--orange); color: #fff;
+  font-size: 15px; font-weight: 600;
+  padding: 14px 28px; border-radius: 12px;
+  border: none; cursor: pointer;
+  transition: all 0.22s var(--ease);
+  box-shadow: var(--shadow-orange);
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.btn-primary:hover { background: var(--orange-dk); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,107,53,0.35); }
+.btn-primary:active { transform: translateY(0); }
 
-/* Integrations */
-.integration-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}.integration-card{background:var(--bg-card);border-radius:var(--radius);padding:28px 20px;border:1px solid var(--border);text-align:center;transition:all var(--transition);cursor:default}.integration-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary-bg)}.integration-card .int-icon{width:48px;height:48px;border-radius:var(--radius);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg-alt)}.integration-card h4{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:4px}.integration-card p{font-size:0.75rem;color:var(--text-muted)}.integration-card .int-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.65rem;font-weight:600;margin-top:8px;background:var(--primary-bg);color:var(--primary)}
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--text);
+  font-size: 15px; font-weight: 500;
+  padding: 13px 24px; border-radius: 12px;
+  border: 1.5px solid var(--border-2); cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.btn-secondary:hover { border-color: var(--text); transform: translateY(-1px); }
 
-/* Testimonials */
-.testimonials{background:var(--bg-alt)}.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.testimonial-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:32px 28px;border:1px solid var(--border);transition:all var(--transition)}.testimonial-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.testimonial-stars{color:var(--accent);font-size:0.9rem;margin-bottom:16px;letter-spacing:2px}.testimonial-card blockquote{font-size:0.95rem;color:var(--text);line-height:1.7;margin-bottom:24px;font-style:italic}.testimonial-author{display:flex;align-items:center;gap:14px}.testimonial-avatar{width:44px;height:44px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;flex-shrink:0}.testimonial-info h4{font-size:0.9rem;font-weight:600;color:var(--text)}.testimonial-info p{font-size:0.8rem;color:var(--text-muted)}
+.btn-teal {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal); color: #fff;
+  font-size: 14px; font-weight: 600;
+  padding: 11px 22px; border-radius: 10px;
+  border: none; cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.btn-teal:hover { background: var(--teal-dk); transform: translateY(-1px); }
 
-/* Pricing */
-.pricing-toggle{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:48px}.pricing-toggle span{font-size:0.95rem;font-weight:500;color:var(--text-secondary);transition:color var(--transition)}.pricing-toggle span.active{color:var(--text)}.toggle-switch{width:52px;height:28px;border-radius:14px;background:var(--border);cursor:pointer;position:relative;transition:background var(--transition);flex-shrink:0}.toggle-switch .toggle-knob{width:22px;height:22px;border-radius:50%;background:var(--bg-card);position:absolute;top:3px;left:3px;transition:transform var(--transition);box-shadow:var(--shadow)}.toggle-switch.active{background:var(--gradient)}.toggle-switch.active .toggle-knob{transform:translateX(24px)}.toggle-save-badge{font-size:0.7rem;font-weight:600;background:rgba(16,185,129,0.12);color:#10b981;padding:2px 10px;border-radius:10px;margin-left:4px}.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.pricing-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:40px 32px;border:1px solid var(--border);position:relative;transition:all var(--transition)}.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.pricing-card.featured{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--shadow-lg)}.pricing-card.featured .pricing-popular{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gradient);color:#fff;font-size:0.75rem;font-weight:600;padding:4px 18px;border-radius:20px;white-space:nowrap}.pricing-card h3{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px}.pricing-card .pricing-desc{font-size:0.85rem;color:var(--text-muted);margin-bottom:24px}.pricing-amount{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}.pricing-amount .currency{font-size:1.3rem;font-weight:700;color:var(--text)}.pricing-amount .amount{font-size:3rem;font-weight:900;color:var(--text);letter-spacing:-2px}.pricing-amount .period{font-size:0.9rem;color:var(--text-muted)}.pricing-annual-note{font-size:0.75rem;color:var(--text-muted);margin-bottom:24px;min-height:20px}.pricing-details{list-style:none;margin:24px 0}.pricing-details li{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:0.88rem;color:var(--text-secondary);border-bottom:1px solid var(--border-light)}.pricing-details li:last-child{border-bottom:none}.pricing-details li i{font-size:0.8rem}.pricing-details li .check{color:var(--success)}.pricing-details li .cross{color:var(--text-muted)}.pricing-card .btn{width:100%;margin-top:8px}.pricing-compare{margin-top:64px;overflow-x:auto}.pricing-compare table{width:100%;border-collapse:collapse;font-size:0.9rem}.pricing-compare th,.pricing-compare td{padding:14px 20px;text-align:left;border-bottom:1px solid var(--border)}.pricing-compare th{font-weight:600;color:var(--text);background:var(--bg-alt)}.pricing-compare td{color:var(--text-secondary)}.pricing-compare td:first-child{font-weight:500;color:var(--text)}.pricing-compare .compare-check{color:var(--success)}.pricing-compare .compare-cross{color:var(--text-muted)}
+/* ===================== NAV ===================== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 70px;
+  background: rgba(250,250,248,0.85); backdrop-filter: blur(24px) saturate(1.8);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.4s;
+}
+[data-theme="dark"] nav { background: rgba(15,14,12,0.85); }
+nav.scrolled {
+  border-bottom-color: var(--border);
+  box-shadow: 0 2px 24px rgba(0,0,0,0.07);
+}
+.nav-inner {
+  max-width: 1160px; margin: 0 auto; padding: 0 32px;
+  height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 32px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+}
+.logo-text {
+  font-family: var(--ff-display); font-size: 19px; font-weight: 900;
+  letter-spacing: -0.04em; color: var(--text);
+}
+.logo-text em { color: var(--orange); font-style: normal; }
 
-/* FAQ */
-.faq{background:var(--bg-alt)}.faq-list{max-width:740px;margin:0 auto}.faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:all var(--transition);background:var(--bg-card)}.faq-item:hover{border-color:var(--primary-bg)}.faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;background:none;border:none;cursor:pointer;font-size:1rem;font-weight:600;color:var(--text);text-align:left;font-family:var(--font);transition:color var(--transition)}.faq-question:hover{color:var(--primary)}.faq-question i{font-size:0.8rem;color:var(--text-muted);transition:transform var(--transition)}.faq-item.active .faq-question i{transform:rotate(45deg);color:var(--primary)}.faq-answer{padding:0 24px;max-height:0;overflow:hidden;transition:all 0.4s ease}.faq-item.active .faq-answer{max-height:300px;padding:0 24px 20px}.faq-answer p{font-size:0.9rem;color:var(--text-secondary);line-height:1.7}
+.nav-links { display: flex; gap: 2px; list-style: none; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--text-2);
+  padding: 8px 14px; border-radius: 8px;
+  transition: all 0.18s; display: block;
+}
+.nav-links a:hover { color: var(--text); background: var(--bg-2); }
 
-/* Contact */
-.contact{background:var(--gradient-hero);position:relative;overflow:hidden}.contact::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}.contact .section-title,.contact .section-subtitle{color:#fff}.contact .section-subtitle{color:rgba(255,255,255,0.6)}.contact .section-label{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8)}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;position:relative;z-index:1;align-items:start}.contact-form{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:36px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:6px}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff;font-size:0.9rem;font-family:var(--font);transition:all var(--transition);outline:none}.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,0.35)}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary-light);background:rgba(255,255,255,0.12)}.form-group select option{background:#1e293b;color:#fff}.form-group textarea{resize:vertical;min-height:120px}.form-error{font-size:0.78rem;color:#f87171;margin-top:4px;display:none}.form-group.error input,.form-group.error textarea{border-color:#f87171}.form-group.error .form-error{display:block}.contact-form .btn-primary{width:100%}.form-success{display:none;text-align:center;padding:40px 20px}.form-success.show{display:block}.form-success i{font-size:3rem;color:#10b981;margin-bottom:16px}.form-success h3{color:#fff;font-size:1.4rem;margin-bottom:8px}.form-success p{color:rgba(255,255,255,0.6)}.contact-info{padding:36px 0}.contact-info h3{color:#fff;font-size:1.3rem;font-weight:700;margin-bottom:12px}.contact-info p{color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:32px}.contact-details{display:flex;flex-direction:column;gap:16px}.contact-detail{display:flex;align-items:center;gap:14px}.contact-detail .cd-icon{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:var(--primary-light);font-size:1rem;flex-shrink:0}.contact-detail h4{color:#fff;font-size:0.9rem;font-weight:600}.contact-detail span{color:rgba(255,255,255,0.5);font-size:0.85rem}
+.nav-actions { display: flex; align-items: center; gap: 8px; }
 
-/* Footer */
-.footer{background:#0f172a;border-top:1px solid rgba(255,255,255,0.06)}.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding:64px 0 48px}.footer-brand .nav-logo{color:#fff;margin-bottom:16px}.footer-brand p{color:rgba(255,255,255,0.4);font-size:0.85rem;line-height:1.7;max-width:300px}.footer-social{display:flex;gap:10px;margin-top:24px}.footer-social a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:0.9rem;transition:all var(--transition)}.footer-social a:hover{background:var(--primary);color:#fff;border-color:var(--primary)}.footer-col h4{color:#fff;font-size:0.9rem;font-weight:700;margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}.footer-col ul{list-style:none}.footer-col ul li{margin-bottom:10px}.footer-col ul a{color:rgba(255,255,255,0.4);font-size:0.85rem;transition:color var(--transition)}.footer-col ul a:hover{color:#fff}.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding:20px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.footer-bottom p{color:rgba(255,255,255,0.3);font-size:0.8rem}.footer-bottom-links{display:flex;gap:20px}.footer-bottom-links a{color:rgba(255,255,255,0.3);font-size:0.8rem;transition:color var(--transition)}.footer-bottom-links a:hover{color:#fff}
+/* Dark mode toggle */
+.theme-toggle {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--bg-2); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; color: var(--text-2);
+}
+.theme-toggle:hover { border-color: var(--orange); color: var(--orange); }
+.icon-moon { display: block; }
+.icon-sun { display: none; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="dark"] .icon-sun { display: block; }
 
-/* Back to top */
-.back-to-top{position:fixed;bottom:100px;right:30px;width:48px;height:48px;border-radius:50%;background:var(--gradient);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(20px);transition:all var(--transition);z-index:900}.back-to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}.back-to-top:hover{transform:translateY(-3px);box-shadow:var(--shadow-xl)}
+.nav-cta-plain {
+  font-size: 14px; font-weight: 500; color: var(--text-2);
+  padding: 9px 18px; border-radius: 9px; border: 1.5px solid var(--border);
+  background: transparent; cursor: pointer; transition: all 0.18s;
+}
+.nav-cta-plain:hover { color: var(--text); border-color: var(--border-2); }
 
-/* Mobile CTA */
-.mobile-cta{display:none;position:fixed;bottom:0;left:0;right:0;padding:16px 24px;background:var(--bg-card);border-top:1px solid var(--border);z-index:999;gap:12px;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.1)}.mobile-cta .btn{flex:1;text-align:center;font-size:0.85rem;padding:14px}.mobile-cta .btn:last-child{flex:1.5}.mobile-cta.show{display:flex}
+.nav-cta-fill {
+  font-size: 14px; font-weight: 600; color: #fff;
+  padding: 9px 20px; border-radius: 9px; border: none;
+  background: var(--orange); cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 7px;
+}
+.nav-cta-fill:hover { background: var(--orange-dk); transform: translateY(-1px); }
 
-/* Nav dots */
-.nav-dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:900}.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--border);border:1.5px solid transparent;cursor:pointer;transition:all var(--transition)}.nav-dot.active{background:var(--primary);border-color:var(--primary-light);transform:scale(1.3)}.nav-dot:hover{transform:scale(1.2)}@media(max-width:1024px){.nav-dots{display:none}}
+.menu-btn {
+  display: none; flex-direction: column; gap: 5px;
+  border: none; background: none; cursor: pointer; padding: 6px;
+  border-radius: 8px;
+}
+.menu-btn span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.28s var(--ease); }
+.menu-btn.on span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-btn.on span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.menu-btn.on span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Reveal animations */
-.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}.reveal.visible{opacity:1;transform:translateY(0)}.reveal-delay-1{transition-delay:0.1s}.reveal-delay-2{transition-delay:0.2s}.reveal-delay-3{transition-delay:0.3s}.reveal-delay-4{transition-delay:0.4s}
+.mob-nav {
+  display: none; position: fixed; inset: 0; top: 70px;
+  background: var(--bg); z-index: 999;
+  flex-direction: column; padding: 24px 32px; gap: 4px;
+  border-top: 1px solid var(--border);
+  overflow-y: auto;
+}
+.mob-nav.open { display: flex; }
+.mob-nav a {
+  font-size: 17px; font-weight: 500; color: var(--text);
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mob-nav a::after { content: '→'; color: var(--text-3); font-size: 14px; }
+.mob-nav-ctas { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
-/* Responsive */
-@media(max-width:1024px){.hero h1{font-size:2.8rem}.hero-grid{grid-template-columns:1fr;gap:40px}.hero-dashboard{max-width:500px;margin:0 auto}.hero-stats{justify-content:center}.features-grid{grid-template-columns:1fr 1fr}.pricing-grid{grid-template-columns:1fr 1fr}.integration-grid{grid-template-columns:repeat(4,1fr)}.footer-top{grid-template-columns:1fr 1fr}}
-@media(max-width:768px){.section{padding:64px 0}.section-title{font-size:1.8rem}.nav-links,.nav-actions .btn-ghost{display:none}.hamburger{display:flex}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:var(--nav-height);left:0;right:0;background:var(--bg-card);padding:16px 24px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-lg);gap:4px}.mobile-cta.show{display:flex}.hero h1{font-size:2.2rem}.hero p{font-size:1rem}.hero-stats{flex-wrap:wrap;gap:24px}.hero-float-card{display:none}.dashboard-mockup{transform:none}.how-steps{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}.testimonial-grid{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}.pricing-compare table{font-size:0.8rem}.pricing-compare th,.pricing-compare td{padding:10px 12px}.integration-grid{grid-template-columns:repeat(3,1fr)}.contact-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.footer-top{grid-template-columns:1fr;gap:32px}.back-to-top{bottom:90px;right:16px}.nav-dots{display:none}}
-@media(max-width:480px){.container{padding:0 16px}.hero h1{font-size:1.8rem}.integration-grid{grid-template-columns:repeat(2,1fr)}}
+/* Section scroll dots */
+.nav-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 900;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border-2); cursor: pointer;
+  transition: all 0.3s; border: none;
+}
+.nav-dot.active { background: var(--orange); transform: scale(1.4); }
+.nav-dot:hover { background: var(--orange); opacity: 0.7; }
+
+/* Mobile sticky CTA */
+.mob-sticky {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 800;
+  background: var(--bg); border-top: 1px solid var(--border);
+  padding: 14px 24px 20px;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.1);
+}
+.mob-sticky .btn-primary { width: 100%; justify-content: center; font-size: 16px; padding: 16px; }
+
+/* ===================== HERO ===================== */
+.hero {
+  padding: 148px 0 96px;
+  position: relative; overflow: hidden;
+  min-height: 92vh; display: flex; align-items: center;
+}
+
+/* Decorative background system */
+.hero-bg {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.hero-blob {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+}
+.hero-blob-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+  top: -200px; right: -180px;
+}
+.hero-blob-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(27,184,154,0.1) 0%, transparent 70%);
+  bottom: -150px; left: -120px;
+}
+.hero-blob-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 70%);
+  top: 40%; left: 40%;
+}
+.hero-ring {
+  position: absolute; border-radius: 50%;
+  border: 2px dashed var(--orange-mid);
+  animation: spin 36s linear infinite;
+}
+.hero-ring-1 { width: 160px; height: 160px; top: 12%; right: 8%; opacity: 0.4; }
+.hero-ring-2 { width: 80px; height: 80px; bottom: 28%; left: 6%; opacity: 0.3; animation-direction: reverse; animation-duration: 24s; }
+.hero-deco-dot { position: absolute; border-radius: 50%; }
+.hero-deco-dot-1 { width: 12px; height: 12px; background: var(--teal); top: 28%; left: 24%; opacity: 0.5; }
+.hero-deco-dot-2 { width: 8px; height: 8px; background: var(--orange); bottom: 36%; right: 22%; opacity: 0.4; }
+.hero-deco-cross {
+  position: absolute; right: 15%; top: 18%; opacity: 0.2; color: var(--orange);
+  font-size: 28px; font-weight: 300; transform: rotate(15deg);
+}
+
+/* Grid overlay */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.3;
+  mask-image: radial-gradient(ellipse 70% 70% at 60% 40%, black 20%, transparent 70%);
+}
+[data-theme="dark"] .hero-grid { opacity: 0.15; }
+
+.hero-inner {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 72px; align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--orange-lt); border: 1px solid var(--orange-mid);
+  color: var(--orange); font-size: 12px; font-weight: 700;
+  border-radius: 99px; padding: 6px 16px; margin-bottom: 28px;
+  letter-spacing: 0.02em;
+}
+.live-dot { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; animation: blink 2s step-end infinite; }
+.pulse-wrapper { position: relative; display: inline-flex; }
+.pulse-ring {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid var(--orange);
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 900; line-height: 1.0; letter-spacing: -0.04em;
+  color: var(--text); margin-bottom: 24px;
+}
+.hero-title-line { display: block; animation: slide-up 0.8s var(--ease) both; }
+.hero-title-line:nth-child(1) { animation-delay: 0.1s; }
+.hero-title-line:nth-child(2) { animation-delay: 0.2s; }
+.hero-title-line:nth-child(3) { animation-delay: 0.3s; }
+
+.hero-sub {
+  font-size: 17px; color: var(--text-2); line-height: 1.75;
+  max-width: 440px; margin-bottom: 40px;
+  animation: slide-up 0.8s var(--ease) 0.4s both;
+}
+
+/* Social proof in hero */
+.hero-social-proof {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 36px;
+  animation: slide-up 0.8s var(--ease) 0.45s both;
+}
+.proof-avatars { display: flex; margin-right: 4px; }
+.proof-av {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2.5px solid var(--bg);
+  background: var(--bg-2); margin-left: -10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: var(--text-2);
+  overflow: hidden; flex-shrink: 0;
+}
+.proof-av:first-child { margin-left: 0; }
+.proof-text { font-size: 13px; color: var(--text-2); }
+.proof-text strong { color: var(--text); font-weight: 700; }
+
+.hero-ctas {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px;
+  animation: slide-up 0.8s var(--ease) 0.5s both;
+}
+
+.hero-trust {
+  animation: slide-up 0.8s var(--ease) 0.6s both;
+}
+.hero-trust-label { font-size: 11px; font-weight: 600; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+.hero-trust-logos { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.trust-logo-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 14px;
+  font-size: 13px; font-weight: 700; color: var(--text-2);
+  transition: all 0.18s;
+}
+.trust-logo-chip:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
+
+/* Hero mockup */
+.hero-right {
+  position: relative;
+  animation: slide-up 0.9s var(--ease) 0.25s both;
+}
+.hero-dashboard {
+  background: var(--white); border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 20px; overflow: hidden;
+  animation: float 4s ease-in-out infinite;
+  transform-origin: center;
+}
+[data-theme="dark"] .hero-dashboard {
+  background: var(--bg-2);
+  border-color: var(--border);
+}
+.dash-topbar {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.dash-logo { width: 26px; height: 26px; border-radius: 8px; background: var(--orange); display: flex; align-items: center; justify-content: center; }
+.dash-brand { font-family: var(--ff-display); font-size: 13px; font-weight: 800; letter-spacing: -0.02em; flex: 1; }
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--teal-lt); color: var(--teal);
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+}
+.live-badge-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; animation: blink 1.6s step-end infinite; }
+
+.dash-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.dstat {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 8px; text-align: center;
+}
+[data-theme="dark"] .dstat { background: var(--bg-3); }
+.dstat-label { font-size: 8px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.dstat-val { font-family: var(--ff-display); font-size: 14px; font-weight: 800; }
+
+.dash-chart { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+[data-theme="dark"] .dash-chart { background: var(--bg-3); }
+.dash-chart-hd { font-size: 10px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: flex; justify-content: space-between; }
+.chart-legend { display: flex; gap: 10px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--text-3); }
+.legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.dash-table { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+[data-theme="dark"] .dash-table { background: var(--bg-3); }
+.dash-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 10px; color: var(--text-2); }
+.dash-row + .dash-row { border-top: 1px solid var(--border); }
+.status-pill { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.pill-green { background: var(--teal-lt); color: var(--teal-dk); }
+.pill-amber { background: #FEF9EC; color: #854F0B; }
+.pill-red { background: #FCEBEB; color: #A32D2D; }
+[data-theme="dark"] .pill-amber { background: rgba(239,159,39,0.15); }
+[data-theme="dark"] .pill-red { background: rgba(226,75,74,0.15); color: #E24B4A; }
+
+/* Floating badges on hero */
+.hero-float {
+  position: absolute; background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 10px 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 600; color: var(--text);
+  white-space: nowrap; z-index: 10;
+}
+[data-theme="dark"] .hero-float { background: var(--bg-2); }
+.float-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.float-1 { top: -18px; right: -24px; animation: float 3.2s ease-in-out 0.5s infinite; }
+.float-2 { bottom: 36px; left: -32px; animation: float 4s ease-in-out 1.2s infinite; }
+.float-3 { bottom: -18px; right: 40px; animation: float 3.5s ease-in-out 0.8s infinite; }
+
+/* Tooltip on stat */
+.dstat { position: relative; cursor: default; }
+.dstat:hover::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--dark); color: #fff; font-size: 10px; font-weight: 500;
+  padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+  z-index: 10; pointer-events: none;
+}
+
+/* ===================== TICKER ===================== */
+.ticker-section {
+  background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 18px 0; overflow: hidden; position: relative;
+}
+[data-theme="dark"] .ticker-section { background: var(--bg-2); }
+.ticker-section::before, .ticker-section::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
+}
+.ticker-section::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
+.ticker-section::after { right: 0; background: linear-gradient(to left, var(--white), transparent); }
+[data-theme="dark"] .ticker-section::before { background: linear-gradient(to right, var(--bg-2), transparent); }
+[data-theme="dark"] .ticker-section::after { background: linear-gradient(to left, var(--bg-2), transparent); }
+.ticker-label {
+  position: absolute; left: 32px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; font-weight: 700; color: var(--text-3); letter-spacing: 0.1em;
+  text-transform: uppercase; z-index: 3; background: var(--white); padding: 2px 10px 2px 0;
+}
+[data-theme="dark"] .ticker-label { background: var(--bg-2); }
+.ticker-track { display: flex; width: max-content; animation: ticker 40s linear infinite; padding-left: 180px; }
+.ticker-track:hover { animation-play-state: paused; }
+.ticker-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 600; color: var(--text-3); white-space: nowrap; padding: 0 8px;
+}
+.ticker-item .flag { font-size: 15px; }
+.ticker-sep { color: var(--orange); font-size: 6px; margin: 0 4px; }
+
+/* ===================== SECTION DIVIDERS ===================== */
+.divider-orange {
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--orange) 30%, var(--teal) 70%, transparent);
+  border: none; margin: 0;
+}
+.section-with-accent { position: relative; }
+.section-accent-line {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--teal));
+  border-radius: 2px;
+}
+
+/* ===================== HOW IT WORKS ===================== */
+.how-section { background: var(--dark); color: var(--text-inv); position: relative; overflow: hidden; }
+.how-bg-pattern {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255,107,53,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(27,184,154,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.how-grid-bg {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.how-section .section-title { color: var(--text-inv); }
+.how-section .section-sub { color: rgba(245,243,238,0.6); }
+.how-header { text-align: center; margin-bottom: 72px; position: relative; z-index: 1; }
+.how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; position: relative; z-index: 1; }
+.how-step {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0; padding: 48px 40px; position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.how-step:first-child { border-radius: var(--r-lg) 0 0 var(--r-lg); }
+.how-step:last-child { border-radius: 0 var(--r-lg) var(--r-lg) 0; }
+.how-step:hover { background: rgba(255,255,255,0.07); }
+.how-connector {
+  position: absolute; top: 48px; right: -1px; width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange); z-index: 2;
+}
+.how-step:last-child .how-connector { display: none; }
+.how-step-num {
+  font-family: var(--ff-display); font-size: 80px; font-weight: 900;
+  color: rgba(255,255,255,0.04); line-height: 1;
+  position: absolute; top: 16px; right: 24px; letter-spacing: -0.05em;
+  pointer-events: none;
+}
+.how-step-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.3);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px; color: var(--orange);
+}
+.how-step-title {
+  font-family: var(--ff-display); font-size: 20px; font-weight: 700;
+  color: var(--text-inv); letter-spacing: -0.02em; margin-bottom: 12px;
+}
+.how-step-desc { font-size: 15px; color: rgba(245,243,238,0.55); line-height: 1.7; }
+.how-step-time {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 20px;
+  font-size: 12px; font-weight: 700; color: var(--orange);
+  background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.2);
+  padding: 4px 12px; border-radius: 99px;
+}
+
+/* ===================== FEATURES ===================== */
+.feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: center; }
+.feat-grid.rev { direction: rtl; }
+.feat-grid.rev > * { direction: ltr; }
+.feat-body { max-width: 500px; }
+.feat-list { list-style: none; margin-top: 28px; }
+.feat-list li {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+  font-size: 15px; color: var(--text-2); line-height: 1.6;
+}
+.feat-list li:last-child { border: none; }
+.feat-check {
+  width: 20px; height: 20px; min-width: 20px; border-radius: 6px;
+  background: var(--teal-lt); border: 1px solid rgba(27,184,154,0.25);
+  display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  flex-shrink: 0;
+}
+.feat-check svg { width: 11px; height: 11px; color: var(--teal); }
+
+/* Feature mockup cards */
+.feat-mockup { display: flex; justify-content: center; align-items: flex-start; }
+
+/* Module card */
+.mock-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  width: 100%; max-width: 400px; overflow: hidden;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+[data-theme="dark"] .mock-card { background: var(--bg-2); }
+.mock-card:hover { transform: translateY(-6px); box-shadow: 0 32px 80px rgba(0,0,0,0.14); }
+.mock-card-head {
+  padding: 16px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg);
+}
+[data-theme="dark"] .mock-card-head { background: var(--bg-3); }
+.mock-card-title { font-size: 12px; font-weight: 700; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+.mock-card-body { padding: 12px 18px; }
+.mod-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.mod-row:last-child { border: none; }
+.mod-left { display: flex; align-items: center; gap: 10px; }
+.mod-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.mod-name { font-size: 13px; font-weight: 500; color: var(--text); }
+
+/* Role card with dynamic content */
+.role-card { max-width: 380px; }
+.role-card-head { padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.role-card-body { padding: 14px 18px; }
+.role-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 10px; margin-bottom: 6px;
+  cursor: pointer; transition: all 0.2s; border: 1.5px solid transparent;
+  position: relative;
+}
+.role-item:hover { background: var(--bg-2); }
+.role-item.active { background: var(--orange-lt); border-color: var(--orange-mid); }
+.role-av { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0; }
+.role-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.role-desc { font-size: 11px; color: var(--text-3); }
+.role-content {
+  margin-top: 14px; padding: 14px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-2);
+  transition: opacity 0.3s, transform 0.3s;
+}
+[data-theme="dark"] .role-content { background: var(--bg-3); }
+.role-content-title { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+.role-feature-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.role-feature-list li { display: flex; align-items: center; gap: 8px; }
+.role-feature-list li::before { content: ''; width: 12px; height: 12px; background: var(--teal); border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+/* Analytics card */
+.analytics-card { max-width: 420px; }
+.bar-chart { padding: 16px 18px; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 12px; }
+.bar-label { width: 80px; color: var(--text-2); flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: var(--bg-2); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; width: 0; transition: width 1.5s var(--ease); }
+.bar-val { width: 36px; text-align: right; color: var(--text); font-weight: 600; }
+
+/* ===================== STATS ===================== */
+.stats-section { background: var(--bg-2); position: relative; overflow: hidden; }
+.stats-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,107,53,0.04) 0%, rgba(27,184,154,0.04) 100%);
+}
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; position: relative; z-index: 1; }
+.stat-item { text-align: center; padding: 32px 20px; }
+.stat-num {
+  font-family: var(--ff-display); font-size: clamp(36px, 5vw, 56px);
+  font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  color: var(--text); margin-bottom: 8px;
+}
+.stat-num span { color: var(--orange); }
+.stat-label { font-size: 14px; color: var(--text-2); font-weight: 400; margin-bottom: 6px; }
+.stat-source { font-size: 11px; color: var(--text-3); font-style: italic; }
+
+/* ===================== VIDEO / DEMO ===================== */
+.demo-section { background: var(--bg); position: relative; }
+.demo-container { text-align: center; }
+.demo-header { margin-bottom: 48px; }
+.video-wrapper {
+  position: relative; border-radius: var(--r-xl);
+  overflow: hidden; background: var(--dark-2);
+  box-shadow: var(--shadow-lg);
+  max-width: 800px; margin: 0 auto;
+  border: 1px solid var(--border);
+}
+.video-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a1a18 0%, #2a2926 50%, #1c1b18 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; cursor: pointer;
+  transition: opacity 0.3s;
+}
+.video-thumb:hover { opacity: 0.92; }
+.video-bg-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.video-overlay-logo {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+.play-btn {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--orange); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 16px rgba(255,107,53,0.15);
+  cursor: pointer; transition: all 0.25s;
+}
+.play-btn:hover { background: var(--orange-dk); transform: scale(1.08); box-shadow: 0 0 0 20px rgba(255,107,53,0.12); }
+.play-btn svg { color: #fff; margin-left: 4px; }
+.video-label { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
+.video-label strong { color: #fff; }
+.video-duration {
+  position: absolute; bottom: 16px; right: 16px;
+  background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; font-weight: 600;
+  padding: 4px 10px; border-radius: 6px;
+}
+
+/* ===================== INTEGRATIONS ===================== */
+.integrations-section { background: var(--bg-2); }
+.integrations-header { text-align: center; margin-bottom: 56px; }
+.integrations-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+}
+.integration-tile {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 24px 16px; text-align: center;
+  transition: all 0.25s var(--ease);
+  cursor: default;
+}
+[data-theme="dark"] .integration-tile { background: var(--bg-3); }
+.integration-tile:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: var(--shadow-orange); }
+.integration-logo-wrap {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  min-width: 100px;
+}
+[data-theme="dark"] .integration-logo-wrap { background: var(--bg-3); }
+.integration-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: none;
+}
+.integration-name { font-size: 12px; font-weight: 700; color: var(--text-2); }
+.integration-cat { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+.integrations-more { text-align: center; margin-top: 32px; font-size: 14px; color: var(--text-3); }
+.integrations-more span { color: var(--orange); font-weight: 700; }
+
+/* ===================== TESTIMONIALS ===================== */
+.testi-section { background: var(--bg); }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.testi-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 28px;
+  transition: all 0.3s var(--ease);
+  position: relative; overflow: hidden;
+}
+[data-theme="dark"] .testi-card { background: var(--bg-2); }
+.testi-card::before {
+  content: '"'; position: absolute; top: -10px; left: 20px;
+  font-family: var(--ff-display); font-size: 120px; font-weight: 900;
+  color: var(--border); line-height: 1; pointer-events: none;
+  z-index: 0;
+}
+.testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--orange-mid); }
+.testi-content { position: relative; z-index: 1; }
+.testi-stars { color: #F59E0B; font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; }
+.testi-text { font-size: 15px; line-height: 1.75; color: var(--text-2); margin-bottom: 20px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-av {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--bg-2); display: flex; align-items: center;
+  justify-content: center; font-size: 18px; font-weight: 800;
+  color: var(--text-2); flex-shrink: 0; border: 1px solid var(--border);
+}
+.testi-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.testi-role { font-size: 12px; color: var(--text-3); }
+.testi-flag { font-size: 14px; }
+.testi-note { text-align: center; font-size: 12px; color: var(--text-3); margin-top: 32px; font-style: italic; }
+
+/* ===================== PRICING ===================== */
+.pricing-section { background: var(--bg-2); }
+.pricing-header { text-align: center; margin-bottom: 40px; }
+.toggle-wrap { display: flex; justify-content: center; margin-bottom: 48px; }
+.toggle {
+  display: inline-flex; background: var(--bg-3); border-radius: 12px; padding: 4px;
+  border: 1px solid var(--border);
+}
+.tog-btn {
+  font-size: 14px; font-weight: 600; color: var(--text-2);
+  padding: 9px 22px; border-radius: 9px; border: none;
+  background: transparent; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; transition: all 0.25s var(--ease);
+}
+.tog-btn.on { background: var(--white); color: var(--text); box-shadow: var(--shadow-sm); }
+[data-theme="dark"] .tog-btn.on { background: var(--bg); }
+.save-tag {
+  font-size: 11px; font-weight: 700; background: var(--teal); color: #fff;
+  padding: 2px 8px; border-radius: 99px;
+}
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.p-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 32px;
+  position: relative; transition: all 0.3s var(--ease);
+}
+[data-theme="dark"] .p-card { background: var(--bg-2); }
+.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.p-card.featured {
+  background: var(--dark); border-color: transparent;
+  box-shadow: var(--shadow-lg);
+}
+.p-card.featured:hover { transform: translateY(-6px); box-shadow: 0 32px 80px rgba(0,0,0,0.25); }
+.popular-tag {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--orange); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 99px;
+  white-space: nowrap; box-shadow: var(--shadow-orange);
+}
+.p-plan { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; }
+.p-card.featured .p-plan { color: rgba(255,255,255,0.5); }
+.p-price {
+  font-family: var(--ff-display); font-size: 46px; font-weight: 900;
+  letter-spacing: -0.04em; color: var(--text); margin-bottom: 6px;
+  display: flex; align-items: flex-end; gap: 4px; line-height: 1;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.p-card.featured .p-price { color: #fff; }
+.p-price-mo { font-size: 16px; font-weight: 400; color: var(--text-3); margin-bottom: 6px; }
+.p-card.featured .p-price-mo { color: rgba(255,255,255,0.5); }
+.p-limit { font-size: 13px; color: var(--text-3); margin-bottom: 24px; }
+.p-card.featured .p-limit { color: rgba(255,255,255,0.45); }
+.p-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+.p-card.featured .p-divider { background: rgba(255,255,255,0.1); }
+.p-feats { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.p-feats li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); }
+.p-card.featured .p-feats li { color: rgba(255,255,255,0.7); }
+.p-feat-check { color: var(--teal); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.p-card.featured .p-feat-check { color: var(--teal); }
+.p-btn {
+  width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+  font-size: 15px; font-weight: 600; font-family: var(--ff-body);
+  transition: all 0.22s var(--ease); display: block; text-align: center;
+}
+.p-btn-sec { background: var(--bg-2); color: var(--text); border: 1.5px solid var(--border); }
+.p-btn-sec:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-lt); }
+.p-btn-pri { background: var(--orange); color: #fff; box-shadow: var(--shadow-orange); }
+.p-btn-pri:hover { background: var(--orange-dk); transform: translateY(-1px); }
+[data-theme="dark"] .p-btn-sec { background: var(--bg-3); border-color: var(--border); }
+
+/* Compare table */
+.compare-section { background: var(--bg); }
+.compare-header { text-align: center; margin-bottom: 48px; }
+.compare-table { width: 100%; border-collapse: collapse; border-radius: var(--r-lg); overflow: hidden; }
+.compare-table th { background: var(--bg-2); padding: 16px 20px; font-size: 13px; font-weight: 700; color: var(--text); text-align: center; }
+.compare-table th:first-child { text-align: left; }
+.compare-table th.featured-col { background: var(--dark); color: #fff; }
+.compare-table td { padding: 14px 20px; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border); text-align: center; }
+.compare-table td:first-child { text-align: left; font-weight: 500; color: var(--text); }
+.compare-table td.featured-col { background: rgba(255,107,53,0.04); }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--bg-2); }
+.compare-table tr:hover td.featured-col { background: rgba(255,107,53,0.08); }
+.check-y { color: var(--teal); font-size: 16px; font-weight: 700; }
+.check-n { color: var(--border-2); font-size: 16px; }
+[data-theme="dark"] .compare-table th { background: var(--bg-3); }
+[data-theme="dark"] .compare-table th.featured-col { background: var(--bg-3); color: var(--orange); }
+
+/* ===================== FAQ ===================== */
+.faq-section { background: var(--bg-2); }
+.faq-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: flex-start; }
+.faq-sidebar .section-sub { margin-top: 16px; }
+.faq-sidebar-contact {
+  margin-top: 32px; padding: 20px; border-radius: var(--r);
+  background: var(--white); border: 1px solid var(--border);
+}
+[data-theme="dark"] .faq-sidebar-contact { background: var(--bg-3); }
+.faq-sidebar-contact p { font-size: 14px; color: var(--text-2); margin-bottom: 12px; }
+.faq-list { display: flex; flex-direction: column; gap: 4px; }
+.faq-item { border-radius: var(--r); overflow: hidden; border: 1px solid var(--border); background: var(--white); }
+[data-theme="dark"] .faq-item { background: var(--bg-2); }
+.faq-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 22px; background: none; border: none; cursor: pointer; text-align: left;
+  font-size: 15px; font-weight: 600; color: var(--text); font-family: var(--ff-body);
+  transition: background 0.18s; min-height: 44px;
+}
+.faq-btn:hover { background: var(--bg-2); }
+.faq-icon {
+  width: 24px; height: 24px; border-radius: 6px; background: var(--bg-2);
+  border: 1px solid var(--border); flex-shrink: 0; transition: all 0.3s var(--ease);
+  display: flex; align-items: center; justify-content: center;
+}
+.faq-item.active .faq-icon { background: var(--orange-lt); border-color: var(--orange-mid); transform: rotate(45deg); }
+.faq-icon::before, .faq-icon::after {
+  content: ''; position: absolute; background: var(--text-2); border-radius: 1px; transition: 0.25s;
+}
+.faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.38s var(--ease); }
+.faq-item.active .faq-body { grid-template-rows: 1fr; }
+.faq-inner { overflow: hidden; }
+.faq-ans { padding: 0 22px 20px; font-size: 15px; line-height: 1.75; color: var(--text-2); }
+
+/* ===================== CONTACT ===================== */
+.contact-section {
+  background: var(--dark); position: relative; overflow: hidden;
+}
+.contact-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(255,107,53,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 60%, rgba(27,184,154,0.08) 0%, transparent 60%);
+}
+.contact-texture {
+  position: absolute; inset: -50%; width: 200%; height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.6; animation: grain 8s steps(10) infinite;
+}
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: flex-start; position: relative; z-index: 1; }
+.contact-left .section-title { color: var(--text-inv); }
+.contact-left .section-sub { color: rgba(245,243,238,0.55); }
+
+/* Trust signals */
+.trust-signals { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; }
+.trust-signal {
+  display: flex; align-items: center; gap: 14px;
+  color: rgba(245,243,238,0.6); font-size: 14px;
+}
+.trust-signal-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+
+/* Countries */
+.country-flags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.country-flag-item {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600;
+  color: rgba(245,243,238,0.7);
+}
+
+/* Contact form */
+.contact-form-card {
+  background: var(--white); border-radius: var(--r-xl);
+  padding: 36px; box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+[data-theme="dark"] .contact-form-card { background: var(--bg-2); }
+.form-title { font-family: var(--ff-display); font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); margin-bottom: 6px; }
+.form-subtitle { font-size: 14px; color: var(--text-3); margin-bottom: 28px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { margin-bottom: 16px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 7px; }
+.form-input, .form-select {
+  width: 100%; padding: 13px 16px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  font-size: 15px; font-family: var(--ff-body); color: var(--text);
+  transition: all 0.18s; outline: none; appearance: none;
+}
+.form-input:focus, .form-select:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+.form-input.invalid { border-color: #E24B4A; box-shadow: 0 0 0 3px rgba(226,75,74,0.1); }
+.form-input.valid { border-color: var(--teal); }
+.field-error { font-size: 12px; color: #E24B4A; margin-top: 5px; display: none; }
+.field-error.show { display: block; }
+.form-privacy {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 12px; color: var(--text-3); margin-bottom: 20px;
+}
+.form-privacy svg { flex-shrink: 0; color: var(--teal); margin-top: 1px; }
+.form-submit {
+  width: 100%; padding: 16px; border-radius: 12px; border: none;
+  background: var(--orange); color: #fff; font-size: 16px; font-weight: 700;
+  font-family: var(--ff-body); cursor: pointer; transition: all 0.22s var(--ease);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  position: relative; overflow: hidden;
+}
+.form-submit::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+.form-submit:hover { background: var(--orange-dk); transform: translateY(-2px); box-shadow: var(--shadow-orange); }
+.form-submit.loading { pointer-events: none; }
+.form-submit.loading .btn-text { opacity: 0; }
+.form-spinner {
+  position: absolute; width: 20px; height: 20px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.3); border-top-color: #fff;
+  animation: spin 0.7s linear infinite; display: none;
+}
+.form-submit.loading .form-spinner { display: block; }
+.form-success {
+  display: none; text-align: center; padding: 32px 20px;
+}
+.form-success.show { display: block; }
+.form-success-icon { font-size: 48px; margin-bottom: 16px; }
+.form-success h3 { font-family: var(--ff-display); font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.form-success p { font-size: 15px; color: var(--text-2); }
+
+/* Whatsapp CTA */
+.whatsapp-cta {
+  display: flex; align-items: center; gap: 10px; margin-top: 20px;
+  padding: 14px 18px; border-radius: 12px;
+  background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.25);
+  text-decoration: none; transition: all 0.2s;
+}
+.whatsapp-cta:hover { background: rgba(37,211,102,0.16); transform: translateY(-1px); }
+.whatsapp-icon-wrap { width: 40px; height: 40px; border-radius: 50%; background: rgba(37,211,102,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.whatsapp-icon-wrap svg { width: 20px; height: 20px; color: #25D366; }
+.whatsapp-text { font-size: 13px; color: rgba(245,243,238,0.7); }
+.whatsapp-text strong { display: block; font-size: 14px; color: rgba(245,243,238,0.9); font-weight: 700; }
+
+/* ===================== FOOTER ===================== */
+footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px; }
+.foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 60px; }
+.foot-brand-desc { font-size: 14px; color: rgba(245,243,238,0.4); line-height: 1.7; margin: 16px 0 24px; max-width: 280px; }
+.foot-social { display: flex; gap: 10px; }
+.foot-soc-btn {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5); transition: all 0.18s;
+}
+.foot-soc-btn:hover { background: rgba(255,107,53,0.2); border-color: rgba(255,107,53,0.4); color: var(--orange); }
+.foot-soc-btn svg { width: 16px; height: 16px; }
+.foot-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 18px; }
+.foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.foot-links a { font-size: 14px; color: rgba(245,243,238,0.55); transition: color 0.18s; }
+.foot-links a:hover { color: var(--orange); }
+.foot-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
+.foot-copy { font-size: 13px; color: rgba(245,243,238,0.3); }
+.foot-copy strong { color: var(--orange); }
+.foot-legal { display: flex; gap: 20px; }
+.foot-legal a { font-size: 13px; color: rgba(245,243,238,0.3); transition: color 0.18s; }
+.foot-legal a:hover { color: rgba(245,243,238,0.7); }
+
+/* ===================== BACK TO TOP ===================== */
+.btt {
+  position: fixed; bottom: 80px; right: 24px; z-index: 800;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--dark); color: #fff; border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transform: translateY(12px);
+  transition: all 0.3s var(--ease); box-shadow: var(--shadow-md);
+  flex-direction: column; gap: 2px;
+}
+.btt.vis { opacity: 1; transform: translateY(0); }
+.btt:hover { background: var(--orange); border-color: transparent; transform: translateY(-2px); }
+.btt-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 1024px) {
+  .hero-inner, .feat-grid { grid-template-columns: 1fr; gap: 56px; }
+  .feat-grid.rev { direction: ltr; }
+  .feat-body { max-width: 100%; }
+  .feat-mockup { justify-content: flex-start; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .testi-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  .integrations-grid { grid-template-columns: repeat(3, 1fr); }
+  .how-steps { grid-template-columns: 1fr; gap: 2px; }
+  .how-step:first-child { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .how-step:last-child { border-radius: 0 0 var(--r-lg) var(--r-lg); }
+  .contact-grid { grid-template-columns: 1fr; gap: 56px; }
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .faq-layout { grid-template-columns: 1fr; gap: 40px; }
+  .compare-section { overflow-x: auto; }
+}
+
+@media (max-width: 768px) {
+  section { padding: 80px 0; }
+  .container { padding: 0 20px; }
+  .nav-links, .nav-actions .nav-cta-plain { display: none; }
+  .menu-btn { display: flex; }
+  .hero { padding: 120px 0 72px; min-height: auto; }
+  .hero-title { font-size: clamp(34px, 9vw, 48px); }
+  .hero-sub { font-size: 16px; }
+  .hero-grid { display: none; }
+  .float-1, .float-2, .float-3 { display: none; }
+  .how-connector { display: none; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
+  .stat-item { padding: 28px 16px; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .integrations-grid { grid-template-columns: repeat(2, 1fr); }
+  .foot-grid { grid-template-columns: 1fr; }
+  .foot-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  .mob-sticky { display: block; }
+  .btt { bottom: 90px; }
+  .nav-dots { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+  .contact-grid { gap: 40px; }
+  .hero-trust-logos { gap: 8px; }
+  .trust-logo-chip { font-size: 12px; padding: 5px 10px; }
+  body { padding-bottom: 80px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: clamp(32px, 10vw, 44px); }
+  .hero-dashboard { padding: 16px; }
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
+  .integrations-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-social-proof { flex-direction: column; align-items: flex-start; }
+}
 </style>
 </head>
 <body>
 
-<!-- Nav -->
-<nav class="nav" id="nav">
-<div class="container">
-<a href="/" class="nav-logo">
-<span class="logo-icon">MG</span>
-ManaGEN
-</a>
-<ul class="nav-links" id="navLinks">
-<li><a href="#features">Features</a></li>
-<li><a href="#how-it-works">How It Works</a></li>
-<li><a href="#pricing">Pricing</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
-<div class="nav-actions">
-<button class="btn btn-ghost" onclick="window.location.href='/auth'">Sign In</button>
-<button class="btn btn-primary btn-sm" onclick="window.location.href='/auth'">Get Started</button>
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9790;</button>
-<button class="hamburger" id="hamburger" aria-label="Menu">
-<span></span><span></span><span></span>
-</button>
-</div>
-</div>
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="logo" aria-label="ManaGEN home">
+      <div class="logo-mark">
+        <svg class="icon" style="width:18px;height:18px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      </div>
+      <span class="logo-text">Mana<em>GEN</em></span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <a href="#" class="nav-cta-plain">Sign In</a>
+      <a href="#" class="nav-cta-fill">
+        Get Started
+        <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
-<!-- Hero -->
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav" aria-hidden="true">
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="#demo" onclick="closeMenu()">Demo</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <div class="mob-nav-ctas">
+    <a href="#" class="btn-primary" onclick="closeMenu()" style="justify-content:center;">Start Free — No Credit Card</a>
+    <a href="#demo" class="btn-secondary" onclick="closeMenu()" style="justify-content:center;">Watch 2-min Demo</a>
+  </div>
+</div>
+
+<!-- SECTION NAV DOTS -->
+<nav class="nav-dots" id="navDots" aria-label="Page sections">
+  <button class="nav-dot active" data-section="hero" title="Home"></button>
+  <button class="nav-dot" data-section="features" title="Features"></button>
+  <button class="nav-dot" data-section="demo" title="Demo"></button>
+  <button class="nav-dot" data-section="stats" title="Stats"></button>
+  <button class="nav-dot" data-section="pricing" title="Pricing"></button>
+  <button class="nav-dot" data-section="contact" title="Contact"></button>
+</nav>
+
+<main>
+
+<!-- =================== HERO =================== -->
 <section class="hero" id="hero">
-<div class="hero-bg-shapes">
-<div class="shape"></div>
-<div class="shape"></div>
-<div class="shape"></div>
+  <div class="hero-bg">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+    <div class="hero-ring hero-ring-1"></div>
+    <div class="hero-ring hero-ring-2"></div>
+    <div class="hero-deco-dot hero-deco-dot-1"></div>
+    <div class="hero-deco-dot hero-deco-dot-2"></div>
+    <div class="hero-deco-cross">+</div>
+    <div class="hero-grid"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-inner">
+
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="pulse-wrapper">
+            <div class="live-dot"></div>
+            <div class="pulse-ring"></div>
+          </div>
+          Now live across 5 African countries
+        </div>
+
+        <h1 class="hero-title">
+          <span class="hero-title-line">One platform.</span>
+          <span class="hero-title-line">Every school.</span>
+          <span class="hero-title-line highlight-orange">Across <span class="underline-orange">Africa</span>.</span>
+        </h1>
+
+        <p class="hero-sub">
+          ManaGEN is built for African institutions — 40+ modules, from attendance to payroll. Go live in 24 hours, not months.
+        </p>
+
+        <div class="hero-social-proof">
+          <div class="proof-avatars">
+            <div class="proof-av" style="background:#FFE0D4;color:#FF6B35;">K</div>
+            <div class="proof-av" style="background:#E2F8F3;color:#1BB89A;">A</div>
+            <div class="proof-av" style="background:#F0E4FF;color:#7C3AED;">E</div>
+            <div class="proof-av" style="background:#FEF9EC;color:#854F0B;">M</div>
+          </div>
+          <div class="proof-text">
+            <strong>500+ schools</strong> trust ManaGEN across Ghana, Nigeria, Kenya, Uganda & Rwanda
+          </div>
+        </div>
+
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary" style="font-size:16px;padding:16px 32px;">
+            <svg class="icon" style="stroke:#fff;width:17px;height:17px;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Start Free — No Credit Card
+          </a>
+          <a href="#demo" class="btn-secondary" style="font-size:16px;padding:15px 28px;">
+            <svg class="icon" style="width:17px;height:17px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+            Watch 2-min Demo
+          </a>
+        </div>
+
+        <div class="hero-trust">
+          <div class="hero-trust-label">Integrates with</div>
+          <div class="hero-trust-logos">
+            <div class="trust-logo-chip">
+              <svg style="height:14px;width:auto;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#0BA360"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">P</text></svg>
+              Paystack
+            </div>
+            <div class="trust-logo-chip">
+              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#F86A5E"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="8" font-weight="bold">F</text></svg>
+              Flutterwave
+            </div>
+            <div class="trust-logo-chip">
+              <svg style="height:14px;width:auto;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FFCC00"/><text x="12" y="16" text-anchor="middle" fill="black" font-size="8" font-weight="bold">MoMo</text></svg>
+              MTN MoMo
+            </div>
+            <div class="trust-logo-chip">
+              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#25D366"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="7" font-weight="bold">WA</text></svg>
+              WhatsApp
+            </div>
+            <div class="trust-logo-chip">
+              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#4285F4"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="8" font-weight="bold">G</text></svg>
+              Google
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-dashboard" style="position:relative;">
+          <div class="dash-topbar">
+            <div class="dash-logo">
+              <svg style="width:14px;height:14px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+            </div>
+            <span class="dash-brand">ManaGEN Dashboard</span>
+            <div class="live-badge"><span class="live-badge-dot"></span>Live</div>
+          </div>
+
+          <div class="dash-stats">
+            <div class="dstat" data-tip="1,089 present today">
+              <div class="dstat-label">Students</div>
+              <div class="dstat-val" style="color:var(--teal);">1,240</div>
+            </div>
+            <div class="dstat" data-tip="87.8% attendance rate">
+              <div class="dstat-label">Present</div>
+              <div class="dstat-val" style="color:var(--orange);">1,089</div>
+            </div>
+            <div class="dstat" data-tip="Collected this term">
+              <div class="dstat-label">Fees In</div>
+              <div class="dstat-val" style="color:#3B6D11;">₵84K</div>
+            </div>
+            <div class="dstat" data-tip="3 reminders sent">
+              <div class="dstat-label">Pending</div>
+              <div class="dstat-val" style="color:#854F0B;">₵12K</div>
+            </div>
+          </div>
+
+          <div class="dash-chart">
+            <div class="dash-chart-hd">
+              Fee Collection — This Term
+              <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--teal);"></div>Collected</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--orange);"></div>Target</div>
+              </div>
+            </div>
+            <svg viewBox="0 0 340 72" preserveAspectRatio="none" style="width:100%;height:64px;">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1BB89A" stop-opacity="0.25"/><stop offset="100%" stop-color="#1BB89A" stop-opacity="0"/></linearGradient>
+                <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF6B35" stop-opacity="0.15"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></linearGradient>
+              </defs>
+              <path d="M0,58 C40,48 80,36 120,38 C160,40 200,22 240,26 C280,30 310,20 340,18 L340,72 L0,72 Z" fill="url(#g1)" stroke="#1BB89A" stroke-width="1.8" fill-opacity="1"/>
+              <path d="M0,50 C40,44 80,52 120,42 C160,32 200,40 240,34 C280,28 310,36 340,32 L340,72 L0,72 Z" fill="url(#g2)" stroke="#FF6B35" stroke-width="1.5" stroke-dasharray="5,3"/>
+            </svg>
+          </div>
+
+          <div class="dash-table">
+            <div class="dash-chart-hd" style="font-size:10px;font-weight:600;color:var(--text-2);margin-bottom:6px;">Today's Attendance</div>
+            <div class="dash-row"><span>Class 7A — 32 students</span><span class="status-pill pill-green">95%</span></div>
+            <div class="dash-row"><span>Class 8B — 29 students</span><span class="status-pill pill-amber">87%</span></div>
+            <div class="dash-row"><span>Class 9C — 28 students</span><span class="status-pill pill-red">75%</span></div>
+          </div>
+        </div>
+
+        <div class="hero-float float-1">
+          <div class="float-icon" style="background:var(--teal-lt);">
+            <svg class="icon" style="color:var(--teal);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-3);font-weight:500;">Fee collected</div>
+            <div>₵2,400 via MoMo</div>
+          </div>
+        </div>
+        <div class="hero-float float-2">
+          <div class="float-icon" style="background:var(--orange-lt);">
+            <svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-3);font-weight:500;">Auto-generated</div>
+            <div>Term report ready</div>
+          </div>
+        </div>
+        <div class="hero-float float-3" style="font-size:11px;">
+          <div class="float-icon" style="background:#F0E4FF;">
+            <svg class="icon" style="color:#7C3AED;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-3);font-weight:500;">AI Alert</div>
+            <div>Attendance drop detected</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section><!-- TICKER -->
+<div class="ticker-section">
+  <div class="ticker-label">Trusted by</div>
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Accra Academy<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Presec Legon<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Aburi Girls<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇳🇬</span>King's College Lagos<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇰🇪</span>Nairobi Academy<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇺🇬</span>St. Anne's Kampala<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇷🇼</span>Kigali International<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Wesley Girls<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Opoku Ware School<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇳🇬</span>Corona Secondary<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇰🇪</span>Braeburn Schools<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Accra Academy<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Presec Legon<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Aburi Girls<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇳🇬</span>King's College Lagos<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇰🇪</span>Nairobi Academy<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇺🇬</span>St. Anne's Kampala<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇷🇼</span>Kigali International<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Wesley Girls<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇬🇭</span>Opoku Ware School<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇳🇬</span>Corona Secondary<span class="ticker-sep">◆</span></div>
+    <div class="ticker-item"><span class="flag">🇰🇪</span>Braeburn Schools<span class="ticker-sep">◆</span></div>
+  </div>
 </div>
-<div class="container">
-<div class="hero-grid">
-<div>
-<div class="hero-badge"><i>★</i> Trusted by 500+ schools worldwide</div>
-<h1>Empower Your School with <span class="highlight">ManaGEN</span></h1>
-<p>The all-in-one platform that streamlines administration, enhances learning, and connects your entire school community.</p>
-<div class="hero-buttons">
-<button class="btn btn-primary btn-lg" onclick="window.location.href='/auth'">Start Free Trial <i>→</i></button>
-<button class="btn btn-outline btn-lg" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Watch Demo <i>▶</i></button>
-</div>
-<div class="hero-stats">
-<div class="hero-stat">
-<h3>10K+</h3>
-<p>Active Users</p>
-</div>
-<div class="hero-stat">
-<h3>500+</h3>
-<p>Schools</p>
-</div>
-<div class="hero-stat">
-<h3>99.9%</h3>
-<p>Uptime</p>
-</div>
-</div>
-</div>
-<div class="hero-dashboard">
-<div class="dashboard-mockup">
-<div class="mockup-header">
-<div class="mockup-dots"><span></span><span></span><span></span></div>
-<div class="mockup-header-text">managen.app — Dashboard</div>
-</div>
-<div class="mockup-body">
-<div class="mockup-row">
-<div class="mockup-cell">
-<div class="badge-bar purple"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
-<div class="mockup-cell">
-<div class="badge-bar blue"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
-</div>
-<div class="mockup-row">
-<div class="mockup-cell">
-<div class="badge-bar green"></div>
-<div class="mockup-chart">
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-<div class="chart-bar"></div>
-</div>
-</div>
-<div class="mockup-cell">
-<div class="badge-bar amber"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
-</div>
-<div class="mockup-bottom">
-<div class="mockup-avatar"></div>
-<div class="mockup-text">
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
-</div>
-</div>
-</div>
-<div class="hero-float-card fc1"><div class="fc-icon">✓</div><div><strong>98%</strong><br> satisfaction</div></div>
-<div class="hero-float-card fc2"><div class="fc-icon">⚡</div><div><strong>2.5x</strong><br> efficiency</div></div>
-<div class="hero-float-card fc3"><div class="fc-icon">🎯</div><div><strong>Zero</strong><br> data loss</div></div>
-</div>
-</div>
-</div>
+
+<hr class="divider-orange">
+
+<!-- =================== HOW IT WORKS =================== -->
+<section class="how-section">
+  <div class="how-bg-pattern"></div>
+  <div class="how-grid-bg"></div>
+  <div class="container">
+    <div class="how-header reveal">
+      <div class="section-eyebrow" style="justify-content:center;color:var(--orange);">HOW IT WORKS</div>
+      <h2 class="section-title" style="text-align:center;">Up and running in 3 steps.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">No servers. No IT department. No weeks of training. Just a working school management system in under 24 hours.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-num">01</div>
+        <div class="how-connector"><svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="how-step-icon"><svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
+        <div class="how-step-title">Register Your School</div>
+        <p class="how-step-desc">Sign up with your school name and contact. Import your existing student and staff data from Excel — we handle the rest automatically.</p>
+        <div class="how-step-time"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Under 2 minutes</div>
+      </div>
+      <div class="how-step reveal delay-1">
+        <div class="how-step-num">02</div>
+        <div class="how-connector"><svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="how-step-icon" style="background:rgba(27,184,154,0.15);border-color:rgba(27,184,154,0.3);color:var(--teal);"><svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+        <div class="how-step-title">Pick Your Modules</div>
+        <p class="how-step-desc">Choose from 40+ modules — attendance, fees, exams, hostel, payroll, transport and more. Enable only what you need. Add more anytime.</p>
+        <div class="how-step-time" style="background:rgba(27,184,154,0.12);border-color:rgba(27,184,154,0.2);color:var(--teal);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> No-code config</div>
+      </div>
+      <div class="how-step reveal delay-2">
+        <div class="how-step-num">03</div>
+        <div class="how-step-icon" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:rgba(245,243,238,0.8);"><svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="how-step-title">Go Live with Support</div>
+        <p class="how-step-desc">Invite your staff and go live. Our onboarding team stays with you through the entire process — live chat, phone, and WhatsApp support included.</p>
+        <div class="how-step-time" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:rgba(245,243,238,0.6);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Live within 24 hours</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Ticker -->
-<div class="ticker-wrap">
-<div class="ticker-track" id="tickerTrack">
-<div class="ticker-item"><i>★</i> <strong>10,000+</strong> active users</div>
-<div class="ticker-item"><i>★</i> <strong>500+</strong> schools onboarded</div>
-<div class="ticker-item"><i>★</i> <strong>99.9%</strong> platform uptime</div>
-<div class="ticker-item"><i>★</i> <strong>24/7</strong> support</div>
-<div class="ticker-item"><i>★</i> <strong>4.9/5</strong> average rating</div>
-<div class="ticker-item"><i>★</i> <strong>150+</strong> integrations</div>
-<div class="ticker-item"><i>★</i> <strong>40+</strong> countries</div>
-<div class="ticker-item"><i>★</i> <strong>ISO 27001</strong> certified</div>
-<div class="ticker-item"><i>★</i> <strong>10,000+</strong> active users</div>
-<div class="ticker-item"><i>★</i> <strong>500+</strong> schools onboarded</div>
-<div class="ticker-item"><i>★</i> <strong>99.9%</strong> platform uptime</div>
-<div class="ticker-item"><i>★</i> <strong>24/7</strong> support</div>
-<div class="ticker-item"><i>★</i> <strong>4.9/5</strong> average rating</div>
-<div class="ticker-item"><i>★</i> <strong>150+</strong> integrations</div>
-<div class="ticker-item"><i>★</i> <strong>40+</strong> countries</div>
-<div class="ticker-item"><i>★</i> <strong>ISO 27001</strong> certified</div>
-</div>
-</div>
+<!-- =================== FEATURES =================== -->
+<section id="features" style="background:var(--white);">
+  <div class="container">
+    <div class="feat-grid" style="margin-bottom:100px;">
+      <div class="reveal feat-body">
+        <div class="section-eyebrow">HAWK-EYE VIEW</div>
+        <h2 class="section-title">Every module.<br>One real-time view.</h2>
+        <p class="section-sub">Your leadership team gets a consolidated view of all operations — attendance, fees, hostel, transport, payroll — on one dashboard. Spot issues before they escalate.</p>
+        <ul class="feat-list">
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Real-time alerts across all 40+ modules</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Cross-module reporting and data correlation</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Multi-school, multi-tenant architecture</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Role-based access for every staff type</li>
+        </ul>
+      </div>
+      <div class="feat-mockup reveal delay-2">
+        <div class="mock-card">
+          <div class="mock-card-head">
+            <span class="mock-card-title"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Module Status — Accra Campus</span>
+            <div class="live-badge"><span class="live-badge-dot"></span>Live</div>
+          </div>
+          <div class="mock-card-body">
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Attendance</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Fees Management</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Examinations</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#EF9F27;box-shadow:0 0 6px #EF9F27;"></div><span class="mod-name">Library</span></div><span class="status-pill pill-amber">Syncing</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Hostel</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#E24B4A;box-shadow:0 0 6px #E24B4A;"></div><span class="mod-name">Transport</span></div><span class="status-pill pill-red">Alert</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Payroll</span></div><span class="status-pill pill-green">Active</span></div>
+            <div style="padding:12px 0 4px;font-size:11px;color:var(--teal);font-weight:700;display:flex;align-items:center;gap:7px;border-top:1px solid var(--border);margin-top:4px;"><span class="live-badge-dot"></span>99.9% Uptime · 3 campuses online</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- How it works -->
-<section class="section" id="how-it-works">
-<div class="container text-center">
-<div class="section-label">How It Works</div>
-<h2 class="section-title">Get started in <span class="highlight">3 simple steps</span></h2>
-<p class="section-subtitle">From signup to full deployment in under an hour. No technical expertise required.</p>
-<div class="how-steps">
-<div class="how-step reveal">
-<div class="step-number">1</div>
-<h3>Create Your Account</h3>
-<p>Sign up and set up your school profile. Add your institution details, branding, and academic calendar in minutes.</p>
-</div>
-<div class="how-step reveal reveal-delay-1">
-<div class="step-number">2</div>
-<h3>Import &amp; Configure</h3>
-<p>Import students, staff, classes, and schedules. Configure roles, permissions, grading systems, and communication channels.</p>
-</div>
-<div class="how-step reveal reveal-delay-2">
-<div class="step-number">3</div>
-<h3>Go Live &amp; Grow</h3>
-<p>Launch your portal, invite parents and teachers, and start managing your school with powerful analytics and automation.</p>
-</div>
-<div class="step-connector"></div>
-</div>
-</div>
+    <div class="feat-grid rev" style="margin-bottom:100px;">
+      <div class="reveal feat-body">
+        <div class="section-eyebrow">ZERO FRICTION</div>
+        <h2 class="section-title">Simple for any administrator.</h2>
+        <p class="section-sub">Your bursar, headmaster, and class teachers don't need to be technical. ManaGEN works the moment you sign up — no servers, no installations.</p>
+        <ul class="feat-list">
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Register your school in under 2 minutes</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Import student data directly from Excel</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Full support team with you throughout</li>
+        </ul>
+      </div>
+      <div class="feat-mockup reveal delay-2">
+        <div class="mock-card" style="max-width:360px;">
+          <div class="mock-card-head">
+            <span class="mock-card-title">ManaGEN Quick Setup</span>
+            <span style="font-size:11px;color:var(--teal);font-weight:700;">66%</span>
+          </div>
+          <div class="mock-card-body" style="padding:16px 18px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(27,184,154,0.2);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;"><svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Create Account</span>
+              <span style="font-size:11px;font-weight:700;background:var(--teal-lt);color:var(--teal);padding:2px 10px;border-radius:99px;">Done</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(27,184,154,0.2);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;"><svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Import Student Records</span>
+              <span style="font-size:11px;font-weight:700;background:var(--teal-lt);color:var(--teal);padding:2px 10px;border-radius:99px;">Done</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--orange-lt);border:1.5px solid var(--orange-mid);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--orange-lt);border:1.5px solid var(--orange-mid);display:flex;align-items:center;justify-content:center;color:var(--orange);font-size:12px;font-weight:800;flex-shrink:0;">3</div>
+              <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Configure Your Modules</span>
+              <span style="font-size:11px;font-weight:700;background:var(--orange-lt);color:var(--orange);padding:2px 10px;border-radius:99px;">Active</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;opacity:0.45;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg-2);display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:12px;font-weight:800;flex-shrink:0;">4</div>
+              <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Invite Staff & Go Live</span>
+              <span style="font-size:11px;font-weight:700;background:var(--bg-2);color:var(--text-3);padding:2px 10px;border-radius:99px;">Pending</span>
+            </div>
+            <div style="height:6px;background:var(--bg-2);border-radius:99px;margin-top:16px;overflow:hidden;">
+              <div class="bar-fill" data-width="66" style="width:0;height:100%;background:linear-gradient(to right,var(--orange),var(--teal));border-radius:99px;transition:width 1.5s var(--ease);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-3);"><span>66% complete</span><span>~8 min remaining</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-grid">
+      <div class="reveal feat-body">
+        <div class="section-eyebrow">ROLE-BASED VIEWS</div>
+        <h2 class="section-title">Every person sees what they need.</h2>
+        <p class="section-sub">The Headmaster gets the full picture. The Bursar sees only finances. Class Teachers track their students. One system, intelligent access — one login.</p>
+        <ul class="feat-list">
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>5 default role types, fully customizable</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Granular permission controls per module</li>
+          <li><div class="feat-check"><svg class="icon" style="stroke-width:3;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Parent & student portals included</li>
+        </ul>
+      </div>
+      <div class="feat-mockup reveal delay-2">
+        <div class="mock-card role-card" style="max-width:380px;">
+          <div class="role-card-head mock-card-head"><span class="mock-card-title">Select Your Role</span></div>
+          <div class="role-card-body">
+            <div class="role-item active" onclick="selectRole(this,'headmaster')">
+              <div class="role-av" style="background:var(--orange-lt);color:var(--orange);">H</div>
+              <div><div class="role-name">Headmaster</div><div class="role-desc">Full oversight — all modules, all data</div></div>
+            </div>
+            <div class="role-item" onclick="selectRole(this,'bursar')">
+              <div class="role-av" style="background:var(--teal-lt);color:var(--teal);">B</div>
+              <div><div class="role-name">Bursar</div><div class="role-desc">Fees, payroll, financial reports</div></div>
+            </div>
+            <div class="role-item" onclick="selectRole(this,'teacher')">
+              <div class="role-av" style="background:#F0E4FF;color:#7C3AED;">T</div>
+              <div><div class="role-name">Class Teacher</div><div class="role-desc">Attendance, grades, class activity</div></div>
+            </div>
+            <div class="role-item" onclick="selectRole(this,'hostel')">
+              <div class="role-av" style="background:#FEF9EC;color:#854F0B;">M</div>
+              <div><div class="role-name">Hostel Master</div><div class="role-desc">Rooms, students, complaints</div></div>
+            </div>
+            <div class="role-content" id="roleContent">
+              <div class="role-content-title">Headmaster Dashboard includes</div>
+              <ul class="role-feature-list">
+                <li>School-wide analytics overview</li>
+                <li>All module alerts & approvals</li>
+                <li>Staff & student management</li>
+                <li>Financial summary & reports</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Features -->
-<section class="section features" id="features">
-<div class="container text-center">
-<div class="section-label">Features</div>
-<h2 class="section-title">Everything you need to <span class="highlight">run your school</span></h2>
-<p class="section-subtitle">Powerful tools designed for administrators, teachers, parents, and students.</p>
-<div class="features-grid">
-<div class="feature-card reveal">
-<div class="feature-icon purple"><i>⚙</i></div>
-<h3>Administration Suite</h3>
-<p>Comprehensive tools for admissions, attendance tracking, timetable management, fee collection, and staff management.</p>
-<ul class="feature-list">
-<li><i>✓</i> Automated attendance &amp; reporting</li>
-<li><i>✓</i> Fee management &amp; invoicing</li>
-<li><i>✓</i> Timetable scheduling</li>
-<li><i>✓</i> Staff &amp; payroll management</li>
-</ul>
-</div>
-<div class="feature-card reveal reveal-delay-1">
-<div class="feature-icon blue"><i>◎</i></div>
-<h3>Learning Management</h3>
-<p>Create, distribute, and grade assignments. Host virtual classes, share resources, and track student progress in real time.</p>
-<ul class="feature-list">
-<li><i>✓</i> Assignment &amp; grade management</li>
-<li><i>✓</i> Virtual classroom integration</li>
-<li><i>✓</i> Resource library &amp; sharing</li>
-<li><i>✓</i> Progress analytics &amp; reports</li>
-</ul>
-</div>
-<div class="feature-card reveal reveal-delay-2">
-<div class="feature-icon green"><i>♦</i></div>
-<h3>Communication Hub</h3>
-<p>Connect parents, teachers, and administrators with real-time messaging, announcements, and automated notifications.</p>
-<ul class="feature-list">
-<li><i>✓</i> Real-time messaging &amp; alerts</li>
-<li><i>✓</i> Parent-teacher communication</li>
-<li><i>✓</i> Broadcast announcements</li>
-<li><i>✓</i> Automated notifications</li>
-</ul>
-</div>
-</div>
-</div>
+<!-- =================== STATS =================== -->
+<section class="stats-section" id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-num"><span data-target="500" data-suffix="+">500+</span></div>
+        <div class="stat-label">Schools using ManaGEN</div>
+        <div class="stat-source">As of Q1 2025 across 5 countries</div>
+      </div>
+      <div class="stat-item reveal delay-1">
+        <div class="stat-num"><span data-target="99.9" data-suffix="%">99.9%</span></div>
+        <div class="stat-label">Platform uptime guaranteed</div>
+        <div class="stat-source">Measured over the last 12 months</div>
+      </div>
+      <div class="stat-item reveal delay-2">
+        <div class="stat-num"><span data-target="40" data-suffix="+">40+</span></div>
+        <div class="stat-label">Integrated modules available</div>
+        <div class="stat-source">Covering every school operation</div>
+      </div>
+      <div class="stat-item reveal delay-3">
+        <div class="stat-num"><span data-target="24" data-suffix="hrs">24hrs</span></div>
+        <div class="stat-label">Average time to go live</div>
+        <div class="stat-source">Including data import & training</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Stats -->
-<section class="section stats" id="stats">
-<div class="container">
-<div class="stats-grid">
-<div class="stat-item reveal"><div class="stat-icon">★</div><div class="stat-number" data-target="10000">0</div><div class="stat-label">Active Users</div></div>
-<div class="stat-item reveal reveal-delay-1"><div class="stat-icon">♦</div><div class="stat-number" data-target="500">0</div><div class="stat-label">Schools</div></div>
-<div class="stat-item reveal reveal-delay-2"><div class="stat-icon">⚡</div><div class="stat-number" data-target="150">0</div><div class="stat-label">Integrations</div></div>
-<div class="stat-item reveal reveal-delay-3"><div class="stat-icon">★</div><div class="stat-number" data-target="40">0</div><div class="stat-label">Countries</div></div>
-</div>
-</div>
+<!-- =================== VIDEO DEMO =================== -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="demo-container">
+      <div class="demo-header reveal">
+        <div class="section-eyebrow" style="justify-content:center;">PRODUCT DEMO</div>
+        <h2 class="section-title" style="text-align:center;">See ManaGEN in 2 minutes.</h2>
+        <p class="section-sub" style="margin:0 auto;text-align:center;">Watch how a typical school goes from sign-up to full operation — no jargon, just the real product.</p>
+      </div>
+      <div class="video-wrapper reveal delay-1">
+        <div class="video-thumb" id="videoThumb" onclick="playDemo()">
+          <div class="video-bg-grid"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;">
+            <div style="background:rgba(15,14,12,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-lg);padding:24px 40px;backdrop-filter:blur(12px);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:32px;height:32px;border-radius:9px;background:var(--orange);display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+                <span style="font-family:var(--ff-display);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">ManaGEN</span>
+                <div class="live-badge" style="margin-left:auto;"><span class="live-badge-dot"></span>Demo</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-width:280px;">
+                <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:12px;text-align:center;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:4px;">STUDENTS</div>
+                  <div style="font-size:18px;font-weight:800;color:#fff;font-family:var(--ff-display);">1,240</div>
+                </div>
+                <div style="background:rgba(255,107,53,0.15);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,107,53,0.3);">
+                  <div style="font-size:10px;color:rgba(255,107,53,0.7);font-weight:600;margin-bottom:4px;">PRESENT</div>
+                  <div style="font-size:18px;font-weight:800;color:var(--orange);font-family:var(--ff-display);">1,089</div>
+                </div>
+                <div style="background:rgba(27,184,154,0.15);border-radius:10px;padding:12px;text-align:center;">
+                  <div style="font-size:10px;color:rgba(27,184,154,0.7);font-weight:600;margin-bottom:4px;">FEES IN</div>
+                  <div style="font-size:18px;font-weight:800;color:var(--teal);font-family:var(--ff-display);">₵84K</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="video-overlay-logo">
+            <div class="play-btn"><svg style="width:24px;height:24px;fill:#fff;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <div class="video-label"><strong>Watch the 2-minute product walkthrough</strong></div>
+          </div>
+          <div class="video-duration">2:14</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text-3);margin-top:20px;">No signup required to watch. Full demo available after free registration.</p>
+    </div>
+  </div>
 </section>
 
-<!-- Demo -->
-<section class="section" id="demo">
-<div class="container text-center">
-<div class="section-label">Video Demo</div>
-<h2 class="section-title">See ManaGEN <span class="highlight">in action</span></h2>
-<p class="section-subtitle">Watch how ManaGEN transforms school operations in under 2 minutes.</p>
-<div class="demo-video-wrap reveal">
-<div class="demo-video-placeholder" id="demoPlaceholder">
-<div class="demo-play-btn" id="demoPlayBtn">▶</div>
-<div class="demo-placeholder-text">Play Demo Video</div>
-</div>
-<div class="demo-caption"><i>▶</i> Watch how Riverdale Academy cut administrative work by 60% using ManaGEN</div>
-</div>
-</div>
+<!-- =================== INTEGRATIONS =================== -->
+<section class="integrations-section">
+  <div class="container">
+    <div class="integrations-header reveal">
+      <div class="section-eyebrow" style="justify-content:center;">INTEGRATIONS & PARTNERS</div>
+      <h2 class="section-title" style="text-align:center;">Works with what Africa uses.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">ManaGEN connects natively with the payment, communication, and productivity tools already trusted by African schools.</p>
+    </div>
+    <div class="integrations-grid reveal delay-1">
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:22px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#0BA360"/><text x="50" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Paystack</text></svg></div>
+        <div class="integration-name">Paystack</div><div class="integration-cat">Payments</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:22px;width:auto;" viewBox="0 0 120 30"><rect width="120" height="30" rx="6" fill="#F86A5E"/><text x="60" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Flutterwave</text></svg></div>
+        <div class="integration-name">Flutterwave</div><div class="integration-cat">Payments</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:28px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#FFCC00"/><text x="50" y="20" text-anchor="middle" fill="black" font-size="11" font-weight="bold">MTN MoMo</text></svg></div>
+        <div class="integration-name">MTN MoMo</div><div class="integration-cat">Mobile Money</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:24px;width:auto;" viewBox="0 0 110 30"><rect width="110" height="30" rx="6" fill="#D32F2F"/><text x="55" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Vodafone Cash</text></svg></div>
+        <div class="integration-name">Vodafone Cash</div><div class="integration-cat">Mobile Money</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:26px;width:auto;" viewBox="0 0 90 30"><rect width="90" height="30" rx="6" fill="#ED1C24"/><text x="45" y="20" text-anchor="middle" fill="white" font-size="9" font-weight="bold">AT Money</text></svg></div>
+        <div class="integration-name">AT Money</div><div class="integration-cat">Mobile Money</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:32px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#25D366"/><text x="50" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">WhatsApp</text></svg></div>
+        <div class="integration-name">WhatsApp API</div><div class="integration-cat">Messaging</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:18px;width:auto;" viewBox="0 0 90 30"><rect width="90" height="30" rx="6" fill="#1A82E2"/><text x="45" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SendGrid</text></svg></div>
+        <div class="integration-name">SendGrid</div><div class="integration-cat">Email</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap"><svg style="height:20px;width:auto;" viewBox="0 0 120 30"><rect width="120" height="30" rx="6" fill="#4285F4"/><text x="60" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Google Workspace</text></svg></div>
+        <div class="integration-name">Google Workspace</div><div class="integration-cat">Productivity</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap" style="background:#217346;"><svg style="width:22px;height:22px;stroke:#fff;" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div class="integration-name">Excel / Sheets</div><div class="integration-cat">Data Import</div>
+      </div>
+      <div class="integration-tile">
+        <div class="integration-logo-wrap" style="background:var(--dark);"><svg style="width:22px;height:22px;stroke:var(--text-inv);" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="integration-name">REST API</div><div class="integration-cat">Custom</div>
+      </div>
+    </div>
+    <div class="integrations-more reveal delay-2"><span>+18 more integrations</span> available on Growth and Enterprise plans.</div>
+  </div>
 </section>
 
-<!-- Integrations -->
-<section class="section features" id="integrations">
-<div class="container text-center">
-<div class="section-label">Integrations</div>
-<h2 class="section-title">Works with your <span class="highlight">favorite tools</span></h2>
-<p class="section-subtitle">Seamless integration with the platforms your school already uses.</p>
-<div class="integration-grid">
-<div class="integration-card reveal"><div class="int-icon">📊</div><h4>Google Workspace</h4><p>Drive, Classroom, Calendar</p><span class="int-badge">Popular</span></div>
-<div class="integration-card reveal reveal-delay-1"><div class="int-icon">📚</div><h4>Microsoft 365</h4><p>Teams, SharePoint, OneDrive</p><span class="int-badge">Popular</span></div>
-<div class="integration-card reveal reveal-delay-2"><div class="int-icon">💳</div><h4>Stripe</h4><p>Payment processing</p></div>
-<div class="integration-card reveal reveal-delay-3"><div class="int-icon">📧</div><h4>SendGrid</h4><p>Email notifications</p></div>
-<div class="integration-card reveal reveal-delay-4"><div class="int-icon">📱</div><h4>WhatsApp</h4><p>Messaging &amp; alerts</p></div>
-<div class="integration-card reveal"><div class="int-icon">📹</div><h4>Zoom</h4><p>Virtual classrooms</p></div>
-<div class="integration-card reveal reveal-delay-1"><div class="int-icon">📝</div><h4>Canvas</h4><p>LMS integration</p></div>
-<div class="integration-card reveal reveal-delay-2"><div class="int-icon">💰</div><h4>QuickBooks</h4><p>Accounting sync</p></div>
-<div class="integration-card reveal reveal-delay-3"><div class="int-icon">🔐</div><h4>Okta</h4><p>SSO &amp; identity</p></div>
-<div class="integration-card reveal reveal-delay-4"><div class="int-icon">☁️</div><h4>AWS</h4><p>Cloud infrastructure</p></div>
-</div>
-</div>
+<!-- =================== TESTIMONIALS =================== -->
+<section class="testi-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;" class="reveal">
+      <div class="section-eyebrow" style="justify-content:center;">TESTIMONIALS</div>
+      <h2 class="section-title">Trusted by school leaders.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">From single-campus primary schools to multi-country university networks.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-content">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"The QR attendance system eliminated proxy marking entirely. Staff mark attendance in 30 seconds. Accurate records, zero disputes."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:var(--orange-lt);color:var(--orange);">K</div>
+            <div><div class="testi-name">Kwame Asante <span class="testi-flag">🇬🇭</span></div><div class="testi-role">Headmaster · Presec Legon</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal delay-1">
+        <div class="testi-content">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Fee collection used to take 3 days each month. With ManaGEN, it automated — parents pay via mobile money and receipts arrive instantly."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:var(--teal-lt);color:var(--teal);">A</div>
+            <div><div class="testi-name">Adjoa Mensah <span class="testi-flag">🇬🇭</span></div><div class="testi-role">Bursar · Aburi Girls</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal delay-2">
+        <div class="testi-content">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Payroll, hostel, and transport all in one dashboard. Our admin team went from 8-hour days to finishing by 3pm. Genuinely transformative."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:#F0E4FF;color:#7C3AED;">E</div>
+            <div><div class="testi-name">Dr. Efua Boateng <span class="testi-flag">🇬🇭</span></div><div class="testi-role">Director · Wesley Girls High School</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="testi-note">*Names represent composite feedback from pilot schools. Identities anonymized to protect client privacy.</p>
+  </div>
 </section>
 
-<!-- Testimonials -->
-<section class="section testimonials" id="testimonials">
-<div class="container text-center">
-<div class="section-label">Testimonials</div>
-<h2 class="section-title">What our <span class="highlight">users say</span></h2>
-<p class="section-subtitle">Hear from school leaders who have transformed their institutions with ManaGEN.</p>
-<div class="testimonial-grid">
-<div class="testimonial-card reveal">
-<div class="testimonial-stars">★★★★★</div>
-<blockquote>"ManaGEN has completely revolutionized how we manage our school. The administrative suite alone saved us countless hours. Our teachers love it, parents love it, and our students are more engaged than ever."</blockquote>
-<div class="testimonial-author">
-<div class="testimonial-avatar">JD</div>
-<div class="testimonial-info">
-<h4>Dr. Jane Doe</h4>
-<p>Principal, Riverdale Academy</p>
-</div>
-</div>
-</div>
-<div class="testimonial-card reveal reveal-delay-1">
-<div class="testimonial-stars">★★★★★</div>
-<blockquote>"The learning management features are outstanding. We went from disparate systems to one unified platform in just two weeks. The support team was incredible throughout the entire process."</blockquote>
-<div class="testimonial-author">
-<div class="testimonial-avatar">MS</div>
-<div class="testimonial-info">
-<h4>Michael Smith</h4>
-<p>Head of Technology, Westfield Schools</p>
-</div>
-</div>
-</div>
-<div class="testimonial-card reveal reveal-delay-2">
-<div class="testimonial-stars">★★★★★</div>
-<blockquote>"Parent communication was always our biggest challenge. ManaGEN's communication hub made it effortless. Our parent satisfaction scores have increased by 40% since implementation."</blockquote>
-<div class="testimonial-author">
-<div class="testimonial-avatar">SK</div>
-<div class="testimonial-info">
-<h4>Sarah Kim</h4>
-<p>Director of Operations, Brighton College</p>
-</div>
-</div>
-</div>
-</div>
-</div>
+<!-- =================== PRICING =================== -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-eyebrow" style="justify-content:center;">PRICING</div>
+      <h2 class="section-title">Simple, transparent pricing.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">Start free. Scale as your school network grows. No hidden fees, no per-module charges.</p>
+    </div>
+    <div class="toggle-wrap reveal">
+      <div class="toggle">
+        <button class="tog-btn on" onclick="setPricing('monthly',this)">Monthly</button>
+        <button class="tog-btn" onclick="setPricing('annual',this)">Annual <span class="save-tag">Save 20%</span></button>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="p-card reveal">
+        <div class="p-plan">STARTER</div>
+        <div class="p-price" data-monthly="49" data-annual="39" data-currency="$">$49<span class="p-price-mo">/mo</span></div>
+        <div class="p-limit">Up to 300 students · 1 campus</div>
+        <div class="p-divider"></div>
+        <ul class="p-feats">
+          <li><span class="p-feat-check">✓</span>Attendance, Fees, Exams, Library</li>
+          <li><span class="p-feat-check">✓</span>3 admin accounts</li>
+          <li><span class="p-feat-check">✓</span>Mobile money integration</li>
+          <li><span class="p-feat-check">✓</span>Email & SMS support</li>
+          <li><span class="p-feat-check">✓</span>Basic reports and exports</li>
+        </ul>
+        <a href="#" class="p-btn p-btn-sec">Get Started Free</a>
+      </div>
+      <div class="p-card featured reveal delay-1">
+        <div class="popular-tag">Most Popular</div>
+        <div class="p-plan">GROWTH</div>
+        <div class="p-price" data-monthly="99" data-annual="79" data-currency="$">$99<span class="p-price-mo">/mo</span></div>
+        <div class="p-limit">Up to 1,000 students · 3 campuses</div>
+        <div class="p-divider"></div>
+        <ul class="p-feats">
+          <li><span class="p-feat-check">✓</span>Everything in Starter</li>
+          <li><span class="p-feat-check">✓</span>Hostel, Transport, Payroll, Chat</li>
+          <li><span class="p-feat-check">✓</span>10 admin accounts</li>
+          <li><span class="p-feat-check">✓</span>Priority support</li>
+          <li><span class="p-feat-check">✓</span>Advanced analytics & AI insights</li>
+          <li><span class="p-feat-check">✓</span>Parent portal & mobile app</li>
+        </ul>
+        <a href="#" class="p-btn p-btn-pri">Start Free Trial</a>
+      </div>
+      <div class="p-card reveal delay-2">
+        <div class="p-plan">ENTERPRISE</div>
+        <div class="p-price" style="font-size:34px;align-items:center;">Custom</div>
+        <div class="p-limit">Unlimited students · Unlimited campuses</div>
+        <div class="p-divider"></div>
+        <ul class="p-feats">
+          <li><span class="p-feat-check">✓</span>Everything in Growth</li>
+          <li><span class="p-feat-check">✓</span>Custom module development</li>
+          <li><span class="p-feat-check">✓</span>Dedicated account manager</li>
+          <li><span class="p-feat-check">✓</span>Full API access & SLA</li>
+          <li><span class="p-feat-check">✓</span>Pan-African multi-tenant setup</li>
+          <li><span class="p-feat-check">✓</span>On-premise deployment option</li>
+        </ul>
+        <a href="#" class="p-btn p-btn-sec">Contact Sales</a>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Pricing -->
-<section class="section" id="pricing">
-<div class="container text-center">
-<div class="section-label">Pricing</div>
-<h2 class="section-title">Simple, transparent <span class="highlight">pricing</span></h2>
-<p class="section-subtitle">Choose the plan that fits your school. No hidden fees. No surprises.</p>
-
-<div class="pricing-toggle">
-<span class="active" id="monthlyLabel">Monthly</span>
-<div class="toggle-switch" id="pricingToggle">
-<div class="toggle-knob"></div>
-</div>
-<span id="annualLabel">Annual <span class="toggle-save-badge">Save 20%</span></span>
-</div>
-
-<div class="pricing-grid" id="pricingGrid">
-<div class="pricing-card reveal">
-<h3>Starter</h3>
-<p class="pricing-desc">For small schools just getting started.</p>
-<div class="pricing-amount">
-<span class="currency">$</span>
-<span class="amount" data-monthly="299" data-annual="239">299</span>
-<span class="period">/mo</span>
-</div>
-<p class="pricing-annual-note" data-monthly="" data-annual="$2,868/year (billed annually)"></p>
-<ul class="pricing-details">
-<li><i class="check">✓</i> Up to 500 students</li>
-<li><i class="check">✓</i> Core admin features</li>
-<li><i class="check">✓</i> Basic LMS</li>
-<li><i class="check">✓</i> Email support</li>
-<li><i class="cross">✗</i> Advanced analytics</li>
-<li><i class="cross">✗</i> Custom integrations</li>
-</ul>
-<button class="btn btn-secondary" onclick="window.location.href='/auth'">Start Free Trial</button>
-</div>
-
-<div class="pricing-card featured reveal reveal-delay-1">
-<div class="pricing-popular">Most Popular</div>
-<h3>Professional</h3>
-<p class="pricing-desc">For growing schools with advanced needs.</p>
-<div class="pricing-amount">
-<span class="currency">$</span>
-<span class="amount" data-monthly="599" data-annual="479">599</span>
-<span class="period">/mo</span>
-</div>
-<p class="pricing-annual-note" data-monthly="" data-annual="$5,748/year (billed annually)"></p>
-<ul class="pricing-details">
-<li><i class="check">✓</i> Up to 2,000 students</li>
-<li><i class="check">✓</i> All admin features</li>
-<li><i class="check">✓</i> Advanced LMS</li>
-<li><i class="check">✓</i> Priority support</li>
-<li><i class="check">✓</i> Advanced analytics</li>
-<li><i class="cross">✗</i> Custom integrations</li>
-</ul>
-<button class="btn btn-primary" onclick="window.location.href='/auth'">Start Free Trial</button>
-</div>
-
-<div class="pricing-card reveal reveal-delay-2">
-<h3>Enterprise</h3>
-<p class="pricing-desc">For large districts with custom requirements.</p>
-<div class="pricing-amount">
-<span class="currency">$</span>
-<span class="amount" data-monthly="Custom">Custom</span>
-<span class="period"></span>
-</div>
-<p class="pricing-annual-note">Contact us for custom pricing</p>
-<ul class="pricing-details">
-<li><i class="check">✓</i> Unlimited students</li>
-<li><i class="check">✓</i> All features included</li>
-<li><i class="check">✓</i> Dedicated account manager</li>
-<li><i class="check">✓</i> 24/7 phone &amp; chat support</li>
-<li><i class="check">✓</i> Custom integrations</li>
-<li><i class="check">✓</i> On-premise option</li>
-</ul>
-<button class="btn btn-secondary" onclick="window.location.href='/auth'">Contact Sales</button>
-</div>
-</div>
-
-<!-- Comparison table -->
-<div class="pricing-compare reveal">
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Starter</th>
-<th>Professional</th>
-<th>Enterprise</th>
-</tr>
-</thead>
-<tbody>
-<tr><td>Student limit</td><td>500</td><td>2,000</td><td>Unlimited</td></tr>
-<tr><td>Attendance tracking</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Grade management</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Timetable scheduling</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Fee management</td><td><i class="compare-half">◐</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Virtual classroom</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Advanced analytics</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Custom integrations</td><td><i class="compare-cross">✗</i></td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>Dedicated support</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
-<tr><td>On-premise deployment</td><td><i class="compare-cross">✗</i></td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td></tr>
-</tbody>
-</table>
-</div>
-</div>
+<!-- PLAN COMPARISON TABLE -->
+<section class="compare-section">
+  <div class="container">
+    <div class="compare-header reveal">
+      <div class="section-eyebrow" style="justify-content:center;">PLAN COMPARISON</div>
+      <h2 class="section-title" style="text-align:center;">What included in each plan?</h2>
+    </div>
+    <div style="overflow-x:auto;" class="reveal delay-1">
+      <table class="compare-table">
+        <thead>
+          <tr><th style="min-width:200px;">Feature</th><th>Starter</th><th class="featured-col">Growth</th><th>Enterprise</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Students</td><td>Up to 300</td><td class="featured-col">Up to 1,000</td><td>Unlimited</td></tr>
+          <tr><td>Campuses</td><td>1</td><td class="featured-col">3</td><td>Unlimited</td></tr>
+          <tr><td>Admin accounts</td><td>3</td><td class="featured-col">10</td><td>Unlimited</td></tr>
+          <tr><td>Attendance & QR</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Fee management & MoMo</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Exams & grading</td><td><span class="check-y">✓</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Hostel management</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Transport & payroll</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Parent portal & mobile app</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>AI insights & analytics</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-y">✓</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Full API access</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>Dedicated account manager</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+          <tr><td>On-premise deployment</td><td><span class="check-n">—</span></td><td class="featured-col"><span class="check-n">—</span></td><td><span class="check-y">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<!-- FAQ -->
-<section class="section faq" id="faq">
-<div class="container text-center">
-<div class="section-label">FAQ</div>
-<h2 class="section-title">Frequently asked <span class="highlight">questions</span></h2>
-<p class="section-subtitle">Everything you need to know about ManaGEN.</p>
-<div class="faq-list">
-<div class="faq-item active">
-<button class="faq-question">How long does it take to set up ManaGEN? <i>+</i></button>
-<div class="faq-answer"><p>Most schools are fully operational within 1-2 weeks. Our onboarding team provides hands-on guidance throughout the process, and our import tools make data migration seamless. Basic setup can be completed in under an hour.</p></div>
-</div>
-<div class="faq-item">
-<button class="faq-question">Can I import data from my existing system? <i>+</i></button>
-<div class="faq-answer"><p>Yes. ManaGEN supports data import from CSV, Excel, and most major SIS platforms. Our migration specialists will work with you to ensure a smooth transition with zero data loss. We also offer API-based migration for custom systems.</p></div>
-</div>
-<div class="faq-item">
-<button class="faq-question">Is my data secure on ManaGEN? <i>+</i></button>
-<div class="faq-answer"><p>Absolutely. We are ISO 27001 certified and comply with FERPA, GDPR, and COPPA regulations. All data is encrypted at rest and in transit. We perform regular security audits and penetration testing. Your data privacy is our top priority.</p></div>
-</div>
-<div class="faq-item">
-<button class="faq-question">What kind of support do you offer? <i>+</i></button>
-<div class="faq-answer"><p>All plans include email support. Professional plans add priority support with faster response times, and Enterprise plans include a dedicated account manager with 24/7 phone and chat support. We also have a comprehensive knowledge base and video tutorials.</p></div>
-</div>
-<div class="faq-item">
-<button class="faq-question">Can I customize ManaGEN for my school's branding? <i>+</i></button>
-<div class="faq-answer"><p>Yes. All plans include branding customization including your logo, colors, and domain. Enterprise plans offer full white-labeling options. You can set up custom roles, permissions, and workflows tailored to your institution's specific needs.</p></div>
-</div>
-<div class="faq-item">
-<button class="faq-question">Is there a free trial available? <i>+</i></button>
-<div class="faq-answer"><p>Yes! We offer a 30-day free trial with full access to all Professional features. No credit card required. You can invite your team, import data, and explore everything ManaGEN has to offer. If you need more time, just let us know.</p></div>
-</div>
-</div>
-</div>
+<!-- =================== FAQ =================== -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="faq-layout">
+      <div class="reveal">
+        <div class="section-eyebrow">FAQ</div>
+        <h2 class="section-title">Questions?</h2>
+        <p class="section-sub">Everything you need to know before you sign up. Still not sure? Talk to us.</p>
+        <div class="faq-sidebar-contact">
+          <p>Our team typically replies within 2 hours on business days.</p>
+          <a href="#" class="btn-teal">Ask a question <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+      <div class="faq-list reveal delay-1">
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">How quickly can ManaGEN go live at my school?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Most schools are fully operational within 24 hours. Our guided onboarding imports your existing student and staff data automatically. We provide hands-on support until you are confident the system is running smoothly.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Does ManaGEN work for multiple campuses or a school network?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Absolutely. ManaGEN is built as a true multi-tenant platform — designed for school groups, districts, and national networks. One login gives you consolidated reporting across all campuses simultaneously.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Can parents and students access the platform?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Yes. Growth and Enterprise plans include a dedicated parent portal where parents can view attendance records, pay fees via mobile money, download receipts, and communicate directly with teachers.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Is our school data secure and hosted in Africa?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">We use bank-grade AES-256 encryption. Data residency options are available for schools requiring local hosting. We are fully GDPR-aware and your student data is never sold or shared with third parties.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">What payment methods are supported?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">ManaGEN integrates with Paystack, Flutterwave, MTN Mobile Money, Vodafone Cash, AirtelTigo Money, and direct bank transfers. Parents can pay from any channel and receive instant digital receipts.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Do you offer training and onboarding support?<div class="faq-icon">+</div></button>
+          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Every plan includes our full documentation library and video tutorials. Growth plans receive live onboarding sessions. Enterprise includes on-site training across all campuses with a dedicated success manager.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Contact -->
-<section class="section contact" id="contact">
-<div class="container">
-<div class="text-center">
-<div class="section-label">Contact Us</div>
-<h2 class="section-title">Ready to transform <span class="highlight">your school?</span></h2>
-<p class="section-subtitle">Get in touch with our team. We will help you find the perfect solution for your institution.</p>
-</div>
-<div class="contact-grid">
-<div class="contact-form" id="contactForm">
-<form id="contactFormEl" novalidate>
-<div class="form-row">
-<div class="form-group">
-<label for="cfName">Full Name</label>
-<input type="text" id="cfName" placeholder="Jane Smith" required>
-<div class="form-error">Please enter your name</div>
-</div>
-<div class="form-group">
-<label for="cfEmail">Email Address</label>
-<input type="email" id="cfEmail" placeholder="jane@school.edu" required>
-<div class="form-error">Please enter a valid email</div>
-</div>
-</div>
-<div class="form-group">
-<label for="cfSchool">School Name</label>
-<input type="text" id="cfSchool" placeholder="Riverdale Academy" required>
-<div class="form-error">Please enter your school name</div>
-</div>
-<div class="form-group">
-<label for="cfRole">Your Role</label>
-<select id="cfRole" required>
-<option value="">Select your role</option>
-<option>School Administrator</option>
-<option>Principal / Head</option>
-<option>Teacher</option>
-<option>IT Administrator</option>
-<option>Parent</option>
-<option>Other</option>
-</select>
-<div class="form-error">Please select your role</div>
-</div>
-<div class="form-group">
-<label for="cfMessage">Message</label>
-<textarea id="cfMessage" placeholder="Tell us about your school's needs..." required></textarea>
-<div class="form-error">Please enter a message</div>
-</div>
-<button type="submit" class="btn btn-primary btn-lg">Send Message <i>→</i></button>
-</form>
-<div class="form-success" id="formSuccess">
-<div><i>★</i></div>
-<h3>Message Sent!</h3>
-<p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
-</div>
-</div>
-<div class="contact-info">
-<h3>We would love to hear from you</h3>
-<p>Whether you have a question about features, pricing, implementation, or anything else, our team is here to help.</p>
-<div class="contact-details">
-<div class="contact-detail">
-<div class="cd-icon">✉</div>
-<div><h4>Email</h4><span>hello@managen.app</span></div>
-</div>
-<div class="contact-detail">
-<div class="cd-icon">★</div>
-<div><h4>Phone</h4><span>+1 (555) 123-4567</span></div>
-</div>
-<div class="contact-detail">
-<div class="cd-icon">♦</div>
-<div><h4>Office</h4><span>123 Education Blvd, Suite 200<br>San Francisco, CA 94105</span></div>
-</div>
-<div class="contact-detail">
-<div class="cd-icon">⚡</div>
-<div><h4>Hours</h4><span>Mon-Fri, 9:00 AM - 6:00 PM EST</span></div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<!-- =================== CONTACT =================== -->
+<section class="contact-section" id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-texture"></div>
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <div class="section-eyebrow" style="color:rgba(255,107,53,0.9);">GET STARTED</div>
+        <h2 class="section-title" style="font-size:clamp(28px,4vw,46px);">Ready to modernize your school?</h2>
+        <p class="section-sub">Join 500+ schools across Africa already running on ManaGEN. Free to start, no credit card required.</p>
+        <div class="trust-signals">
+          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>AES-256 encryption · GDPR-aware · Student data never sold</div>
+          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>Go live in under 24 hours — our team guides you through setup</div>
+          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>Local data residency options available for all African markets</div>
+          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>14-day free trial on all plans — cancel anytime, no questions</div>
+        </div>
+        <div class="country-flags">
+          <div class="country-flag-item">🇬🇭 Ghana</div>
+          <div class="country-flag-item">🇳🇬 Nigeria</div>
+          <div class="country-flag-item">🇰🇪 Kenya</div>
+          <div class="country-flag-item">🇺🇬 Uganda</div>
+          <div class="country-flag-item">🇷🇼 Rwanda</div>
+          <div class="country-flag-item">🇹🇿 Tanzania</div>
+        </div>
+        <a href="#" class="whatsapp-cta" target="_blank" rel="noopener">
+          <div class="whatsapp-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+          <div class="whatsapp-text"><strong>Prefer WhatsApp? Chat with us now</strong>Typically responds in under 30 minutes</div>
+        </a>
+      </div>
+      <div class="reveal delay-2">
+        <div class="contact-form-card" id="formCard">
+          <div class="form-title">Start your free trial</div>
+          <div class="form-subtitle">No credit card required · Go live in 24 hours</div>
+          <form id="leadForm" onsubmit="handleSubmit(event)" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="fname">First Name *</label>
+                <input class="form-input" id="fname" type="text" placeholder="Kwame" required>
+                <div class="field-error" id="err-fname">Please enter your first name</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lname">Last Name *</label>
+                <input class="form-input" id="lname" type="text" placeholder="Asante" required>
+                <div class="field-error" id="err-lname">Please enter your last name</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Work Email *</label>
+              <input class="form-input" id="email" type="email" placeholder="kwame@school.edu.gh" required>
+              <div class="field-error" id="err-email">Please enter a valid email address</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="school">School Name *</label>
+              <input class="form-input" id="school" type="text" placeholder="Accra Academy" required>
+              <div class="field-error" id="err-school">Please enter your school name</div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="role">Your Role *</label>
+                <select class="form-input form-select" id="role" required>
+                  <option value="">Select role…</option>
+                  <option>Headmaster / Principal</option>
+                  <option>Bursar / Accountant</option>
+                  <option>IT Administrator</option>
+                  <option>School Owner</option>
+                  <option>Other</option>
+                </select>
+                <div class="field-error" id="err-role">Please select your role</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="students">No. of Students</label>
+                <select class="form-input form-select" id="students">
+                  <option value="">Select range…</option>
+                  <option>Under 100</option>
+                  <option>100–300</option>
+                  <option>300–1,000</option>
+                  <option>1,000–5,000</option>
+                  <option>Over 5,000</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-privacy">
+              <svg class="icon icon-sm" style="color:var(--teal);margin-top:2px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Your data is encrypted and never shared. By submitting you agree to our <a href="#" style="color:var(--orange);">Privacy Policy</a>.
+            </div>
+            <button type="submit" class="form-submit" id="submitBtn"><span class="btn-text">Start Free Trial — No Credit Card</span><div class="form-spinner"></div></button>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon">🎉</div>
+            <h3>You are in! Welcome to ManaGEN.</h3>
+            <p>Check your email for your login link. Our onboarding team will WhatsApp you within the hour to get your school set up.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
-<div class="container">
-<div class="footer-top">
-<div class="footer-brand">
-<a href="/" class="nav-logo">
-<span class="logo-icon">MG</span>
-ManaGEN
-</a>
-<p>Empowering schools worldwide with intelligent management solutions. Streamline operations, enhance learning, and connect your entire community.</p>
-<div class="footer-social">
-<a href="#" aria-label="Twitter">𝕏</a>
-<a href="#" aria-label="LinkedIn">in</a>
-<a href="#" aria-label="Facebook">f</a>
-<a href="#" aria-label="GitHub">GH</a>
-</div>
-</div>
-<div class="footer-col">
-<h4>Product</h4>
-<ul>
-<li><a href="#features">Features</a></li>
-<li><a href="#pricing">Pricing</a></li>
-<li><a href="#integrations">Integrations</a></li>
-<li><a href="/auth">Sign In</a></li>
-</ul>
-</div>
-<div class="footer-col">
-<h4>Company</h4>
-<ul>
-<li><a href="#about">About</a></li>
-<li><a href="#blog">Blog</a></li>
-<li><a href="#careers">Careers</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
-</div>
-<div class="footer-col">
-<h4>Support</h4>
-<ul>
-<li><a href="#docs">Documentation</a></li>
-<li><a href="#faq">FAQ</a></li>
-<li><a href="#status">System Status</a></li>
-<li><a href="#privacy">Privacy Policy</a></li>
-</ul>
-</div>
-</div>
-<div class="footer-bottom">
-<p>&copy; 2026 ManaGEN. All rights reserved.</p>
-<div class="footer-bottom-links">
-<a href="#terms">Terms of Service</a>
-<a href="#privacy">Privacy Policy</a>
-<a href="#cookies">Cookie Policy</a>
-</div>
-</div>
-</div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:16px;display:inline-flex;">
+          <div class="logo-mark"><svg style="width:18px;height:18px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+          <span class="logo-text" style="color:#fff;">Mana<em>GEN</em></span>
+        </a>
+        <p class="foot-brand-desc">The all-in-one school management platform built for African institutions. 40+ modules. Cloud-native. Pan-African.</p>
+        <div class="foot-social">
+          <a href="#" class="foot-soc-btn" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" class="foot-soc-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+          <a href="#" class="foot-soc-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="#" class="foot-soc-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-col-title">Product</div>
+        <ul class="foot-links">
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">API Docs</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Company</div>
+        <ul class="foot-links">
+          <li><a href="#">About ManaGEN</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Support</div>
+        <ul class="foot-links">
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">System Status</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 <strong>ManaGEN Technologies</strong>. Built for Africa. 🌍</div>
+      <div class="foot-legal"><a href="#">Terms</a><a href="#">Privacy</a><a href="#">Cookies</a></div>
+    </div>
+  </div>
 </footer>
 
-<!-- Back to top -->
-<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+<!-- BACK TO TOP -->
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg class="icon" style="stroke:#fff;" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+  <span class="btt-label">TOP</span>
+</button>
 
-<!-- Mobile CTA -->
-<div class="mobile-cta show" id="mobileCta">
-<button class="btn btn-secondary" onclick="window.location.href='/auth'">Sign In</button>
-<button class="btn btn-primary" onclick="window.location.href='/auth'">Get Started</button>
+<!-- MOBILE STICKY CTA -->
+<div class="mob-sticky">
+  <a href="#" class="btn-primary">Start Free — No Credit Card Required</a>
 </div>
 
-<!-- Nav dots -->
-<div class="nav-dots" id="navDots"></div>
-
 <script>
-(function(){
-'use strict';
+/* ========== DARK MODE ========== */
+const html = document.documentElement;
+const themeBtn = document.getElementById("themeToggle");
+const saved = localStorage.getItem("managen-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+html.setAttribute("data-theme", saved);
+themeBtn.addEventListener("click", () => {
+  const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  html.setAttribute("data-theme", next);
+  localStorage.setItem("managen-theme", next);
+});
 
-// Dark mode toggle
-const themeToggle = document.getElementById('themeToggle');
-function setTheme(theme){
-document.documentElement.setAttribute('data-theme',theme);
-localStorage.setItem('managen-theme',theme);
-themeToggle.textContent = theme === 'dark' ? '☀' : '☽';
+/* ========== NAV ========== */
+const nav = document.getElementById("mainNav");
+const btt = document.getElementById("btt");
+const menuBtn = document.getElementById("menuBtn");
+const mobNav = document.getElementById("mobNav");
+let ticking = false;
+window.addEventListener("scroll", () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      nav.classList.toggle("scrolled", y > 40);
+      btt.classList.toggle("vis", y > window.innerHeight * 0.35);
+      updateNavDots();
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, { passive: true });
+
+function closeMenu() {
+  mobNav.classList.remove("open");
+  menuBtn.classList.remove("on");
+  menuBtn.setAttribute("aria-expanded", "false");
+  mobNav.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("locked");
 }
-const savedTheme = localStorage.getItem('managen-theme');
-if(savedTheme) setTheme(savedTheme);
-else if(window.matchMedia('(prefers-color-scheme:dark)').matches) setTheme('dark');
-themeToggle.addEventListener('click',function(){
-const current = document.documentElement.getAttribute('data-theme');
-setTheme(current === 'dark' ? 'light' : 'dark');
+menuBtn.addEventListener("click", () => {
+  const open = !mobNav.classList.contains("open");
+  mobNav.classList.toggle("open", open);
+  menuBtn.classList.toggle("on", open);
+  menuBtn.setAttribute("aria-expanded", String(open));
+  mobNav.setAttribute("aria-hidden", String(!open));
+  document.body.classList.toggle("locked", open);
 });
 
-// Nav scroll
-const nav = document.getElementById('nav');
-let lastScroll = 0;
-window.addEventListener('scroll',function(){
-const y = window.scrollY;
-nav.classList.toggle('scrolled',y > 50);
-lastScroll = y;
-},{passive:true});
-
-// Hamburger
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-hamburger.addEventListener('click',function(){
-this.classList.toggle('active');
-navLinks.classList.toggle('open');
+/* ========== SECTION NAV DOTS ========== */
+const sectionIds = ["hero","features","demo","stats","pricing","contact"];
+const dots = document.querySelectorAll(".nav-dot");
+dots.forEach((dot, i) => {
+  dot.addEventListener("click", () => {
+    const el = document.getElementById(sectionIds[i]);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  });
 });
-document.querySelectorAll('.nav-links a').forEach(function(a){
-a.addEventListener('click',function(){hamburger.classList.remove('active');navLinks.classList.remove('open');});
-});
-
-// Nav dots
-const sections = ['hero','how-it-works','features','demo','integrations','testimonials','pricing','faq','contact'];
-const navDots = document.getElementById('navDots');
-sections.forEach(function(id){
-const dot = document.createElement('button');
-dot.className = 'nav-dot';
-dot.setAttribute('data-section',id);
-dot.setAttribute('aria-label','Navigate to '+id);
-dot.addEventListener('click',function(){
-document.getElementById(id).scrollIntoView({behavior:'smooth'});
-});
-navDots.appendChild(dot);
-});
-let activeDotIdx = 0;
-function updateDots(){
-const scrollY = window.scrollY + window.innerHeight/3;
-let found = false;
-for(let i=sections.length-1;i>=0;i--){
-const el = document.getElementById(sections[i]);
-if(el && el.offsetTop <= scrollY){
-if(activeDotIdx !== i){
-if(navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.remove('active');
-activeDotIdx = i;
-if(navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.add('active');
+function updateNavDots() {
+  const mid = window.scrollY + window.innerHeight * 0.45;
+  let active = 0;
+  sectionIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= mid) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle("active", i === active));
 }
-found = true;
-break;
+
+/* ========== REVEAL ON SCROLL ========== */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("vis"); });
+}, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+
+/* ========== PROGRESS BARS (feat mockup) ========== */
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const w = e.target.dataset.width;
+      if (w) setTimeout(() => { e.target.style.width = w + "%"; }, 300);
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll("[data-width]").forEach(b => barObs.observe(b));
+
+/* ========== COUNTERS ========== */
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || "";
+    const dur = 2200;
+    const start = performance.now();
+    const update = now => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 4);
+      const val = eased * target;
+      el.textContent = (Number.isInteger(target) ? Math.floor(val) : val.toFixed(1)) + suffix;
+      if (p < 1) requestAnimationFrame(update);
+      else el.textContent = target + suffix;
+    };
+    requestAnimationFrame(update);
+    countObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll("[data-target]").forEach(el => countObs.observe(el));
+
+/* ========== PRICING TOGGLE ========== */
+function setPricing(type, btn) {
+  document.querySelectorAll(".tog-btn").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  document.querySelectorAll(".p-price[data-monthly]").forEach(p => {
+    const v = type === "monthly" ? p.dataset.monthly : p.dataset.annual;
+    const c = p.dataset.currency || "$";
+    p.style.opacity = "0";
+    p.style.transform = "translateY(8px)";
+    setTimeout(() => {
+      p.innerHTML = c + v + "<span class=\"p-price-mo\">/mo</span>";
+      p.style.transition = "opacity 0.35s, transform 0.35s";
+      p.style.opacity = "1";
+      p.style.transform = "translateY(0)";
+    }, 180);
+  });
 }
+
+/* ========== FAQ ========== */
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const wasOpen = item.classList.contains("active");
+  document.querySelectorAll(".faq-item").forEach(i => {
+    i.classList.remove("active");
+    i.querySelector(".faq-btn").setAttribute("aria-expanded", "false");
+  });
+  if (!wasOpen) {
+    item.classList.add("active");
+    btn.setAttribute("aria-expanded", "true");
+  }
 }
-if(!found && navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.remove('active');
+
+/* ========== ROLE CARD ========== */
+const roleData = {
+  headmaster: { title: "Headmaster Dashboard includes", features: ["School-wide analytics overview", "All module alerts & approvals", "Staff & student management", "Financial summary & reports"] },
+  bursar: { title: "Bursar Dashboard includes", features: ["Fee collection & MoMo tracking", "Payroll processing & history", "Financial reports & exports", "Payment alerts & reminders"] },
+  teacher: { title: "Teacher Dashboard includes", features: ["QR attendance for your class", "Grade entry & term reports", "Student performance tracking", "Parent communication tools"] },
+  hostel: { title: "Hostel Master Dashboard includes", features: ["Room assignment & availability", "Student check-in/check-out", "Maintenance complaint log", "Hostel fee tracking"] }
+};
+function selectRole(el, role) {
+  el.closest(".role-card-body").querySelectorAll(".role-item").forEach(i => i.classList.remove("active"));
+  el.classList.add("active");
+  const data = roleData[role];
+  const content = document.getElementById("roleContent");
+  content.style.opacity = "0";
+  content.style.transform = "translateY(6px)";
+  setTimeout(() => {
+    content.innerHTML = "<div class=\"role-content-title\">" + data.title + "</div><ul class=\"role-feature-list\">" + data.features.map(f => "<li>" + f + "</li>").join("") + "</ul>";
+    content.style.transition = "opacity 0.3s, transform 0.3s";
+    content.style.opacity = "1";
+    content.style.transform = "translateY(0)";
+  }, 160);
 }
-window.addEventListener('scroll',updateDots,{passive:true});
-window.addEventListener('load',updateDots);
-updateDots();
 
-// Scroll reveal
-const revealObserver = new IntersectionObserver(function(entries){
-entries.forEach(function(entry){
-if(entry.isIntersecting){
-entry.target.classList.add('visible');
-revealObserver.unobserve(entry.target);
+/* ========== FORM VALIDATION ========== */
+function validateField(input, errId) {
+  const err = document.getElementById(errId);
+  const valid = input.value.trim() !== "" && (input.type !== "email" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value));
+  input.classList.toggle("invalid", !valid);
+  input.classList.toggle("valid", valid && input.value.length > 0);
+  if (err) err.classList.toggle("show", !valid && input.value !== "");
+  return valid;
 }
+["fname","lname","email","school","role"].forEach(id => {
+  const input = document.getElementById(id);
+  if (input) {
+    input.addEventListener("blur", () => validateField(input, "err-" + id));
+    input.addEventListener("input", () => { if (input.classList.contains("invalid")) validateField(input, "err-" + id); });
+  }
 });
-},{threshold:0.15});
-document.querySelectorAll('.reveal').forEach(function(el){revealObserver.observe(el);});
-
-// Counters
-const counterObserver = new IntersectionObserver(function(entries){
-entries.forEach(function(entry){
-if(entry.isIntersecting){
-const el = entry.target;
-const target = parseInt(el.getAttribute('data-target'));
-if(!target) return;
-const duration = 2000;
-const start = performance.now();
-function update(now){
-const elapsed = now - start;
-const progress = Math.min(elapsed/duration,1);
-const eased = 1 - Math.pow(1-progress,3);
-const currentVal = Math.round(eased * target);
-el.textContent = currentVal.toLocaleString();
-if(progress < 1) requestAnimationFrame(update);
-else el.textContent = target.toLocaleString();
+function handleSubmit(e) {
+  e.preventDefault();
+  const fields = [{id:"fname",err:"err-fname"},{id:"lname",err:"err-lname"},{id:"email",err:"err-email"},{id:"school",err:"err-school"},{id:"role",err:"err-role"}];
+  let allValid = true;
+  fields.forEach(f => { const input = document.getElementById(f.id); if (!validateField(input, f.err)) allValid = false; });
+  if (!allValid) return;
+  const btn = document.getElementById("submitBtn");
+  btn.classList.add("loading");
+  setTimeout(() => {
+    document.getElementById("leadForm").style.display = "none";
+    document.getElementById("formSuccess").classList.add("show");
+    document.getElementById("formCard").style.borderColor = "rgba(27,184,154,0.4)";
+  }, 1400);
 }
-requestAnimationFrame(update);
-counterObserver.unobserve(el);
+
+/* ========== VIDEO DEMO ========== */
+function playDemo() {
+  const thumb = document.getElementById("videoThumb");
+  thumb.innerHTML = "<div style=\"width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:600;\"><div style=\"text-align:center;opacity:0.6;\"><div style=\"font-size:48px;margin-bottom:12px;\"><svg style=\"width:48px;height:48px;stroke:#fff;stroke-width:1.5;\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"10 8 16 12 10 16 10 8\" fill=\"currentColor\" stroke=\"none\"/></svg></div>Demo video would load here</div></div>";
 }
-});
-},{threshold:0.5});
-document.querySelectorAll('.stat-number[data-target]').forEach(function(el){counterObserver.observe(el);});
 
-// Pricing toggle
-const pricingToggle = document.getElementById('pricingToggle');
-const monthlyLabel = document.getElementById('monthlyLabel');
-const annualLabel = document.getElementById('annualLabel');
-const amounts = document.querySelectorAll('.pricing-card .amount');
-const notes = document.querySelectorAll('.pricing-annual-note');
-let isAnnual = false;
-pricingToggle.addEventListener('click',function(){
-isAnnual = !isAnnual;
-this.classList.toggle('active');
-monthlyLabel.classList.toggle('active',!isAnnual);
-annualLabel.classList.toggle('active',isAnnual);
-amounts.forEach(function(el){
-const val = isAnnual ? el.getAttribute('data-annual') : el.getAttribute('data-monthly');
-if(val) el.textContent = val;
-});
-notes.forEach(function(el){
-const note = isAnnual ? el.getAttribute('data-annual') : el.getAttribute('data-monthly');
-el.textContent = note || '';
-});
-});
-
-// FAQ accordion
-document.querySelectorAll('.faq-question').forEach(function(btn){
-btn.addEventListener('click',function(){
-const item = this.parentElement;
-const isActive = item.classList.contains('active');
-document.querySelectorAll('.faq-item.active').forEach(function(el){el.classList.remove('active');});
-if(!isActive) item.classList.add('active');
-});
-});
-
-// Form validation
-const form = document.getElementById('contactFormEl');
-const formSuccess = document.getElementById('formSuccess');
-const formWrap = document.getElementById('contactForm');
-form.addEventListener('submit',function(e){
-e.preventDefault();
-let valid = true;
-form.querySelectorAll('.form-group.error').forEach(function(el){el.classList.remove('error');});
-form.querySelectorAll('input[required],textarea[required],select[required]').forEach(function(field){
-const group = field.closest('.form-group');
-if(!group) return;
-let isValid = true;
-if(field.hasAttribute('required') && !field.value.trim()) isValid = false;
-if(field.type === 'email' && field.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim())) isValid = false;
-if(!isValid){group.classList.add('error');valid=false;}
-});
-if(valid){
-form.style.display = 'none';
-formSuccess.classList.add('show');
+/* ========== HERO PARALLAX (desktop only) ========== */
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && !window.matchMedia("(pointer: coarse)").matches) {
+  const heroRight = document.querySelector(".hero-right");
+  window.addEventListener("scroll", () => {
+    if (heroRight && window.scrollY < window.innerHeight) {
+      heroRight.style.transform = "translateY(" + (window.scrollY * 0.05) + "px)";
+    }
+  }, { passive: true });
 }
-});
-
-// Video demo placeholder
-const demoPlaceholder = document.getElementById('demoPlaceholder');
-const demoPlayBtn = document.getElementById('demoPlayBtn');
-demoPlaceholder.addEventListener('click',function(){
-this.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="Demo Video" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>';
-this.style.position = 'relative';
-});
-
-// Back to top
-const backToTop = document.getElementById('backToTop');
-window.addEventListener('scroll',function(){
-backToTop.classList.toggle('visible',window.scrollY > 600);
-},{passive:true});
-backToTop.addEventListener('click',function(){
-window.scrollTo({top:0,behavior:'smooth'});
-});
-
-// Hero parallax
-const hero = document.getElementById('hero');
-window.addEventListener('mousemove',function(e){
-const speed = 0.02;
-const x = (e.clientX - window.innerWidth/2) * speed;
-const y = (e.clientY - window.innerHeight/2) * speed;
-const shapes = hero.querySelectorAll('.hero-bg-shapes .shape');
-if(shapes.length) {
-shapes[0].style.transform = 'translate('+x*0.5+'px,'+y*0.5+'px)';
-shapes[1].style.transform = 'translate('+x*-0.3+'px,'+y*-0.3+'px)';
-shapes[2].style.transform = 'translate('+x*0.2+'px,'+y*-0.4+'px)';
-}
-},{passive:true});
-
-})();
 </script>
 
 </body>
