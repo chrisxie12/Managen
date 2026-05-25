@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ManaGEN - School Management Platform</title>
+<meta name="description" content="ManaGEN is the all-in-one school management platform that streamlines administration, learning, and communication.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#ffffff;--bg-alt:#f8f9fc;--bg-card:#ffffff;--text:#1a1a2e;--text-secondary:#6b7280;--text-muted:#9ca3af;--primary:#4f46e5;--primary-light:#818cf8;--primary-dark:#3730a3;--primary-bg:#eef2ff;--secondary:#0ea5e9;--accent:#f59e0b;--success:#10b981;--border:#e5e7eb;--border-light:#f3f4f6;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.06);--shadow-lg:0 10px 25px rgba(0,0,0,0.1),0 6px 10px rgba(0,0,0,0.08);--shadow-xl:0 20px 40px rgba(0,0,0,0.12);--radius-sm:6px;--radius:10px;--radius-lg:16px;--radius-xl:24px;--nav-height:70px;--font:'Inter',-apple-system,sans-serif;--transition:0.3s cubic-bezier(0.4,0,0.2,1);--gradient:linear-gradient(135deg,#4f46e5,#0ea5e9);--gradient-warm:linear-gradient(135deg,#4f46e5,#f59e0b);--gradient-hero:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)}[data-theme="dark"]{--bg:#0f172a;--bg-alt:#1e293b;--bg-card:#1e293b;--text:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--primary:#818cf8;--primary-light:#a5b4fc;--primary-dark:#4f46e5;--primary-bg:#1e1b4b;--border:#334155;--border-light:#1e293b;--shadow:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 6px rgba(0,0,0,0.4);--shadow-lg:0 10px 25px rgba(0,0,0,0.5);--shadow-xl:0 20px 40px rgba(0,0,0,0.6)}html{scroll-behavior:smooth}body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;transition:background var(--transition),color var(--transition)}a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.container{max-width:1200px;margin:0 auto;padding:0 24px}.section{padding:100px 0}.section-label{display:inline-flex;align-items:center;gap:8px;background:var(--primary-bg);color:var(--primary);font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:20px;margin-bottom:16px}.section-title{font-size:2.5rem;font-weight:800;line-height:1.2;margin-bottom:16px;letter-spacing:-0.5px}.section-title .highlight{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.section-subtitle{font-size:1.1rem;color:var(--text-secondary);max-width:600px;margin:0 auto 48px;line-height:1.7}.text-center{text-align:center}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 28px;font-size:0.95rem;font-weight:600;border-radius:var(--radius);border:none;cursor:pointer;transition:all var(--transition);font-family:var(--font);white-space:nowrap}.btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 15px rgba(79,70,229,0.35)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(79,70,229,0.45)}.btn-secondary{background:var(--bg-card);color:var(--text);border:1.5px solid var(--border)}.btn-secondary:hover{background:var(--bg-alt);border-color:var(--primary)}.btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.3)}.btn-outline:hover{background:rgba(255,255,255,0.1);border-color:#fff}.btn-ghost{background:transparent;color:var(--text-secondary);padding:8px 16px}.btn-ghost:hover{color:var(--primary);background:var(--primary-bg)}.btn-sm{padding:8px 20px;font-size:0.85rem}.btn-lg{padding:16px 36px;font-size:1.05rem}.btn-lg i{font-size:1.2rem}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;z-index:1000;transition:all var(--transition)}[data-theme="dark"] .nav{background:rgba(15,23,42,0.85)}.nav.scrolled{background:rgba(255,255,255,0.95);border-bottom-color:var(--border);box-shadow:var(--shadow)}[data-theme="dark"] .nav.scrolled{background:rgba(15,23,42,0.95)}.nav .container{display:flex;align-items:center;justify-content:space-between;height:100%}.nav-logo{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;color:var(--text)}.nav-logo .logo-icon{width:36px;height:36px;background:var(--gradient);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;font-weight:700}.nav-links{display:flex;align-items:center;gap:8px;list-style:none}.nav-links a{padding:8px 16px;font-size:0.9rem;font-weight:500;color:var(--text-secondary);border-radius:var(--radius-sm);transition:all var(--transition)}.nav-links a:hover{color:var(--text);background:var(--bg-alt)}.nav-actions{display:flex;align-items:center;gap:12px}.theme-toggle{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--text-secondary);transition:all var(--transition)}.theme-toggle:hover{border-color:var(--primary);color:var(--primary)}.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all var(--transition)}.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}.hamburger.active span:nth-child(2){opacity:0}.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:var(--nav-height);background:var(--gradient-hero);position:relative;overflow:hidden}.hero-bg-shapes{position:absolute;inset:0;overflow:hidden}.hero-bg-shapes .shape{position:absolute;border-radius:50%;opacity:0.08}.hero-bg-shapes .shape:nth-child(1){width:600px;height:600px;background:#4f46e5;top:-200px;right:-200px}.hero-bg-shapes .shape:nth-child(2){width:400px;height:400px;background:#0ea5e9;bottom:-100px;left:-100px}.hero-bg-shapes .shape:nth-child(3){width:300px;height:300px;background:#f59e0b;top:40%;left:60%}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);padding:8px 20px;border-radius:50px;font-size:0.85rem;color:rgba(255,255,255,0.9);margin-bottom:24px}.hero-badge i{color:var(--accent)}.hero h1{font-size:3.5rem;font-weight:900;line-height:1.1;color:#fff;letter-spacing:-1px;margin-bottom:20px}.hero h1 .highlight{background:var(--gradient-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{font-size:1.15rem;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.7;margin-bottom:32px}.hero-buttons{display:flex;gap:16px;flex-wrap:wrap}.hero-stats{display:flex;gap:40px;margin-top:48px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.1)}.hero-stat h3{font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:-0.5px}.hero-stat p{font-size:0.85rem;color:rgba(255,255,255,0.5);margin-bottom:0}
+
+/* Dashboard mockup */
+.hero-dashboard{position:relative}.dashboard-mockup{background:#1e293b;border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);overflow:hidden;border:1px solid rgba(255,255,255,0.1);transform:perspective(1000px) rotateY(-5deg) rotateX(2deg);transition:transform 0.6s ease}.dashboard-mockup:hover{transform:perspective(1000px) rotateY(0deg) rotateX(0deg)}.mockup-header{display:flex;align-items:center;gap:12px;padding:16px 20px;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.08)}.mockup-dots{display:flex;gap:6px}.mockup-dots span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.2)}.mockup-dots span:nth-child(1){background:#ef4444}.mockup-dots span:nth-child(2){background:#f59e0b}.mockup-dots span:nth-child(3){background:#10b981}.mockup-header-text{font-size:0.8rem;color:rgba(255,255,255,0.4)}.mockup-body{padding:24px}.mockup-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.mockup-cell{background:rgba(255,255,255,0.04);border-radius:var(--radius-sm);padding:16px;border:1px solid rgba(255,255,255,0.06)}.mockup-cell .bar{height:8px;border-radius:4px;margin-bottom:8px;background:rgba(255,255,255,0.08)}.mockup-cell .bar:nth-child(1){width:60%;background:rgba(79,70,229,0.4)}.mockup-cell .bar:nth-child(2){width:85%;background:rgba(14,165,233,0.3)}.mockup-cell .bar:nth-child(3){width:45%}.mockup-cell .badge-bar{width:40px;height:40px;border-radius:var(--radius-sm);margin-bottom:12px}.badge-bar.purple{background:rgba(79,70,229,0.3)}.badge-bar.blue{background:rgba(14,165,233,0.3)}.badge-bar.green{background:rgba(16,185,129,0.3)}.badge-bar.amber{background:rgba(245,158,11,0.3)}.mockup-chart{display:flex;align-items:flex-end;gap:6px;height:60px;padding-top:8px}.mockup-chart .chart-bar{flex:1;border-radius:3px 3px 0 0;background:rgba(79,70,229,0.3);transition:height 0.5s ease}.mockup-chart .chart-bar:nth-child(1){height:35%}.mockup-chart .chart-bar:nth-child(2){height:55%}.mockup-chart .chart-bar:nth-child(3){height:70%;background:rgba(79,70,229,0.5)}.mockup-chart .chart-bar:nth-child(4){height:45%}.mockup-chart .chart-bar:nth-child(5){height:85%;background:rgba(14,165,233,0.4)}.mockup-chart .chart-bar:nth-child(6){height:60%}.mockup-chart .chart-bar:nth-child(7){height:90%;background:rgba(16,185,129,0.4)}
+.mockup-bottom{display:flex;gap:12px;margin-top:16px}.mockup-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);flex-shrink:0}.mockup-text{flex:1}.mockup-text .bar{height:8px;border-radius:4px;margin-bottom:6px;background:rgba(255,255,255,0.06)}.mockup-text .bar:nth-child(1){width:50%}.mockup-text .bar:nth-child(2){width:30%}.hero-float-card{position:absolute;background:var(--bg-card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:12px;font-size:0.85rem;color:var(--text);animation:float 3s ease-in-out infinite;border:1px solid var(--border)}.hero-float-card .fc-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem}.hero-float-card.fc1{top:10%;right:-30px;animation-delay:0s}.hero-float-card.fc1 .fc-icon{background:rgba(16,185,129,0.15);color:#10b981}.hero-float-card.fc2{bottom:15%;left:-40px;animation-delay:1.5s}.hero-float-card.fc2 .fc-icon{background:rgba(245,158,11,0.15);color:#f59e0b}.hero-float-card.fc3{top:50%;right:-50px;animation-delay:0.8s}.hero-float-card.fc3 .fc-icon{background:rgba(79,70,229,0.15);color:#4f46e5}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Ticker */
+.ticker-wrap{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;padding:16px 0;position:relative}.ticker-track{display:flex;gap:60px;animation:tick 30s linear infinite;width:max-content}.ticker-item{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:0.9rem;font-weight:500;white-space:nowrap}.ticker-item i{font-size:1.2rem;color:var(--primary)}.ticker-item strong{color:var(--text)}.ticker-wrap:hover .ticker-track{animation-play-state:paused}@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* How it works */
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative}.how-step{text-align:center;padding:40px 28px;border-radius:var(--radius-lg);background:var(--bg-card);border:1px solid var(--border);position:relative;transition:all var(--transition)}.how-step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary-bg)}.step-number{width:56px;height:56px;border-radius:50%;background:var(--gradient);color:#fff;font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}.how-step h3{font-size:1.2rem;font-weight:700;margin-bottom:10px;color:var(--text)}.how-step p{font-size:0.9rem;color:var(--text-secondary);line-height:1.6}.step-connector{display:none}@media(min-width:768px){.step-connector{display:block;position:absolute;top:68px;left:calc(50% + 40px);width:calc(100% - 80px);height:2px;background:linear-gradient(to right,var(--primary-bg),var(--border),var(--primary-bg));z-index:-1}}
+
+/* Features */
+.features{background:var(--bg-alt)}.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.feature-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:36px 28px;border:1px solid var(--border);transition:all var(--transition);position:relative;overflow:hidden}.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);transform:scaleX(0);transition:transform var(--transition);transform-origin:left}.feature-card:hover::before{transform:scaleX(1)}.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.feature-icon{width:52px;height:52px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:20px}.feature-icon.purple{background:rgba(79,70,229,0.12);color:#4f46e5}.feature-icon.blue{background:rgba(14,165,233,0.12);color:#0ea5e9}.feature-icon.green{background:rgba(16,185,129,0.12);color:#10b981}.feature-card h3{font-size:1.15rem;font-weight:700;margin-bottom:10px;color:var(--text)}.feature-card p{font-size:0.9rem;color:var(--text-secondary);line-height:1.65}.feature-list{list-style:none;margin-top:18px}.feature-list li{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px}.feature-list li i{color:var(--success);font-size:0.75rem}
+
+/* Stats */
+.stats{background:var(--gradient-hero);position:relative;overflow:hidden}.stats::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;z-index:1}.stat-item{text-align:center;padding:20px}.stat-item .stat-number{font-size:2.5rem;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:4px}.stat-item .stat-label{font-size:0.9rem;color:rgba(255,255,255,0.6)}.stat-item .stat-icon{font-size:2rem;margin-bottom:12px;opacity:0.3}
+
+/* Demo */
+.demo-video-wrap{max-width:800px;margin:0 auto;border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl);position:relative;background:var(--bg-card);border:1px solid var(--border)}.demo-video-placeholder{width:100%;aspect-ratio:16/9;background:var(--gradient-hero);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;cursor:pointer;position:relative;transition:all var(--transition)}.demo-video-placeholder:hover{filter:brightness(1.1)}.demo-play-btn{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;transition:all var(--transition)}.demo-video-placeholder:hover .demo-play-btn{background:var(--primary);border-color:var(--primary);transform:scale(1.1)}.demo-placeholder-text{color:rgba(255,255,255,0.7);font-size:0.9rem;font-weight:500}.demo-caption{padding:20px 24px;display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--text-secondary)}.demo-caption i{color:var(--primary)}
+
+/* Integrations */
+.integration-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}.integration-card{background:var(--bg-card);border-radius:var(--radius);padding:28px 20px;border:1px solid var(--border);text-align:center;transition:all var(--transition);cursor:default}.integration-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary-bg)}.integration-card .int-icon{width:48px;height:48px;border-radius:var(--radius);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg-alt)}.integration-card h4{font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:4px}.integration-card p{font-size:0.75rem;color:var(--text-muted)}.integration-card .int-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.65rem;font-weight:600;margin-top:8px;background:var(--primary-bg);color:var(--primary)}
+
+/* Testimonials */
+.testimonials{background:var(--bg-alt)}.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.testimonial-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:32px 28px;border:1px solid var(--border);transition:all var(--transition)}.testimonial-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.testimonial-stars{color:var(--accent);font-size:0.9rem;margin-bottom:16px;letter-spacing:2px}.testimonial-card blockquote{font-size:0.95rem;color:var(--text);line-height:1.7;margin-bottom:24px;font-style:italic}.testimonial-author{display:flex;align-items:center;gap:14px}.testimonial-avatar{width:44px;height:44px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.9rem;flex-shrink:0}.testimonial-info h4{font-size:0.9rem;font-weight:600;color:var(--text)}.testimonial-info p{font-size:0.8rem;color:var(--text-muted)}
+
+/* Pricing */
+.pricing-toggle{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:48px}.pricing-toggle span{font-size:0.95rem;font-weight:500;color:var(--text-secondary);transition:color var(--transition)}.pricing-toggle span.active{color:var(--text)}.toggle-switch{width:52px;height:28px;border-radius:14px;background:var(--border);cursor:pointer;position:relative;transition:background var(--transition);flex-shrink:0}.toggle-switch .toggle-knob{width:22px;height:22px;border-radius:50%;background:var(--bg-card);position:absolute;top:3px;left:3px;transition:transform var(--transition);box-shadow:var(--shadow)}.toggle-switch.active{background:var(--gradient)}.toggle-switch.active .toggle-knob{transform:translateX(24px)}.toggle-save-badge{font-size:0.7rem;font-weight:600;background:rgba(16,185,129,0.12);color:#10b981;padding:2px 10px;border-radius:10px;margin-left:4px}.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.pricing-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:40px 32px;border:1px solid var(--border);position:relative;transition:all var(--transition)}.pricing-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}.pricing-card.featured{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary),var(--shadow-lg)}.pricing-card.featured .pricing-popular{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gradient);color:#fff;font-size:0.75rem;font-weight:600;padding:4px 18px;border-radius:20px;white-space:nowrap}.pricing-card h3{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px}.pricing-card .pricing-desc{font-size:0.85rem;color:var(--text-muted);margin-bottom:24px}.pricing-amount{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}.pricing-amount .currency{font-size:1.3rem;font-weight:700;color:var(--text)}.pricing-amount .amount{font-size:3rem;font-weight:900;color:var(--text);letter-spacing:-2px}.pricing-amount .period{font-size:0.9rem;color:var(--text-muted)}.pricing-annual-note{font-size:0.75rem;color:var(--text-muted);margin-bottom:24px;min-height:20px}.pricing-details{list-style:none;margin:24px 0}.pricing-details li{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:0.88rem;color:var(--text-secondary);border-bottom:1px solid var(--border-light)}.pricing-details li:last-child{border-bottom:none}.pricing-details li i{font-size:0.8rem}.pricing-details li .check{color:var(--success)}.pricing-details li .cross{color:var(--text-muted)}.pricing-card .btn{width:100%;margin-top:8px}.pricing-compare{margin-top:64px;overflow-x:auto}.pricing-compare table{width:100%;border-collapse:collapse;font-size:0.9rem}.pricing-compare th,.pricing-compare td{padding:14px 20px;text-align:left;border-bottom:1px solid var(--border)}.pricing-compare th{font-weight:600;color:var(--text);background:var(--bg-alt)}.pricing-compare td{color:var(--text-secondary)}.pricing-compare td:first-child{font-weight:500;color:var(--text)}.pricing-compare .compare-check{color:var(--success)}.pricing-compare .compare-cross{color:var(--text-muted)}
+
+/* FAQ */
+.faq{background:var(--bg-alt)}.faq-list{max-width:740px;margin:0 auto}.faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:all var(--transition);background:var(--bg-card)}.faq-item:hover{border-color:var(--primary-bg)}.faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;background:none;border:none;cursor:pointer;font-size:1rem;font-weight:600;color:var(--text);text-align:left;font-family:var(--font);transition:color var(--transition)}.faq-question:hover{color:var(--primary)}.faq-question i{font-size:0.8rem;color:var(--text-muted);transition:transform var(--transition)}.faq-item.active .faq-question i{transform:rotate(45deg);color:var(--primary)}.faq-answer{padding:0 24px;max-height:0;overflow:hidden;transition:all 0.4s ease}.faq-item.active .faq-answer{max-height:300px;padding:0 24px 20px}.faq-answer p{font-size:0.9rem;color:var(--text-secondary);line-height:1.7}
+
+/* Contact */
+.contact{background:var(--gradient-hero);position:relative;overflow:hidden}.contact::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}.contact .section-title,.contact .section-subtitle{color:#fff}.contact .section-subtitle{color:rgba(255,255,255,0.6)}.contact .section-label{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8)}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;position:relative;z-index:1;align-items:start}.contact-form{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:36px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}.form-group{margin-bottom:16px}.form-group label{display:block;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:6px}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);color:#fff;font-size:0.9rem;font-family:var(--font);transition:all var(--transition);outline:none}.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,0.35)}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary-light);background:rgba(255,255,255,0.12)}.form-group select option{background:#1e293b;color:#fff}.form-group textarea{resize:vertical;min-height:120px}.form-error{font-size:0.78rem;color:#f87171;margin-top:4px;display:none}.form-group.error input,.form-group.error textarea{border-color:#f87171}.form-group.error .form-error{display:block}.contact-form .btn-primary{width:100%}.form-success{display:none;text-align:center;padding:40px 20px}.form-success.show{display:block}.form-success i{font-size:3rem;color:#10b981;margin-bottom:16px}.form-success h3{color:#fff;font-size:1.4rem;margin-bottom:8px}.form-success p{color:rgba(255,255,255,0.6)}.contact-info{padding:36px 0}.contact-info h3{color:#fff;font-size:1.3rem;font-weight:700;margin-bottom:12px}.contact-info p{color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:32px}.contact-details{display:flex;flex-direction:column;gap:16px}.contact-detail{display:flex;align-items:center;gap:14px}.contact-detail .cd-icon{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:var(--primary-light);font-size:1rem;flex-shrink:0}.contact-detail h4{color:#fff;font-size:0.9rem;font-weight:600}.contact-detail span{color:rgba(255,255,255,0.5);font-size:0.85rem}
+
+/* Footer */
+.footer{background:#0f172a;border-top:1px solid rgba(255,255,255,0.06)}.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding:64px 0 48px}.footer-brand .nav-logo{color:#fff;margin-bottom:16px}.footer-brand p{color:rgba(255,255,255,0.4);font-size:0.85rem;line-height:1.7;max-width:300px}.footer-social{display:flex;gap:10px;margin-top:24px}.footer-social a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:0.9rem;transition:all var(--transition)}.footer-social a:hover{background:var(--primary);color:#fff;border-color:var(--primary)}.footer-col h4{color:#fff;font-size:0.9rem;font-weight:700;margin-bottom:20px;text-transform:uppercase;letter-spacing:1px}.footer-col ul{list-style:none}.footer-col ul li{margin-bottom:10px}.footer-col ul a{color:rgba(255,255,255,0.4);font-size:0.85rem;transition:color var(--transition)}.footer-col ul a:hover{color:#fff}.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding:20px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}.footer-bottom p{color:rgba(255,255,255,0.3);font-size:0.8rem}.footer-bottom-links{display:flex;gap:20px}.footer-bottom-links a{color:rgba(255,255,255,0.3);font-size:0.8rem;transition:color var(--transition)}.footer-bottom-links a:hover{color:#fff}
+
+/* Back to top */
+.back-to-top{position:fixed;bottom:100px;right:30px;width:48px;height:48px;border-radius:50%;background:var(--gradient);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(20px);transition:all var(--transition);z-index:900}.back-to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}.back-to-top:hover{transform:translateY(-3px);box-shadow:var(--shadow-xl)}
+
+/* Mobile CTA */
+.mobile-cta{display:none;position:fixed;bottom:0;left:0;right:0;padding:16px 24px;background:var(--bg-card);border-top:1px solid var(--border);z-index:999;gap:12px;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.1)}.mobile-cta .btn{flex:1;text-align:center;font-size:0.85rem;padding:14px}.mobile-cta .btn:last-child{flex:1.5}.mobile-cta.show{display:flex}
+
+/* Nav dots */
+.nav-dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:900}.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--border);border:1.5px solid transparent;cursor:pointer;transition:all var(--transition)}.nav-dot.active{background:var(--primary);border-color:var(--primary-light);transform:scale(1.3)}.nav-dot:hover{transform:scale(1.2)}@media(max-width:1024px){.nav-dots{display:none}}
+
+/* Reveal animations */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}.reveal.visible{opacity:1;transform:translateY(0)}.reveal-delay-1{transition-delay:0.1s}.reveal-delay-2{transition-delay:0.2s}.reveal-delay-3{transition-delay:0.3s}.reveal-delay-4{transition-delay:0.4s}
+
+/* Responsive */
+@media(max-width:1024px){.hero h1{font-size:2.8rem}.hero-grid{grid-template-columns:1fr;gap:40px}.hero-dashboard{max-width:500px;margin:0 auto}.hero-stats{justify-content:center}.features-grid{grid-template-columns:1fr 1fr}.pricing-grid{grid-template-columns:1fr 1fr}.integration-grid{grid-template-columns:repeat(4,1fr)}.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.section{padding:64px 0}.section-title{font-size:1.8rem}.nav-links,.nav-actions .btn-ghost{display:none}.hamburger{display:flex}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:var(--nav-height);left:0;right:0;background:var(--bg-card);padding:16px 24px;border-bottom:1px solid var(--border);box-shadow:var(--shadow-lg);gap:4px}.mobile-cta.show{display:flex}.hero h1{font-size:2.2rem}.hero p{font-size:1rem}.hero-stats{flex-wrap:wrap;gap:24px}.hero-float-card{display:none}.dashboard-mockup{transform:none}.how-steps{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}.testimonial-grid{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}.pricing-compare table{font-size:0.8rem}.pricing-compare th,.pricing-compare td{padding:10px 12px}.integration-grid{grid-template-columns:repeat(3,1fr)}.contact-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.footer-top{grid-template-columns:1fr;gap:32px}.back-to-top{bottom:90px;right:16px}.nav-dots{display:none}}
+@media(max-width:480px){.container{padding:0 16px}.hero h1{font-size:1.8rem}.integration-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+<div class="container">
+<a href="/" class="nav-logo">
+<span class="logo-icon">MG</span>
+ManaGEN
+</a>
+<ul class="nav-links" id="navLinks">
+<li><a href="#features">Features</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+<div class="nav-actions">
+<button class="btn btn-ghost" onclick="window.location.href='/auth'">Sign In</button>
+<button class="btn btn-primary btn-sm" onclick="window.location.href='/auth'">Get Started</button>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">&#9790;</button>
+<button class="hamburger" id="hamburger" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
+</div>
+</div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+<div class="hero-bg-shapes">
+<div class="shape"></div>
+<div class="shape"></div>
+<div class="shape"></div>
+</div>
+<div class="container">
+<div class="hero-grid">
+<div>
+<div class="hero-badge"><i>★</i> Trusted by 500+ schools worldwide</div>
+<h1>Empower Your School with <span class="highlight">ManaGEN</span></h1>
+<p>The all-in-one platform that streamlines administration, enhances learning, and connects your entire school community.</p>
+<div class="hero-buttons">
+<button class="btn btn-primary btn-lg" onclick="window.location.href='/auth'">Start Free Trial <i>→</i></button>
+<button class="btn btn-outline btn-lg" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Watch Demo <i>▶</i></button>
+</div>
+<div class="hero-stats">
+<div class="hero-stat">
+<h3>10K+</h3>
+<p>Active Users</p>
+</div>
+<div class="hero-stat">
+<h3>500+</h3>
+<p>Schools</p>
+</div>
+<div class="hero-stat">
+<h3>99.9%</h3>
+<p>Uptime</p>
+</div>
+</div>
+</div>
+<div class="hero-dashboard">
+<div class="dashboard-mockup">
+<div class="mockup-header">
+<div class="mockup-dots"><span></span><span></span><span></span></div>
+<div class="mockup-header-text">managen.app — Dashboard</div>
+</div>
+<div class="mockup-body">
+<div class="mockup-row">
+<div class="mockup-cell">
+<div class="badge-bar purple"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+<div class="mockup-cell">
+<div class="badge-bar blue"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+<div class="mockup-row">
+<div class="mockup-cell">
+<div class="badge-bar green"></div>
+<div class="mockup-chart">
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+<div class="chart-bar"></div>
+</div>
+</div>
+<div class="mockup-cell">
+<div class="badge-bar amber"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+<div class="mockup-bottom">
+<div class="mockup-avatar"></div>
+<div class="mockup-text">
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="hero-float-card fc1"><div class="fc-icon">✓</div><div><strong>98%</strong><br> satisfaction</div></div>
+<div class="hero-float-card fc2"><div class="fc-icon">⚡</div><div><strong>2.5x</strong><br> efficiency</div></div>
+<div class="hero-float-card fc3"><div class="fc-icon">🎯</div><div><strong>Zero</strong><br> data loss</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+<div class="ticker-track" id="tickerTrack">
+<div class="ticker-item"><i>★</i> <strong>10,000+</strong> active users</div>
+<div class="ticker-item"><i>★</i> <strong>500+</strong> schools onboarded</div>
+<div class="ticker-item"><i>★</i> <strong>99.9%</strong> platform uptime</div>
+<div class="ticker-item"><i>★</i> <strong>24/7</strong> support</div>
+<div class="ticker-item"><i>★</i> <strong>4.9/5</strong> average rating</div>
+<div class="ticker-item"><i>★</i> <strong>150+</strong> integrations</div>
+<div class="ticker-item"><i>★</i> <strong>40+</strong> countries</div>
+<div class="ticker-item"><i>★</i> <strong>ISO 27001</strong> certified</div>
+<div class="ticker-item"><i>★</i> <strong>10,000+</strong> active users</div>
+<div class="ticker-item"><i>★</i> <strong>500+</strong> schools onboarded</div>
+<div class="ticker-item"><i>★</i> <strong>99.9%</strong> platform uptime</div>
+<div class="ticker-item"><i>★</i> <strong>24/7</strong> support</div>
+<div class="ticker-item"><i>★</i> <strong>4.9/5</strong> average rating</div>
+<div class="ticker-item"><i>★</i> <strong>150+</strong> integrations</div>
+<div class="ticker-item"><i>★</i> <strong>40+</strong> countries</div>
+<div class="ticker-item"><i>★</i> <strong>ISO 27001</strong> certified</div>
+</div>
+</div>
+
+<!-- How it works -->
+<section class="section" id="how-it-works">
+<div class="container text-center">
+<div class="section-label">How It Works</div>
+<h2 class="section-title">Get started in <span class="highlight">3 simple steps</span></h2>
+<p class="section-subtitle">From signup to full deployment in under an hour. No technical expertise required.</p>
+<div class="how-steps">
+<div class="how-step reveal">
+<div class="step-number">1</div>
+<h3>Create Your Account</h3>
+<p>Sign up and set up your school profile. Add your institution details, branding, and academic calendar in minutes.</p>
+</div>
+<div class="how-step reveal reveal-delay-1">
+<div class="step-number">2</div>
+<h3>Import &amp; Configure</h3>
+<p>Import students, staff, classes, and schedules. Configure roles, permissions, grading systems, and communication channels.</p>
+</div>
+<div class="how-step reveal reveal-delay-2">
+<div class="step-number">3</div>
+<h3>Go Live &amp; Grow</h3>
+<p>Launch your portal, invite parents and teachers, and start managing your school with powerful analytics and automation.</p>
+</div>
+<div class="step-connector"></div>
+</div>
+</div>
+</section>
+
+<!-- Features -->
+<section class="section features" id="features">
+<div class="container text-center">
+<div class="section-label">Features</div>
+<h2 class="section-title">Everything you need to <span class="highlight">run your school</span></h2>
+<p class="section-subtitle">Powerful tools designed for administrators, teachers, parents, and students.</p>
+<div class="features-grid">
+<div class="feature-card reveal">
+<div class="feature-icon purple"><i>⚙</i></div>
+<h3>Administration Suite</h3>
+<p>Comprehensive tools for admissions, attendance tracking, timetable management, fee collection, and staff management.</p>
+<ul class="feature-list">
+<li><i>✓</i> Automated attendance &amp; reporting</li>
+<li><i>✓</i> Fee management &amp; invoicing</li>
+<li><i>✓</i> Timetable scheduling</li>
+<li><i>✓</i> Staff &amp; payroll management</li>
+</ul>
+</div>
+<div class="feature-card reveal reveal-delay-1">
+<div class="feature-icon blue"><i>◎</i></div>
+<h3>Learning Management</h3>
+<p>Create, distribute, and grade assignments. Host virtual classes, share resources, and track student progress in real time.</p>
+<ul class="feature-list">
+<li><i>✓</i> Assignment &amp; grade management</li>
+<li><i>✓</i> Virtual classroom integration</li>
+<li><i>✓</i> Resource library &amp; sharing</li>
+<li><i>✓</i> Progress analytics &amp; reports</li>
+</ul>
+</div>
+<div class="feature-card reveal reveal-delay-2">
+<div class="feature-icon green"><i>♦</i></div>
+<h3>Communication Hub</h3>
+<p>Connect parents, teachers, and administrators with real-time messaging, announcements, and automated notifications.</p>
+<ul class="feature-list">
+<li><i>✓</i> Real-time messaging &amp; alerts</li>
+<li><i>✓</i> Parent-teacher communication</li>
+<li><i>✓</i> Broadcast announcements</li>
+<li><i>✓</i> Automated notifications</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Stats -->
+<section class="section stats" id="stats">
+<div class="container">
+<div class="stats-grid">
+<div class="stat-item reveal"><div class="stat-icon">★</div><div class="stat-number" data-target="10000">0</div><div class="stat-label">Active Users</div></div>
+<div class="stat-item reveal reveal-delay-1"><div class="stat-icon">♦</div><div class="stat-number" data-target="500">0</div><div class="stat-label">Schools</div></div>
+<div class="stat-item reveal reveal-delay-2"><div class="stat-icon">⚡</div><div class="stat-number" data-target="150">0</div><div class="stat-label">Integrations</div></div>
+<div class="stat-item reveal reveal-delay-3"><div class="stat-icon">★</div><div class="stat-number" data-target="40">0</div><div class="stat-label">Countries</div></div>
+</div>
+</div>
+</section>
+
+<!-- Demo -->
+<section class="section" id="demo">
+<div class="container text-center">
+<div class="section-label">Video Demo</div>
+<h2 class="section-title">See ManaGEN <span class="highlight">in action</span></h2>
+<p class="section-subtitle">Watch how ManaGEN transforms school operations in under 2 minutes.</p>
+<div class="demo-video-wrap reveal">
+<div class="demo-video-placeholder" id="demoPlaceholder">
+<div class="demo-play-btn" id="demoPlayBtn">▶</div>
+<div class="demo-placeholder-text">Play Demo Video</div>
+</div>
+<div class="demo-caption"><i>▶</i> Watch how Riverdale Academy cut administrative work by 60% using ManaGEN</div>
+</div>
+</div>
+</section>
+
+<!-- Integrations -->
+<section class="section features" id="integrations">
+<div class="container text-center">
+<div class="section-label">Integrations</div>
+<h2 class="section-title">Works with your <span class="highlight">favorite tools</span></h2>
+<p class="section-subtitle">Seamless integration with the platforms your school already uses.</p>
+<div class="integration-grid">
+<div class="integration-card reveal"><div class="int-icon">📊</div><h4>Google Workspace</h4><p>Drive, Classroom, Calendar</p><span class="int-badge">Popular</span></div>
+<div class="integration-card reveal reveal-delay-1"><div class="int-icon">📚</div><h4>Microsoft 365</h4><p>Teams, SharePoint, OneDrive</p><span class="int-badge">Popular</span></div>
+<div class="integration-card reveal reveal-delay-2"><div class="int-icon">💳</div><h4>Stripe</h4><p>Payment processing</p></div>
+<div class="integration-card reveal reveal-delay-3"><div class="int-icon">📧</div><h4>SendGrid</h4><p>Email notifications</p></div>
+<div class="integration-card reveal reveal-delay-4"><div class="int-icon">📱</div><h4>WhatsApp</h4><p>Messaging &amp; alerts</p></div>
+<div class="integration-card reveal"><div class="int-icon">📹</div><h4>Zoom</h4><p>Virtual classrooms</p></div>
+<div class="integration-card reveal reveal-delay-1"><div class="int-icon">📝</div><h4>Canvas</h4><p>LMS integration</p></div>
+<div class="integration-card reveal reveal-delay-2"><div class="int-icon">💰</div><h4>QuickBooks</h4><p>Accounting sync</p></div>
+<div class="integration-card reveal reveal-delay-3"><div class="int-icon">🔐</div><h4>Okta</h4><p>SSO &amp; identity</p></div>
+<div class="integration-card reveal reveal-delay-4"><div class="int-icon">☁️</div><h4>AWS</h4><p>Cloud infrastructure</p></div>
+</div>
+</div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials" id="testimonials">
+<div class="container text-center">
+<div class="section-label">Testimonials</div>
+<h2 class="section-title">What our <span class="highlight">users say</span></h2>
+<p class="section-subtitle">Hear from school leaders who have transformed their institutions with ManaGEN.</p>
+<div class="testimonial-grid">
+<div class="testimonial-card reveal">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"ManaGEN has completely revolutionized how we manage our school. The administrative suite alone saved us countless hours. Our teachers love it, parents love it, and our students are more engaged than ever."</blockquote>
+<div class="testimonial-author">
+<div class="testimonial-avatar">JD</div>
+<div class="testimonial-info">
+<h4>Dr. Jane Doe</h4>
+<p>Principal, Riverdale Academy</p>
+</div>
+</div>
+</div>
+<div class="testimonial-card reveal reveal-delay-1">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"The learning management features are outstanding. We went from disparate systems to one unified platform in just two weeks. The support team was incredible throughout the entire process."</blockquote>
+<div class="testimonial-author">
+<div class="testimonial-avatar">MS</div>
+<div class="testimonial-info">
+<h4>Michael Smith</h4>
+<p>Head of Technology, Westfield Schools</p>
+</div>
+</div>
+</div>
+<div class="testimonial-card reveal reveal-delay-2">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"Parent communication was always our biggest challenge. ManaGEN's communication hub made it effortless. Our parent satisfaction scores have increased by 40% since implementation."</blockquote>
+<div class="testimonial-author">
+<div class="testimonial-avatar">SK</div>
+<div class="testimonial-info">
+<h4>Sarah Kim</h4>
+<p>Director of Operations, Brighton College</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Pricing -->
+<section class="section" id="pricing">
+<div class="container text-center">
+<div class="section-label">Pricing</div>
+<h2 class="section-title">Simple, transparent <span class="highlight">pricing</span></h2>
+<p class="section-subtitle">Choose the plan that fits your school. No hidden fees. No surprises.</p>
+
+<div class="pricing-toggle">
+<span class="active" id="monthlyLabel">Monthly</span>
+<div class="toggle-switch" id="pricingToggle">
+<div class="toggle-knob"></div>
+</div>
+<span id="annualLabel">Annual <span class="toggle-save-badge">Save 20%</span></span>
+</div>
+
+<div class="pricing-grid" id="pricingGrid">
+<div class="pricing-card reveal">
+<h3>Starter</h3>
+<p class="pricing-desc">For small schools just getting started.</p>
+<div class="pricing-amount">
+<span class="currency">$</span>
+<span class="amount" data-monthly="299" data-annual="239">299</span>
+<span class="period">/mo</span>
+</div>
+<p class="pricing-annual-note" data-monthly="" data-annual="$2,868/year (billed annually)"></p>
+<ul class="pricing-details">
+<li><i class="check">✓</i> Up to 500 students</li>
+<li><i class="check">✓</i> Core admin features</li>
+<li><i class="check">✓</i> Basic LMS</li>
+<li><i class="check">✓</i> Email support</li>
+<li><i class="cross">✗</i> Advanced analytics</li>
+<li><i class="cross">✗</i> Custom integrations</li>
+</ul>
+<button class="btn btn-secondary" onclick="window.location.href='/auth'">Start Free Trial</button>
+</div>
+
+<div class="pricing-card featured reveal reveal-delay-1">
+<div class="pricing-popular">Most Popular</div>
+<h3>Professional</h3>
+<p class="pricing-desc">For growing schools with advanced needs.</p>
+<div class="pricing-amount">
+<span class="currency">$</span>
+<span class="amount" data-monthly="599" data-annual="479">599</span>
+<span class="period">/mo</span>
+</div>
+<p class="pricing-annual-note" data-monthly="" data-annual="$5,748/year (billed annually)"></p>
+<ul class="pricing-details">
+<li><i class="check">✓</i> Up to 2,000 students</li>
+<li><i class="check">✓</i> All admin features</li>
+<li><i class="check">✓</i> Advanced LMS</li>
+<li><i class="check">✓</i> Priority support</li>
+<li><i class="check">✓</i> Advanced analytics</li>
+<li><i class="cross">✗</i> Custom integrations</li>
+</ul>
+<button class="btn btn-primary" onclick="window.location.href='/auth'">Start Free Trial</button>
+</div>
+
+<div class="pricing-card reveal reveal-delay-2">
+<h3>Enterprise</h3>
+<p class="pricing-desc">For large districts with custom requirements.</p>
+<div class="pricing-amount">
+<span class="currency">$</span>
+<span class="amount" data-monthly="Custom">Custom</span>
+<span class="period"></span>
+</div>
+<p class="pricing-annual-note">Contact us for custom pricing</p>
+<ul class="pricing-details">
+<li><i class="check">✓</i> Unlimited students</li>
+<li><i class="check">✓</i> All features included</li>
+<li><i class="check">✓</i> Dedicated account manager</li>
+<li><i class="check">✓</i> 24/7 phone &amp; chat support</li>
+<li><i class="check">✓</i> Custom integrations</li>
+<li><i class="check">✓</i> On-premise option</li>
+</ul>
+<button class="btn btn-secondary" onclick="window.location.href='/auth'">Contact Sales</button>
+</div>
+</div>
+
+<!-- Comparison table -->
+<div class="pricing-compare reveal">
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Starter</th>
+<th>Professional</th>
+<th>Enterprise</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Student limit</td><td>500</td><td>2,000</td><td>Unlimited</td></tr>
+<tr><td>Attendance tracking</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Grade management</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Timetable scheduling</td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Fee management</td><td><i class="compare-half">◐</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Virtual classroom</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Advanced analytics</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Custom integrations</td><td><i class="compare-cross">✗</i></td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>Dedicated support</td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td><td><i class="compare-check">✓</i></td></tr>
+<tr><td>On-premise deployment</td><td><i class="compare-cross">✗</i></td><td><i class="compare-cross">✗</i></td><td><i class="compare-check">✓</i></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq" id="faq">
+<div class="container text-center">
+<div class="section-label">FAQ</div>
+<h2 class="section-title">Frequently asked <span class="highlight">questions</span></h2>
+<p class="section-subtitle">Everything you need to know about ManaGEN.</p>
+<div class="faq-list">
+<div class="faq-item active">
+<button class="faq-question">How long does it take to set up ManaGEN? <i>+</i></button>
+<div class="faq-answer"><p>Most schools are fully operational within 1-2 weeks. Our onboarding team provides hands-on guidance throughout the process, and our import tools make data migration seamless. Basic setup can be completed in under an hour.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-question">Can I import data from my existing system? <i>+</i></button>
+<div class="faq-answer"><p>Yes. ManaGEN supports data import from CSV, Excel, and most major SIS platforms. Our migration specialists will work with you to ensure a smooth transition with zero data loss. We also offer API-based migration for custom systems.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-question">Is my data secure on ManaGEN? <i>+</i></button>
+<div class="faq-answer"><p>Absolutely. We are ISO 27001 certified and comply with FERPA, GDPR, and COPPA regulations. All data is encrypted at rest and in transit. We perform regular security audits and penetration testing. Your data privacy is our top priority.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-question">What kind of support do you offer? <i>+</i></button>
+<div class="faq-answer"><p>All plans include email support. Professional plans add priority support with faster response times, and Enterprise plans include a dedicated account manager with 24/7 phone and chat support. We also have a comprehensive knowledge base and video tutorials.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-question">Can I customize ManaGEN for my school's branding? <i>+</i></button>
+<div class="faq-answer"><p>Yes. All plans include branding customization including your logo, colors, and domain. Enterprise plans offer full white-labeling options. You can set up custom roles, permissions, and workflows tailored to your institution's specific needs.</p></div>
+</div>
+<div class="faq-item">
+<button class="faq-question">Is there a free trial available? <i>+</i></button>
+<div class="faq-answer"><p>Yes! We offer a 30-day free trial with full access to all Professional features. No credit card required. You can invite your team, import data, and explore everything ManaGEN has to offer. If you need more time, just let us know.</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Contact -->
+<section class="section contact" id="contact">
+<div class="container">
+<div class="text-center">
+<div class="section-label">Contact Us</div>
+<h2 class="section-title">Ready to transform <span class="highlight">your school?</span></h2>
+<p class="section-subtitle">Get in touch with our team. We will help you find the perfect solution for your institution.</p>
+</div>
+<div class="contact-grid">
+<div class="contact-form" id="contactForm">
+<form id="contactFormEl" novalidate>
+<div class="form-row">
+<div class="form-group">
+<label for="cfName">Full Name</label>
+<input type="text" id="cfName" placeholder="Jane Smith" required>
+<div class="form-error">Please enter your name</div>
+</div>
+<div class="form-group">
+<label for="cfEmail">Email Address</label>
+<input type="email" id="cfEmail" placeholder="jane@school.edu" required>
+<div class="form-error">Please enter a valid email</div>
+</div>
+</div>
+<div class="form-group">
+<label for="cfSchool">School Name</label>
+<input type="text" id="cfSchool" placeholder="Riverdale Academy" required>
+<div class="form-error">Please enter your school name</div>
+</div>
+<div class="form-group">
+<label for="cfRole">Your Role</label>
+<select id="cfRole" required>
+<option value="">Select your role</option>
+<option>School Administrator</option>
+<option>Principal / Head</option>
+<option>Teacher</option>
+<option>IT Administrator</option>
+<option>Parent</option>
+<option>Other</option>
+</select>
+<div class="form-error">Please select your role</div>
+</div>
+<div class="form-group">
+<label for="cfMessage">Message</label>
+<textarea id="cfMessage" placeholder="Tell us about your school's needs..." required></textarea>
+<div class="form-error">Please enter a message</div>
+</div>
+<button type="submit" class="btn btn-primary btn-lg">Send Message <i>→</i></button>
+</form>
+<div class="form-success" id="formSuccess">
+<div><i>★</i></div>
+<h3>Message Sent!</h3>
+<p>Thank you for reaching out. Our team will get back to you within 24 hours.</p>
+</div>
+</div>
+<div class="contact-info">
+<h3>We would love to hear from you</h3>
+<p>Whether you have a question about features, pricing, implementation, or anything else, our team is here to help.</p>
+<div class="contact-details">
+<div class="contact-detail">
+<div class="cd-icon">✉</div>
+<div><h4>Email</h4><span>hello@managen.app</span></div>
+</div>
+<div class="contact-detail">
+<div class="cd-icon">★</div>
+<div><h4>Phone</h4><span>+1 (555) 123-4567</span></div>
+</div>
+<div class="contact-detail">
+<div class="cd-icon">♦</div>
+<div><h4>Office</h4><span>123 Education Blvd, Suite 200<br>San Francisco, CA 94105</span></div>
+</div>
+<div class="contact-detail">
+<div class="cd-icon">⚡</div>
+<div><h4>Hours</h4><span>Mon-Fri, 9:00 AM - 6:00 PM EST</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-top">
+<div class="footer-brand">
+<a href="/" class="nav-logo">
+<span class="logo-icon">MG</span>
+ManaGEN
+</a>
+<p>Empowering schools worldwide with intelligent management solutions. Streamline operations, enhance learning, and connect your entire community.</p>
+<div class="footer-social">
+<a href="#" aria-label="Twitter">𝕏</a>
+<a href="#" aria-label="LinkedIn">in</a>
+<a href="#" aria-label="Facebook">f</a>
+<a href="#" aria-label="GitHub">GH</a>
+</div>
+</div>
+<div class="footer-col">
+<h4>Product</h4>
+<ul>
+<li><a href="#features">Features</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a href="#integrations">Integrations</a></li>
+<li><a href="/auth">Sign In</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<ul>
+<li><a href="#about">About</a></li>
+<li><a href="#blog">Blog</a></li>
+<li><a href="#careers">Careers</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<ul>
+<li><a href="#docs">Documentation</a></li>
+<li><a href="#faq">FAQ</a></li>
+<li><a href="#status">System Status</a></li>
+<li><a href="#privacy">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<p>&copy; 2026 ManaGEN. All rights reserved.</p>
+<div class="footer-bottom-links">
+<a href="#terms">Terms of Service</a>
+<a href="#privacy">Privacy Policy</a>
+<a href="#cookies">Cookie Policy</a>
+</div>
+</div>
+</div>
+</footer>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+<!-- Mobile CTA -->
+<div class="mobile-cta show" id="mobileCta">
+<button class="btn btn-secondary" onclick="window.location.href='/auth'">Sign In</button>
+<button class="btn btn-primary" onclick="window.location.href='/auth'">Get Started</button>
+</div>
+
+<!-- Nav dots -->
+<div class="nav-dots" id="navDots"></div>
+
+<script>
+(function(){
+'use strict';
+
+// Dark mode toggle
+const themeToggle = document.getElementById('themeToggle');
+function setTheme(theme){
+document.documentElement.setAttribute('data-theme',theme);
+localStorage.setItem('managen-theme',theme);
+themeToggle.textContent = theme === 'dark' ? '☀' : '☽';
+}
+const savedTheme = localStorage.getItem('managen-theme');
+if(savedTheme) setTheme(savedTheme);
+else if(window.matchMedia('(prefers-color-scheme:dark)').matches) setTheme('dark');
+themeToggle.addEventListener('click',function(){
+const current = document.documentElement.getAttribute('data-theme');
+setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// Nav scroll
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+window.addEventListener('scroll',function(){
+const y = window.scrollY;
+nav.classList.toggle('scrolled',y > 50);
+lastScroll = y;
+},{passive:true});
+
+// Hamburger
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+hamburger.addEventListener('click',function(){
+this.classList.toggle('active');
+navLinks.classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(function(a){
+a.addEventListener('click',function(){hamburger.classList.remove('active');navLinks.classList.remove('open');});
+});
+
+// Nav dots
+const sections = ['hero','how-it-works','features','demo','integrations','testimonials','pricing','faq','contact'];
+const navDots = document.getElementById('navDots');
+sections.forEach(function(id){
+const dot = document.createElement('button');
+dot.className = 'nav-dot';
+dot.setAttribute('data-section',id);
+dot.setAttribute('aria-label','Navigate to '+id);
+dot.addEventListener('click',function(){
+document.getElementById(id).scrollIntoView({behavior:'smooth'});
+});
+navDots.appendChild(dot);
+});
+let activeDotIdx = 0;
+function updateDots(){
+const scrollY = window.scrollY + window.innerHeight/3;
+let found = false;
+for(let i=sections.length-1;i>=0;i--){
+const el = document.getElementById(sections[i]);
+if(el && el.offsetTop <= scrollY){
+if(activeDotIdx !== i){
+if(navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.remove('active');
+activeDotIdx = i;
+if(navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.add('active');
+}
+found = true;
+break;
+}
+}
+if(!found && navDots.children[activeDotIdx]) navDots.children[activeDotIdx].classList.remove('active');
+}
+window.addEventListener('scroll',updateDots,{passive:true});
+window.addEventListener('load',updateDots);
+updateDots();
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+entry.target.classList.add('visible');
+revealObserver.unobserve(entry.target);
+}
+});
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(function(el){revealObserver.observe(el);});
+
+// Counters
+const counterObserver = new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+const el = entry.target;
+const target = parseInt(el.getAttribute('data-target'));
+if(!target) return;
+const duration = 2000;
+const start = performance.now();
+function update(now){
+const elapsed = now - start;
+const progress = Math.min(elapsed/duration,1);
+const eased = 1 - Math.pow(1-progress,3);
+const currentVal = Math.round(eased * target);
+el.textContent = currentVal.toLocaleString();
+if(progress < 1) requestAnimationFrame(update);
+else el.textContent = target.toLocaleString();
+}
+requestAnimationFrame(update);
+counterObserver.unobserve(el);
+}
+});
+},{threshold:0.5});
+document.querySelectorAll('.stat-number[data-target]').forEach(function(el){counterObserver.observe(el);});
+
+// Pricing toggle
+const pricingToggle = document.getElementById('pricingToggle');
+const monthlyLabel = document.getElementById('monthlyLabel');
+const annualLabel = document.getElementById('annualLabel');
+const amounts = document.querySelectorAll('.pricing-card .amount');
+const notes = document.querySelectorAll('.pricing-annual-note');
+let isAnnual = false;
+pricingToggle.addEventListener('click',function(){
+isAnnual = !isAnnual;
+this.classList.toggle('active');
+monthlyLabel.classList.toggle('active',!isAnnual);
+annualLabel.classList.toggle('active',isAnnual);
+amounts.forEach(function(el){
+const val = isAnnual ? el.getAttribute('data-annual') : el.getAttribute('data-monthly');
+if(val) el.textContent = val;
+});
+notes.forEach(function(el){
+const note = isAnnual ? el.getAttribute('data-annual') : el.getAttribute('data-monthly');
+el.textContent = note || '';
+});
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(function(btn){
+btn.addEventListener('click',function(){
+const item = this.parentElement;
+const isActive = item.classList.contains('active');
+document.querySelectorAll('.faq-item.active').forEach(function(el){el.classList.remove('active');});
+if(!isActive) item.classList.add('active');
+});
+});
+
+// Form validation
+const form = document.getElementById('contactFormEl');
+const formSuccess = document.getElementById('formSuccess');
+const formWrap = document.getElementById('contactForm');
+form.addEventListener('submit',function(e){
+e.preventDefault();
+let valid = true;
+form.querySelectorAll('.form-group.error').forEach(function(el){el.classList.remove('error');});
+form.querySelectorAll('input[required],textarea[required],select[required]').forEach(function(field){
+const group = field.closest('.form-group');
+if(!group) return;
+let isValid = true;
+if(field.hasAttribute('required') && !field.value.trim()) isValid = false;
+if(field.type === 'email' && field.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim())) isValid = false;
+if(!isValid){group.classList.add('error');valid=false;}
+});
+if(valid){
+form.style.display = 'none';
+formSuccess.classList.add('show');
+}
+});
+
+// Video demo placeholder
+const demoPlaceholder = document.getElementById('demoPlaceholder');
+const demoPlayBtn = document.getElementById('demoPlayBtn');
+demoPlaceholder.addEventListener('click',function(){
+this.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="Demo Video" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>';
+this.style.position = 'relative';
+});
+
+// Back to top
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll',function(){
+backToTop.classList.toggle('visible',window.scrollY > 600);
+},{passive:true});
+backToTop.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// Hero parallax
+const hero = document.getElementById('hero');
+window.addEventListener('mousemove',function(e){
+const speed = 0.02;
+const x = (e.clientX - window.innerWidth/2) * speed;
+const y = (e.clientY - window.innerHeight/2) * speed;
+const shapes = hero.querySelectorAll('.hero-bg-shapes .shape');
+if(shapes.length) {
+shapes[0].style.transform = 'translate('+x*0.5+'px,'+y*0.5+'px)';
+shapes[1].style.transform = 'translate('+x*-0.3+'px,'+y*-0.3+'px)';
+shapes[2].style.transform = 'translate('+x*0.2+'px,'+y*-0.4+'px)';
+}
+},{passive:true});
+
+})();
+</script>
+
+</body>
+</html>
