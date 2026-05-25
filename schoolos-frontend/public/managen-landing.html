@@ -810,6 +810,7 @@ nav.scrolled {
 }
 [data-theme="dark"] .integration-tile { background: var(--bg-3); }
 .integration-tile:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: var(--shadow-orange); }
+.trust-logo-img { display:inline-block;vertical-align:middle; }
 .integration-logo-wrap {
   height: 48px;
   display: flex;
@@ -1157,6 +1158,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   .faq-layout { grid-template-columns: 1fr; gap: 40px; }
   .compare-section { overflow-x: auto; }
+  .sec-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media (max-width: 768px) {
@@ -1184,6 +1186,12 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .hero-trust-logos { gap: 8px; }
   .trust-logo-chip { font-size: 12px; padding: 5px 10px; }
   body { padding-bottom: 80px; }
+  .cmp-grid { grid-template-columns: 1fr !important; }
+  .sec-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .calc-inner { flex-direction: column; padding: 16px 20px; }
+  .calc-inner .calc-price { border-left: none !important; padding-left: 0 !important; border-top: 1px solid var(--border); padding-top: 16px; width: 100%; }
+  .calc-inner input[type="range"] { width: 160px; }
+  .trust-logo-img { height: 12px !important; }
 }
 
 @media (max-width: 480px) {
@@ -1192,6 +1200,11 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .dash-stats { grid-template-columns: repeat(2, 1fr); }
   .integrations-grid { grid-template-columns: repeat(2, 1fr); }
   .hero-social-proof { flex-direction: column; align-items: flex-start; }
+  .sec-grid { grid-template-columns: 1fr !important; }
+  .calc-inner input[type="range"] { width: 120px; }
+  .calc-inner #studentCount { font-size: 20px; min-width: 48px; }
+  .compare-table { font-size: 12px; }
+  .compare-table th, .compare-table td { padding: 10px 8px; }
 }
 </style>
 </head>
@@ -1318,23 +1331,23 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="hero-trust-label">Integrates with</div>
           <div class="hero-trust-logos">
             <div class="trust-logo-chip">
-              <svg style="height:14px;width:auto;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#0BA360"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="bold">P</text></svg>
+              <img src="https://cdn.simpleicons.org/paystack/0BA360" alt="" class="trust-logo-img" style="height:14px;">
               Paystack
             </div>
             <div class="trust-logo-chip">
-              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#F86A5E"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="8" font-weight="bold">F</text></svg>
+              <img src="https://cdn.simpleicons.org/flutterwave/F86A5E" alt="" class="trust-logo-img" style="height:16px;">
               Flutterwave
             </div>
             <div class="trust-logo-chip">
-              <svg style="height:14px;width:auto;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FFCC00"/><text x="12" y="16" text-anchor="middle" fill="black" font-size="8" font-weight="bold">MoMo</text></svg>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/MTN_Logo.svg/240px-MTN_Logo.svg.png" alt="" class="trust-logo-img" style="height:16px;">
               MTN MoMo
             </div>
             <div class="trust-logo-chip">
-              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#25D366"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="7" font-weight="bold">WA</text></svg>
+              <img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" class="trust-logo-img" style="height:16px;">
               WhatsApp
             </div>
             <div class="trust-logo-chip">
-              <svg style="height:16px;width:16px;" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#4285F4"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="8" font-weight="bold">G</text></svg>
+              <img src="https://cdn.simpleicons.org/google/4285F4" alt="" class="trust-logo-img" style="height:16px;">
               Google
             </div>
           </div>
@@ -1502,7 +1515,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <h2 class="section-title" style="text-align:center;">What changes when you switch to ManaGEN?</h2>
       <p class="section-sub" style="margin:0 auto;text-align:center;">Schools don't buy software — they buy outcomes. Here's what happens when you automate.</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="reveal delay-1">
+    <div class="cmp-grid reveal delay-1" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div style="background:var(--white);border:2px solid #E24B4A;border-radius:var(--r-xl);padding:32px;position:relative;">
         <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#E24B4A;color:#fff;font-size:11px;font-weight:700;padding:4px 20px;border-radius:99px;white-space:nowrap;">BEFORE ManaGEN</div>
         <div style="margin-top:12px;">
@@ -1739,43 +1752,43 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     </div>
     <div class="integrations-grid reveal delay-1">
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:22px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#0BA360"/><text x="50" y="20" text-anchor="middle" fill="white" font-size="12" font-weight="bold">Paystack</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://cdn.simpleicons.org/paystack/0BA360" alt="Paystack" class="integration-logo" style="height:22px;"></div>
         <div class="integration-name">Paystack</div><div class="integration-cat">Payments</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:22px;width:auto;" viewBox="0 0 120 30"><rect width="120" height="30" rx="6" fill="#F86A5E"/><text x="60" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Flutterwave</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://cdn.simpleicons.org/flutterwave/F86A5E" alt="Flutterwave" class="integration-logo" style="height:22px;"></div>
         <div class="integration-name">Flutterwave</div><div class="integration-cat">Payments</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:28px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#FFCC00"/><text x="50" y="20" text-anchor="middle" fill="black" font-size="11" font-weight="bold">MTN MoMo</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/MTN_Logo.svg/240px-MTN_Logo.svg.png" alt="MTN MoMo" class="integration-logo" style="height:28px;"></div>
         <div class="integration-name">MTN MoMo</div><div class="integration-cat">Mobile Money</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:24px;width:auto;" viewBox="0 0 110 30"><rect width="110" height="30" rx="6" fill="#D32F2F"/><text x="55" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Vodafone Cash</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Vodafone_icon.svg/240px-Vodafone_icon.svg.png" alt="Vodafone Cash" class="integration-logo" style="height:24px;"></div>
         <div class="integration-name">Vodafone Cash</div><div class="integration-cat">Mobile Money</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:26px;width:auto;" viewBox="0 0 90 30"><rect width="90" height="30" rx="6" fill="#ED1C24"/><text x="45" y="20" text-anchor="middle" fill="white" font-size="9" font-weight="bold">AT Money</text></svg></div>
+        <div class="integration-logo-wrap"><div style="font-size:22px;font-weight:800;color:#ED1C24;font-family:var(--ff-display);">AT</div></div>
         <div class="integration-name">AT Money</div><div class="integration-cat">Mobile Money</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:32px;width:auto;" viewBox="0 0 100 30"><rect width="100" height="30" rx="6" fill="#25D366"/><text x="50" y="20" text-anchor="middle" fill="white" font-size="11" font-weight="bold">WhatsApp</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp" class="integration-logo" style="height:32px;"></div>
         <div class="integration-name">WhatsApp API</div><div class="integration-cat">Messaging</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:18px;width:auto;" viewBox="0 0 90 30"><rect width="90" height="30" rx="6" fill="#1A82E2"/><text x="45" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">SendGrid</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://cdn.simpleicons.org/sendgrid/1A82E2" alt="SendGrid" class="integration-logo" style="height:18px;"></div>
         <div class="integration-name">SendGrid</div><div class="integration-cat">Email</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap"><svg style="height:20px;width:auto;" viewBox="0 0 120 30"><rect width="120" height="30" rx="6" fill="#4285F4"/><text x="60" y="20" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Google Workspace</text></svg></div>
+        <div class="integration-logo-wrap"><img src="https://cdn.simpleicons.org/google/4285F4" alt="Google Workspace" class="integration-logo" style="height:20px;"></div>
         <div class="integration-name">Google Workspace</div><div class="integration-cat">Productivity</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap" style="background:#217346;"><svg style="width:22px;height:22px;stroke:#fff;" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div class="integration-logo-wrap" style="background:#217346;"><img src="https://cdn.simpleicons.org/microsoftexcel/ffffff" alt="Excel" class="integration-logo" style="height:22px;"></div>
         <div class="integration-name">Excel / Sheets</div><div class="integration-cat">Data Import</div>
       </div>
       <div class="integration-tile">
-        <div class="integration-logo-wrap" style="background:var(--dark);"><svg style="width:22px;height:22px;stroke:var(--text-inv);" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="integration-logo-wrap" style="background:var(--dark);"><img src="https://cdn.simpleicons.org/apis/ffffff" alt="API" class="integration-logo" style="height:22px;"></div>
         <div class="integration-name">REST API</div><div class="integration-cat">Custom</div>
       </div>
     </div>
@@ -1791,7 +1804,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <h2 class="section-title" style="text-align:center;">Your data is safe with us.</h2>
       <p class="section-sub" style="margin:0 auto;text-align:center;">Student data is the most sensitive asset a school holds. We treat it that way.</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" class="reveal delay-1">
+    <div class="sec-grid reveal delay-1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
       <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
         <div style="font-size:32px;margin-bottom:12px;">🔐</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">AES-256 Encryption</div>
@@ -1875,7 +1888,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       </div>
     </div>
     <div class="calc-wrap reveal" style="text-align:center;margin-bottom:40px;">
-      <div style="display:inline-flex;align-items:center;gap:20px;background:var(--bg-3);padding:20px 32px;border-radius:var(--r-lg);border:1px solid var(--border);flex-wrap:wrap;">
+      <div class="calc-inner" style="display:inline-flex;align-items:center;gap:20px;background:var(--bg-3);padding:20px 32px;border-radius:var(--r-lg);border:1px solid var(--border);flex-wrap:wrap;">
         <div style="text-align:left;">
           <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">How many students?</div>
           <div style="display:flex;align-items:center;gap:16px;">
