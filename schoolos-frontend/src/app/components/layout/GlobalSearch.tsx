@@ -37,7 +37,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
       setQuery("");
       setResults([]);
       focusTimeoutRef.current = setTimeout(() => inputRef.current?.focus(), 100);
-      const stored = localStorage.getItem("managen-recent-searches");
+      const stored = localStorage.getItem("schoolos-recent-searches");
       if (stored) {
         try {
           const parsed = JSON.parse(stored) as SearchResult[];
@@ -143,13 +143,13 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   }, [query, doSearch]);
 
   const handleSelect = (item: SearchResult) => {
-    const stored = localStorage.getItem("managen-recent-searches");
+    const stored = localStorage.getItem("schoolos-recent-searches");
     let recentList: SearchResult[] = [];
     try {
       recentList = stored ? JSON.parse(stored) : [];
     } catch { /* ignore */ }
     recentList = [item, ...recentList.filter((r) => r.id !== item.id)].slice(0, 10);
-    localStorage.setItem("managen-recent-searches", JSON.stringify(recentList));
+    localStorage.setItem("schoolos-recent-searches", JSON.stringify(recentList));
     onClose();
     navigate(item.path);
   };

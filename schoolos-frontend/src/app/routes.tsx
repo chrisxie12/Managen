@@ -61,7 +61,7 @@ import { SuperAdminBilling } from "./pages/SuperAdminBilling";
 import { SuperAdminReportCards } from "./pages/SuperAdminReportCards";
 import { SuperAdminAuthGuard } from "../components/SuperAdminAuthGuard";
 import { RequireRole } from "../components/RequireRole";
-import ManagenFlow from "./components/ManagenFlow";
+import SchoolOSFlow from "./components/SchoolOSFlow";
 import { AuthGuard } from "../components/AuthGuard";
 import { ParentGuard } from "../components/ParentGuard";
 import { OnboardingGuard } from "../components/OnboardingGuard";
@@ -143,7 +143,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/architecture",
-        Component: ManagenFlow,
+        Component: SchoolOSFlow,
       },
       {
         path: "/auth",

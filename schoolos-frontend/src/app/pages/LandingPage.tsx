@@ -4,7 +4,7 @@ export function LandingPage() {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/managen-landing.html")
+    fetch("/schoolos-landing.html")
       .then(r => r.text())
       .then(html => {
         if (!rootRef.current) return;

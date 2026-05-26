@@ -29,7 +29,7 @@ export function SuperAdminLayout() {
           <Shield size={17} color="white" />
         </div>
         <div>
-          <div style={{ color: "white", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>Managen</div>
+          <div style={{ color: "white", fontWeight: 700, fontSize: "1.05rem", lineHeight: 1.1 }}>SchoolOS</div>
           <div style={{ color: "#64748b", fontSize: "0.68rem" }}>Super Admin</div>
         </div>
       </div>

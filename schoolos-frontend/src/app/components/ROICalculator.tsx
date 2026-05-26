@@ -115,7 +115,7 @@ export function ROICalculator() {
             borderColor: `${COLORS.MUTED}20`,
           }}>
           <div className="text-xs font-semibold" style={{ color: COLORS.MUTED }}>
-            Net after Managen
+            Net after SchoolOS
           </div>
           <div className="text-2xl font-bold mt-2" style={{ color: COLORS.GREEN }}>
             ₵{(annualGain - yearlySubscriptionCost).toLocaleString()}
@@ -126,7 +126,7 @@ export function ROICalculator() {
       <div className="mt-6 p-4 rounded-lg"
         style={{ background: `${COLORS.AMBER}10` }}>
         <p className="text-sm" style={{ color: COLORS.NAVY }}>
-          <span className="font-bold">With Managen:</span> Collection improves from {currentCollection}% to ~92%, 
+          <span className="font-bold">With SchoolOS:</span> Collection improves from {currentCollection}% to ~92%, 
           generating <span className="font-bold">₵{(annualGain - yearlySubscriptionCost).toLocaleString()} net annual profit</span>.
         </p>
       </div>

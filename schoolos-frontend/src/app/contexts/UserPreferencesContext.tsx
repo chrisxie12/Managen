@@ -57,7 +57,7 @@ const UserPreferencesContext = createContext<UserPreferencesContextValue | null>
 
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const [preferences, setPreferences] = useLocalStorage<UserPreferences>(
-    "managen-user-preferences",
+    "schoolos-user-preferences",
     DEFAULT_PREFERENCES,
   );
 

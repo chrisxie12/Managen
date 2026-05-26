@@ -51,7 +51,7 @@ export function ParentProfile() {
         const reg = await navigator.serviceWorker.ready;
         const existing = await reg.pushManager.getSubscription();
         if (existing) return;
-        const subdomain = localStorage.getItem('managen_subdomain');
+        const subdomain = localStorage.getItem('schoolos_subdomain');
         const res = await fetch("/api/school/push/vapid-public-key", {
           headers: subdomain ? { 'x-tenant-subdomain': subdomain } : {},
         });

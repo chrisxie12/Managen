@@ -1,5 +1,5 @@
 /**
- * Managen API Service
+ * SchoolOS API Service
  * Centralized utility for making backend requests
  *
  * Dev: Vite proxy (vite.config.ts) forwards /api/* → backend.
@@ -29,7 +29,7 @@ function getTenantHeader(): Record<string, string> {
     if (host.endsWith('.localhost') && host.split('.').length === 2) {
       return { 'x-tenant-subdomain': host.split('.')[0] };
     }
-    const subdomain = localStorage.getItem('managen_subdomain');
+    const subdomain = localStorage.getItem('schoolos_subdomain');
     if (subdomain) return { 'x-tenant-subdomain': subdomain };
   } catch {}
   return {};

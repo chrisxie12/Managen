@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { useAuth as useClerkAuth, useUser } from "@clerk/react";
 import { api } from "../services/api";
 
-const SUBDOMAIN_KEY = "managen_subdomain";
+const SUBDOMAIN_KEY = "schoolos_subdomain";
 
 export function storeSubdomain(subdomain: string) {
   try { localStorage.setItem(SUBDOMAIN_KEY, subdomain); } catch {}

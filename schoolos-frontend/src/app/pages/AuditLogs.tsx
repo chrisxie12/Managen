@@ -415,7 +415,7 @@ export function AuditLogs() {
       if (dateFrom) params.set("date_from", dateFrom);
       if (dateTo) params.set("date_to", dateTo);
 
-      const subdomain = localStorage.getItem('managen_subdomain');
+      const subdomain = localStorage.getItem('schoolos_subdomain');
       const res = await fetch(`/api/school/audit-logs/export?${params.toString()}`, {
         credentials: "include",
         headers: subdomain ? { 'x-tenant-subdomain': subdomain } : {},

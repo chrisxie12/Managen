@@ -129,7 +129,7 @@ export function AuthPage() {
           window.location.href = "/dashboard";
           return;
         }
-        toast.success("Account created! Welcome to Managen.");
+        toast.success("Account created! Welcome to SchoolOS.");
         navigate("/dashboard");
       } else if (mode === "superadmin") {
         await api.post("/api/superadmin/login", {
@@ -243,7 +243,7 @@ export function AuthPage() {
                 fontWeight: 700,
               }}
             >
-              Managen
+              SchoolOS
             </span>
           </div>
 
@@ -312,7 +312,7 @@ export function AuthPage() {
                 marginBottom: "0.75rem",
               }}
             >
-              "Switching to Managen was the best operational decision we made
+              "Switching to SchoolOS was the best operational decision we made
               this academic year."
             </p>
             <div className="flex items-center gap-3">
@@ -378,7 +378,7 @@ export function AuthPage() {
                 fontSize: "1.2rem",
               }}
             >
-              Managen
+              SchoolOS
             </span>
           </div>
 

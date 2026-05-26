@@ -3,7 +3,7 @@
 import { cn } from "./utils";
 import React, { useEffect, useRef } from 'react';
 
-// Education-themed floating particles background for ManaGen
+// Education-themed floating particles background for SchoolOS
 // Features: graduation caps, books, pencils, chalk dust, school bells
 
 type Particle = {
@@ -31,7 +31,7 @@ export function EducationBackground({ className }: { className?: string }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // ManaGen brand colors
+    // SchoolOS brand colors
     const colors = {
       navy: '#0A2472',
       navyLight: '#1a3a8f',

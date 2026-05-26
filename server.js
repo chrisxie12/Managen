@@ -316,7 +316,7 @@ const authLimiter = rateLimit({
 // ─── Status & Health Routes ───────────────────────────────────
 app.get('/', (req, res) => {
   res.json({
-    status: 'Managen API is live ✅',
+    status: 'SchoolOS API is live ✅',
     version: '1.0.0',
     environment: process.env.NODE_ENV,
     timestamp: new Date()

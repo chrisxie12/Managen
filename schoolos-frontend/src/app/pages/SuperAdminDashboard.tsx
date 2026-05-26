@@ -117,7 +117,7 @@ export function SuperAdminDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-white">Command Center</h1>
-          <p style={{ color: MUTED, fontSize: "0.82rem" }}>Executive overview of the Managen platform</p>
+          <p style={{ color: MUTED, fontSize: "0.82rem" }}>Executive overview of the SchoolOS platform</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: healthScore >= 80 ? "rgba(16,185,129,0.1)" : "rgba(245,158,11,0.1)", border: `1px solid ${healthScore >= 80 ? "rgba(16,185,129,0.2)" : "rgba(245,158,11,0.2)"}` }}>
