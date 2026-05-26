@@ -342,20 +342,7 @@ nav.scrolled {
 .mob-nav a::after { content: '→'; color: var(--text-3); font-size: 14px; }
 .mob-nav-ctas { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
 
-/* Section scroll dots */
-.nav-dots {
-  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 10px; z-index: 900;
-}
-.nav-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--border-2); cursor: pointer;
-  transition: all 0.3s; border: none;
-}
-.nav-dot.active { background: var(--orange); transform: scale(1.4); }
-.nav-dot:hover { background: var(--orange); opacity: 0.7; }
-
-/* Mobile sticky CTA */
+/* ===================== BUTTONS ===================== */
 .mob-sticky {
   display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 800;
   background: var(--bg); border-top: 1px solid var(--border);
@@ -1209,7 +1196,6 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .foot-bottom { flex-direction: column; gap: 16px; text-align: center; }
   .mob-sticky { display: block; }
   .btt { bottom: 90px; }
-  .nav-dots { display: none; }
   .form-row { grid-template-columns: 1fr; }
   .contact-grid { gap: 40px; }
   .hero-trust-logos { gap: 8px; }
@@ -1284,16 +1270,6 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     <a href="#demo" class="btn-secondary" onclick="closeMenu()" style="justify-content:center;">Watch 2-min Demo</a>
   </div>
 </div>
-
-<!-- SECTION NAV DOTS -->
-<nav class="nav-dots" id="navDots" aria-label="Page sections">
-  <button class="nav-dot active" data-section="hero" title="Home"></button>
-  <button class="nav-dot" data-section="features" title="Features"></button>
-  <button class="nav-dot" data-section="demo" title="Demo"></button>
-  <button class="nav-dot" data-section="stats" title="Stats"></button>
-  <button class="nav-dot" data-section="pricing" title="Pricing"></button>
-  <button class="nav-dot" data-section="contact" title="Contact"></button>
-</nav>
 
 <main>
 
@@ -2279,7 +2255,6 @@ window.addEventListener("scroll", () => {
       const y = window.scrollY;
       nav.classList.toggle("scrolled", y > 40);
       btt.classList.toggle("vis", y > window.innerHeight * 0.35);
-      updateNavDots();
       ticking = false;
     });
     ticking = true;
@@ -2301,25 +2276,6 @@ menuBtn.addEventListener("click", () => {
   mobNav.setAttribute("aria-hidden", String(!open));
   document.body.classList.toggle("locked", open);
 });
-
-/* ========== SECTION NAV DOTS ========== */
-const sectionIds = ["hero","features","demo","stats","pricing","contact"];
-const dots = document.querySelectorAll(".nav-dot");
-dots.forEach((dot, i) => {
-  dot.addEventListener("click", () => {
-    const el = document.getElementById(sectionIds[i]);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  });
-});
-function updateNavDots() {
-  const mid = window.scrollY + window.innerHeight * 0.45;
-  let active = 0;
-  sectionIds.forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el && el.offsetTop <= mid) active = i;
-  });
-  dots.forEach((d, i) => d.classList.toggle("active", i === active));
-}
 
 /* ========== REVEAL ON SCROLL ========== */
 const revealObs = new IntersectionObserver(entries => {
