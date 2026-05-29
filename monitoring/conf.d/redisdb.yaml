@@ -1,0 +1,14 @@
+# ─── Redis Integration ──────────────────────────────────────────────
+# Monitors the Redis instance used by BullMQ / caching.
+init_config:
+
+instances:
+  - host: localhost
+    port: 6379
+    db: 0
+    keys:
+      - bull:schoolos:*
+    warn_on_missing_keys: true
+    tags:
+      - service:schoolos-backend
+      - component:redis

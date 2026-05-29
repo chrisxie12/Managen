@@ -1,0 +1,47 @@
+# ─── Datadog Agent Configuration for SchoolOS ───────────────────────
+# Deploy on your DigitalOcean Droplet.
+#
+# Install:
+#   DD_API_KEY=<your_key> bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script_agent7.sh)"
+#
+# Apply config:
+#   sudo cp datadog-agent.yaml /etc/datadog-agent/datadog.yaml
+#   sudo cp conf.d/ /etc/datadog-agent/conf.d/
+#   sudo systemctl restart datadog-agent
+
+api_key: ${DD_API_KEY}
+site: datadoghq.com
+tags:
+  - env:${DD_ENV}
+  - service:schoolos-backend
+  - team:engineering
+
+hostname: ${HOSTNAME}
+
+# ─── APM ────────────────────────────────────────────────────────────
+apm_config:
+  enabled: true
+  apm_non_local_traffic: true  # allow APM from Node.js container/process
+  max_traces_per_second: 100
+  env: ${DD_ENV}
+  log_pipelines:
+    - name: express
+      source: nodejs
+      service: schoolos-backend
+
+# ─── Logs ───────────────────────────────────────────────────────────
+logs_enabled: true
+logs_config:
+  container_collect_all: false
+  logs_dd_url: agent-intake.logs.datadoghq.com:10516
+  use_port_443: true
+
+# ─── Process Monitoring ─────────────────────────────────────────────
+process_config:
+  enabled: "true"
+  scrub_args: true
+
+# ─── Integrations (set up in conf.d/) ───────────────────────────────
+# Check /etc/datadog-agent/conf.d/ for integration configs.
+# The Node.js integration requires no special conf — dd-trace sends
+# traces via localhost:8126 and metrics via localhost:8125 (DogStatsD).

@@ -1,0 +1,72 @@
+{
+  "name": "schoolos-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "build": "node -e \"console.log('No build step required')\"",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node scripts/smoke-test.js && node --test scripts/api-tests.js",
+    "test:superadmin": "node scripts/test-superadmin-load.js",
+    "test:fees": "node scripts/test-fee-reminders.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "22.x"
+  },
+  "overrides": {
+    "esbuild": "0.19.12"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1050.0",
+    "@aws-sdk/s3-request-presigner": "^3.1050.0",
+    "@clerk/backend": "^3.4.9",
+    "@google/generative-ai": "^0.24.1",
+    "@sentry/node": "^10.53.1",
+    "@sentry/react": "^10.53.1",
+    "@supabase/supabase-js": "^2.105.1",
+    "@upstash/redis": "^1.38.0",
+    "archiver": "^8.0.0",
+    "axios": "^1.16.0",
+    "bcryptjs": "^3.0.3",
+    "bullmq": "^5.76.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "date-fns": "^4.2.1",
+    "dd-trace": "^5.103.0",
+    "docx-templates": "^4.15.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "ioredis": "^5.10.1",
+    "jsonwebtoken": "^9.0.3",
+    "mammoth": "^1.12.0",
+    "multer": "1.4.5-lts.2",
+    "nodemailer": "^8.0.7",
+    "pdfkit": "^0.18.0",
+    "puppeteer": "^25.0.4",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
+    "stripe": "^22.1.0",
+    "twilio": "^4.13.1",
+    "web-push": "^3.6.7",
+    "xlsx": "^0.18.5",
+    "zod": "^4.4.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "msgpackr-extract",
+      "@datadog/native-appsec",
+      "@datadog/native-iast-taint-tracking",
+      "@datadog/native-metrics",
+      "@datadog/pprof",
+      "dd-trace",
+      "@sentry/cli"
+    ],
+    "ignoredBuiltDependencies": []
+  },
+  "description": ""
+}

@@ -1,0 +1,11 @@
+export const NAVY = "#0A2472";
+export const NAVY_LIGHT = "#0C2D8A";
+export const NAVY_DARK = "#0C1A3A";
+export const CREAM = "#F8F9FA";
+export const MUTED = "#6B7280";
+export const AMBER = "#FFBA08";
+export const AMBER_LIGHT = "#FFF8E1";
+export const GREEN = "#10B981";
+export const RED = "#EF4444";
+export const INDIGO = "#6366F1";
+export const WHITE = "#FFFFFF";

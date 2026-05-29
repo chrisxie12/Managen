@@ -1,0 +1,10 @@
+POST http://localhost:5000/api/onboard/signup
+Content-Type: application/json
+
+{
+  "schoolName": "Greenfield Academy",
+  "email": "admin@greenfield.com",
+  "adminName": "John Doe",
+  "adminPassword": "password123",
+  "plan": "trial"
+}

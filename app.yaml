@@ -1,0 +1,53 @@
+name: managen
+services:
+  - name: managen-backend
+    github:
+      branch: main
+      repo: chrisxie12/Managen
+    run_command: node server.js
+    build_command: pnpm install --no-frozen-lockfile
+    source_dir: /
+    http_port: 8080
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+      - key: SPACES_KEY
+        value: "${SPACES_KEY}"
+      - key: SPACES_SECRET
+        value: "${SPACES_SECRET}"
+      - key: SPACES_REGION
+        value: "${SPACES_REGION}"
+      - key: SPACES_BUCKET
+        value: "${SPACES_BUCKET}"
+      - key: SPACES_ENDPOINT
+        value: "${SPACES_ENDPOINT}"
+      - key: GOOGLE_API_KEY
+        value: "${GOOGLE_API_KEY}"
+      - key: VAPID_PUBLIC_KEY
+        value: "${VAPID_PUBLIC_KEY}"
+      - key: VAPID_PRIVATE_KEY
+        value: "${VAPID_PRIVATE_KEY}"
+      - key: DD_ENABLED
+        value: "${DD_ENABLED}"
+      - key: SENTRY_DSN
+        value: "${SENTRY_DSN}"
+static_sites:
+  - name: managen-frontend
+    github:
+      branch: main
+      repo: chrisxie12/Managen
+    build_command: cd schoolos-frontend && npm install -g pnpm && pnpm install --no-frozen-lockfile && pnpm run build
+    output_dir: /schoolos-frontend/dist
+    source_dir: /
+    error_document: index.html
+    routes:
+      - path: /
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: https://api.getschoolos.me
+      - key: VITE_SENTRY_DSN
+        value: "${VITE_SENTRY_DSN}"
