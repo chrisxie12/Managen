@@ -1243,62 +1243,108 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 }
 
 @media (max-width: 768px) {
-  section { padding: 72px 0; }
-  .container { padding: 0 20px; }
+  section { padding: 60px 0; }
+  .container { padding: 0 18px; }
   .nav-links, .nav-actions .nav-cta-plain { display: none; }
   .menu-btn { display: flex; }
-  .hero { padding: 110px 0 60px; min-height: auto; }
-  .hero-title { font-size: clamp(34px, 9vw, 48px); }
-  .hero-sub { font-size: 16px; }
+
+  /* Hero — reduce excessive top whitespace */
+  .hero { padding: 90px 0 44px; min-height: auto; }
+  .hero-title { font-size: clamp(30px, 8vw, 46px); }
+  .hero-sub { font-size: 15px; max-width: 100%; }
   .hero-grid { display: none; }
   .float-1, .float-2, .float-3 { display: none; }
+
+  /* Stack hero CTA buttons full-width on mobile */
+  .hero-ctas { flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-secondary { width: 100%; justify-content: center; }
+
+  /* Center all section eyebrows */
+  .section-eyebrow { justify-content: center; }
+
+  /* How it works */
   .how-connector { display: none; }
+
+  /* Stats */
   .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0; }
   .stat-item { padding: 28px 16px; }
+
+  /* Testimonials */
   .testi-grid { grid-template-columns: 1fr; }
+
+  /* Integrations */
   .integrations-grid { grid-template-columns: repeat(2, 1fr); }
-  .foot-grid { grid-template-columns: 1fr; }
+
+  /* Footer */
+  .foot-grid { grid-template-columns: 1fr; gap: 32px; }
   .foot-bottom { flex-direction: column; gap: 16px; text-align: center; }
+
+  /* Sticky bar + back-to-top */
   .mob-sticky { display: block; }
-  .btt { bottom: 90px; }
-  .form-row { grid-template-columns: 1fr; }
-  .contact-grid { gap: 40px; }
-  .hero-trust-logos { gap: 8px; }
-  .trust-logo-chip { font-size: 12px; padding: 5px 10px; }
+  .btt { bottom: 90px; right: 16px; }
   body { padding-bottom: 80px; }
+
+  /* Forms */
+  .form-row { grid-template-columns: 1fr; }
+  .contact-grid { gap: 28px; }
+
+  /* Trust chips */
+  .hero-trust-logos { gap: 6px; }
+  .trust-logo-chip { font-size: 11px; padding: 4px 10px; }
+  .trust-logo-img { height: 12px !important; }
+
+  /* Calc — full-width slider */
   .cmp-grid { grid-template-columns: 1fr !important; }
   .sec-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .calc-inner { flex-direction: column; padding: 16px 20px; }
   .calc-inner .calc-price { border-left: none !important; padding-left: 0 !important; border-top: 1px solid var(--border); padding-top: 16px; width: 100%; }
-  .calc-inner input[type="range"] { width: 160px; }
-  .trust-logo-img { height: 12px !important; }
+  .calc-inner input[type="range"] { width: 100%; }
 
-  /* WhatsApp section: stack vertically, center phone */
-  .wa-section-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+  /* WhatsApp section */
+  .wa-section-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
   .wa-phone-wrap { justify-content: center !important; }
 
-  /* Fix btn wrapping */
-  .btn-primary, .btn-secondary, .btn-teal { white-space: nowrap; }
-
-  /* Reduce hero social proof spacing */
-  .hero-social-proof { margin-top: 16px !important; }
-  .hero-trust { margin-top: 16px !important; }
-
-  /* Section eyebrow centering on mobile */
-  .how-header .section-eyebrow { justify-content: center; }
+  /* Hero meta spacing */
+  .hero-social-proof { margin-top: 10px !important; }
+  .hero-trust { margin-top: 10px !important; }
 }
 
 @media (max-width: 480px) {
-  .hero-title { font-size: clamp(32px, 10vw, 44px); }
-  .hero-dashboard { padding: 16px; }
+  section { padding: 52px 0; }
+  .container { padding: 0 16px; }
+
+  /* Hero */
+  .hero { padding: 82px 0 36px; }
+  .hero-title { font-size: clamp(28px, 9vw, 40px); }
+  .hero-sub { font-size: 14px; }
+  .hero-eyebrow { font-size: 11px; padding: 5px 12px; }
+
+  /* Dashboard inside hero */
+  .hero-dashboard { padding: 14px; }
   .dash-stats { grid-template-columns: repeat(2, 1fr); }
+
+  /* Integrations */
   .integrations-grid { grid-template-columns: repeat(2, 1fr); }
-  .hero-social-proof { flex-direction: column; align-items: flex-start; }
+
+  /* Social proof stacking */
+  .hero-social-proof { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+  /* Security grid — single column on narrow phones */
   .sec-grid { grid-template-columns: 1fr !important; }
-  .calc-inner input[type="range"] { width: 120px; }
-  .calc-inner #studentCount { font-size: 20px; min-width: 48px; }
+
+  /* Comparison table */
   .compare-table { font-size: 12px; }
-  .compare-table th, .compare-table td { padding: 10px 8px; }
+  .compare-table th, .compare-table td { padding: 10px 6px; }
+
+  /* iOS zoom fix — inputs must be ≥16px to prevent auto-zoom */
+  .form-input, .form-select { font-size: 16px; }
+
+  /* Calc */
+  .calc-inner #studentCount { font-size: 18px; min-width: 40px; }
+
+  /* Pricing cards full-width */
+  .pricing-grid { max-width: 100%; }
 }
 </style>
 </head>
