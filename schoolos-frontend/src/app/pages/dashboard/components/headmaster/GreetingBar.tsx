@@ -32,7 +32,7 @@ export function GreetingBar({ alerts, alertLoading }: GreetingBarProps) {
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
       <div>
         <div className="flex items-center gap-2 flex-wrap">
-          <h2 className="text-[22px] font-bold text-gray-800" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <h2 className="text-[22px] font-bold text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {greeting}
           </h2>
           <span className="text-[22px] font-bold text-blue-600 underline underline-offset-2 decoration-blue-300">
@@ -44,7 +44,7 @@ export function GreetingBar({ alerts, alertLoading }: GreetingBarProps) {
             </span>
           )}
         </div>
-        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Clock size={12} />
             {formatTime(now)}
@@ -58,7 +58,7 @@ export function GreetingBar({ alerts, alertLoading }: GreetingBarProps) {
 
       <div className="flex items-center gap-2 flex-wrap">
         {alertLoading ? (
-          <div className="h-6 w-20 bg-gray-200 rounded-full animate-pulse" />
+          <div className="h-6 w-20 bg-muted rounded-full animate-pulse" />
         ) : totalUnread > 0 ? (
           <button
             onClick={() => navigate('/dashboard/notifications')}

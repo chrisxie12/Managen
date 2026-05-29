@@ -89,8 +89,8 @@ function KPICard({ icon: Icon, label, value, subtext, trend, color, onClick, isL
       onClick={onClick}
       className={`p-6 rounded-2xl border transition-all ${onClick ? "cursor-pointer hover:shadow-lg" : ""}`}
       style={{
-        background: "white",
-        borderColor: "#E5E7EB",
+        background: "var(--card)",
+        borderColor: "var(--border)",
       }}
     >
       <div className="flex justify-between items-start mb-4">
@@ -116,17 +116,17 @@ function KPICard({ icon: Icon, label, value, subtext, trend, color, onClick, isL
 
       {isLoading ? (
         <div className="space-y-2">
-          <div className="h-8 bg-gray-200 rounded animate-pulse w-1/2" />
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+          <div className="h-8 bg-muted rounded animate-pulse w-1/2" />
+          <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
         </div>
       ) : (
         <>
-          <div className="text-3xl font-bold" style={{ color: COLOR_SCHEME.primary, marginBottom: "0.5rem" }}>
+          <div className="text-3xl font-bold text-foreground" style={{ marginBottom: "0.5rem" }}>
             {value}
           </div>
-          <div style={{ color: "#6B7280", fontSize: "0.875rem" }}>{label}</div>
+          <div className="text-muted-foreground" style={{ fontSize: "0.875rem" }}>{label}</div>
           {subtext && (
-            <div style={{ color: "#9CA3AF", fontSize: "0.75rem", marginTop: "0.5rem" }}>
+            <div className="text-muted-foreground/70" style={{ fontSize: "0.75rem", marginTop: "0.5rem" }}>
               {subtext}
             </div>
           )}
@@ -144,8 +144,8 @@ function QuickActionCard({ icon: Icon, label, description, onClick, color }: Qui
   return (
     <button
       onClick={onClick}
-      className="p-4 rounded-xl border transition-all hover:shadow-lg text-left"
-      style={{ background: "white", borderColor: "#E5E7EB" }}
+      className="p-4 rounded-xl border transition-all hover:shadow-lg text-left bg-card"
+      style={{ borderColor: "var(--border)" }}
     >
       <div className="flex items-start justify-between mb-3">
         <div
@@ -154,12 +154,12 @@ function QuickActionCard({ icon: Icon, label, description, onClick, color }: Qui
         >
           <Icon size={20} color={color} />
         </div>
-        <ChevronRight size={16} style={{ color: "#D1D5DB" }} />
+        <ChevronRight size={16} className="text-muted-foreground/50" />
       </div>
-      <div style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "0.25rem" }}>
+      <div className="text-foreground" style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "0.25rem" }}>
         {label}
       </div>
-      <div style={{ fontSize: "0.75rem", color: "#6B7280" }}>
+      <div className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>
         {description}
       </div>
     </button>
@@ -226,14 +226,14 @@ function TaskItem({ title, priority, status, dueDate, owner }: TaskProps) {
 
   return (
     <div
-      className="p-4 rounded-lg border flex items-center justify-between hover:bg-gray-50 transition-colors"
-      style={{ borderColor: "#E5E7EB" }}
+      className="p-4 rounded-lg border flex items-center justify-between hover:bg-muted/40 transition-colors"
+      style={{ borderColor: "var(--border)" }}
     >
       <div className="flex items-center gap-3 flex-1">
         {statusIcons[status]}
         <div className="flex-1">
-          <div style={{ fontWeight: 600, marginBottom: "0.25rem" }}>{title}</div>
-          <div style={{ fontSize: "0.75rem", color: "#6B7280" }}>
+          <div className="text-foreground" style={{ fontWeight: 600, marginBottom: "0.25rem" }}>{title}</div>
+          <div className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>
             Due {new Date(dueDate).toLocaleDateString()}
             {owner && ` • ${owner}`}
           </div>
@@ -256,19 +256,19 @@ function PerformanceChart({ data, title }: { data: { month: string; value: numbe
   const avgValue = Math.round(data.reduce((sum, d) => sum + d.value, 0) / data.length);
 
   return (
-    <div className="p-6 rounded-2xl border" style={{ background: "white", borderColor: "#E5E7EB" }}>
+    <div className="p-6 rounded-2xl border bg-card" style={{ borderColor: "var(--border)" }}>
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h3 style={{ fontSize: "0.875rem", color: "#6B7280", marginBottom: "0.5rem" }}>
+          <h3 className="text-muted-foreground" style={{ fontSize: "0.875rem", marginBottom: "0.5rem" }}>
             {title}
           </h3>
-          <div style={{ fontSize: "1.875rem", fontWeight: 700, color: COLOR_SCHEME.primary }}>
+          <div className="text-foreground" style={{ fontSize: "1.875rem", fontWeight: 700 }}>
             {avgValue}%
           </div>
         </div>
         <div className="flex gap-2">
-          <button style={{ padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid #E5E7EB", cursor: "pointer" }}>
-            <MoreHorizontal size={16} color="#6B7280" />
+          <button className="text-muted-foreground" style={{ padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid var(--border)", cursor: "pointer", background: "var(--card)" }}>
+            <MoreHorizontal size={16} />
           </button>
         </div>
       </div>
@@ -285,7 +285,7 @@ function PerformanceChart({ data, title }: { data: { month: string; value: numbe
               }}
               title={`${item.month}: ${item.value}%`}
             />
-            <div style={{ fontSize: "0.625rem", marginTop: "0.5rem", color: "#6B7280" }}>
+            <div className="text-muted-foreground" style={{ fontSize: "0.625rem", marginTop: "0.5rem" }}>
               {item.month}
             </div>
           </div>
@@ -430,7 +430,7 @@ export function AdminOverviewV3() {
   ];
 
   return (
-    <div style={{ background: COLOR_SCHEME.secondary, minHeight: "100vh" }} className="p-6">
+    <div className="p-6 min-h-screen bg-background">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
@@ -439,13 +439,13 @@ export function AdminOverviewV3() {
               style={{
                 fontSize: "2rem",
                 fontWeight: 700,
-                color: COLOR_SCHEME.primary,
                 marginBottom: "0.5rem",
               }}
+              className="text-foreground"
             >
               Welcome back, {user?.firstName || "Admin"}
             </h1>
-            <p style={{ color: "#6B7280" }}>
+            <p className="text-muted-foreground">
               {school?.name || "School Management"}
               {connected && (
                 <span style={{ color: "#10B981", marginLeft: "1rem" }}>
@@ -460,30 +460,30 @@ export function AdminOverviewV3() {
               style={{
                 padding: "0.75rem 1rem",
                 borderRadius: "0.75rem",
-                border: "1px solid #E5E7EB",
-                background: "white",
+                border: "1px solid var(--border)",
+                background: "var(--card)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
               }}
             >
-              <Download size={18} style={{ color: COLOR_SCHEME.primary }} />
-              <span style={{ color: COLOR_SCHEME.primary, fontWeight: 500 }}>Export</span>
+              <Download size={18} className="text-foreground" />
+              <span className="text-foreground font-medium">Export</span>
             </button>
             <button
               style={{
                 padding: "0.75rem 1rem",
                 borderRadius: "0.75rem",
-                border: "1px solid #E5E7EB",
-                background: "white",
+                border: "1px solid var(--border)",
+                background: "var(--card)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 gap: "0.5rem",
               }}
             >
-              <Settings size={18} style={{ color: COLOR_SCHEME.primary }} />
+              <Settings size={18} className="text-foreground" />
             </button>
           </div>
         </div>
@@ -497,9 +497,9 @@ export function AdminOverviewV3() {
               style={{
                 padding: "0.5rem 1rem",
                 borderRadius: "0.5rem",
-                border: "1px solid #E5E7EB",
-                background: timeRange === range.toLowerCase() ? COLOR_SCHEME.primary : "white",
-                color: timeRange === range.toLowerCase() ? "white" : COLOR_SCHEME.primary,
+                border: "1px solid var(--border)",
+                background: timeRange === range.toLowerCase() ? "var(--primary)" : "var(--card)",
+                color: timeRange === range.toLowerCase() ? "var(--primary-foreground)" : "var(--foreground)",
                 cursor: "pointer",
                 fontSize: "0.875rem",
                 fontWeight: 500,
@@ -609,8 +609,8 @@ export function AdminOverviewV3() {
 
         {/* Tasks Sidebar */}
         <div
-          className="p-6 rounded-2xl border"
-          style={{ background: "white", borderColor: "#E5E7EB" }}
+          className="p-6 rounded-2xl border bg-card"
+          style={{ borderColor: "var(--border)" }}
         >
           <div className="flex justify-between items-center mb-4">
             <h3 style={{ fontSize: "1rem", fontWeight: 700 }}>
@@ -680,13 +680,13 @@ export function AdminOverviewV3() {
 
       {/* Footer Info */}
       <div
-        className="mt-8 p-6 rounded-2xl border text-center"
-        style={{ background: "white", borderColor: "#E5E7EB" }}
+        className="mt-8 p-6 rounded-2xl border text-center bg-card"
+        style={{ borderColor: "var(--border)" }}
       >
-        <p style={{ color: "#6B7280", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
+        <p className="text-muted-foreground" style={{ fontSize: "0.875rem", marginBottom: "0.5rem" }}>
           📊 Tip: Your school is performing above average. Keep the great work!
         </p>
-        <p style={{ color: "#9CA3AF", fontSize: "0.75rem" }}>
+        <p className="text-muted-foreground/60" style={{ fontSize: "0.75rem" }}>
           Dashboard loaded at {new Date().toLocaleTimeString()}
         </p>
       </div>

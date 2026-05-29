@@ -24,9 +24,9 @@ export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFees
 
   return (
     <>
-      <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
+      <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
         <div className="flex items-center gap-3">
-          <button onClick={onToggleSidebar} className="lg:hidden text-gray-500 hover:text-gray-700">
+          <button onClick={onToggleSidebar} className="lg:hidden text-muted-foreground hover:text-foreground">
             <Menu size={22} />
           </button>
           <div className="flex items-center gap-3">
@@ -34,7 +34,7 @@ export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFees
               {getInitials(schoolName)}
             </div>
             <div>
-              <h1 className="text-sm font-semibold text-gray-800 leading-tight">{schoolName}</h1>
+              <h1 className="text-sm font-semibold text-foreground leading-tight">{schoolName}</h1>
               <span className="inline-block text-[9px] font-semibold px-1.5 py-0.5 rounded bg-green-100 text-green-700 leading-tight">
                 {getCurrentTerm()}
               </span>
@@ -45,11 +45,11 @@ export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFees
         <div className="hidden md:flex flex-1 max-w-md mx-6">
           <div
             onClick={() => setCommandOpen(true)}
-            className="w-full flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 cursor-pointer text-xs text-gray-400 hover:bg-gray-200 transition-colors"
+            className="w-full flex items-center gap-2 bg-muted rounded-lg px-3 py-2 cursor-pointer text-xs text-muted-foreground hover:bg-muted/70 transition-colors"
           >
-            <Search size={14} className="text-gray-400" />
+            <Search size={14} className="text-muted-foreground" />
             <span>Search menu, students, pages...</span>
-            <span className="ml-auto text-[9px] text-gray-400 bg-gray-200 px-1.5 py-0.5 rounded">⌘K</span>
+            <span className="ml-auto text-[9px] text-muted-foreground bg-background px-1.5 py-0.5 rounded">⌘K</span>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFees
             </button>
           )}
 
-          <button className="relative text-gray-500 hover:text-gray-700 p-1.5">
+          <button className="relative text-muted-foreground hover:text-foreground p-1.5">
             <Bell size={18} />
             {unreadAlerts > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center">
@@ -79,14 +79,14 @@ export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFees
             )}
           </button>
 
-          <button onClick={() => navigate('/dashboard/settings')} className="text-gray-500 hover:text-gray-700 p-1.5">
+          <button onClick={() => navigate('/dashboard/settings')} className="text-muted-foreground hover:text-foreground p-1.5">
             <Settings size={18} />
           </button>
 
-          <div className="flex items-center gap-2 pl-2 border-l border-gray-200 ml-1">
+          <div className="flex items-center gap-2 pl-2 border-l border-border ml-1">
             <div className="hidden sm:block text-right">
-              <div className="text-xs font-medium text-gray-700 leading-tight">{userName.split(' ')[0]}</div>
-              <div className="text-[9px] text-gray-400">{roleLabel}</div>
+              <div className="text-xs font-medium text-foreground leading-tight">{userName.split(' ')[0]}</div>
+              <div className="text-[9px] text-muted-foreground">{roleLabel}</div>
             </div>
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold">
               {initials}

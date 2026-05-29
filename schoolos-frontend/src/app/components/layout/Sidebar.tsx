@@ -36,15 +36,15 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 ${sidebarWidth} bg-slate-900 border-r border-slate-800 flex flex-col overflow-y-auto h-screen scrollbar-thin transition-all duration-200 z-50`}
+      className={`fixed inset-y-0 left-0 ${sidebarWidth} bg-sidebar border-r border-sidebar-border flex flex-col overflow-y-auto h-screen scrollbar-thin transition-all duration-200 z-50`}
     >
       {/* Header */}
-      <div className={`h-14 px-4 flex items-center gap-3 border-b border-slate-800 flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
-        <GraduationCap className="w-7 h-7 text-white flex-shrink-0" />
+      <div className={`h-14 px-4 flex items-center gap-3 border-b border-sidebar-border flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
+        <GraduationCap className="w-7 h-7 text-sidebar-foreground flex-shrink-0" />
         {!collapsed && (
           <>
-            <span className="text-white font-semibold text-base tracking-tight truncate">SchoolOS</span>
-            <span className="ml-auto flex-shrink-0 text-[10px] bg-primary-600 text-white px-1.5 py-0.5 rounded font-medium">Pro</span>
+            <span className="text-sidebar-foreground font-semibold text-base tracking-tight truncate">SchoolOS</span>
+            <span className="ml-auto flex-shrink-0 text-[10px] bg-sidebar-primary text-sidebar-primary-foreground px-1.5 py-0.5 rounded font-medium">Pro</span>
           </>
         )}
       </div>
@@ -55,7 +55,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
           <div key={section.id} className="mb-2">
             {/* Group Label */}
             {!collapsed && (
-              <div className="px-3 pt-5 pb-2 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+              <div className="px-3 pt-5 pb-2 text-[11px] font-semibold text-sidebar-foreground/50 uppercase tracking-wider">
                 {section.label}
               </div>
             )}
@@ -80,22 +80,22 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
                                 isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
                               } ${
                                 active
-                                  ? "bg-slate-800 border-l-[3px] border-primary-500"
-                                  : "hover:bg-slate-800/50"
+                                  ? "bg-sidebar-accent/20 border-l-[3px] border-sidebar-primary"
+                                  : "hover:bg-sidebar-accent/10"
                               }`}
                             >
-                              <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-white" : "text-slate-400"}`} />
+                              <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-sidebar-foreground" : "text-sidebar-foreground/50"}`} />
                             </button>
                           </Tooltip.Trigger>
                           <Tooltip.Portal>
                             <Tooltip.Content
                               side="right"
                               sideOffset={8}
-                              className="z-50 text-white text-xs font-medium bg-slate-800 px-2 py-1 rounded shadow-lg"
+                              className="z-50 text-sidebar-foreground text-xs font-medium bg-sidebar border border-sidebar-border px-2 py-1 rounded shadow-lg"
                             >
                               {item.label}
                               {isDisabled && " (Soon)"}
-                              <Tooltip.Arrow className="fill-slate-800" />
+                              <Tooltip.Arrow className="fill-sidebar" />
                             </Tooltip.Content>
                           </Tooltip.Portal>
                         </Tooltip.Root>
@@ -109,14 +109,14 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
                       onClick={() => { if (!isDisabled) handleNavigation(item.path); }}
                       disabled={isDisabled}
                       className={`w-full h-9 px-3 flex items-center gap-2.5 rounded-md transition-colors duration-150 ${
-                        isDisabled ? "opacity-50 cursor-not-allowed text-slate-500" : "cursor-pointer"
+                        isDisabled ? "opacity-50 cursor-not-allowed text-sidebar-foreground/40" : "cursor-pointer"
                       } ${
                         active
-                          ? "bg-slate-800 text-white border-l-[3px] border-primary-500 -ml-[3px]"
-                          : "text-slate-300 hover:bg-slate-800/50 hover:text-slate-200"
+                          ? "bg-sidebar-accent/20 text-sidebar-foreground border-l-[3px] border-sidebar-primary -ml-[3px]"
+                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/10 hover:text-sidebar-foreground"
                       }`}
                     >
-                      <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-white" : "text-slate-400"}`} />
+                      <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-sidebar-foreground" : "text-sidebar-foreground/50"}`} />
                       <span className="text-[13px] font-medium">{item.label}</span>
                       {isDisabled && (
                         <span className="ml-auto text-[9px] uppercase tracking-wider font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
@@ -133,25 +133,25 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
       </nav>
 
       {/* Bottom Section */}
-      <div className="mt-auto border-t border-slate-800 px-3 py-3 space-y-0.5 flex-shrink-0">
+      <div className="mt-auto border-t border-sidebar-border px-3 py-3 space-y-0.5 flex-shrink-0">
         {!collapsed && (
-          <button onClick={() => navigate("/dashboard/notifications")} className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-slate-300 hover:bg-slate-800/50 hover:text-slate-200 transition-colors duration-150 mb-2">
-            <Bell className="w-[18px] h-[18px] stroke-[2] text-slate-400" />
+          <button onClick={() => navigate("/dashboard/notifications")} className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent/10 hover:text-sidebar-foreground transition-colors duration-150 mb-2">
+            <Bell className="w-[18px] h-[18px] stroke-[2] text-sidebar-foreground/50" />
             <span className="text-[13px] font-medium">Notifications</span>
           </button>
         )}
-        
-        <button onClick={() => navigate("/dashboard/profile")} className={`w-full ${collapsed ? "h-12 justify-center px-0" : "h-10 px-2 gap-3"} flex items-center rounded-md hover:bg-slate-800/50 transition-colors`}>
-          <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white font-medium flex-shrink-0">
+
+        <button onClick={() => navigate("/dashboard/profile")} className={`w-full ${collapsed ? "h-12 justify-center px-0" : "h-10 px-2 gap-3"} flex items-center rounded-md hover:bg-sidebar-accent/10 transition-colors`}>
+          <div className="w-8 h-8 rounded-full bg-sidebar-accent/30 flex items-center justify-center text-xs text-sidebar-foreground font-medium flex-shrink-0">
             {initials}
           </div>
           {!collapsed && (
             <>
               <div className="text-left overflow-hidden">
-                <div className="text-[13px] text-white font-medium truncate">{user?.fullName || "User"}</div>
-                <div className="text-[11px] text-slate-500 truncate capitalize">{userRoleStr}</div>
+                <div className="text-[13px] text-sidebar-foreground font-medium truncate">{user?.fullName || "User"}</div>
+                <div className="text-[11px] text-sidebar-foreground/50 truncate capitalize">{userRoleStr}</div>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 ml-auto flex-shrink-0" />
+              <ChevronRight className="w-4 h-4 text-sidebar-foreground/40 ml-auto flex-shrink-0" />
             </>
           )}
         </button>

@@ -30,11 +30,11 @@ export function FinancialPerformanceChart({
   onRetry,
 }: FinancialPerformanceChartProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="bg-card rounded-lg border border-border p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-bold text-gray-800">📊 Financial Performance</span>
-          <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+          <span className="text-sm font-bold text-foreground">📊 Financial Performance</span>
+          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
             Last {range} days
           </span>
         </div>
@@ -46,7 +46,7 @@ export function FinancialPerformanceChart({
               className={`text-[10px] px-2 py-1 rounded-md transition-colors ${
                 range === d
                   ? 'bg-indigo-500 text-white font-medium'
-                  : 'text-gray-500 hover:bg-gray-100'
+                  : 'text-muted-foreground hover:bg-muted'
               }`}
             >
               {d}d
@@ -56,11 +56,11 @@ export function FinancialPerformanceChart({
       </div>
 
       {loading && (
-        <div className="h-[280px] bg-gray-100 rounded-lg animate-pulse" />
+        <div className="h-[280px] bg-muted rounded-lg animate-pulse" />
       )}
 
       {error && (
-        <div className="h-[280px] flex items-center justify-center bg-gray-50 rounded-lg">
+        <div className="h-[280px] flex items-center justify-center bg-muted/40 rounded-lg">
           <div className="text-center">
             <p className="text-red-400 text-sm">⚠ Could not load chart</p>
             <button onClick={onRetry} className="mt-1 text-xs text-blue-600 underline">Retry</button>
@@ -79,7 +79,7 @@ export function FinancialPerformanceChart({
                     <stop offset="95%" stopColor="#6366f1" stopOpacity={0.01} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
                 <XAxis
                   dataKey="date"
                   tick={{ fontSize: 9, fill: '#9ca3af' }}
@@ -106,7 +106,9 @@ export function FinancialPerformanceChart({
                     fontSize: 11,
                     fontFamily: "'DM Mono', monospace",
                     borderRadius: 6,
-                    border: '1px solid #e5e7eb',
+                    background: 'var(--card)',
+                    color: 'var(--foreground)',
+                    border: '1px solid var(--border)',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                   }}
                   formatter={(value: number) => [formatCurrency(value), 'Income Collection']}
@@ -124,7 +126,7 @@ export function FinancialPerformanceChart({
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-gray-500">
+          <div className="flex items-center gap-1.5 mt-2 text-[10px] text-muted-foreground">
             <span className="inline-block w-4 h-0.5 bg-indigo-500 rounded" />
             Income Collection
           </div>
@@ -132,7 +134,7 @@ export function FinancialPerformanceChart({
       )}
 
       {!loading && !error && data && data.length === 0 && (
-        <div className="h-[280px] flex items-center justify-center bg-gray-50 rounded-lg">
+        <div className="h-[280px] flex items-center justify-center bg-muted/40 rounded-lg">
           <p className="text-gray-400 text-sm italic">No financial data available</p>
         </div>
       )}

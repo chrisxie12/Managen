@@ -13,18 +13,18 @@ export function BirthdaysWidget({ birthdays, loading, error, onRetry }: Birthday
   const todayStr = formatShortDate(today);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-3">
+    <div className="bg-card rounded-lg border border-border p-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-bold text-gray-800">🎂 Birthdays</span>
+        <span className="text-sm font-bold text-foreground">🎂 Birthdays</span>
       </div>
 
       {loading && (
         <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex items-center gap-2 animate-pulse">
-              <div className="w-8 h-8 rounded-full bg-gray-200" />
+              <div className="w-8 h-8 rounded-full bg-muted" />
               <div className="flex-1 space-y-1">
-                <div className="h-3 w-24 bg-gray-200 rounded" />
+                <div className="h-3 w-24 bg-muted rounded" />
                 <div className="h-2 w-16 bg-gray-100 rounded" />
               </div>
             </div>
@@ -41,7 +41,7 @@ export function BirthdaysWidget({ birthdays, loading, error, onRetry }: Birthday
 
       {!loading && !error && (!birthdays || birthdays.length === 0) && (
         <div className="flex items-center justify-center py-6">
-          <p className="text-gray-400 text-xs italic">No birthdays this week 🎉</p>
+          <p className="text-muted-foreground text-xs italic">No birthdays this week 🎉</p>
         </div>
       )}
 
@@ -61,8 +61,8 @@ export function BirthdaysWidget({ birthdays, loading, error, onRetry }: Birthday
                 {b.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-xs font-bold text-gray-800 truncate">{b.name}</div>
-                <div className="text-[9px] text-gray-400 truncate">
+                <div className="text-xs font-bold text-foreground truncate">{b.name}</div>
+                <div className="text-[9px] text-muted-foreground truncate">
                   {b.className} • {b.admissionNumber}
                 </div>
               </div>
@@ -70,7 +70,7 @@ export function BirthdaysWidget({ birthdays, loading, error, onRetry }: Birthday
                 className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
                   b.isToday
                     ? 'bg-red-500 text-white'
-                    : 'bg-gray-100 text-gray-500'
+                    : 'bg-muted text-muted-foreground'
                 }`}
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >

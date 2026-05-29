@@ -208,7 +208,7 @@ function DashboardLayoutInner() {
   }, [location.pathname]);
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM }}>
+    <div className="flex h-screen overflow-hidden bg-background" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* Desktop: full sidebar */}
       <div className="hidden lg:flex">
         <Sidebar role={user?.role || "school-admin"} />
@@ -221,24 +221,23 @@ function DashboardLayoutInner() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="relative z-50 h-full bg-white shadow-xl">
+          <div className="relative z-50 h-full bg-sidebar shadow-xl">
              <Sidebar role={user?.role || "school-admin"} onClose={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px] md:ml-16">
-        <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3"
-          style={{ background: "rgba(248,249,250,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(10,36,114,0.07)" }}>
+        <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3 bg-background/85 backdrop-blur-xl border-b border-border">
           <div className="flex items-center gap-3">
-            <button onClick={() => setMobileOpen(true)} className="lg:hidden">
-              <Menu size={20} color={NAVY} />
+            <button onClick={() => setMobileOpen(true)} className="lg:hidden text-foreground">
+              <Menu size={20} />
             </button>
             <div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }}>
+              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }} className="text-foreground">
                 {pageTitle}
               </h1>
-              <p style={{ color: MUTED, fontSize: "0.75rem" }}>{school?.name || "School"} Dashboard</p>
+              <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{school?.name || "School"} Dashboard</p>
             </div>
           </div>
 
@@ -268,8 +267,7 @@ function DashboardLayoutInner() {
 
           {installPrompt && (
               <button onClick={handleInstall}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium"
-                style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", color: NAVY }}>
+                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium bg-card border border-border text-foreground">
                 <Download size={13} /> Install App
               </button>
             )}
@@ -278,22 +276,19 @@ function DashboardLayoutInner() {
             )}
             <button
               onClick={() => setGlobalSearchOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95"
-              style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}
+              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95 bg-card border border-border"
             >
-              <Search size={14} color={MUTED} />
-              <span style={{ color: MUTED, fontSize: "0.82rem" }}>Search...</span>
-              <kbd className="px-1.5 py-0.5 rounded text-[10px] font-medium ml-4"
-                style={{ background: `${NAVY}08`, color: MUTED }}>
+              <Search size={14} className="text-muted-foreground" />
+              <span className="text-muted-foreground" style={{ fontSize: "0.82rem" }}>Search...</span>
+              <kbd className="px-1.5 py-0.5 rounded text-[10px] font-medium ml-4 bg-muted text-muted-foreground">
                 ⌘K
               </kbd>
             </button>
 
             <div className="relative">
               <button onClick={() => setShowNotifDropdown(!showNotifDropdown)}
-                className="relative w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)" }}>
-                <Bell size={16} color={NAVY_LIGHT} />
+                className="relative w-9 h-9 rounded-xl flex items-center justify-center bg-card border border-border">
+                <Bell size={16} className="text-foreground" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
                     style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
@@ -302,11 +297,10 @@ function DashboardLayoutInner() {
               {showNotifDropdown && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl shadow-lg overflow-hidden"
-                    style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}>
-                    <div className="p-3 text-center text-sm" style={{ color: MUTED }}>
+                  <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl shadow-lg overflow-hidden bg-card border border-border">
+                    <div className="p-3 text-center text-sm text-muted-foreground">
                       <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }}
-                        className="text-xs font-medium" style={{ color: NAVY }}>
+                        className="text-xs font-medium text-foreground hover:text-primary transition-colors">
                         View all notifications
                       </button>
                     </div>

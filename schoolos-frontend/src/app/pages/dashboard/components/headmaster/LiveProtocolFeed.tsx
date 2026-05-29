@@ -19,9 +19,9 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
   }, [activities]);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-3 h-full flex flex-col">
+    <div className="bg-card rounded-lg border border-border p-3 h-full flex flex-col">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-bold text-gray-800">⚡ Live Protocol</span>
+        <span className="text-sm font-bold text-foreground">⚡ Live Protocol</span>
         <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-green-500 text-white">
           APPS
         </span>
@@ -31,9 +31,9 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
         <div className="flex-1 space-y-2 py-1">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex gap-2 animate-pulse">
-              <div className="w-0.5 h-10 bg-gray-200 rounded" />
+              <div className="w-0.5 h-10 bg-muted rounded" />
               <div className="flex-1 space-y-1">
-                <div className="h-2.5 w-12 bg-gray-200 rounded" />
+                <div className="h-2.5 w-12 bg-muted rounded" />
                 <div className="h-3 w-full bg-gray-100 rounded" />
               </div>
             </div>
@@ -50,7 +50,7 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
 
       {!loading && !error && visibleActivities.length === 0 && (
         <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-400 text-xs italic">No activity recorded today</p>
+          <p className="text-muted-foreground text-xs italic">No activity recorded today</p>
         </div>
       )}
 
@@ -61,12 +61,12 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
               <div className="w-0.5 rounded flex-shrink-0" style={{ backgroundColor: item.color }} />
               <div className="min-w-0">
                 <div
-                  className="text-[10px] text-gray-400 leading-none mb-0.5"
+                  className="text-[10px] text-muted-foreground leading-none mb-0.5"
                   style={{ fontFamily: "'DM Mono', monospace" }}
                 >
                   {item.timestamp || '--:--:--'}
                 </div>
-                <div className="text-xs text-gray-700 leading-snug line-clamp-2">
+                <div className="text-xs text-foreground/80 leading-snug line-clamp-2">
                   {item.text}
                 </div>
               </div>
@@ -78,7 +78,7 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
       {!loading && !error && (activities?.length || 0) > 8 && (
         <a
           href="/dashboard/audit-logs"
-          className="block text-center text-[10px] text-blue-600 hover:text-blue-800 mt-2 pt-1.5 border-t border-gray-100"
+          className="block text-center text-[10px] text-primary hover:opacity-80 mt-2 pt-1.5 border-t border-border"
         >
           View Full Log →
         </a>
@@ -87,7 +87,7 @@ export function LiveProtocolFeed({ activities, loading, error, onRetry }: LivePr
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
       `}</style>
     </div>
   );

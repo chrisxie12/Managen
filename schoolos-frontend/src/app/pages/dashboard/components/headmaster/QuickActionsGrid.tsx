@@ -55,14 +55,14 @@ export function QuickActionsGrid({ onOpenFeeReminders }: QuickActionsGridProps) 
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between gap-4 mb-3 flex-wrap">
-        <span className="text-sm font-bold text-gray-800">⚡ Quick Actions</span>
+        <span className="text-sm font-bold text-foreground">⚡ Quick Actions</span>
         <div className="flex-1 max-w-xs relative">
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Find an app... (e.g. Fees)"
-            className="w-full text-xs bg-gray-100 border border-gray-200 rounded-md px-3 py-1.5 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            className="w-full text-xs bg-muted border border-border rounded-md px-3 py-1.5 placeholder:text-muted-foreground text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
         <a href="/dashboard/apps" className="text-[10px] text-blue-600 hover:text-blue-800 font-medium">

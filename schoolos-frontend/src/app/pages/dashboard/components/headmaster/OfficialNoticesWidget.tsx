@@ -10,16 +10,16 @@ interface OfficialNoticesWidgetProps {
 
 export function OfficialNoticesWidget({ notices, loading, error, onRetry }: OfficialNoticesWidgetProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-3">
+    <div className="bg-card rounded-lg border border-border p-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-bold text-gray-800">📢 Official Notices</span>
+        <span className="text-sm font-bold text-foreground">📢 Official Notices</span>
       </div>
 
       {loading && (
         <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-3 w-full bg-gray-200 rounded mb-1" />
+              <div className="h-3 w-full bg-muted rounded mb-1" />
               <div className="h-2 w-20 bg-gray-100 rounded" />
             </div>
           ))}
@@ -35,7 +35,7 @@ export function OfficialNoticesWidget({ notices, loading, error, onRetry }: Offi
 
       {!loading && !error && (!notices || notices.length === 0) && (
         <div className="flex items-center justify-center py-6">
-          <p className="text-gray-400 text-xs italic">No notices published yet</p>
+          <p className="text-muted-foreground text-xs italic">No notices published yet</p>
         </div>
       )}
 
@@ -43,14 +43,14 @@ export function OfficialNoticesWidget({ notices, loading, error, onRetry }: Offi
         <div className="space-y-2.5">
           {notices.slice(0, 3).map(notice => (
             <div key={notice.id}>
-              <div className="text-xs font-bold text-gray-800 leading-snug line-clamp-2">
+              <div className="text-xs font-bold text-foreground leading-snug line-clamp-2">
                 {notice.title}
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="text-[9px] text-gray-400">
+                <span className="text-[9px] text-muted-foreground">
                   {notice.date ? formatDate(notice.date, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                 </span>
-                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
                   {notice.type || 'notice'}
                 </span>
               </div>
