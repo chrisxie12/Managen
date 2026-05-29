@@ -327,6 +327,7 @@ nav.scrolled {
   padding: 9px 20px; border-radius: 9px; border: none;
   background: var(--orange); cursor: pointer; transition: all 0.2s;
   display: flex; align-items: center; gap: 7px;
+  white-space: nowrap;
 }
 .nav-cta-fill:hover { background: var(--orange-dk); transform: translateY(-1px); }
 
@@ -627,7 +628,7 @@ nav.scrolled {
   background-size: 50px 50px;
 }
 .how-section .section-title { color: var(--text-inv); }
-.how-section .section-sub { color: rgba(245,243,238,0.6); }
+.how-section .section-sub { color: var(--text-2); }
 .how-header { text-align: center; margin-bottom: 72px; position: relative; z-index: 1; }
 .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; position: relative; z-index: 1; }
 .how-step {
@@ -660,7 +661,7 @@ nav.scrolled {
   font-family: var(--ff-display); font-size: 20px; font-weight: 700;
   color: var(--text-inv); letter-spacing: -0.02em; margin-bottom: 12px;
 }
-.how-step-desc { font-size: 15px; color: rgba(245,243,238,0.55); line-height: 1.7; }
+.how-step-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; opacity: 0.85; }
 .how-step-time {
   display: inline-flex; align-items: center; gap: 6px; margin-top: 20px;
   font-size: 12px; font-weight: 700; color: var(--orange);
@@ -1192,11 +1193,11 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 }
 
 @media (max-width: 768px) {
-  section { padding: 80px 0; }
+  section { padding: 72px 0; }
   .container { padding: 0 20px; }
   .nav-links, .nav-actions .nav-cta-plain { display: none; }
   .menu-btn { display: flex; }
-  .hero { padding: 120px 0 72px; min-height: auto; }
+  .hero { padding: 110px 0 60px; min-height: auto; }
   .hero-title { font-size: clamp(34px, 9vw, 48px); }
   .hero-sub { font-size: 16px; }
   .hero-grid { display: none; }
@@ -1221,6 +1222,20 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .calc-inner .calc-price { border-left: none !important; padding-left: 0 !important; border-top: 1px solid var(--border); padding-top: 16px; width: 100%; }
   .calc-inner input[type="range"] { width: 160px; }
   .trust-logo-img { height: 12px !important; }
+
+  /* WhatsApp section: stack vertically, center phone */
+  .wa-section-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+  .wa-phone-wrap { justify-content: center !important; }
+
+  /* Fix btn wrapping */
+  .btn-primary, .btn-secondary, .btn-teal { white-space: nowrap; }
+
+  /* Reduce hero social proof spacing */
+  .hero-social-proof { margin-top: 16px !important; }
+  .hero-trust { margin-top: 16px !important; }
+
+  /* Section eyebrow centering on mobile */
+  .how-header .section-eyebrow { justify-content: center; }
 }
 
 @media (max-width: 480px) {
@@ -1821,10 +1836,10 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </section>
 
 <!-- =================== WHATSAPP FEATURE =================== -->
-<section style="background:var(--dark);position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 50%,rgba(37,211,102,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 50%,rgba(255,107,53,0.07) 0%,transparent 60%);pointer-events:none;"></div>
+<section style="background:#0F0E0C;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 50%,rgba(37,211,102,0.09) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 50%,rgba(255,107,53,0.09) 0%,transparent 60%);pointer-events:none;"></div>
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+    <div class="wa-section-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
       <!-- Left: copy -->
       <div class="reveal">
         <div class="section-eyebrow" style="color:var(--orange);">WHATSAPP INTEGRATION</div>
@@ -1850,13 +1865,13 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             Parents can query their child's progress via AI chatbot
           </li>
         </ul>
-        <a href="/auth" class="btn-primary" style="margin-top:32px;display:inline-flex;">
+        <a href="/auth" class="btn-primary" style="margin-top:32px;display:inline-flex;white-space:nowrap;">
           See it in action
           <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </div>
       <!-- Right: phone mockup -->
-      <div class="reveal delay-2" style="display:flex;justify-content:center;">
+      <div class="wa-phone-wrap reveal delay-2" style="display:flex;justify-content:center;">
         <div style="width:240px;background:#111;border-radius:36px;border:6px solid #222;box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06);overflow:hidden;position:relative;">
           <!-- Phone notch -->
           <div style="height:28px;background:#111;display:flex;align-items:center;justify-content:center;padding-top:6px;">
