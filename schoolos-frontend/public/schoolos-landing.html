@@ -111,6 +111,21 @@
 /* ===================== RESET & BASE ===================== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* Apply smooth transitions to all elements only during theme switch */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 0.45s cubic-bezier(0.16,1,0.3,1),
+    background 0.45s cubic-bezier(0.16,1,0.3,1),
+    color 0.38s cubic-bezier(0.16,1,0.3,1),
+    border-color 0.38s cubic-bezier(0.16,1,0.3,1),
+    box-shadow 0.38s cubic-bezier(0.16,1,0.3,1),
+    fill 0.38s cubic-bezier(0.16,1,0.3,1),
+    stroke 0.38s cubic-bezier(0.16,1,0.3,1) !important;
+}
+
 body {
   font-family: var(--ff-body);
   background: var(--bg);
@@ -118,7 +133,6 @@ body {
   overflow-x: hidden;
   line-height: 1.65;
   font-size: 16px;
-  transition: background 0.4s, color 0.4s;
 }
 body.locked { overflow: hidden; }
 a { color: inherit; text-decoration: none; }
@@ -2239,8 +2253,10 @@ const saved = localStorage.getItem("schoolos-theme") || (window.matchMedia("(pre
 html.setAttribute("data-theme", saved);
 themeBtn.addEventListener("click", () => {
   const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  html.classList.add("theme-switching");
   html.setAttribute("data-theme", next);
   localStorage.setItem("schoolos-theme", next);
+  setTimeout(() => html.classList.remove("theme-switching"), 500);
 });
 
 /* ========== NAV ========== */
