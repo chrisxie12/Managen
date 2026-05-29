@@ -111,9 +111,14 @@
   --text-inv: #0F172A;
   --border: #334155;
   --border-2: #475569;
-  --primary-lt: rgba(10,36,114,0.15);
-  --primary-mid: rgba(10,36,114,0.3);
+  /* Override primary to vibrant blue — navy (#0A2472) is invisible on dark bg */
+  --primary: #2563EB;
+  --primary-dk: #1D4ED8;
+  --primary-glow: rgba(37,99,235,0.2);
+  --primary-lt: rgba(37,99,235,0.15);
+  --primary-mid: rgba(37,99,235,0.3);
   --teal-lt: rgba(16,185,129,0.12);
+  --shadow-primary: 0 8px 32px rgba(37,99,235,0.28);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
   --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
   --shadow-lg: 0 24px 64px rgba(0,0,0,0.5);
@@ -281,7 +286,7 @@ nav {
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s, box-shadow 0.3s, background 0.4s;
 }
-[data-theme="dark"] nav { background: rgba(15,14,12,0.85); }
+[data-theme="dark"] nav { background: rgba(15,23,42,0.92); }
 nav.scrolled {
   border-bottom-color: var(--border);
   box-shadow: 0 2px 24px rgba(0,0,0,0.07);
@@ -313,18 +318,52 @@ nav.scrolled {
 
 .nav-actions { display: flex; align-items: center; gap: 8px; }
 
-/* Dark mode toggle */
+/* Dark mode toggle — pill slider */
 .theme-toggle {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: var(--bg-2); border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s; color: var(--text-2);
+  position: relative;
+  width: 64px; height: 32px; border-radius: 99px;
+  background: var(--bg-3); border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 7px;
+  cursor: pointer; transition: background 0.3s, border-color 0.3s;
+  flex-shrink: 0;
 }
-.theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
-.icon-moon { display: block; }
-.icon-sun { display: none; }
-[data-theme="dark"] .icon-moon { display: none; }
-[data-theme="dark"] .icon-sun { display: block; }
+.theme-toggle:hover { border-color: var(--primary-vibrant); }
+[data-theme="dark"] .theme-toggle {
+  background: #111827; border-color: rgba(37,99,235,0.3);
+}
+[data-theme="dark"] .theme-toggle:hover { border-color: #2563EB; }
+
+.tt-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--primary-vibrant);
+  transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+  box-shadow: 0 2px 6px rgba(37,99,235,0.4);
+  pointer-events: none;
+}
+[data-theme="dark"] .tt-thumb {
+  transform: translateX(34px);
+  background: #FBBF24;
+  box-shadow: 0 2px 6px rgba(251,191,36,0.4);
+}
+
+.tt-sun, .tt-moon {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  position: relative;
+  transition: color 0.25s;
+  stroke: currentColor; fill: none;
+  stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+}
+/* Light mode: sun on left (active — white on blue thumb), moon on right (dimmed) */
+.tt-sun { color: #fff; }
+.tt-moon { color: var(--text-3); }
+/* Dark mode: sun on left (dimmed), moon on right (active — dark on amber thumb) */
+[data-theme="dark"] .tt-sun { color: var(--text-3); }
+[data-theme="dark"] .tt-moon { color: #1C1917; }
+/* Mobile toggle — smaller pill; recalculate thumb slide distance */
+[data-theme="dark"] #themeToggleMob .tt-thumb { transform: translateX(28px); }
 
 .nav-cta-plain {
   font-size: 14px; font-weight: 500; color: var(--text-2);
@@ -1075,7 +1114,7 @@ nav.scrolled {
   font-size: 15px; font-family: var(--ff-body); color: var(--text);
   transition: all 0.18s; outline: none; appearance: none;
 }
-.form-input:focus, .form-select:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(10,36,114,0.12); }
+.form-input:focus, .form-select:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px var(--primary-lt); }
 .form-input.invalid { border-color: #E24B4A; box-shadow: 0 0 0 3px rgba(226,75,74,0.1); }
 .form-input.valid { border-color: var(--teal); }
 .field-error { font-size: 12px; color: #E24B4A; margin-top: 5px; display: none; }
@@ -1282,8 +1321,9 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 
     <div class="nav-actions">
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <svg class="icon icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="tt-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span class="tt-thumb"></span>
+        <svg class="tt-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
       <a href="/auth" class="nav-cta-plain">Sign In</a>
       <a href="/auth" class="nav-cta-fill">
@@ -1303,6 +1343,14 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   <a href="#demo" onclick="closeMenu()">Demo</a>
   <a href="#pricing" onclick="closeMenu()">Pricing</a>
   <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);">
+    <span style="font-size:15px;font-weight:500;color:var(--text);">Dark mode</span>
+    <button class="theme-toggle" id="themeToggleMob" aria-label="Toggle dark mode" style="width:56px;height:28px;padding:0 6px;">
+      <svg class="tt-sun" viewBox="0 0 24 24" style="width:12px;height:12px;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <span class="tt-thumb" style="width:20px;height:20px;top:3px;left:3px;"></span>
+      <svg class="tt-moon" viewBox="0 0 24 24" style="width:12px;height:12px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
   <div class="mob-nav-ctas">
     <a href="/auth" class="btn-primary" onclick="closeMenu()" style="justify-content:center;">Start Free — No Credit Card</a>
     <a href="#demo" class="btn-secondary" onclick="closeMenu()" style="justify-content:center;">Watch 2-min Demo</a>
@@ -2424,15 +2472,18 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 /* ========== DARK MODE ========== */
 const html = document.documentElement;
 const themeBtn = document.getElementById("themeToggle");
+const themeBtnMob = document.getElementById("themeToggleMob");
 const saved = localStorage.getItem("schoolos-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 html.setAttribute("data-theme", saved);
-themeBtn.addEventListener("click", () => {
+function toggleTheme() {
   const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
   html.classList.add("theme-switching");
   html.setAttribute("data-theme", next);
   localStorage.setItem("schoolos-theme", next);
   setTimeout(() => html.classList.remove("theme-switching"), 500);
-});
+}
+themeBtn.addEventListener("click", toggleTheme);
+if (themeBtnMob) themeBtnMob.addEventListener("click", toggleTheme);
 
 /* ========== NAV ========== */
 const nav = document.getElementById("mainNav");
