@@ -1255,7 +1255,7 @@ footer::before {
   background: linear-gradient(90deg, transparent, var(--primary), #60A5FA, var(--primary), transparent);
   opacity: 0.5;
 }
-.foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr; gap: 48px; margin-bottom: 60px; }
+.foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 48px; margin-bottom: 60px; }
 .foot-brand-desc { font-size: 14px; color: rgba(245,243,238,0.4); line-height: 1.7; margin: 16px 0 24px; max-width: 280px; }
 .foot-social { display: flex; gap: 10px; }
 .foot-soc-btn {
@@ -1969,44 +1969,55 @@ footer::before {
   <div class="container">
     <div class="demo-container">
       <div class="demo-header reveal">
-        <div class="section-eyebrow" style="justify-content:center;">PRODUCT DEMO</div>
-        <h2 class="section-title" style="text-align:center;">See it in action.</h2>
-        <p class="section-sub" style="margin:0 auto;text-align:center;">Watch a real school go from sign-up to running attendance, collecting fees, and generating reports. No jargon. No fluff. Just the product.</p>
+        <div class="section-eyebrow" style="justify-content:center;">LIVE DEMO</div>
+        <h2 class="section-title" style="text-align:center;">See SchoolOS with your own eyes.</h2>
+        <p class="section-sub" style="margin:0 auto;text-align:center;">Book a 30-minute live walkthrough with our team. We'll show you exactly how SchoolOS works for your school — attendance, fees, reports, and all.</p>
       </div>
-      <div class="video-wrapper reveal delay-1">
-        <div class="video-thumb" id="videoThumb" onclick="playDemo()">
-          <div class="video-bg-grid"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;">
-            <div style="background:rgba(15,14,12,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-lg);padding:24px 40px;backdrop-filter:blur(12px);">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--primary);display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
-                <span style="font-family:var(--ff-display);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">SchoolOS</span>
-                <div class="live-badge" style="margin-left:auto;"><span class="live-badge-dot"></span>Demo</div>
+      <div class="reveal delay-1" style="max-width:700px;margin:0 auto;">
+        <div style="background:var(--dark);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,0.08);">
+          <!-- Top bar -->
+          <div style="background:linear-gradient(135deg,#0A2472 0%,#1D4ED8 100%);padding:40px;text-align:center;">
+            <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:99px;padding:8px 20px;margin-bottom:24px;">
+              <span style="width:8px;height:8px;background:#4ADE80;border-radius:50%;display:inline-block;animation:blink 2s step-end infinite;"></span>
+              <span style="font-size:12px;font-weight:700;color:#fff;letter-spacing:0.05em;">LIVE SESSIONS AVAILABLE</span>
+            </div>
+            <h3 style="font-family:var(--ff-display);font-size:clamp(22px,4vw,32px);font-weight:900;color:#fff;letter-spacing:-0.02em;margin-bottom:8px;">30-Minute Live Walkthrough</h3>
+            <p style="font-size:15px;color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto;">Watch a real SchoolOS session — attendance marking, fee collection, and report generation — tailored to your school type.</p>
+          </div>
+          <!-- What to expect -->
+          <div style="padding:32px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+            <div style="text-align:center;">
+              <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                <svg style="width:20px;height:20px;stroke:#60A5FA;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-width:280px;">
-                <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:12px;text-align:center;">
-                  <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:4px;">STUDENTS</div>
-                  <div style="font-size:18px;font-weight:800;color:#fff;font-family:var(--ff-display);">1,240</div>
-                </div>
-                <div style="background:rgba(10,36,114,0.15);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(10,36,114,0.3);">
-                  <div style="font-size:10px;color:rgba(10,36,114,0.7);font-weight:600;margin-bottom:4px;">PRESENT</div>
-                  <div style="font-size:18px;font-weight:800;color:var(--primary);font-family:var(--ff-display);">1,089</div>
-                </div>
-                <div style="background:rgba(16,185,129,0.15);border-radius:10px;padding:12px;text-align:center;">
-                  <div style="font-size:10px;color:rgba(16,185,129,0.7);font-weight:600;margin-bottom:4px;">FEES IN</div>
-                  <div style="font-size:18px;font-weight:800;color:var(--teal);font-family:var(--ff-display);">₵84K</div>
-                </div>
+              <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);">Live screen share</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;">Real product, real data</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                <svg style="width:20px;height:20px;stroke:#60A5FA;fill:none;stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
+              <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);">30 minutes</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;">No sales pressure</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                <svg style="width:20px;height:20px;stroke:#60A5FA;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);">Your questions</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;">Tailored to your school</div>
             </div>
           </div>
-          <div class="video-overlay-logo">
-            <div class="play-btn"><svg style="width:24px;height:24px;fill:#fff;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-            <div class="video-label"><strong>Watch the 2-minute product walkthrough</strong></div>
+          <!-- CTA -->
+          <div style="padding:32px 40px;text-align:center;">
+            <a href="#contact" class="btn-primary" style="font-size:16px;padding:16px 40px;display:inline-flex;white-space:nowrap;">
+              Book Your Free Demo
+              <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <p style="margin-top:14px;font-size:13px;color:rgba(255,255,255,0.4);">Usually responds within 2 hours · Available Mon–Sat</p>
           </div>
-          <div class="video-duration">2:14</div>
         </div>
       </div>
-      <p style="text-align:center;font-size:13px;color:var(--text-3);margin-top:20px;">No signup required to watch. Full demo available after free registration.</p>
     </div>
   </div>
 </section>
@@ -2482,7 +2493,7 @@ footer::before {
           <div class="country-flag-item">🇷🇼 Rwanda</div>
           <div class="country-flag-item">🇹🇿 Tanzania</div>
         </div>
-        <a href="#" class="whatsapp-cta" target="_blank" rel="noopener">
+        <a href="https://wa.me/233000000000?text=Hi%20SchoolOS%20team%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20platform." class="whatsapp-cta" target="_blank" rel="noopener">
           <div class="whatsapp-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
           <div class="whatsapp-text"><strong>Prefer WhatsApp? Chat with us now.</strong> We typically respond within 30 minutes.</div>
         </a>
@@ -2526,12 +2537,7 @@ footer::before {
           <span class="logo-text" style="color:#fff;">School<em>OS</em></span>
         </a>
         <p class="foot-brand-desc">The school management platform built for Ghanaian schools. 40+ modules. Cloud-native. 24-hour go-live.</p>
-        <div class="foot-social">
-          <a href="#" class="foot-soc-btn" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-        </div>
+        <div class="foot-social" style="display:none;"></div>
       </div>
       <div>
         <div class="foot-col-title">Product</div>
@@ -2541,16 +2547,6 @@ footer::before {
           <li><a href="#demo">Demo</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="/auth">Sign In</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="foot-col-title">Company</div>
-        <ul class="foot-links">
-          <li><a href="#">About SchoolOS</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Press</a></li>
-          <li><a href="#">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -2575,7 +2571,7 @@ footer::before {
     </div>
     <div class="foot-bottom">
       <div class="foot-copy">© 2025 <strong>SchoolOS Technologies</strong>. Built for Ghanaian schools.</div>
-      <div class="foot-legal"><a href="#">Terms</a><a href="#">Privacy</a><a href="#">Cookies</a></div>
+      <div class="foot-legal"><a href="#contact">Terms</a><a href="#contact">Privacy</a><a href="#contact">Cookies</a></div>
     </div>
   </div>
 </footer>
@@ -2786,12 +2782,6 @@ function handleSubmit(e) {
   setTimeout(() => {
     window.location.href = "/auth?email=" + email;
   }, 900);
-}
-
-/* ========== VIDEO DEMO ========== */
-function playDemo() {
-  const thumb = document.getElementById("videoThumb");
-  thumb.innerHTML = "<div style=\"width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:600;\"><div style=\"text-align:center;opacity:0.6;\"><div style=\"font-size:48px;margin-bottom:12px;\"><svg style=\"width:48px;height:48px;stroke:#fff;stroke-width:1.5;\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"10 8 16 12 10 16 10 8\" fill=\"currentColor\" stroke=\"none\"/></svg></div>Demo video would load here</div></div>";
 }
 
 /* ========== PRICING CALCULATOR ========== */
