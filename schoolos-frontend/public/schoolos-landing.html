@@ -1820,34 +1820,135 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </section>
 
-<!-- =================== SECURITY & COMPLIANCE =================== -->
-<section style="background:var(--bg);">
+<!-- =================== WHATSAPP FEATURE =================== -->
+<section style="background:var(--dark);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 50%,rgba(37,211,102,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 50%,rgba(255,107,53,0.07) 0%,transparent 60%);pointer-events:none;"></div>
   <div class="container">
-    <div style="text-align:center;margin-bottom:48px;" class="reveal">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+      <!-- Left: copy -->
+      <div class="reveal">
+        <div class="section-eyebrow" style="color:var(--orange);">WHATSAPP INTEGRATION</div>
+        <h2 class="section-title" style="color:var(--text-inv);">Parents get results<br>before they even ask.</h2>
+        <p class="section-sub" style="color:rgba(245,243,238,0.6);">The moment a report card is generated or a fee is received, the parent knows. Automated WhatsApp messages in the parent's own language — no extra step for teachers.</p>
+        <ul style="list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:14px;">
+          <li style="display:flex;align-items:flex-start;gap:14px;font-size:15px;color:rgba(245,243,238,0.7);line-height:1.6;">
+            <span style="width:22px;height:22px;min-width:22px;border-radius:6px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+              <svg style="width:11px;height:11px;color:#25D366;stroke:#25D366;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Attendance alerts sent at end of each school day
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:14px;font-size:15px;color:rgba(245,243,238,0.7);line-height:1.6;">
+            <span style="width:22px;height:22px;min-width:22px;border-radius:6px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+              <svg style="width:11px;height:11px;color:#25D366;stroke:#25D366;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Fee payment receipt delivered instantly via MoMo confirmation
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:14px;font-size:15px;color:rgba(245,243,238,0.7);line-height:1.6;">
+            <span style="width:22px;height:22px;min-width:22px;border-radius:6px;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);display:flex;align-items:center;justify-content:center;margin-top:2px;">
+              <svg style="width:11px;height:11px;color:#25D366;stroke:#25D366;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Parents can query their child's progress via AI chatbot
+          </li>
+        </ul>
+        <a href="/auth" class="btn-primary" style="margin-top:32px;display:inline-flex;">
+          See it in action
+          <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <!-- Right: phone mockup -->
+      <div class="reveal delay-2" style="display:flex;justify-content:center;">
+        <div style="width:240px;background:#111;border-radius:36px;border:6px solid #222;box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06);overflow:hidden;position:relative;">
+          <!-- Phone notch -->
+          <div style="height:28px;background:#111;display:flex;align-items:center;justify-content:center;padding-top:6px;">
+            <div style="width:60px;height:6px;background:#000;border-radius:99px;"></div>
+          </div>
+          <!-- WhatsApp header -->
+          <div style="background:#075E54;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;">S</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff;">SchoolOS</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.6);">School Management</div>
+            </div>
+          </div>
+          <!-- Chat messages -->
+          <div style="background:#ECE5DD;padding:12px 10px;min-height:360px;display:flex;flex-direction:column;gap:8px;">
+            <!-- Incoming -->
+            <div style="background:#fff;border-radius:0 12px 12px 12px;padding:10px 12px;max-width:85%;box-shadow:0 1px 2px rgba(0,0,0,0.12);">
+              <div style="font-size:11px;color:#333;line-height:1.5;"><strong style="color:#075E54;">📊 Attendance Report</strong><br>Kofi was <span style="color:#25D366;font-weight:700;">PRESENT</span> today.<br>Class 8B · Period 1-8 ✓</div>
+              <div style="font-size:9px;color:#999;text-align:right;margin-top:4px;">8:32 AM ✓✓</div>
+            </div>
+            <!-- Incoming -->
+            <div style="background:#fff;border-radius:0 12px 12px 12px;padding:10px 12px;max-width:85%;box-shadow:0 1px 2px rgba(0,0,0,0.12);">
+              <div style="font-size:11px;color:#333;line-height:1.5;"><strong style="color:#075E54;">💰 Payment Received</strong><br>GHS 450.00 received for Kofi Mensah.<br>Term 2 fees — <span style="color:#25D366;font-weight:700;">PAID IN FULL</span><br>Ref: RCP-2025-4A2F</div>
+              <div style="font-size:9px;color:#999;text-align:right;margin-top:4px;">2:14 PM ✓✓</div>
+            </div>
+            <!-- Incoming -->
+            <div style="background:#fff;border-radius:0 12px 12px 12px;padding:10px 12px;max-width:90%;box-shadow:0 1px 2px rgba(0,0,0,0.12);">
+              <div style="font-size:11px;color:#333;line-height:1.5;"><strong style="color:#075E54;">📄 Report Card Ready</strong><br>Kofi's Term 2 results are ready.<br>Average: <span style="color:#FF6B35;font-weight:700;">78.4% (B+)</span><br>Rank: 4th of 32 students</div>
+              <div style="font-size:9px;color:#999;text-align:right;margin-top:4px;">Fri 4:05 PM ✓✓</div>
+            </div>
+            <!-- Outgoing reply -->
+            <div style="background:#DCF8C6;border-radius:12px 0 12px 12px;padding:10px 12px;max-width:75%;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,0.12);">
+              <div style="font-size:11px;color:#333;">Thank you! 🙏</div>
+              <div style="font-size:9px;color:#999;text-align:right;margin-top:4px;">4:07 PM ✓✓</div>
+            </div>
+          </div>
+          <!-- Phone bottom bar -->
+          <div style="height:20px;background:#ECE5DD;display:flex;align-items:center;justify-content:center;">
+            <div style="width:40px;height:4px;background:#999;border-radius:99px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== SECURITY & COMPLIANCE =================== -->
+<section style="background:var(--bg);position:relative;overflow:hidden;">
+  <!-- Subtle gradient top divider -->
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--orange),var(--teal),transparent);opacity:0.4;"></div>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;" class="reveal">
       <div class="section-eyebrow" style="justify-content:center;">SECURITY & COMPLIANCE</div>
-      <h2 class="section-title" style="text-align:center;">Student data is the most sensitive asset a school holds. We built for that.</h2>
-      <p class="section-sub" style="margin:0 auto;text-align:center;">Bank-grade encryption. Local data residency options in Ghana, Nigeria, and Kenya. Your data stays yours.</p>
+      <h2 class="section-title" style="text-align:center;">Student data is the most sensitive asset a school holds.</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center;">Bank-grade encryption. Local data residency in Ghana, Nigeria, and Kenya. Your data stays yours — always.</p>
     </div>
     <div class="sec-grid reveal delay-1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:12px;">🔐</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">AES-256 Encryption</div>
-        <div style="font-size:11px;color:var(--text-3);">The same standard banks use — data encrypted at rest and in transit</div>
+      <!-- AES-256 -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--teal)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(27,184,154,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(27,184,154,0.1);border:1px solid rgba(27,184,154,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg style="width:24px;height:24px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">AES-256 Encryption</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.6;">The same standard banks use — data encrypted at rest and in transit</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),rgba(27,184,154,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:12px;">🇪🇺</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">GDPR Compliant</div>
-        <div style="font-size:11px;color:var(--text-3);">Full GDPR framework — student data never sold</div>
+      <!-- GDPR -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='#7C3AED';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(124,58,237,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg style="width:24px;height:24px;stroke:#7C3AED;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">GDPR Compliant</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.6;">Full GDPR framework — student data never sold or shared without consent</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7C3AED,rgba(124,58,237,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:12px;">🌍</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">Local Data Residency</div>
-        <div style="font-size:11px;color:var(--text-3);">Host your data in Africa — Ghana, Nigeria, Kenya</div>
+      <!-- Local Data -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--orange)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(255,107,53,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg style="width:24px;height:24px;stroke:var(--orange);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Local Data Residency</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.6;">Your data stays in Africa — hosted in Ghana, Nigeria, and Kenya</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),rgba(255,107,53,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:24px 16px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:12px;">📋</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">99.9% Uptime SLA</div>
-        <div style="font-size:11px;color:var(--text-3);">Enterprise-grade infrastructure with monitoring</div>
+      <!-- Uptime -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='#3B82F6';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(59,130,246,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg style="width:24px;height:24px;stroke:#3B82F6;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">99.9% Uptime SLA</div>
+        <div style="font-size:12px;color:var(--text-3);line-height:1.6;">Enterprise-grade infrastructure with 24/7 active monitoring</div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3B82F6,rgba(59,130,246,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
     </div>
   </div>
