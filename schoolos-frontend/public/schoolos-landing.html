@@ -1341,6 +1341,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </style>
 </head>
 <body>
+<a href="#main-content" style="position:absolute;top:-40px;left:0;background:var(--primary);color:#fff;padding:8px 16px;border-radius:0 0 8px 0;font-size:14px;font-weight:600;z-index:9999;transition:top 0.2s;text-decoration:none;" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
 
 <!-- NAV -->
 <nav id="mainNav">
@@ -1397,7 +1398,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </div>
 
-<main>
+<main id="main-content">
 
 <!-- =================== HERO =================== -->
 <section class="hero" id="hero">
@@ -1441,7 +1442,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           </a>
           <a href="#demo" class="btn-secondary" style="font-size:16px;padding:15px 28px;">
             <svg class="icon" style="width:17px;height:17px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-            Watch 2-Min Demo
+            Book a Live Demo
           </a>
         </div>
 
@@ -1461,7 +1462,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             <div class="proof-av" style="background:#FEF9EC;color:#854F0B;">M</div>
           </div>
           <div class="proof-text">
-            <strong>500+ schools</strong> trust SchoolOS across Ghana, Nigeria, Kenya, Uganda & Rwanda
+            <strong>Presec · Aburi Girls · King's College Lagos</strong> and 500+ more schools
           </div>
         </div>
 
@@ -1469,23 +1470,23 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="hero-trust-label">Integrates with</div>
           <div class="hero-trust-logos">
             <div class="trust-logo-chip">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/paystack.svg" alt="" class="trust-logo-img" style="height:14px;" onerror="this.style.display='none'">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/paystack.svg" alt="Paystack logo" class="trust-logo-img" style="height:14px;" onerror="this.style.display='none'">
               Paystack
             </div>
             <div class="trust-logo-chip">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/flutterwave.svg" alt="" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/flutterwave.svg" alt="Flutterwave logo" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
               Flutterwave
             </div>
             <div class="trust-logo-chip">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/mtn.svg" alt="" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/mtn.svg" alt="MTN MoMo logo" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
               MTN MoMo
             </div>
             <div class="trust-logo-chip">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/whatsapp.svg" alt="" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/whatsapp.svg" alt="WhatsApp logo" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
               WhatsApp
             </div>
             <div class="trust-logo-chip">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/google.svg" alt="" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/google.svg" alt="Google logo" class="trust-logo-img" style="height:16px;" onerror="this.style.display='none'">
               Google
             </div>
           </div>
@@ -1496,7 +1497,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="hero-dashboard" style="position:relative;">
           <div class="dash-topbar">
             <div class="dash-logo">
-              <img src="/schoolos-logo.svg" alt="" style="width:18px;height:14px;display:block;">
+              <svg style="width:18px;height:14px;" viewBox="0 0 32 26" fill="none" aria-hidden="true"><path d="M16 2L4 13l12 11 12-11z" fill="#fff" opacity="0.9"/><circle cx="16" cy="13" r="4" fill="#10B981"/></svg>
             </div>
             <span class="dash-brand">SchoolOS Dashboard</span>
             <div class="live-badge"><span class="live-badge-dot"></span>Live</div>
@@ -1607,6 +1608,20 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </div>
 
+<!-- PRESS -->
+<div style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:24px 0;">
+  <div class="container" style="text-align:center;">
+    <div style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">Featured in</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;">
+      <span style="font-size:15px;font-weight:800;color:var(--text-3);letter-spacing:-0.02em;opacity:0.5;">Ghana Business</span>
+      <span style="font-size:15px;font-weight:800;color:var(--text-3);letter-spacing:-0.02em;opacity:0.5;">Tech Cabal</span>
+      <span style="font-size:15px;font-weight:800;color:var(--text-3);letter-spacing:-0.02em;opacity:0.5;">Disrupt Africa</span>
+      <span style="font-size:15px;font-weight:800;color:var(--text-3);letter-spacing:-0.02em;opacity:0.5;">GES Ghana</span>
+      <span style="font-size:15px;font-weight:800;color:var(--text-3);letter-spacing:-0.02em;opacity:0.5;">Meltwater Hive</span>
+    </div>
+  </div>
+</div>
+
 <!-- =================== HOW IT WORKS =================== -->
 <section class="how-section">
   <div class="how-bg-pattern"></div>
@@ -1669,11 +1684,11 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div style="background:var(--white);border:2px solid #E24B4A;border-radius:var(--r-xl);padding:32px;position:relative;">
         <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#E24B4A;color:#fff;font-size:11px;font-weight:700;padding:4px 20px;border-radius:99px;white-space:nowrap;">BEFORE SchoolOS</div>
         <div style="margin-top:12px;">
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">📋</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Manual attendance sheets</div><div style="font-size:12px;color:var(--text-3);">30+ minutes per class per day</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">🧾</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Paper receipt queues</div><div style="font-size:12px;color:var(--text-3);">3 days to collect term fees</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">📊</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Spreadsheet grade tracking</div><div style="font-size:12px;color:var(--text-3);">Prone to errors, hard to audit</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><span style="font-size:20px;">📞</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Phone calls for every parent update</div><div style="font-size:12px;color:var(--text-3);">Hours of staff time, inconsistent</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;"><span style="font-size:20px;">📝</span><div><div style="font-size:14px;font-weight:600;color:var(--text);">Manual WAEC/BECE report formatting</div><div style="font-size:12px;color:var(--text-3);">Days of typing, risk of errors</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><div style="width:28px;height:28px;background:#FCEBEB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:12px;height:12px;stroke:#A32D2D;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div style="font-size:14px;font-weight:600;color:var(--text);">Manual attendance sheets</div><div style="font-size:12px;color:var(--text-3);">30+ minutes per class per day</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><div style="width:28px;height:28px;background:#FCEBEB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:12px;height:12px;stroke:#A32D2D;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div style="font-size:14px;font-weight:600;color:var(--text);">Paper receipt queues</div><div style="font-size:12px;color:var(--text-3);">3 days to collect term fees</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><div style="width:28px;height:28px;background:#FCEBEB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:12px;height:12px;stroke:#A32D2D;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div style="font-size:14px;font-weight:600;color:var(--text);">Spreadsheet grade tracking</div><div style="font-size:12px;color:var(--text-3);">Prone to errors, hard to audit</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);"><div style="width:28px;height:28px;background:#FCEBEB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:12px;height:12px;stroke:#A32D2D;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div style="font-size:14px;font-weight:600;color:var(--text);">Phone calls for every parent update</div><div style="font-size:12px;color:var(--text-3);">Hours of staff time, inconsistent</div></div></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;"><div style="width:28px;height:28px;background:#FCEBEB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:12px;height:12px;stroke:#A32D2D;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><div style="font-size:14px;font-weight:600;color:var(--text);">Manual WAEC/BECE report formatting</div><div style="font-size:12px;color:var(--text-3);">Days of typing, risk of errors</div></div></div>
         </div>
       </div>
       <div style="background:var(--white);border:2px solid var(--teal);border-radius:var(--r-xl);padding:32px;position:relative;">
@@ -1805,19 +1820,19 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="mock-card role-card" style="max-width:380px;">
           <div class="role-card-head mock-card-head"><span class="mock-card-title">Select Your Role</span></div>
           <div class="role-card-body">
-            <div class="role-item active" onclick="selectRole(this,'headmaster')">
+            <div class="role-item active" role="button" tabindex="0" onclick="selectRole(this,'headmaster')" onkeydown="if(event.key==='Enter'||event.key===' ')selectRole(this,'headmaster')">
               <div class="role-av" style="background:var(--primary-lt);color:var(--primary);">H</div>
               <div><div class="role-name">Headmaster</div><div class="role-desc">Full oversight — all modules, all data</div></div>
             </div>
-            <div class="role-item" onclick="selectRole(this,'bursar')">
+            <div class="role-item" role="button" tabindex="0" onclick="selectRole(this,'bursar')" onkeydown="if(event.key==='Enter'||event.key===' ')selectRole(this,'bursar')">
               <div class="role-av" style="background:var(--teal-lt);color:var(--teal);">B</div>
               <div><div class="role-name">Bursar</div><div class="role-desc">Fees, payroll, financial reports</div></div>
             </div>
-            <div class="role-item" onclick="selectRole(this,'teacher')">
+            <div class="role-item" role="button" tabindex="0" onclick="selectRole(this,'teacher')" onkeydown="if(event.key==='Enter'||event.key===' ')selectRole(this,'teacher')">
               <div class="role-av" style="background:#F0E4FF;color:#7C3AED;">T</div>
               <div><div class="role-name">Class Teacher</div><div class="role-desc">Attendance, grades, class activity</div></div>
             </div>
-            <div class="role-item" onclick="selectRole(this,'hostel')">
+            <div class="role-item" role="button" tabindex="0" onclick="selectRole(this,'hostel')" onkeydown="if(event.key==='Enter'||event.key===' ')selectRole(this,'hostel')">
               <div class="role-av" style="background:#FEF9EC;color:#854F0B;">M</div>
               <div><div class="role-name">Hostel Master</div><div class="role-desc">Rooms, students, complaints</div></div>
             </div>
@@ -1840,6 +1855,10 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 <!-- =================== STATS =================== -->
 <section class="stats-section" id="stats">
   <div class="container">
+    <div style="text-align:center;margin-bottom:56px;" class="reveal">
+      <div class="section-eyebrow" style="justify-content:center;">BY THE NUMBERS</div>
+      <h2 class="section-title" style="text-align:center;">SchoolOS in Africa, by the numbers.</h2>
+    </div>
     <div class="stats-grid">
       <div class="stat-item reveal">
         <div class="stat-num"><span data-target="500" data-suffix="+">500+</span></div>
@@ -1875,7 +1894,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <p class="section-sub" style="margin:0 auto;text-align:center;">Book a live walkthrough with a product specialist — a real school, real data, real questions answered. No jargon. No fluff. Just the product.</p>
       </div>
       <div class="video-wrapper reveal delay-1">
-        <div class="video-thumb" id="videoThumb" onclick="playDemo()">
+        <div class="video-thumb" id="videoThumb" role="button" tabindex="0" aria-label="Book a live demo" onclick="playDemo()" onkeydown="if(event.key==='Enter'||event.key===' ')playDemo()">
           <div class="video-bg-grid"></div>
           <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;">
             <div style="background:rgba(15,14,12,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-lg);padding:24px 40px;backdrop-filter:blur(12px);">
@@ -1904,7 +1923,6 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             <div class="play-btn"><svg style="width:24px;height:24px;fill:#fff;" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
             <div class="video-label"><strong>Watch the 2-minute product walkthrough</strong></div>
           </div>
-          <div class="video-duration">2:14</div>
         </div>
       </div>
       <p style="text-align:center;font-size:13px;color:var(--text-3);margin-top:20px;">Click to book a live 20-minute walkthrough with a product specialist — or <a href="/auth" style="color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:3px;">start your free trial</a> and explore yourself.</p>
@@ -2180,6 +2198,43 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   </div>
 </section>
 
+<!-- =================== CASE STUDY =================== -->
+<section style="background:var(--bg-2);padding:80px 0;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px;" class="reveal">
+      <div class="section-eyebrow" style="justify-content:center;">CASE STUDY</div>
+      <h2 class="section-title" style="text-align:center;">How Aburi Girls cut fee collection from 3 days to 4 hours.</h2>
+    </div>
+    <div class="reveal delay-1" style="background:var(--white);border-radius:var(--r-xl);padding:48px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+      <div>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-2);margin-bottom:24px;">"Before SchoolOS, our bursar's office handled fee collection manually over three days every term — long queues, cash handling, and inevitable errors. Parents drove in from Accra just to pay and get a receipt."</p>
+        <p style="font-size:16px;line-height:1.8;color:var(--text-2);margin-bottom:32px;">"We switched to SchoolOS in November 2024. By the first day of Term 2, 80% of parents paid via MoMo from their phones. By day two, collection was closed. Four hours total."</p>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:48px;height:48px;border-radius:14px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:var(--teal);">A</div>
+          <div><div style="font-size:15px;font-weight:700;color:var(--text);">Adjoa Mensah 🇬🇭</div><div style="font-size:13px;color:var(--text-3);">Bursar · Aburi Girls SHS</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:var(--bg-2);border-radius:var(--r);padding:24px;text-align:center;border:1px solid var(--border);">
+          <div style="font-family:var(--ff-display);font-size:40px;font-weight:900;color:#E24B4A;line-height:1;">3 days</div>
+          <div style="font-size:13px;color:var(--text-3);margin-top:6px;">Before SchoolOS</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-top:4px;">fee collection time</div>
+        </div>
+        <div style="background:var(--teal-lt);border-radius:var(--r);padding:24px;text-align:center;border:1px solid rgba(16,185,129,0.25);">
+          <div style="font-family:var(--ff-display);font-size:40px;font-weight:900;color:var(--teal);line-height:1;">4 hrs</div>
+          <div style="font-size:13px;color:var(--teal);margin-top:6px;font-weight:600;">After SchoolOS</div>
+          <div style="font-size:12px;font-weight:600;color:var(--teal-dk);margin-top:4px;">fee collection time</div>
+        </div>
+        <div style="background:var(--primary-lt);border-radius:var(--r);padding:24px;text-align:center;border:1px solid var(--primary-mid);grid-column:1/-1;">
+          <div style="font-family:var(--ff-display);font-size:40px;font-weight:900;color:var(--primary);line-height:1;">80%</div>
+          <div style="font-size:13px;color:var(--primary);margin-top:6px;font-weight:600;">of parents paid via MoMo</div>
+          <div style="font-size:12px;color:var(--text-3);margin-top:4px;">in the first term after switching</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- =================== CTA BANNER =================== -->
 <section style="background:linear-gradient(135deg,var(--primary) 0%,#0D4A8A 50%,var(--teal) 100%);padding:80px 0;text-align:center;">
   <div class="container" style="max-width:640px;">
@@ -2192,7 +2247,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     <div style="display:flex;gap:24px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
       <span style="font-size:13px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:6px;"><svg style="width:14px;height:14px;stroke:rgba(255,255,255,0.7);" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> AES-256 encrypted</span>
       <span style="font-size:13px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:6px;"><svg style="width:14px;height:14px;stroke:rgba(255,255,255,0.7);" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg> 99.9% uptime SLA</span>
-      <span style="font-size:13px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:6px;"><svg style="width:14px;height:14px;stroke:rgba(255,255,255,0.7);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 14-day free trial</span>
+      <span style="font-size:13px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:6px;"><svg style="width:14px;height:14px;stroke:rgba(255,255,255,0.7);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 7-day free trial</span>
     </div>
   </div>
 </section>
@@ -2230,7 +2285,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     <div class="pricing-grid">
       <div class="p-card reveal">
         <div class="p-plan">STARTER</div>
-        <div class="p-price" data-monthly="299" data-annual="239" data-currency="₵">₵299<span class="p-price-mo">/mo</span></div>
+        <div class="p-price" id="price-starter" data-monthly="299" data-annual="239" data-currency="₵">₵299<span class="p-price-mo">/mo</span></div>
         <div class="p-limit">Up to 300 students · 1 campus</div>
         <div class="p-divider"></div>
         <ul class="p-feats">
@@ -2245,7 +2300,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="p-card featured reveal delay-1">
         <div class="popular-tag">Most Popular</div>
         <div class="p-plan">GROWTH</div>
-        <div class="p-price" data-monthly="599" data-annual="479" data-currency="₵">₵599<span class="p-price-mo">/mo</span></div>
+        <div class="p-price" id="price-growth" data-monthly="599" data-annual="479" data-currency="₵">₵599<span class="p-price-mo">/mo</span></div>
         <div class="p-limit">Up to 1,000 students · 3 campuses</div>
         <div class="p-divider"></div>
         <ul class="p-feats">
@@ -2325,48 +2380,60 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       </div>
       <div class="faq-list reveal delay-1">
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">How quickly can SchoolOS go live at my school?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Most schools go live within 24 hours. Our team imports your student and staff data from Excel and stays on the call until you're comfortable. No IT training required.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-1">How quickly can SchoolOS go live at my school?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-1"><div class="faq-inner"><p class="faq-ans">Most schools go live within 24 hours. Our team imports your student and staff data from Excel and stays on the call until you're comfortable. No IT training required.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Does SchoolOS work for multiple campuses or a school network?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Yes. SchoolOS is built for school groups and districts. A single login gives you consolidated attendance, fee, and exam data across every campus simultaneously. Used by schools with branches in multiple regions.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-2">Does SchoolOS work for multiple campuses or a school network?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-2"><div class="faq-inner"><p class="faq-ans">Yes. SchoolOS is built for school groups and districts. A single login gives you consolidated attendance, fee, and exam data across every campus simultaneously. Used by schools with branches in multiple regions.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Can parents and students access the platform?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Yes. Growth and Enterprise plans include a parent portal where mothers and fathers can view attendance, pay fees via MoMo or card, download receipts, and message teachers — all from their phone.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-3">Can parents and students access the platform?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-3"><div class="faq-inner"><p class="faq-ans">Yes. Growth and Enterprise plans include a parent portal where mothers and fathers can view attendance, pay fees via MoMo or card, download receipts, and message teachers — all from their phone.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Is our school data secure and hosted in Africa?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">We use bank-grade AES-256 encryption — the same standard Ghanaian banks use. Data can be hosted locally in Ghana, Nigeria, or Kenya. Your student data is never sold or shared with third parties. Period.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-4">Is our school data secure and hosted in Africa?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-4"><div class="faq-inner"><p class="faq-ans">We use bank-grade AES-256 encryption — the same standard Ghanaian banks use. Data can be hosted locally in Ghana, Nigeria, or Kenya. Your student data is never sold or shared with third parties. Period.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">What payment methods are supported?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">SchoolOS integrates with Paystack, Flutterwave, MTN Mobile Money, Vodafone Cash, AirtelTigo Money, and direct bank transfers. Parents can pay from any channel and receive instant digital receipts.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-5">What payment methods are supported?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-5"><div class="faq-inner"><p class="faq-ans">SchoolOS integrates with Paystack, Flutterwave, MTN Mobile Money, Vodafone Cash, AirtelTigo Money, and direct bank transfers. Parents can pay from any channel and receive instant digital receipts.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Do you offer training and onboarding support?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Every plan includes our documentation library and how-to videos. Growth plans include live onboarding sessions over video call. Enterprise includes on-site training at every campus with a dedicated account manager.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-6">Do you offer training and onboarding support?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-6"><div class="faq-inner"><p class="faq-ans">Every plan includes our documentation library and how-to videos. Growth plans include live onboarding sessions over video call. Enterprise includes on-site training at every campus with a dedicated account manager.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Can parents pay school fees directly through SchoolOS?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Yes. Parents receive a payment link via WhatsApp or SMS. They can pay using mobile money (MTN MoMo, Vodafone Cash, AT Money), card, or bank transfer. Receipts are generated instantly and the fee ledger updates automatically.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-7">Can parents pay school fees directly through SchoolOS?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-7"><div class="faq-inner"><p class="faq-ans">Yes. Parents receive a payment link via WhatsApp or SMS. They can pay using mobile money (MTN MoMo, Vodafone Cash, AT Money), card, or bank transfer. Receipts are generated instantly and the fee ledger updates automatically.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Does SchoolOS support SHS / WASSCE grading systems?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Yes. SchoolOS supports the Ghana Education Service (GES) grading system, WASSCE computation rules, and the NaCCA curriculum framework. Term reports are auto-generated in the approved GES format. BECE and WASSCE results can be imported directly.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-8">Does SchoolOS support SHS / WASSCE grading systems?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-8"><div class="faq-inner"><p class="faq-ans">Yes. SchoolOS supports the Ghana Education Service (GES) grading system, WASSCE computation rules, and the NaCCA curriculum framework. Term reports are auto-generated in the approved GES format. BECE and WASSCE results can be imported directly.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Is there a mobile app for teachers?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">SchoolOS is fully responsive on mobile browsers — no app download needed. Teachers can mark attendance, enter grades, and view schedules from any smartphone. Native Android and iOS apps for parents are available on Growth and Enterprise plans.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-9">Is there a mobile app for teachers?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-9"><div class="faq-inner"><p class="faq-ans">SchoolOS is fully responsive on mobile browsers — no app download needed. Teachers can mark attendance, enter grades, and view schedules from any smartphone. Native Android and iOS apps for parents are available on Growth and Enterprise plans.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">What happens if WhatsApp or our internet goes down?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">SchoolOS queues WhatsApp and SMS messages automatically and retries when the connection is restored. The platform itself works with any internet connection — 3G, 4G, or satellite. Teachers can also mark attendance offline on mobile; data syncs when reconnected.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-10">What happens if WhatsApp or our internet goes down?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-10"><div class="faq-inner"><p class="faq-ans">SchoolOS queues WhatsApp and SMS messages automatically and retries when the connection is restored. The platform itself works with any internet connection — 3G, 4G, or satellite. Teachers can also mark attendance offline on mobile; data syncs when reconnected.</p></div></div>
         </div>
         <div class="faq-item">
-          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">Can we export our data if we decide to leave?<div class="faq-icon">+</div></button>
-          <div class="faq-body"><div class="faq-inner"><p class="faq-ans">Absolutely. You can export all your data — student records, fees, grades, attendance — in standard formats (CSV, Excel, PDF) at any time with one click. No lock-in. No hidden fees. Your data is yours.</p></div></div>
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-11">Can we export our data if we decide to leave?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-11"><div class="faq-inner"><p class="faq-ans">Absolutely. You can export all your data — student records, fees, grades, attendance — in standard formats (CSV, Excel, PDF) at any time with one click. No lock-in. No hidden fees. Your data is yours.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-12">What happens when my 7-day trial ends?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-12"><div class="faq-inner"><p class="faq-ans">You'll receive an email reminder before your trial ends. If you choose not to subscribe, your account is paused — your data is kept safe for 30 days so you can come back anytime. No charges are made without your explicit action.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-13">Can I migrate from another school management system?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-13"><div class="faq-inner"><p class="faq-ans">Yes. Our onboarding team handles data migration from any existing system — including spreadsheets, EMIS, Sage, and other school platforms. We import student records, fee history, and staff data. Most migrations are completed within 24 hours.</p></div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false" aria-controls="faq-body-14">Does SchoolOS work with slow or intermittent internet?<div class="faq-icon">+</div></button>
+          <div class="faq-body" id="faq-body-14"><div class="faq-inner"><p class="faq-ans">Yes. SchoolOS is optimised for African network conditions. Attendance marking and fee collection work with 2G/3G connections. The app caches essential data locally so teachers can mark attendance even when offline — records sync automatically when connectivity is restored.</p></div></div>
         </div>
       </div>
     </div>
@@ -2387,7 +2454,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>AES-256 encryption · GDPR-aware · Student data never sold</div>
           <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>Go live in under 24 hours — our team guides you through setup</div>
           <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>Local data residency options available for all African markets</div>
-          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>14-day free trial on all plans — cancel anytime, no questions</div>
+          <div class="trust-signal"><div class="trust-signal-icon"><svg class="icon" style="stroke:rgba(245,243,238,0.6);" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>7-day free trial on all plans — cancel anytime, no questions</div>
         </div>
         <div class="country-flags">
           <div class="country-flag-item">🇬🇭 Ghana</div>
@@ -2397,7 +2464,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="country-flag-item">🇷🇼 Rwanda</div>
           <div class="country-flag-item">🇹🇿 Tanzania</div>
         </div>
-        <a href="#" class="whatsapp-cta" target="_blank" rel="noopener">
+        <a href="https://wa.me/233244000000?text=Hi%20SchoolOS%20team%2C%20I%27d%20like%20to%20learn%20more." class="whatsapp-cta" target="_blank" rel="noopener">
           <div class="whatsapp-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
           <div class="whatsapp-text"><strong>Prefer WhatsApp? Chat with us now.</strong> We typically respond within 30 minutes.</div>
         </a>
@@ -2407,10 +2474,15 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="form-title">Start your free trial</div>
           <div class="form-subtitle">No credit card required · Go live in 24 hours</div>
           <form id="leadForm" onsubmit="handleSubmit(event)" novalidate>
-            <div class="form-group">
-              <label class="form-label" for="email">Work Email *</label>
-              <input class="form-input" id="email" type="email" placeholder="kwame@school.edu.gh" required>
-              <div class="field-error" id="err-email">Please enter a valid email address</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label" for="firstName">First Name</label><input class="form-input" id="firstName" type="text" placeholder="Kwame" required></div>
+              <div class="form-group"><label class="form-label" for="lastName">Last Name</label><input class="form-input" id="lastName" type="text" placeholder="Asante" required></div>
+            </div>
+            <div class="form-group full"><label class="form-label" for="schoolName">School Name</label><input class="form-input" id="schoolName" type="text" placeholder="Presec Legon" required></div>
+            <div class="form-group full"><label class="form-label" for="email">Work Email</label><input class="form-input" id="email" type="email" placeholder="you@school.edu.gh" required><div class="field-error" id="err-email">Please enter a valid email.</div></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label" for="phone">WhatsApp / Phone</label><input class="form-input" id="phone" type="tel" placeholder="+233 24 000 0000"></div>
+              <div class="form-group"><label class="form-label" for="students">Number of Students</label><select class="form-select" id="students"><option value="">Select range...</option><option>Under 100</option><option>100 – 300</option><option>300 – 1,000</option><option>1,000+</option></select></div>
             </div>
             <div class="form-privacy">
               <svg class="icon icon-sm" style="color:var(--teal);margin-top:2px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -2442,16 +2514,18 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         </a>
         <p class="foot-brand-desc">The school management platform built for Ghanaian schools. 40+ modules. Cloud-native. 24-hour go-live.</p>
         <div class="foot-social">
-          <a href="#" class="foot-soc-btn" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-          <a href="#" class="foot-soc-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+          <a href="https://twitter.com/getschoolos" target="_blank" rel="noopener" class="foot-soc-btn" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="https://linkedin.com/company/schoolos" target="_blank" rel="noopener" class="foot-soc-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+          <a href="https://facebook.com/getschoolos" target="_blank" rel="noopener" class="foot-soc-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+          <a href="https://youtube.com/@schoolos" target="_blank" rel="noopener" class="foot-soc-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
         </div>
       </div>
       <div>
         <div class="foot-col-title">Product</div>
         <ul class="foot-links">
           <li><a href="#features">Features</a></li>
+          <li><a href="#stats">By the numbers</a></li>
+          <li><a href="#reviews">Reviews</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#demo">Demo</a></li>
           <li><a href="#faq">FAQ</a></li>
@@ -2461,11 +2535,11 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div>
         <div class="foot-col-title">Company</div>
         <ul class="foot-links">
-          <li><a href="#">About SchoolOS</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Press</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#contact">About SchoolOS</a></li>
+          <li><a href="#contact">Blog</a></li>
+          <li><a href="#contact">Careers</a></li>
+          <li><a href="#contact">Press</a></li>
+          <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -2474,14 +2548,14 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <li><a href="#contact">Contact Us</a></li>
           <li><a href="#faq">Help & FAQ</a></li>
           <li><a href="/health" target="_blank">System Status</a></li>
-          <li><a href="#contact">Privacy Policy</a></li>
-          <li><a href="#contact">Terms of Use</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Use</a></li>
         </ul>
       </div>
       <div>
         <div class="foot-col-title">Stay Updated</div>
         <p style="font-size:13px;color:var(--text-3);margin-bottom:14px;">Tips for running a smoother school — sent monthly.</p>
-        <form onsubmit="event.preventDefault();this.innerHTML='<span style=\'font-size:13px;color:var(--teal);font-weight:600;\'>✓ Subscribed! Check your inbox.</span>';" style="display:flex;gap:8px;">
+        <form onsubmit="event.preventDefault();this.innerHTML='<span style=\'font-size:13px;color:var(--teal);font-weight:600;\'>✓ Subscribed! Check your inbox.</span>';setTimeout(()=>window.location.href='/auth',1800);" style="display:flex;gap:8px;">
           <input type="email" placeholder="Your email" required style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-family:var(--ff-body);min-width:0;">
           <button type="submit" style="padding:10px 16px;border-radius:8px;background:var(--primary);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Subscribe</button>
         </form>
@@ -2490,7 +2564,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     </div>
     <div class="foot-bottom">
       <div class="foot-copy">© 2025 <strong>SchoolOS Technologies</strong>. Built for Ghanaian schools.</div>
-      <div class="foot-legal"><a href="#">Terms</a><a href="#">Privacy</a><a href="#">Cookies</a></div>
+      <div class="foot-legal"><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/cookies">Cookies</a></div>
     </div>
   </div>
 </footer>
@@ -2513,7 +2587,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     <div style="font-size:48px;margin-bottom:16px;">📋</div>
     <h3 style="font-family:var(--ff-display);font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;">Free School Management Checklist</h3>
     <p style="font-size:14px;color:var(--text-2);margin-bottom:24px;">Download our 10-point evaluation checklist for choosing the right school management system. Used by 500+ schools across Africa.</p>
-    <form onsubmit="event.preventDefault();closeExit();window.location.href='/auth';" style="display:flex;flex-direction:column;gap:12px;">
+    <form onsubmit="event.preventDefault();closeExit();window.location.href='/auth?ref=checklist';" style="display:flex;flex-direction:column;gap:12px;">
       <input type="email" placeholder="Your work email" required style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);font-size:15px;font-family:var(--ff-body);">
       <button type="submit" class="btn-primary" style="justify-content:center;width:100%;">Send Me the Checklist</button>
     </form>
@@ -2522,7 +2596,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </div>
 
 <!-- WHATSAPP FLOATING CHAT -->
-<a href="https://wa.me/233000000000?text=Hi%20SchoolOS%20team%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20platform." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp">
+<a href="https://wa.me/233244000000?text=Hi%20SchoolOS%20team%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20platform." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat on WhatsApp">
   <svg style="width:28px;height:28px;fill:#fff;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
@@ -2554,6 +2628,7 @@ window.addEventListener("scroll", () => {
     requestAnimationFrame(() => {
       const y = window.scrollY;
       nav.classList.toggle("scrolled", y > 40);
+      nav.classList.toggle("scrolled-far", y > window.innerHeight * 0.8);
       btt.classList.toggle("vis", y > window.innerHeight * 0.35);
       ticking = false;
     });
@@ -2631,12 +2706,15 @@ function calcPrice() {
   else { plan = "Enterprise"; price = 0; }
   document.getElementById("calcPrice").textContent = price > 0 ? "₵" + price : "Custom";
   document.getElementById("calcPlan").textContent = price > 0 ? plan + " plan recommended" : "Custom pricing — contact sales";
-  const starter = document.querySelector(".p-card:not(.featured):not(:last-child) .p-price[data-monthly]");
-  const growth = document.querySelector(".p-card.featured .p-price[data-monthly]");
-  const sBase = count <= 300 ? 299 : Math.round(299 + (count - 300) * 0.3);
-  const gBase = count <= 1000 ? 599 : 599 + Math.round((count - 1000) * 0.18);
-  if (starter) { const v = Math.round((type === "monthly" ? Math.min(sBase, 1199) : Math.min(sBase, 1199) * 0.8)); starter.innerHTML = "₵" + v + "<span class=\"p-price-mo\">/mo</span>"; }
-  if (growth) { const v = Math.round((type === "monthly" ? Math.min(gBase, 2999) : Math.min(gBase, 2999) * 0.8)); growth.innerHTML = "₵" + v + "<span class=\"p-price-mo\">/mo</span>"; }
+  const starterEl = document.getElementById('price-starter');
+  const growthEl = document.getElementById('price-growth');
+  if (plan === 'Enterprise') {
+    if (starterEl) starterEl.innerHTML = '—<span class="p-price-mo"></span>';
+    if (growthEl) growthEl.innerHTML = 'Custom<span class="p-price-mo"></span>';
+  } else {
+    if (starterEl) starterEl.innerHTML = (type === 'annual' ? '₵239' : '₵299') + '<span class="p-price-mo">/mo</span>';
+    if (growthEl) growthEl.innerHTML = (type === 'annual' ? '₵479' : '₵599') + '<span class="p-price-mo">/mo</span>';
+  }
 }
 function setPricing(type, btn) {
   document.querySelectorAll(".tog-btn").forEach(b => b.classList.remove("on"));
@@ -2727,10 +2805,10 @@ const slider = document.getElementById("studentSlider");
 if (slider) { slider.addEventListener("input", calcPrice); calcPrice(); }
 
 /* ========== EXIT-INTENT MODAL ========== */
-let exitShown = false;
 document.addEventListener("mouseleave", (e) => {
-  if (exitShown || e.clientY > 0) return;
-  exitShown = true;
+  if (e.clientY > 0) return;
+  if (sessionStorage.getItem('exitSeen')) return;
+  sessionStorage.setItem('exitSeen', '1');
   const modal = document.getElementById("exitModal");
   if (modal) modal.classList.add("show");
 });
