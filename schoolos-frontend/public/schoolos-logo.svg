@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" fill="none">
+
+  <!-- Left shape: diamond frame (back/bracket) -->
+  <path fill="#FF8C00" fill-rule="evenodd" d="
+    M82 6
+    C76 6 71 8 67 12
+    L10 69
+    C6 73 4 78 4 83
+    C4 88 6 93 10 97
+    L67 154
+    C71 158 76 160 82 160
+    C88 160 93 158 97 154
+    L154 97
+    C158 93 160 88 160 83
+    C160 78 158 73 154 69
+    L97 12
+    C93 8 88 6 82 6 Z
+
+    M82 30
+    L136 84
+    L82 138
+    L28 84
+    Z
+  "/>
+
+  <!-- Right shape: arrow diamond -->
+  <path fill="#FF8C00" d="
+    M178 40
+    C172 40 167 42 163 46
+    L106 103
+    C102 107 100 112 100 117
+    C100 122 102 127 106 131
+    L163 188
+    C167 192 172 194 178 194
+    C184 194 189 192 193 188
+    L250 131
+    C254 127 256 122 256 117
+    C256 112 254 107 250 103
+    L193 46
+    C189 42 184 40 178 40 Z
+  "/>
+
+  <!-- Dark inner void in right shape -->
+  <path fill="#0F0E0C" d="
+    M178 66
+    L232 120
+    L178 174
+    L124 120
+    Z
+  "/>
+
+  <!-- Arrow mark visible inside right shape -->
+  <path fill="#FF8C00" d="
+    M153 107
+    L178 94
+    L178 118
+    Z
+    M178 94
+    L200 106
+    L178 118
+    L196 106
+    Z
+  "/>
+
+</svg>
