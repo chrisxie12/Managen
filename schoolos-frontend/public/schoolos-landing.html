@@ -1312,6 +1312,47 @@ footer::before {
 .btt:hover { background: linear-gradient(135deg, var(--primary-vibrant) 0%, #1D4ED8 100%); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(37,99,235,0.5); }
 .btt-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.04em; }
 
+/* ===================== MOBILE HERO VISUAL ===================== */
+.hero-mobile-visual { display: none; }
+
+.hmv-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+[data-theme="dark"] .hmv-card { background: var(--bg-2); }
+.hmv-topbar {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-vibrant) 100%);
+  padding: 11px 14px; display: flex; align-items: center; gap: 8px;
+}
+.hmv-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.hmv-stat { padding: 10px 8px; text-align: center; }
+.hmv-stat-label {
+  font-size: 9px; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px;
+}
+.hmv-stat-val {
+  font-family: var(--ff-display); font-size: 18px; font-weight: 900; line-height: 1;
+}
+.hmv-notifs {
+  padding: 10px 12px; background: var(--bg);
+  display: flex; flex-direction: column; gap: 7px;
+}
+[data-theme="dark"] .hmv-notifs { background: var(--bg-3); }
+.hmv-notif {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px;
+}
+[data-theme="dark"] .hmv-notif { background: var(--bg-2); }
+.hmv-notif-meta {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 600; color: var(--text-3); margin-bottom: 4px;
+}
+.hmv-notif-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 1024px) {
   .hero-inner, .feat-grid { grid-template-columns: 1fr; gap: 56px; }
@@ -1348,6 +1389,9 @@ footer::before {
   .hero-sub { font-size: 15px; max-width: 100%; }
   .hero-grid { display: none; }
   .float-1, .float-2, .float-3 { display: none; }
+  /* Hide desktop dashboard, show compact mobile visual instead */
+  .hero-right { display: none; }
+  .hero-mobile-visual { display: block; margin-top: 28px; }
 
   /* Stack hero CTA buttons full-width on mobile */
   .hero-ctas { flex-direction: column; gap: 10px; margin-bottom: 28px; }
@@ -1544,8 +1588,54 @@ footer::before {
           </a>
           <a href="#demo" class="btn-secondary" style="font-size:16px;padding:15px 28px;">
             <svg class="icon" style="width:17px;height:17px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-            Watch 2-Min Demo
+            Book a Demo
           </a>
+        </div>
+
+        <!-- MOBILE-ONLY HERO VISUAL — hidden on desktop -->
+        <div class="hero-mobile-visual">
+          <div class="hmv-card">
+            <div class="hmv-topbar">
+              <div style="width:22px;height:22px;background:rgba(255,255,255,0.2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg style="width:12px;height:10px;stroke:#fff;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:#fff;flex:1;">SchoolOS Dashboard</span>
+              <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.15);border-radius:99px;padding:3px 9px;">
+                <span style="width:6px;height:6px;background:#4ADE80;border-radius:50%;animation:blink 1.6s step-end infinite;"></span>
+                <span style="font-size:9px;font-weight:700;color:#fff;letter-spacing:0.04em;">LIVE</span>
+              </div>
+            </div>
+            <div class="hmv-stats">
+              <div class="hmv-stat">
+                <div class="hmv-stat-label">Students</div>
+                <div class="hmv-stat-val" style="color:var(--teal);">1,240</div>
+              </div>
+              <div class="hmv-stat" style="border-left:1px solid var(--border);border-right:1px solid var(--border);">
+                <div class="hmv-stat-label">Present</div>
+                <div class="hmv-stat-val" style="color:var(--primary-vibrant);">1,089</div>
+              </div>
+              <div class="hmv-stat">
+                <div class="hmv-stat-label">Fees In</div>
+                <div class="hmv-stat-val" style="color:#059669;">₵84K</div>
+              </div>
+            </div>
+            <div class="hmv-notifs">
+              <div class="hmv-notif">
+                <div class="hmv-notif-meta">
+                  <svg style="width:10px;height:10px;fill:#25D366;flex-shrink:0;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  <span>WhatsApp · Just now</span>
+                </div>
+                <div class="hmv-notif-text">📊 Kofi was <strong style="color:var(--teal);">PRESENT</strong> today — Class 8B, all 8 periods ✓</div>
+              </div>
+              <div class="hmv-notif">
+                <div class="hmv-notif-meta">
+                  <svg style="width:10px;height:10px;fill:#25D366;flex-shrink:0;" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  <span>WhatsApp · 2:14 PM</span>
+                </div>
+                <div class="hmv-notif-text">💰 ₵450 received — Kofi Mensah Term 2 fees <strong style="color:#059669;">PAID IN FULL</strong> · Ref RCP-2025</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="hero-trust" style="margin-top:12px;">
