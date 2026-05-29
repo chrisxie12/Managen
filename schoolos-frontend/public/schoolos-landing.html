@@ -1361,6 +1361,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     <ul class="nav-links">
       <li><a href="#features">Features</a></li>
       <li><a href="#demo">Demo</a></li>
+      <li><a href="#reviews">Reviews</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
@@ -1387,6 +1388,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 <div class="mob-nav" id="mobNav" aria-hidden="true">
   <a href="#features" onclick="closeMenu()">Features</a>
   <a href="#demo" onclick="closeMenu()">Demo</a>
+  <a href="#reviews" onclick="closeMenu()">Reviews</a>
   <a href="#pricing" onclick="closeMenu()">Pricing</a>
   <a href="#faq" onclick="closeMenu()">FAQ</a>
   <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);">
@@ -1697,6 +1699,10 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             <div style="width:28px;height:28px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div><div style="font-size:14px;font-weight:600;color:var(--text);">WhatsApp alerts — sent automatically</div><div style="font-size:12px;color:var(--teal);font-weight:600;">Attendance, fees, results delivered instantly</div></div>
           </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);">
+            <div style="width:28px;height:28px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--text);">Digital grade book — auto-computed, auditable</div><div style="font-size:12px;color:var(--teal);font-weight:600;">No spreadsheets, no manual errors</div></div>
+          </div>
           <div style="display:flex;align-items:center;gap:12px;padding:14px 0;">
             <div style="width:28px;height:28px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.5;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
             <div><div style="font-size:14px;font-weight:600;color:var(--text);">One-click WAEC/BECE report cards</div><div style="font-size:12px;color:var(--teal);font-weight:600;">NaCCA/GES format, error-free</div></div>
@@ -1874,7 +1880,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="demo-header reveal">
         <div class="section-eyebrow" style="justify-content:center;">PRODUCT DEMO</div>
         <h2 class="section-title" style="text-align:center;">See it in action.</h2>
-        <p class="section-sub" style="margin:0 auto;text-align:center;">Watch a real school go from sign-up to running attendance, collecting fees, and generating reports. No jargon. No fluff. Just the product.</p>
+        <p class="section-sub" style="margin:0 auto;text-align:center;">Book a live walkthrough with a product specialist — a real school, real data, real questions answered. No jargon. No fluff. Just the product.</p>
       </div>
       <div class="video-wrapper reveal delay-1">
         <div class="video-thumb" id="videoThumb" onclick="playDemo()">
@@ -1909,7 +1915,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="video-duration">2:14</div>
         </div>
       </div>
-      <p style="text-align:center;font-size:13px;color:var(--text-3);margin-top:20px;">No signup required to watch. Full demo available after free registration.</p>
+      <p style="text-align:center;font-size:13px;color:var(--text-3);margin-top:20px;">Click to book a live 20-minute walkthrough with a product specialist — or <a href="/auth" style="color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:3px;">start your free trial</a> and explore yourself.</p>
     </div>
   </div>
 </section>
@@ -2103,14 +2109,14 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </section>
 
 <!-- =================== TESTIMONIALS =================== -->
-<section class="testi-section">
+<section class="testi-section" id="reviews">
   <div class="container">
     <div style="text-align:center;margin-bottom:56px;" class="reveal">
       <div class="section-eyebrow" style="justify-content:center;">TESTIMONIALS</div>
       <h2 class="section-title">What school leaders say.</h2>
       <p class="section-sub" style="margin:0 auto;text-align:center;">From single-campus primary schools to multi-campus secondary schools across Ghana.</p>
     </div>
-    <div class="testi-grid">
+    <div class="testi-grid" style="grid-template-columns:repeat(2,1fr);">
       <div class="testi-card reveal">
         <div class="testi-content">
           <div class="testi-stars">★★★★★</div>
@@ -2154,6 +2160,20 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           </div>
         </div>
       </div>
+      <div class="testi-card reveal delay-3">
+        <div class="testi-content">
+          <div class="testi-stars">★★★★★</div>
+          <div style="display:inline-flex;align-items:center;gap:8px;background:#FEF9EC;border:1px solid rgba(133,79,11,0.2);border-radius:8px;padding:6px 12px;margin-bottom:14px;">
+            <span style="font-size:18px;font-weight:900;color:#854F0B;font-family:var(--ff-display);">₦6M saved</span>
+            <span style="font-size:11px;color:#854F0B;font-weight:600;">in payroll errors annually</span>
+          </div>
+          <p class="testi-text">"We caught three payroll discrepancies in the first month — errors that had been going unnoticed for years. SchoolOS's payroll audit trail is worth the subscription price alone."</p>
+          <div class="testi-author">
+            <div class="testi-av" style="background:#FEF9EC;color:#854F0B;">T</div>
+            <div><div class="testi-name">Tunde Okafor <span class="testi-flag">🇳🇬</span></div><div class="testi-role">Finance Director · King's College Lagos</div></div>
+          </div>
+        </div>
+      </div>
     </div>
     <p class="testi-note">*Testimonials from school leaders in our pilot program. Names used with permission.</p>
 
@@ -2169,7 +2189,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </section>
 
 <!-- =================== CTA BANNER =================== -->
-<section style="background:linear-gradient(135deg,var(--primary),#E55A2B);padding:80px 0;text-align:center;">
+<section style="background:linear-gradient(135deg,var(--primary) 0%,#0D4A8A 50%,var(--teal) 100%);padding:80px 0;text-align:center;">
   <div class="container" style="max-width:640px;">
     <h2 style="font-family:var(--ff-display);font-size:clamp(28px,5vw,42px);font-weight:900;color:#fff;margin-bottom:16px;">From manual registers to one dashboard.<br>Start free, no card needed.</h2>
     <p style="font-size:17px;color:rgba(255,255,255,0.85);margin-bottom:32px;">Join 500+ schools already using SchoolOS for attendance, fees, exams, and payroll — all from one place.</p>
@@ -2693,8 +2713,21 @@ function handleSubmit(e) {
 
 /* ========== VIDEO DEMO ========== */
 function playDemo() {
-  const thumb = document.getElementById("videoThumb");
-  thumb.innerHTML = "<div style=\"width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:600;\"><div style=\"text-align:center;opacity:0.6;\"><div style=\"font-size:48px;margin-bottom:12px;\"><svg style=\"width:48px;height:48px;stroke:#fff;stroke-width:1.5;\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"10 8 16 12 10 16 10 8\" fill=\"currentColor\" stroke=\"none\"/></svg></div>Demo video would load here</div></div>";
+  const wrapper = document.getElementById("videoThumb").closest(".video-wrapper");
+  wrapper.innerHTML = `<div style="width:100%;aspect-ratio:16/9;background:var(--dark-2);border-radius:var(--r-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px;">
+    <div style="width:64px;height:64px;border-radius:16px;background:var(--primary);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(10,36,114,0.4);">
+      <svg style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-family:var(--ff-display);font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">Book a Live Demo</div>
+      <div style="font-size:15px;color:rgba(255,255,255,0.6);max-width:360px;line-height:1.6;">See SchoolOS running a real school — live screen share with a product specialist. Takes 20 minutes.</div>
+    </div>
+    <a href="#contact" onclick="document.getElementById('videoThumb')?.closest('.video-wrapper')?.scrollIntoView()" style="display:inline-flex;align-items:center;gap:10px;background:var(--primary);color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none;transition:background 0.2s;box-shadow:0 4px 20px rgba(10,36,114,0.4);">
+      <svg style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.6 19.79 19.79 0 0 1 1.6 4.93 2 2 0 0 1 3.6 2.72h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.3a16 16 0 0 0 6.29 6.29l.94-.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Request a Live Demo
+    </a>
+    <div style="font-size:12px;color:rgba(255,255,255,0.35);">Free · No obligation · Response within 2 hours</div>
+  </div>`;
 }
 
 /* ========== PRICING CALCULATOR ========== */
