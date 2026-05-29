@@ -59,7 +59,7 @@ const COLOR_SCHEME = {
   primary: "#0A2472",
   primaryLight: "#0C2D8A",
   secondary: "#F8F9FA",
-  accent: "#FF6B35",
+  accent: "#2563EB",
   success: "#10B981",
   warning: "#F59E0B",
   danger: "#EF4444",

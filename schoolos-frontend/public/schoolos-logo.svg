@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" fill="none">
 
   <!-- Left shape: diamond frame (back/bracket) -->
-  <path fill="#FF8C00" fill-rule="evenodd" d="
+  <path fill="#0A2472" fill-rule="evenodd" d="
     M82 6
     C76 6 71 8 67 12
     L10 69
@@ -24,7 +24,7 @@
   "/>
 
   <!-- Right shape: arrow diamond -->
-  <path fill="#FF8C00" d="
+  <path fill="#2563EB" d="
     M178 40
     C172 40 167 42 163 46
     L106 103
@@ -41,7 +41,7 @@
   "/>
 
   <!-- Dark inner void in right shape -->
-  <path fill="#0F0E0C" d="
+  <path fill="#0F172A" d="
     M178 66
     L232 120
     L178 174
@@ -50,7 +50,7 @@
   "/>
 
   <!-- Arrow mark visible inside right shape -->
-  <path fill="#FF8C00" d="
+  <path fill="#2563EB" d="
     M153 107
     L178 94
     L178 118

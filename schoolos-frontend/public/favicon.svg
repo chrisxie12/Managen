@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#111"/>
-  <!-- Left: diamond frame -->
-  <path fill="#FF8C00" fill-rule="evenodd"
+  <rect width="32" height="32" rx="7" fill="#0F172A"/>
+  <!-- Left: diamond frame (navy) -->
+  <path fill="#0A2472" fill-rule="evenodd"
     d="M10 3 L3 10 L10 17 L17 10 Z M10 5.5 L14.5 10 L10 14.5 L5.5 10 Z"/>
-  <!-- Right: arrow diamond -->
-  <path fill="#FF8C00" d="M21 14 L14 21 L21 28 L28 21 Z"/>
-  <path fill="#111" d="M21 17 L25 21 L21 25 L17 21 Z"/>
-  <path fill="#FF8C00" d="M18 19.5 L21 17.5 L21 22.5 L18 19.5 Z M21 17.5 L24 19.5 Z"/>
+  <!-- Right: arrow diamond (vibrant blue) -->
+  <path fill="#2563EB" d="M21 14 L14 21 L21 28 L28 21 Z"/>
+  <path fill="#0F172A" d="M21 17 L25 21 L21 25 L17 21 Z"/>
+  <path fill="#2563EB" d="M18 19.5 L21 17.5 L21 22.5 L18 19.5 Z M21 17.5 L24 19.5 Z"/>
 </svg>

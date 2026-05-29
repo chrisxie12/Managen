@@ -3,7 +3,7 @@ import { TrendingUp, ArrowRight } from "lucide-react";
 
 const COLORS = {
   NAVY: "#0A2472",
-  AMBER: "#FFBA08",
+  AMBER: "#10B981",
   GREEN: "#10B981",
   MUTED: "#6B7280",
 };

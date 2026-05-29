@@ -35,8 +35,8 @@ export function EducationBackground({ className }: { className?: string }) {
     const colors = {
       navy: '#0A2472',
       navyLight: '#1a3a8f',
-      amber: '#FFBA08',
-      amberLight: '#ffd966',
+      amber: '#10B981',
+      amberLight: '#6EE7B7',
       cream: '#F8F9FA',
       white: '#ffffff',
     };

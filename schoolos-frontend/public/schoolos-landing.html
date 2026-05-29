@@ -49,60 +49,71 @@
 <style>
 /* ===================== DESIGN TOKENS ===================== */
 :root {
-  --bg: #FAFAF8;
-  --bg-2: #F2F0EC;
-  --bg-3: #E8E5DE;
+  /* — Background — */
+  --bg: #F8F9FA;
+  --bg-2: #F1F5F9;
+  --bg-3: #E2E8F0;
   --white: #ffffff;
-  --dark: #0F0E0C;
-  --dark-2: #1C1B18;
-  --dark-3: #2C2B27;
-  --orange: #FF6B35;
-  --orange-dk: #E5531F;
-  --orange-lt: #FFF3EE;
-  --orange-mid: #FFD4C2;
-  --orange-glow: rgba(255,107,53,0.18);
-  --teal: #1BB89A;
-  --teal-dk: #14967E;
-  --teal-lt: #E2F8F3;
-  --teal-glow: rgba(27,184,154,0.15);
-  --text: #1A1A18;
-  --text-2: #55534C;
-  --text-3: #95928A;
-  --text-inv: #F5F3EE;
-  --border: #E4E2DA;
-  --border-2: #CBC8BF;
+  /* — Dark (for inverted sections) — matches dashboard sidebar slate-900 */
+  --dark: #0F172A;
+  --dark-2: #1E293B;
+  --dark-3: #334155;
+  /* — Primary brand: Navy (matches dashboard #0A2472) — */
+  --primary: #0A2472;
+  --primary-dk: #081960;
+  --primary-lt: #EEF2FF;
+  --primary-mid: #C7D2FE;
+  --primary-glow: rgba(10,36,114,0.18);
+  --primary-vibrant: #2563EB;
+  /* — Secondary accent: Green (matches dashboard #10B981) — */
+  --teal: #10B981;
+  --teal-dk: #059669;
+  --teal-lt: #D1FAE5;
+  --teal-glow: rgba(16,185,129,0.15);
+  /* — Text — */
+  --text: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --text-inv: #F8FAFC;
+  /* — Borders — */
+  --border: #E2E8F0;
+  --border-2: #CBD5E1;
   --border-dk: rgba(255,255,255,0.1);
+  /* — Typography — */
   --ff-display: 'Bricolage Grotesque', sans-serif;
   --ff-body: 'DM Sans', sans-serif;
   --ff-mono: 'SF Mono','Fira Code','Cascadia Code',monospace;
+  /* — Motion — */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* — Radius — */
   --r: 16px;
   --r-lg: 24px;
   --r-xl: 32px;
+  /* — Shadows — */
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-md: 0 8px 32px rgba(0,0,0,0.08);
   --shadow-lg: 0 24px 64px rgba(0,0,0,0.12);
-  --shadow-orange: 0 8px 32px rgba(255,107,53,0.22);
+  --shadow-primary: 0 8px 32px rgba(10,36,114,0.22);
 }
 
 [data-theme="dark"] {
-  --bg: #0F0E0C;
-  --bg-2: #181714;
-  --bg-3: #222018;
-  --white: #1C1B18;
-  --dark: #F5F3EE;
-  --dark-2: #E8E5DC;
-  --dark-3: #D0CEC5;
-  --text: #F0EDE6;
-  --text-2: #A8A59D;
-  --text-3: #6A6760;
-  --text-inv: #1A1A18;
-  --border: #2A2924;
-  --border-2: #3A3830;
-  --orange-lt: rgba(255,107,53,0.12);
-  --orange-mid: rgba(255,107,53,0.25);
-  --teal-lt: rgba(27,184,154,0.12);
+  --bg: #0F172A;
+  --bg-2: #1E293B;
+  --bg-3: #334155;
+  --white: #1E293B;
+  --dark: #F8FAFC;
+  --dark-2: #F1F5F9;
+  --dark-3: #E2E8F0;
+  --text: #F1F5F9;
+  --text-2: #94A3B8;
+  --text-3: #64748B;
+  --text-inv: #0F172A;
+  --border: #334155;
+  --border-2: #475569;
+  --primary-lt: rgba(10,36,114,0.15);
+  --primary-mid: rgba(10,36,114,0.3);
+  --teal-lt: rgba(16,185,129,0.12);
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
   --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
   --shadow-lg: 0 24px 64px rgba(0,0,0,0.5);
@@ -141,7 +152,7 @@ button { font-family: var(--ff-body); }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 99px; opacity: 0.4; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 99px; opacity: 0.4; }
 
 /* ===================== ICON SYSTEM ===================== */
 .icon {
@@ -166,11 +177,11 @@ section { padding: 110px 0; }
 .section-eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
-  color: var(--orange); margin-bottom: 18px;
+  color: var(--primary); margin-bottom: 18px;
 }
 .section-eyebrow::before {
   content: ''; display: block; width: 24px; height: 2px;
-  background: var(--orange); border-radius: 1px;
+  background: var(--primary); border-radius: 1px;
 }
 .section-title {
   font-family: var(--ff-display);
@@ -185,11 +196,11 @@ section { padding: 110px 0; }
   line-height: 1.8; font-weight: 300;
   max-width: 560px;
 }
-.highlight-orange { color: var(--orange); }
+.highlight-primary { color: var(--primary); }
 .highlight-teal { color: var(--teal); }
-.underline-orange {
+.underline-primary {
   text-decoration: underline;
-  text-decoration-color: var(--orange);
+  text-decoration-color: var(--primary);
   text-underline-offset: 8px;
   text-decoration-thickness: 3px;
 }
@@ -226,12 +237,12 @@ section { padding: 110px 0; }
 /* ===================== BUTTONS ===================== */
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
-  background: var(--orange); color: #fff;
+  background: var(--primary-vibrant); color: #fff;
   font-size: 15px; font-weight: 600;
   padding: 14px 28px; border-radius: 12px;
   border: none; cursor: pointer;
   transition: all 0.22s var(--ease);
-  box-shadow: var(--shadow-orange);
+  box-shadow: 0 8px 32px rgba(37,99,235,0.28);
   position: relative; overflow: hidden;
 }
 .btn-primary::after {
@@ -239,7 +250,7 @@ section { padding: 110px 0; }
   background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
   pointer-events: none;
 }
-.btn-primary:hover { background: var(--orange-dk); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,107,53,0.35); }
+.btn-primary:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,99,235,0.4); }
 .btn-primary:active { transform: translateY(0); }
 
 .btn-secondary {
@@ -282,15 +293,15 @@ nav.scrolled {
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-mark {
   width: 36px; height: 36px; border-radius: 10px;
-  background: var(--orange);
+  background: var(--primary);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+  box-shadow: 0 4px 12px rgba(10,36,114,0.3);
 }
 .logo-text {
   font-family: var(--ff-display); font-size: 19px; font-weight: 900;
   letter-spacing: -0.04em; color: var(--text);
 }
-.logo-text em { color: var(--orange); font-style: normal; }
+.logo-text em { color: var(--primary); font-style: normal; }
 
 .nav-links { display: flex; gap: 2px; list-style: none; }
 .nav-links a {
@@ -309,7 +320,7 @@ nav.scrolled {
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all 0.2s; color: var(--text-2);
 }
-.theme-toggle:hover { border-color: var(--orange); color: var(--orange); }
+.theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
 .icon-moon { display: block; }
 .icon-sun { display: none; }
 [data-theme="dark"] .icon-moon { display: none; }
@@ -325,11 +336,11 @@ nav.scrolled {
 .nav-cta-fill {
   font-size: 14px; font-weight: 600; color: #fff;
   padding: 9px 20px; border-radius: 9px; border: none;
-  background: var(--orange); cursor: pointer; transition: all 0.2s;
+  background: var(--primary-vibrant); cursor: pointer; transition: all 0.2s;
   display: flex; align-items: center; gap: 7px;
   white-space: nowrap;
 }
-.nav-cta-fill:hover { background: var(--orange-dk); transform: translateY(-1px); }
+.nav-cta-fill:hover { background: #1D4ED8; transform: translateY(-1px); }
 
 .menu-btn {
   display: none; flex-direction: column; gap: 5px;
@@ -382,31 +393,31 @@ nav.scrolled {
 }
 .hero-blob-1 {
   width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(10,36,114,0.12) 0%, transparent 70%);
   top: -200px; right: -180px;
 }
 .hero-blob-2 {
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(27,184,154,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%);
   bottom: -150px; left: -120px;
 }
 .hero-blob-3 {
   width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(255,107,53,0.07) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(10,36,114,0.07) 0%, transparent 70%);
   top: 40%; left: 40%;
 }
 .hero-ring {
   position: absolute; border-radius: 50%;
-  border: 2px dashed var(--orange-mid);
+  border: 2px dashed var(--primary-mid);
   animation: spin 36s linear infinite;
 }
 .hero-ring-1 { width: 160px; height: 160px; top: 12%; right: 8%; opacity: 0.4; }
 .hero-ring-2 { width: 80px; height: 80px; bottom: 28%; left: 6%; opacity: 0.3; animation-direction: reverse; animation-duration: 24s; }
 .hero-deco-dot { position: absolute; border-radius: 50%; }
 .hero-deco-dot-1 { width: 12px; height: 12px; background: var(--teal); top: 28%; left: 24%; opacity: 0.5; }
-.hero-deco-dot-2 { width: 8px; height: 8px; background: var(--orange); bottom: 36%; right: 22%; opacity: 0.4; }
+.hero-deco-dot-2 { width: 8px; height: 8px; background: var(--primary); bottom: 36%; right: 22%; opacity: 0.4; }
 .hero-deco-cross {
-  position: absolute; right: 15%; top: 18%; opacity: 0.2; color: var(--orange);
+  position: absolute; right: 15%; top: 18%; opacity: 0.2; color: var(--primary);
   font-size: 28px; font-weight: 300; transform: rotate(15deg);
 }
 
@@ -428,16 +439,16 @@ nav.scrolled {
 
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--orange-lt); border: 1px solid var(--orange-mid);
-  color: var(--orange); font-size: 12px; font-weight: 700;
+  background: var(--primary-lt); border: 1px solid var(--primary-mid);
+  color: var(--primary); font-size: 12px; font-weight: 700;
   border-radius: 99px; padding: 6px 16px; margin-bottom: 28px;
   letter-spacing: 0.02em;
 }
-.live-dot { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; animation: blink 2s step-end infinite; }
+.live-dot { width: 7px; height: 7px; background: var(--primary); border-radius: 50%; animation: blink 2s step-end infinite; }
 .pulse-wrapper { position: relative; display: inline-flex; }
 .pulse-ring {
   position: absolute; inset: -4px; border-radius: 50%;
-  border: 2px solid var(--orange);
+  border: 2px solid var(--primary);
   animation: pulse-ring 2s ease-out infinite;
 }
 
@@ -494,7 +505,7 @@ nav.scrolled {
   font-size: 13px; font-weight: 700; color: var(--text-2);
   transition: all 0.18s;
 }
-.trust-logo-chip:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
+.trust-logo-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
 
 /* Hero mockup */
 .hero-right {
@@ -516,7 +527,7 @@ nav.scrolled {
 .dash-topbar {
   display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
 }
-.dash-logo { width: 26px; height: 26px; border-radius: 8px; background: var(--orange); display: flex; align-items: center; justify-content: center; }
+.dash-logo { width: 26px; height: 26px; border-radius: 8px; background: var(--primary); display: flex; align-items: center; justify-content: center; }
 .dash-brand { font-family: var(--ff-display); font-size: 13px; font-weight: 800; letter-spacing: -0.02em; flex: 1; }
 .live-badge {
   display: flex; align-items: center; gap: 5px;
@@ -603,13 +614,13 @@ nav.scrolled {
   font-size: 13px; font-weight: 600; color: var(--text-3); white-space: nowrap; padding: 0 8px;
 }
 .ticker-item .flag { font-size: 15px; }
-.ticker-sep { color: var(--orange); font-size: 6px; margin: 0 4px; }
+.ticker-sep { color: var(--primary); font-size: 6px; margin: 0 4px; }
 
 .section-with-accent { position: relative; }
 .section-accent-line {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
   width: 80px; height: 3px;
-  background: linear-gradient(90deg, var(--orange), var(--teal));
+  background: linear-gradient(90deg, var(--primary), var(--teal));
   border-radius: 2px;
 }
 
@@ -618,8 +629,8 @@ nav.scrolled {
 .how-bg-pattern {
   position: absolute; inset: 0;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(255,107,53,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(27,184,154,0.08) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgba(10,36,114,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16,185,129,0.08) 0%, transparent 50%);
   pointer-events: none;
 }
 .how-grid-bg {
@@ -642,7 +653,7 @@ nav.scrolled {
 .how-connector {
   position: absolute; top: 48px; right: -1px; width: 24px; height: 24px;
   display: flex; align-items: center; justify-content: center;
-  color: var(--orange); z-index: 2;
+  color: var(--primary); z-index: 2;
 }
 .how-step:last-child .how-connector { display: none; }
 .how-step-num {
@@ -653,9 +664,9 @@ nav.scrolled {
 }
 .how-step-icon {
   width: 52px; height: 52px; border-radius: 14px;
-  background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.3);
+  background: rgba(10,36,114,0.15); border: 1px solid rgba(10,36,114,0.3);
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 24px; color: var(--orange);
+  margin-bottom: 24px; color: var(--primary);
 }
 .how-step-title {
   font-family: var(--ff-display); font-size: 20px; font-weight: 700;
@@ -664,8 +675,8 @@ nav.scrolled {
 .how-step-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; opacity: 0.85; }
 .how-step-time {
   display: inline-flex; align-items: center; gap: 6px; margin-top: 20px;
-  font-size: 12px; font-weight: 700; color: var(--orange);
-  background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.2);
+  font-size: 12px; font-weight: 700; color: var(--primary);
+  background: rgba(10,36,114,0.12); border: 1px solid rgba(10,36,114,0.2);
   padding: 4px 12px; border-radius: 99px;
 }
 
@@ -683,7 +694,7 @@ nav.scrolled {
 .feat-list li:last-child { border: none; }
 .feat-check {
   width: 20px; height: 20px; min-width: 20px; border-radius: 6px;
-  background: var(--teal-lt); border: 1px solid rgba(27,184,154,0.25);
+  background: var(--teal-lt); border: 1px solid rgba(16,185,129,0.25);
   display: flex; align-items: center; justify-content: center; margin-top: 2px;
   flex-shrink: 0;
 }
@@ -726,7 +737,7 @@ nav.scrolled {
   position: relative;
 }
 .role-item:hover { background: var(--bg-2); }
-.role-item.active { background: var(--orange-lt); border-color: var(--orange-mid); }
+.role-item.active { background: var(--primary-lt); border-color: var(--primary-mid); }
 .role-av { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; flex-shrink: 0; }
 .role-name { font-size: 13px; font-weight: 700; color: var(--text); }
 .role-desc { font-size: 11px; color: var(--text-3); }
@@ -755,7 +766,7 @@ nav.scrolled {
 .stats-section { background: var(--bg-2); position: relative; overflow: hidden; }
 .stats-section::before {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(255,107,53,0.04) 0%, rgba(27,184,154,0.04) 100%);
+  background: linear-gradient(135deg, rgba(10,36,114,0.04) 0%, rgba(16,185,129,0.04) 100%);
 }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; position: relative; z-index: 1; }
 .stat-item { text-align: center; padding: 32px 20px; }
@@ -764,7 +775,7 @@ nav.scrolled {
   font-weight: 900; letter-spacing: -0.04em; line-height: 1;
   color: var(--text); margin-bottom: 8px;
 }
-.stat-num span { color: var(--orange); }
+.stat-num span { color: var(--primary); }
 .stat-label { font-size: 14px; color: var(--text-2); font-weight: 400; margin-bottom: 6px; }
 .stat-source { font-size: 11px; color: var(--text-3); font-style: italic; }
 
@@ -798,11 +809,11 @@ nav.scrolled {
 }
 .play-btn {
   width: 72px; height: 72px; border-radius: 50%;
-  background: var(--orange); display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 0 16px rgba(255,107,53,0.15);
+  background: var(--primary); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 16px rgba(10,36,114,0.15);
   cursor: pointer; transition: all 0.25s;
 }
-.play-btn:hover { background: var(--orange-dk); transform: scale(1.08); box-shadow: 0 0 0 20px rgba(255,107,53,0.12); }
+.play-btn:hover { background: var(--primary-dk); transform: scale(1.08); box-shadow: 0 0 0 20px rgba(10,36,114,0.12); }
 .play-btn svg { color: #fff; margin-left: 4px; }
 .video-label { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
 .video-label strong { color: #fff; }
@@ -825,7 +836,7 @@ nav.scrolled {
   cursor: default;
 }
 [data-theme="dark"] .integration-tile { background: var(--bg-3); }
-.integration-tile:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: var(--shadow-orange); }
+.integration-tile:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: var(--shadow-primary); }
 .trust-logo-img { display:inline-block;vertical-align:middle; }
 .integration-logo-wrap {
   height: 48px;
@@ -849,7 +860,7 @@ nav.scrolled {
 .integration-name { font-size: 12px; font-weight: 700; color: var(--text-2); }
 .integration-cat { font-size: 10px; color: var(--text-3); margin-top: 2px; }
 .integrations-more { text-align: center; margin-top: 32px; font-size: 14px; color: var(--text-3); }
-.integrations-more span { color: var(--orange); font-weight: 700; }
+.integrations-more span { color: var(--primary); font-weight: 700; }
 
 /* ===================== TESTIMONIALS ===================== */
 .testi-section { background: var(--bg); }
@@ -867,7 +878,7 @@ nav.scrolled {
   color: var(--border); line-height: 1; pointer-events: none;
   z-index: 0;
 }
-.testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--orange-mid); }
+.testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-mid); }
 .testi-content { position: relative; z-index: 1; }
 .testi-stars { color: #F59E0B; font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; }
 .testi-text { font-size: 15px; line-height: 1.75; color: var(--text-2); margin-bottom: 20px; font-style: italic; }
@@ -918,9 +929,9 @@ nav.scrolled {
 .p-card.featured:hover { transform: translateY(-6px); box-shadow: 0 32px 80px rgba(0,0,0,0.25); }
 .popular-tag {
   position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-  background: var(--orange); color: #fff;
+  background: var(--primary); color: #fff;
   font-size: 11px; font-weight: 700; padding: 5px 18px; border-radius: 99px;
-  white-space: nowrap; box-shadow: var(--shadow-orange);
+  white-space: nowrap; box-shadow: var(--shadow-primary);
 }
 .p-plan { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 10px; }
 .p-card.featured .p-plan { color: rgba(255,255,255,0.5); }
@@ -948,9 +959,9 @@ nav.scrolled {
   transition: all 0.22s var(--ease); display: block; text-align: center;
 }
 .p-btn-sec { background: var(--bg-2); color: var(--text); border: 1.5px solid var(--border); }
-.p-btn-sec:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-lt); }
-.p-btn-pri { background: var(--orange); color: #fff; box-shadow: var(--shadow-orange); }
-.p-btn-pri:hover { background: var(--orange-dk); transform: translateY(-1px); }
+.p-btn-sec:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-lt); }
+.p-btn-pri { background: var(--primary); color: #fff; box-shadow: var(--shadow-primary); }
+.p-btn-pri:hover { background: var(--primary-dk); transform: translateY(-1px); }
 [data-theme="dark"] .p-btn-sec { background: var(--bg-3); border-color: var(--border); }
 
 /* Compare table */
@@ -962,14 +973,14 @@ nav.scrolled {
 .compare-table th.featured-col { background: var(--dark); color: #fff; }
 .compare-table td { padding: 14px 20px; font-size: 14px; color: var(--text-2); border-bottom: 1px solid var(--border); text-align: center; }
 .compare-table td:first-child { text-align: left; font-weight: 500; color: var(--text); }
-.compare-table td.featured-col { background: rgba(255,107,53,0.04); }
+.compare-table td.featured-col { background: rgba(10,36,114,0.04); }
 .compare-table tr:last-child td { border-bottom: none; }
 .compare-table tr:hover td { background: var(--bg-2); }
-.compare-table tr:hover td.featured-col { background: rgba(255,107,53,0.08); }
+.compare-table tr:hover td.featured-col { background: rgba(10,36,114,0.08); }
 .check-y { color: var(--teal); font-size: 16px; font-weight: 700; }
 .check-n { color: var(--border-2); font-size: 16px; }
 [data-theme="dark"] .compare-table th { background: var(--bg-3); }
-[data-theme="dark"] .compare-table th.featured-col { background: var(--bg-3); color: var(--orange); }
+[data-theme="dark"] .compare-table th.featured-col { background: var(--bg-3); color: var(--primary); }
 
 /* ===================== FAQ ===================== */
 .faq-section { background: var(--bg-2); }
@@ -996,7 +1007,7 @@ nav.scrolled {
   border: 1px solid var(--border); flex-shrink: 0; transition: all 0.3s var(--ease);
   display: flex; align-items: center; justify-content: center;
 }
-.faq-item.active .faq-icon { background: var(--orange-lt); border-color: var(--orange-mid); transform: rotate(45deg); }
+.faq-item.active .faq-icon { background: var(--primary-lt); border-color: var(--primary-mid); transform: rotate(45deg); }
 .faq-icon::before, .faq-icon::after {
   content: ''; position: absolute; background: var(--text-2); border-radius: 1px; transition: 0.25s;
 }
@@ -1012,8 +1023,8 @@ nav.scrolled {
 .contact-bg {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(255,107,53,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 20% 60%, rgba(27,184,154,0.08) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 60% at 80% 50%, rgba(10,36,114,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 60%, rgba(16,185,129,0.08) 0%, transparent 60%);
 }
 .contact-texture {
   position: absolute; inset: -50%; width: 200%; height: 200%;
@@ -1064,7 +1075,7 @@ nav.scrolled {
   font-size: 15px; font-family: var(--ff-body); color: var(--text);
   transition: all 0.18s; outline: none; appearance: none;
 }
-.form-input:focus, .form-select:focus { border-color: var(--orange); background: var(--white); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+.form-input:focus, .form-select:focus { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 3px rgba(10,36,114,0.12); }
 .form-input.invalid { border-color: #E24B4A; box-shadow: 0 0 0 3px rgba(226,75,74,0.1); }
 .form-input.valid { border-color: var(--teal); }
 .field-error { font-size: 12px; color: #E24B4A; margin-top: 5px; display: none; }
@@ -1076,7 +1087,7 @@ nav.scrolled {
 .form-privacy svg { flex-shrink: 0; color: var(--teal); margin-top: 1px; }
 .form-submit {
   width: 100%; padding: 16px; border-radius: 12px; border: none;
-  background: var(--orange); color: #fff; font-size: 16px; font-weight: 700;
+  background: var(--primary); color: #fff; font-size: 16px; font-weight: 700;
   font-family: var(--ff-body); cursor: pointer; transition: all 0.22s var(--ease);
   display: flex; align-items: center; justify-content: center; gap: 10px;
   position: relative; overflow: hidden;
@@ -1085,7 +1096,7 @@ nav.scrolled {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
 }
-.form-submit:hover { background: var(--orange-dk); transform: translateY(-2px); box-shadow: var(--shadow-orange); }
+.form-submit:hover { background: var(--primary-dk); transform: translateY(-2px); box-shadow: var(--shadow-primary); }
 .form-submit.loading { pointer-events: none; }
 .form-submit.loading .btn-text { opacity: 0; }
 .form-spinner {
@@ -1126,15 +1137,15 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   display: flex; align-items: center; justify-content: center;
   color: rgba(255,255,255,0.5); transition: all 0.18s;
 }
-.foot-soc-btn:hover { background: rgba(255,107,53,0.2); border-color: rgba(255,107,53,0.4); color: var(--orange); }
+.foot-soc-btn:hover { background: rgba(10,36,114,0.2); border-color: rgba(10,36,114,0.4); color: var(--primary); }
 .foot-soc-btn svg { width: 16px; height: 16px; }
 .foot-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 18px; }
 .foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .foot-links a { font-size: 14px; color: rgba(245,243,238,0.55); transition: color 0.18s; }
-.foot-links a:hover { color: var(--orange); }
+.foot-links a:hover { color: var(--primary); }
 .foot-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
 .foot-copy { font-size: 13px; color: rgba(245,243,238,0.3); }
-.foot-copy strong { color: var(--orange); }
+.foot-copy strong { color: var(--primary); }
 .foot-legal { display: flex; gap: 20px; }
 .foot-legal a { font-size: 13px; color: rgba(245,243,238,0.3); transition: color 0.18s; }
 .foot-legal a:hover { color: rgba(245,243,238,0.7); }
@@ -1169,7 +1180,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   flex-direction: column; gap: 2px;
 }
 .btt.vis { opacity: 1; transform: translateY(0); }
-.btt:hover { background: var(--orange); border-color: transparent; transform: translateY(-2px); }
+.btt:hover { background: var(--primary); border-color: transparent; transform: translateY(-2px); }
 .btt-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.04em; }
 
 /* ===================== RESPONSIVE ===================== */
@@ -1328,7 +1339,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 
         <h1 class="hero-title">
           <span class="hero-title-line">Run your school.</span>
-          <span class="hero-title-line highlight-orange">Not your <span class="underline-orange">paperwork</span>.</span>
+          <span class="hero-title-line highlight-primary">Not your <span class="underline-primary">paperwork</span>.</span>
         </h1>
 
         <p class="hero-sub">
@@ -1349,15 +1360,15 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="hero-trust" style="margin-top:12px;">
           <div class="hero-trust-logos" style="justify-content:flex-start;gap:16px;">
             <span style="font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:5px;"><svg style="width:14px;height:14px;stroke:var(--teal);" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>No credit card required</span>
-            <span style="font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:5px;"><svg style="width:14px;height:14px;stroke:var(--orange);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10-minute setup</span>
+            <span style="font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:5px;"><svg style="width:14px;height:14px;stroke:var(--primary);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10-minute setup</span>
             <span style="font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:5px;"><svg style="width:14px;height:14px;stroke:var(--teal);" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Trusted by 500+ schools</span>
           </div>
         </div>
 
         <div class="hero-social-proof" style="margin-top:24px;">
           <div class="proof-avatars">
-            <div class="proof-av" style="background:#FFE0D4;color:#FF6B35;">K</div>
-            <div class="proof-av" style="background:#E2F8F3;color:#1BB89A;">A</div>
+            <div class="proof-av" style="background:#FFE0D4;color:#0A2472;">K</div>
+            <div class="proof-av" style="background:#E2F8F3;color:#10B981;">A</div>
             <div class="proof-av" style="background:#F0E4FF;color:#7C3AED;">E</div>
             <div class="proof-av" style="background:#FEF9EC;color:#854F0B;">M</div>
           </div>
@@ -1410,7 +1421,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             </div>
             <div class="dstat" data-tip="87.8% attendance rate">
               <div class="dstat-label">Present</div>
-              <div class="dstat-val" style="color:var(--orange);">1,089</div>
+              <div class="dstat-val" style="color:var(--primary);">1,089</div>
             </div>
             <div class="dstat" data-tip="Collected this term">
               <div class="dstat-label">Fees In</div>
@@ -1427,16 +1438,16 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
               Fee Collection — This Term
               <div class="chart-legend">
                 <div class="legend-item"><div class="legend-dot" style="background:var(--teal);"></div>Collected</div>
-                <div class="legend-item"><div class="legend-dot" style="background:var(--orange);"></div>Target</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--primary);"></div>Target</div>
               </div>
             </div>
             <svg viewBox="0 0 340 72" preserveAspectRatio="none" style="width:100%;height:64px;">
               <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1BB89A" stop-opacity="0.25"/><stop offset="100%" stop-color="#1BB89A" stop-opacity="0"/></linearGradient>
-                <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF6B35" stop-opacity="0.15"/><stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/></linearGradient>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10B981" stop-opacity="0.25"/><stop offset="100%" stop-color="#10B981" stop-opacity="0"/></linearGradient>
+                <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0A2472" stop-opacity="0.15"/><stop offset="100%" stop-color="#0A2472" stop-opacity="0"/></linearGradient>
               </defs>
-              <path d="M0,58 C40,48 80,36 120,38 C160,40 200,22 240,26 C280,30 310,20 340,18 L340,72 L0,72 Z" fill="url(#g1)" stroke="#1BB89A" stroke-width="1.8" fill-opacity="1"/>
-              <path d="M0,50 C40,44 80,52 120,42 C160,32 200,40 240,34 C280,28 310,36 340,32 L340,72 L0,72 Z" fill="url(#g2)" stroke="#FF6B35" stroke-width="1.5" stroke-dasharray="5,3"/>
+              <path d="M0,58 C40,48 80,36 120,38 C160,40 200,22 240,26 C280,30 310,20 340,18 L340,72 L0,72 Z" fill="url(#g1)" stroke="#10B981" stroke-width="1.8" fill-opacity="1"/>
+              <path d="M0,50 C40,44 80,52 120,42 C160,32 200,40 240,34 C280,28 310,36 340,32 L340,72 L0,72 Z" fill="url(#g2)" stroke="#0A2472" stroke-width="1.5" stroke-dasharray="5,3"/>
             </svg>
           </div>
 
@@ -1458,8 +1469,8 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           </div>
         </div>
         <div class="hero-float float-2">
-          <div class="float-icon" style="background:var(--orange-lt);">
-            <svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <div class="float-icon" style="background:var(--primary-lt);">
+            <svg class="icon" style="color:var(--primary);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           </div>
           <div>
             <div style="font-size:10px;color:var(--text-3);font-weight:500;">Auto-generated</div>
@@ -1514,14 +1525,14 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   <div class="how-grid-bg"></div>
   <div class="container">
     <div class="how-header reveal">
-      <div class="section-eyebrow" style="justify-content:center;color:var(--orange);">HOW IT WORKS</div>
+      <div class="section-eyebrow" style="justify-content:center;color:var(--primary);">HOW IT WORKS</div>
       <h2 class="section-title" style="text-align:center;">Up and running in 3 steps.</h2>
       <p class="section-sub" style="margin:0 auto;text-align:center;">No servers, no IT department, no weeks of training. Just a working school management system in under 24 hours.</p>
     </div>
     <div class="how-steps">
       <div class="how-step reveal">
         <div class="how-step-num">01</div>
-        <div class="how-connector"><svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="how-connector"><svg class="icon" style="color:var(--primary);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         <div class="how-step-icon"><svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
         <div class="how-step-title">Register Your School</div>
         <p class="how-step-desc">Sign up with your school name and contact. Import your existing student and staff data from Excel — we handle the rest automatically.</p>
@@ -1529,11 +1540,11 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       </div>
       <div class="how-step reveal delay-1">
         <div class="how-step-num">02</div>
-        <div class="how-connector"><svg class="icon" style="color:var(--orange);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
-        <div class="how-step-icon" style="background:rgba(27,184,154,0.15);border-color:rgba(27,184,154,0.3);color:var(--teal);"><svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+        <div class="how-connector"><svg class="icon" style="color:var(--primary);" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        <div class="how-step-icon" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);color:var(--teal);"><svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
         <div class="how-step-title">Pick Your Modules</div>
         <p class="how-step-desc">Choose from 40+ modules — attendance, fees, exams, hostel, payroll, transport and more. Enable only what you need. Add more anytime.</p>
-        <div class="how-step-time" style="background:rgba(27,184,154,0.12);border-color:rgba(27,184,154,0.2);color:var(--teal);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> No-code config</div>
+        <div class="how-step-time" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.2);color:var(--teal);"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> No-code config</div>
       </div>
       <div class="how-step reveal delay-2">
         <div class="how-step-num">03</div>
@@ -1627,13 +1638,13 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             <div class="live-badge"><span class="live-badge-dot"></span>Live</div>
           </div>
           <div class="mock-card-body">
-            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Attendance</span></div><span class="status-pill pill-green">Active</span></div>
-            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Fees Management</span></div><span class="status-pill pill-green">Active</span></div>
-            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Examinations</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></div><span class="mod-name">Attendance</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></div><span class="mod-name">Fees Management</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></div><span class="mod-name">Examinations</span></div><span class="status-pill pill-green">Active</span></div>
             <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#EF9F27;box-shadow:0 0 6px #EF9F27;"></div><span class="mod-name">Library</span></div><span class="status-pill pill-amber">Syncing</span></div>
-            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Hostel</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></div><span class="mod-name">Hostel</span></div><span class="status-pill pill-green">Active</span></div>
             <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#E24B4A;box-shadow:0 0 6px #E24B4A;"></div><span class="mod-name">Transport</span></div><span class="status-pill pill-red">Alert</span></div>
-            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#1BB89A;box-shadow:0 0 6px #1BB89A;"></div><span class="mod-name">Payroll</span></div><span class="status-pill pill-green">Active</span></div>
+            <div class="mod-row"><div class="mod-left"><div class="mod-status-dot" style="background:#10B981;box-shadow:0 0 6px #10B981;"></div><span class="mod-name">Payroll</span></div><span class="status-pill pill-green">Active</span></div>
             <div style="padding:12px 0 4px;font-size:11px;color:var(--teal);font-weight:700;display:flex;align-items:center;gap:7px;border-top:1px solid var(--border);margin-top:4px;"><span class="live-badge-dot"></span>99.9% Uptime · 3 campuses online</div>
           </div>
         </div>
@@ -1658,20 +1669,20 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             <span style="font-size:11px;color:var(--teal);font-weight:700;">66%</span>
           </div>
           <div class="mock-card-body" style="padding:16px 18px;">
-            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(27,184,154,0.2);">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(16,185,129,0.2);">
               <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;"><svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
               <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Create Account</span>
               <span style="font-size:11px;font-weight:700;background:var(--teal-lt);color:var(--teal);padding:2px 10px;border-radius:99px;">Done</span>
             </div>
-            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(27,184,154,0.2);">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--teal-lt);border:1px solid rgba(16,185,129,0.2);">
               <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;"><svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
               <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Import Student Records</span>
               <span style="font-size:11px;font-weight:700;background:var(--teal-lt);color:var(--teal);padding:2px 10px;border-radius:99px;">Done</span>
             </div>
-            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--orange-lt);border:1.5px solid var(--orange-mid);">
-              <div style="width:28px;height:28px;border-radius:50%;background:var(--orange-lt);border:1.5px solid var(--orange-mid);display:flex;align-items:center;justify-content:center;color:var(--orange);font-size:12px;font-weight:800;flex-shrink:0;">3</div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;background:var(--primary-lt);border:1.5px solid var(--primary-mid);">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--primary-lt);border:1.5px solid var(--primary-mid);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:12px;font-weight:800;flex-shrink:0;">3</div>
               <span style="font-size:13px;font-weight:600;color:var(--text);flex:1;">Configure Your Modules</span>
-              <span style="font-size:11px;font-weight:700;background:var(--orange-lt);color:var(--orange);padding:2px 10px;border-radius:99px;">Active</span>
+              <span style="font-size:11px;font-weight:700;background:var(--primary-lt);color:var(--primary);padding:2px 10px;border-radius:99px;">Active</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;margin-bottom:4px;opacity:0.45;">
               <div style="width:28px;height:28px;border-radius:50%;background:var(--bg-2);display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:12px;font-weight:800;flex-shrink:0;">4</div>
@@ -1679,7 +1690,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
               <span style="font-size:11px;font-weight:700;background:var(--bg-2);color:var(--text-3);padding:2px 10px;border-radius:99px;">Pending</span>
             </div>
             <div style="height:6px;background:var(--bg-2);border-radius:99px;margin-top:16px;overflow:hidden;">
-              <div class="bar-fill" data-width="66" style="width:0;height:100%;background:linear-gradient(to right,var(--orange),var(--teal));border-radius:99px;transition:width 1.5s var(--ease);"></div>
+              <div class="bar-fill" data-width="66" style="width:0;height:100%;background:linear-gradient(to right,var(--primary),var(--teal));border-radius:99px;transition:width 1.5s var(--ease);"></div>
             </div>
             <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-3);"><span>66% complete</span><span>~8 min remaining</span></div>
           </div>
@@ -1703,7 +1714,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div class="role-card-head mock-card-head"><span class="mock-card-title">Select Your Role</span></div>
           <div class="role-card-body">
             <div class="role-item active" onclick="selectRole(this,'headmaster')">
-              <div class="role-av" style="background:var(--orange-lt);color:var(--orange);">H</div>
+              <div class="role-av" style="background:var(--primary-lt);color:var(--primary);">H</div>
               <div><div class="role-name">Headmaster</div><div class="role-desc">Full oversight — all modules, all data</div></div>
             </div>
             <div class="role-item" onclick="selectRole(this,'bursar')">
@@ -1777,7 +1788,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
           <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;">
             <div style="background:rgba(15,14,12,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r-lg);padding:24px 40px;backdrop-filter:blur(12px);">
               <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--orange);display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+                <div style="width:32px;height:32px;border-radius:9px;background:var(--primary);display:flex;align-items:center;justify-content:center;"><svg style="width:16px;height:16px;stroke:#fff;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
                 <span style="font-family:var(--ff-display);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">SchoolOS</span>
                 <div class="live-badge" style="margin-left:auto;"><span class="live-badge-dot"></span>Demo</div>
               </div>
@@ -1786,12 +1797,12 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
                   <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;margin-bottom:4px;">STUDENTS</div>
                   <div style="font-size:18px;font-weight:800;color:#fff;font-family:var(--ff-display);">1,240</div>
                 </div>
-                <div style="background:rgba(255,107,53,0.15);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(255,107,53,0.3);">
-                  <div style="font-size:10px;color:rgba(255,107,53,0.7);font-weight:600;margin-bottom:4px;">PRESENT</div>
-                  <div style="font-size:18px;font-weight:800;color:var(--orange);font-family:var(--ff-display);">1,089</div>
+                <div style="background:rgba(10,36,114,0.15);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(10,36,114,0.3);">
+                  <div style="font-size:10px;color:rgba(10,36,114,0.7);font-weight:600;margin-bottom:4px;">PRESENT</div>
+                  <div style="font-size:18px;font-weight:800;color:var(--primary);font-family:var(--ff-display);">1,089</div>
                 </div>
-                <div style="background:rgba(27,184,154,0.15);border-radius:10px;padding:12px;text-align:center;">
-                  <div style="font-size:10px;color:rgba(27,184,154,0.7);font-weight:600;margin-bottom:4px;">FEES IN</div>
+                <div style="background:rgba(16,185,129,0.15);border-radius:10px;padding:12px;text-align:center;">
+                  <div style="font-size:10px;color:rgba(16,185,129,0.7);font-weight:600;margin-bottom:4px;">FEES IN</div>
                   <div style="font-size:18px;font-weight:800;color:var(--teal);font-family:var(--ff-display);">₵84K</div>
                 </div>
               </div>
@@ -1865,12 +1876,12 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 
 <!-- =================== WHATSAPP FEATURE =================== -->
 <section style="background:#0F0E0C;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 50%,rgba(37,211,102,0.09) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 50%,rgba(255,107,53,0.09) 0%,transparent 60%);pointer-events:none;"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 10% 50%,rgba(37,211,102,0.09) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 90% 50%,rgba(10,36,114,0.09) 0%,transparent 60%);pointer-events:none;"></div>
   <div class="container">
     <div class="wa-section-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
       <!-- Left: copy -->
       <div class="reveal">
-        <div class="section-eyebrow" style="color:var(--orange);">WHATSAPP INTEGRATION</div>
+        <div class="section-eyebrow" style="color:var(--primary);">WHATSAPP INTEGRATION</div>
         <h2 class="section-title" style="color:var(--text-inv);">Parents get results<br>before they even ask.</h2>
         <p class="section-sub" style="color:rgba(245,243,238,0.6);">The moment a report card is generated or a fee is received, the parent knows. Automated WhatsApp messages in the parent's own language — no extra step for teachers.</p>
         <ul style="list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:14px;">
@@ -1927,7 +1938,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
             </div>
             <!-- Incoming -->
             <div style="background:#fff;border-radius:0 12px 12px 12px;padding:10px 12px;max-width:90%;box-shadow:0 1px 2px rgba(0,0,0,0.12);">
-              <div style="font-size:11px;color:#333;line-height:1.5;"><strong style="color:#075E54;">📄 Report Card Ready</strong><br>Kofi's Term 2 results are ready.<br>Average: <span style="color:#FF6B35;font-weight:700;">78.4% (B+)</span><br>Rank: 4th of 32 students</div>
+              <div style="font-size:11px;color:#333;line-height:1.5;"><strong style="color:#075E54;">📄 Report Card Ready</strong><br>Kofi's Term 2 results are ready.<br>Average: <span style="color:#0A2472;font-weight:700;">78.4% (B+)</span><br>Rank: 4th of 32 students</div>
               <div style="font-size:9px;color:#999;text-align:right;margin-top:4px;">Fri 4:05 PM ✓✓</div>
             </div>
             <!-- Outgoing reply -->
@@ -1949,7 +1960,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 <!-- =================== SECURITY & COMPLIANCE =================== -->
 <section style="background:var(--bg);position:relative;overflow:hidden;">
   <!-- Subtle gradient top divider -->
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--orange),var(--teal),transparent);opacity:0.4;"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary),var(--teal),transparent);opacity:0.4;"></div>
   <div class="container">
     <div style="text-align:center;margin-bottom:56px;" class="reveal">
       <div class="section-eyebrow" style="justify-content:center;">SECURITY & COMPLIANCE</div>
@@ -1958,13 +1969,13 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
     </div>
     <div class="sec-grid reveal delay-1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
       <!-- AES-256 -->
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--teal)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(27,184,154,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
-        <div style="width:52px;height:52px;border-radius:14px;background:rgba(27,184,154,0.1);border:1px solid rgba(27,184,154,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--teal)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(16,185,129,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
           <svg style="width:24px;height:24px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
         <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">AES-256 Encryption</div>
         <div style="font-size:12px;color:var(--text-3);line-height:1.6;">The same standard banks use — data encrypted at rest and in transit</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),rgba(27,184,154,0));border-radius:0 0 var(--r) var(--r);"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),rgba(16,185,129,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
       <!-- GDPR -->
       <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='#7C3AED';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(124,58,237,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
@@ -1976,13 +1987,13 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7C3AED,rgba(124,58,237,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
       <!-- Local Data -->
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--orange)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(255,107,53,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
-        <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-          <svg style="width:24px;height:24px;stroke:var(--orange);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(10,36,114,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(10,36,114,0.1);border:1px solid rgba(10,36,114,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg style="width:24px;height:24px;stroke:var(--primary);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         </div>
         <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Local Data Residency</div>
         <div style="font-size:12px;color:var(--text-3);line-height:1.6;">Your data stays in Africa — hosted in Ghana, Nigeria, and Kenya</div>
-        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),rgba(255,107,53,0));border-radius:0 0 var(--r) var(--r);"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),rgba(10,36,114,0));border-radius:0 0 var(--r) var(--r);"></div>
       </div>
       <!-- Uptime -->
       <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:28px 20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;" onmouseenter="this.style.borderColor='#3B82F6';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(59,130,246,0.12)'" onmouseleave="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
@@ -2010,13 +2021,13 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="testi-content">
           <div class="testi-stars">★★★★★</div>
           <!-- Metric callout -->
-          <div style="display:inline-flex;align-items:center;gap:8px;background:var(--orange-lt);border:1px solid var(--orange-mid);border-radius:8px;padding:6px 12px;margin-bottom:14px;">
-            <span style="font-size:18px;font-weight:900;color:var(--orange);font-family:var(--ff-display);">30 sec</span>
-            <span style="font-size:11px;color:var(--orange);font-weight:600;">attendance per class</span>
+          <div style="display:inline-flex;align-items:center;gap:8px;background:var(--primary-lt);border:1px solid var(--primary-mid);border-radius:8px;padding:6px 12px;margin-bottom:14px;">
+            <span style="font-size:18px;font-weight:900;color:var(--primary);font-family:var(--ff-display);">30 sec</span>
+            <span style="font-size:11px;color:var(--primary);font-weight:600;">attendance per class</span>
           </div>
           <p class="testi-text">"Proxy marking is gone. Completely. QR attendance takes 30 seconds per class, records are accurate, and I haven't had a single dispute with a parent since we switched."</p>
           <div class="testi-author">
-            <div class="testi-av" style="background:var(--orange-lt);color:var(--orange);">K</div>
+            <div class="testi-av" style="background:var(--primary-lt);color:var(--primary);">K</div>
             <div><div class="testi-name">Kwame Asante <span class="testi-flag">🇬🇭</span></div><div class="testi-role">Headmaster · Presec Legon</div></div>
           </div>
         </div>
@@ -2024,7 +2035,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="testi-card reveal delay-1">
         <div class="testi-content">
           <div class="testi-stars">★★★★★</div>
-          <div style="display:inline-flex;align-items:center;gap:8px;background:var(--teal-lt);border:1px solid rgba(27,184,154,0.25);border-radius:8px;padding:6px 12px;margin-bottom:14px;">
+          <div style="display:inline-flex;align-items:center;gap:8px;background:var(--teal-lt);border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:6px 12px;margin-bottom:14px;">
             <span style="font-size:18px;font-weight:900;color:var(--teal);font-family:var(--ff-display);">3 days → 4 hrs</span>
             <span style="font-size:11px;color:var(--teal);font-weight:600;">fee collection time</span>
           </div>
@@ -2064,12 +2075,12 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 </section>
 
 <!-- =================== CTA BANNER =================== -->
-<section style="background:linear-gradient(135deg,var(--orange),#E55A2B);padding:80px 0;text-align:center;">
+<section style="background:linear-gradient(135deg,var(--primary),#E55A2B);padding:80px 0;text-align:center;">
   <div class="container" style="max-width:640px;">
     <h2 style="font-family:var(--ff-display);font-size:clamp(28px,5vw,42px);font-weight:900;color:#fff;margin-bottom:16px;">From manual registers to one dashboard.<br>Start free, no card needed.</h2>
     <p style="font-size:17px;color:rgba(255,255,255,0.85);margin-bottom:32px;">Join 500+ schools already using SchoolOS for attendance, fees, exams, and payroll — all from one place.</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="/auth" class="btn-primary" style="background:#fff;color:var(--orange);font-size:17px;padding:16px 36px;">Start Free Trial</a>
+      <a href="/auth" class="btn-primary" style="background:#fff;color:var(--primary);font-size:17px;padding:16px 36px;">Start Free Trial</a>
       <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;color:#fff;font-size:16px;font-weight:600;padding:16px 28px;border:2px solid rgba(255,255,255,0.4);border-radius:12px;text-decoration:none;transition:all 0.2s;">Request a Demo <svg class="icon" style="stroke:#fff;width:18px;height:18px;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
     <div style="display:flex;gap:24px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
@@ -2099,8 +2110,8 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div style="text-align:left;">
           <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">How many students?</div>
           <div style="display:flex;align-items:center;gap:16px;">
-            <input type="range" id="studentSlider" min="50" max="5000" value="300" step="50" style="width:200px;accent-color:var(--orange);">
-            <span id="studentCount" style="font-family:var(--ff-display);font-size:24px;font-weight:900;color:var(--orange);min-width:60px;">300</span>
+            <input type="range" id="studentSlider" min="50" max="5000" value="300" step="50" style="width:200px;accent-color:var(--primary);">
+            <span id="studentCount" style="font-family:var(--ff-display);font-size:24px;font-weight:900;color:var(--primary);min-width:60px;">300</span>
           </div>
         </div>
         <div class="calc-price" style="text-align:left;border-left:1px solid var(--border);padding-left:20px;">
@@ -2203,7 +2214,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="faq-sidebar-contact">
           <p>We typically reply within 2 hours on business days.</p>
           <a href="#contact" class="btn-teal">Request a Demo <svg class="icon icon-sm" style="stroke:#fff;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
-          <a href="/auth" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--orange);font-weight:600;text-decoration:none;justify-content:center;">Start Free Trial →</a>
+          <a href="/auth" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--primary);font-weight:600;text-decoration:none;justify-content:center;">Start Free Trial →</a>
         </div>
       </div>
       <div class="faq-list reveal delay-1">
@@ -2263,7 +2274,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   <div class="container">
     <div class="contact-grid">
       <div class="contact-left reveal">
-        <div class="section-eyebrow" style="color:rgba(255,107,53,0.9);">GET STARTED</div>
+        <div class="section-eyebrow" style="color:rgba(10,36,114,0.9);">GET STARTED</div>
         <h2 class="section-title" style="font-size:clamp(28px,4vw,46px);">Ready to bring your school onto SchoolOS?</h2>
         <p class="section-sub">Join 500+ schools already managing attendance, fees, exams, and payroll on one platform. Free to start, no credit card required.</p>
         <div class="trust-signals">
@@ -2366,7 +2377,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <p style="font-size:13px;color:var(--text-3);margin-bottom:14px;">Tips for running a smoother school — sent monthly.</p>
         <form onsubmit="event.preventDefault();this.innerHTML='<span style=\'font-size:13px;color:var(--teal);font-weight:600;\'>✓ Subscribed! Check your inbox.</span>';" style="display:flex;gap:8px;">
           <input type="email" placeholder="Your email" required style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-family:var(--ff-body);min-width:0;">
-          <button type="submit" style="padding:10px 16px;border-radius:8px;background:var(--orange);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Subscribe</button>
+          <button type="submit" style="padding:10px 16px;border-radius:8px;background:var(--primary);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Subscribe</button>
         </form>
         <p style="font-size:11px;color:var(--text-3);margin-top:10px;">No spam. Unsubscribe anytime.</p>
       </div>

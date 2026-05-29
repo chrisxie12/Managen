@@ -7,8 +7,8 @@ import {
 
 const NAVY = "#0A2472";
 const NAVY_LIGHT = "#0C2D8A";
-const AMBER = "#FFBA08";
-const AMBER_LIGHT = "#FFF8E1";
+const AMBER = "#2563EB";
+const AMBER_LIGHT = "#EFF6FF";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -719,13 +719,13 @@ export function AuthPage() {
             </div>
             {mode === "signup" && form.password && (
               <div className="p-3 rounded-2xl text-sm" style={{
-                background: passwordStrength === "weak" ? "#FEF2F2" : passwordStrength === "medium" ? AMBER_LIGHT : "#ECFDF5",
-                borderLeft: `3px solid ${passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? AMBER : "#10B981"}`,
+                background: passwordStrength === "weak" ? "#FEF2F2" : passwordStrength === "medium" ? "#FEF3C7" : "#ECFDF5",
+                borderLeft: `3px solid ${passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#10B981"}`,
                 color: NAVY,
               }}>
                 Strength: <span style={{
                   fontWeight: 600,
-                  color: passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? AMBER : "#10B981",
+                  color: passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#10B981",
                   textTransform: "capitalize",
                 }}>{passwordStrength}</span>
               </div>
@@ -741,12 +741,12 @@ export function AuthPage() {
               className="w-full py-4 rounded-full flex items-center justify-center gap-2 mt-2 active:scale-95 transition-transform"
               style={{
                 background: loading
-                  ? "rgba(255,186,8,0.5)"
+                  ? "rgba(37,99,235,0.5)"
                   : AMBER,
-                color: NAVY,
+                color: "#ffffff",
                 fontSize: "0.95rem",
                 fontWeight: 700,
-                boxShadow: "0 8px 24px rgba(255,186,8,0.3)",
+                boxShadow: "0 8px 24px rgba(37,99,235,0.3)",
               }}
             >
               {loading ? (
