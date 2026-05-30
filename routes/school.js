@@ -1990,6 +1990,125 @@ router.get('/announcements', protect, async (req, res) => {
 const dashboardRouter = require('./dashboard');
 router.use('/dashboard', dashboardRouter);
 
+// ─── Streams ──────────────────────────────────────────────
+router.get('/streams', protect, requirePermission('subjects.view'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const streams = await schoolService.getStreams(schoolId);
+        return res.json({ data: { streams } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching streams.' }); }
+});
+
+router.post('/streams', protect, requirePermission('subjects.create', 'subjects.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { name, class_id } = req.body;
+        if (!name) return res.status(400).json({ error: 'Stream name is required.' });
+        const stream = await schoolService.createStream(schoolId, { name, class_id });
+        return res.status(201).json({ data: { stream } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating stream.' }); }
+});
+
+router.delete('/streams/:id', protect, requirePermission('subjects.delete'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        await schoolService.deleteStream(schoolId, req.params.id);
+        return res.json({ data: { message: 'Stream deleted.' } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting stream.' }); }
+});
+
+// ─── Class Teachers ────────────────────────────────────────
+router.get('/class-teachers', protect, requirePermission('teachers.view'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const classTeachers = await schoolService.getClassTeachers(schoolId);
+        return res.json({ data: { classTeachers } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching class teachers.' }); }
+});
+
+router.post('/class-teachers', protect, requirePermission('teachers.create', 'teachers.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { class_id, teacher_id, role } = req.body;
+        if (!class_id || !teacher_id) return res.status(400).json({ error: 'class_id and teacher_id are required.' });
+        const record = await schoolService.assignClassTeacher(schoolId, { class_id, teacher_id, role: role || 'form_teacher' });
+        return res.status(201).json({ data: { classTeacher: record } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error assigning class teacher.' }); }
+});
+
+router.delete('/class-teachers/:id', protect, requirePermission('teachers.delete'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        await schoolService.removeClassTeacher(schoolId, req.params.id);
+        return res.json({ data: { message: 'Class teacher removed.' } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error removing class teacher.' }); }
+});
+
+// ─── Subject Teachers ──────────────────────────────────────
+router.get('/subject-teachers', protect, requirePermission('teachers.view'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const subjectTeachers = await schoolService.getSubjectTeachers(schoolId);
+        return res.json({ data: { subjectTeachers } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching subject teachers.' }); }
+});
+
+router.post('/subject-teachers', protect, requirePermission('teachers.create', 'teachers.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { subject_id, teacher_id, class_id } = req.body;
+        if (!subject_id || !teacher_id) return res.status(400).json({ error: 'subject_id and teacher_id are required.' });
+        const record = await schoolService.assignSubjectTeacher(schoolId, { subject_id, teacher_id, class_id });
+        return res.status(201).json({ data: { subjectTeacher: record } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error assigning subject teacher.' }); }
+});
+
+router.delete('/subject-teachers/:id', protect, requirePermission('teachers.delete'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        await schoolService.removeSubjectTeacher(schoolId, req.params.id);
+        return res.json({ data: { message: 'Subject teacher removed.' } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error removing subject teacher.' }); }
+});
+
+// ─── Expenses ──────────────────────────────────────────────
+router.get('/expenses', protect, requirePermission('finance.view'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { data, error } = await supabase.from('expenses')
+            .select('*')
+            .eq('school_id', schoolId)
+            .order('date', { ascending: false })
+            .limit(100);
+        if (error) return res.status(500).json({ error: error.message });
+        return res.json({ data: { expenses: data || [] } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching expenses.' }); }
+});
+
+router.post('/expenses', protect, requirePermission('finance.create', 'finance.edit'), async (req, res) => {
+    try {
+        const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
+        const { description, amount, category, date, notes, method } = req.body;
+        if (!description || amount == null) return res.status(400).json({ error: 'description and amount are required.' });
+        const { data, error } = await supabase.from('expenses')
+            .insert({
+                id: crypto.randomUUID(),
+                school_id: schoolId,
+                description,
+                amount: Number(amount),
+                category: category || 'Other',
+                date: date || new Date().toISOString().split('T')[0],
+                notes: notes || null,
+                payment_method: method || 'Cash',
+                created_by: req.user?.userId || req.user?.id || null,
+            })
+            .select()
+            .single();
+        if (error) return res.status(500).json({ error: error.message });
+        return res.status(201).json({ data: { expense: data } });
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating expense.' }); }
+});
+
 module.exports = router;
 module.exports.protect = protect;
 

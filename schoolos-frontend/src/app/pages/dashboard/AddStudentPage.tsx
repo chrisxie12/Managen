@@ -55,23 +55,14 @@ export function AddStudentPage() {
     try {
       await api.post("/api/school/students", {
         name: form.fullName,
-        date_of_birth: form.dob,
+        dob: form.dob,
         gender: form.gender,
-        religion: form.religion,
-        nationality: form.nationality,
         class_name: form.class,
         admission_no: form.admissionNo,
-        admission_date: form.admissionDate,
-        previous_school: form.previousSchool,
-        guardian_name: form.guardianName,
-        guardian_relationship: form.relationship,
+        parent_name: form.guardianName,
         parent_phone: form.phone,
-        parent_whatsapp: form.whatsapp,
         parent_email: form.email,
-        home_address: form.address,
-        blood_group: form.bloodGroup,
-        known_allergies: form.allergies,
-        emergency_contact: form.emergencyContact,
+        address: form.address,
       });
       toast.success(`${form.fullName} enrolled successfully!`);
       navigate("/dashboard/students");
