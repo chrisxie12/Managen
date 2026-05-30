@@ -43,7 +43,9 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
         <img src="/schoolos-logo.svg" alt="SchoolOS" className="flex-shrink-0" style={{ height: "32px", width: "auto" }} />
         {!collapsed && (
           <>
-            <span className="text-sidebar-foreground font-semibold text-base tracking-tight truncate">SchoolOS</span>
+            <span className="font-semibold text-base tracking-tight truncate text-sidebar-foreground">
+              School<span style={{ background: "linear-gradient(135deg,#00D2FF,#0066FF,#001A99)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>OS</span>
+            </span>
             <span className="ml-auto flex-shrink-0 text-[10px] bg-sidebar-primary text-sidebar-primary-foreground px-1.5 py-0.5 rounded font-medium">Pro</span>
           </>
         )}
