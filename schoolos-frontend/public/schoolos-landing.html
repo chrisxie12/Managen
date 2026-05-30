@@ -1347,6 +1347,8 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 }
 
 /* ===================== PWA INSTALL BANNER ===================== */
+@keyframes pwa-shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
 .pwa-banner {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -1361,24 +1363,16 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
 }
 .pwa-banner.visible { transform: translateY(0); }
 
-/* Shrinking countdown bar */
+/* Countdown bar shrinks from full → empty over 12 s */
 .pwa-progress {
   position: absolute; top: 0; left: 0;
   height: 3px; width: 100%;
   background: var(--teal);
   transform-origin: left;
   transform: scaleX(0);
-  opacity: 0;
-  transition: none;
 }
 .pwa-banner.visible .pwa-progress {
-  opacity: 1;
-  transform: scaleX(1);
-  transition: transform 12s linear, opacity 0.1s 0.1s;
-}
-/* Trigger the shrink immediately after .visible is applied */
-.pwa-banner.ticking .pwa-progress {
-  transform: scaleX(0);
+  animation: pwa-shrink 12s linear forwards;
 }
 
 .pwa-banner-inner {
@@ -2940,51 +2934,45 @@ if ('serviceWorker' in navigator) {
 
 (function() {
   var deferredPrompt = null;
-  var banner    = document.getElementById('pwaBanner');
+  var banner     = document.getElementById('pwaBanner');
   var installBtn = document.getElementById('pwaInstallBtn');
   var dismissBtn = document.getElementById('pwaDismissBtn');
   var iosSteps   = document.getElementById('pwaIosSteps');
-  var DISMISSED  = 'pwaBannerDismissed';
+  var DISMISSED  = 'soos-pwa-v2';   // new key — clears any old dismissal
   var autoTimer  = null;
 
-  // Skip if dismissed before, or app is already installed as PWA
   if (!banner) return;
   if (localStorage.getItem(DISMISSED)) return;
+  // Already running as installed PWA — no need to prompt
   if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) return;
 
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   function showBanner() {
     banner.classList.add('visible');
-    // Trigger countdown bar (needs one frame gap for CSS transition to fire)
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() { banner.classList.add('ticking'); });
-    });
-    // Auto-dismiss after 12 s if user ignores
     autoTimer = setTimeout(function() { hideBanner(false); }, 12000);
   }
 
   function hideBanner(permanent) {
-    banner.classList.remove('visible', 'ticking');
+    banner.classList.remove('visible');
     if (iosSteps) iosSteps.classList.remove('visible');
     clearTimeout(autoTimer);
     if (permanent) localStorage.setItem(DISMISSED, '1');
   }
 
-  // Capture Chrome/Android native prompt so we can trigger it on demand
+  // Capture Android/Chrome native install prompt
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     deferredPrompt = e;
   });
 
-  // Show automatically after 2 seconds — no interaction required
+  // Pop up automatically after 2 seconds — no interaction required
   setTimeout(showBanner, 2000);
 
   installBtn && installBtn.addEventListener('click', function() {
     if (isIOS) {
-      // Show manual steps for iOS Safari (no native prompt API)
       if (iosSteps) iosSteps.classList.toggle('visible');
-      clearTimeout(autoTimer); // keep banner open while reading steps
+      clearTimeout(autoTimer); // keep open so they can read the steps
       return;
     }
     if (deferredPrompt) {
@@ -2994,6 +2982,13 @@ if ('serviceWorker' in navigator) {
         if (c.outcome === 'accepted') localStorage.setItem(DISMISSED, '1');
         deferredPrompt = null;
       });
+      return;
+    }
+    // Fallback for desktop/Firefox — open instructions in iosSteps panel
+    if (iosSteps) {
+      iosSteps.innerHTML = 'Open this page in <strong>Chrome</strong> or <strong>Safari</strong> on your phone,<br>then tap the install prompt.';
+      iosSteps.classList.toggle('visible');
+      clearTimeout(autoTimer);
     }
   });
 
