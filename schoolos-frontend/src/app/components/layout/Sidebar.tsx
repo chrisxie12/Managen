@@ -40,7 +40,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
     >
       {/* Header */}
       <div className={`h-14 px-4 flex items-center gap-3 border-b border-sidebar-border flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
-        <img src="/schoolos-logo.svg" alt="SchoolOS" className="w-7 h-8 flex-shrink-0" />
+        <img src="/schoolos-logo.svg" alt="SchoolOS" className="flex-shrink-0" style={{ height: "32px", width: "auto" }} />
         {!collapsed && (
           <>
             <span className="text-sidebar-foreground font-semibold text-base tracking-tight truncate">SchoolOS</span>

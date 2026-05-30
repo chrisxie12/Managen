@@ -1,10 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" fill="none">
-  <!-- Simplified shield for small sizes -->
-  <path fill="#0A2472" d="M 26,0 Q 2,0 2,24 L 2,118 Q 26,208 100,238 Q 174,208 198,118 L 198,24 Q 198,0 174,0 Z"/>
-  <text x="100" y="175"
-        text-anchor="middle"
-        font-family="Georgia,'Times New Roman',serif"
-        font-size="155"
-        font-weight="bold"
-        fill="white">S</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2FF"/>
+      <stop offset="50%" stop-color="#0066FF"/>
+      <stop offset="100%" stop-color="#001A99"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#030A16"/>
+  <g transform="translate(4.75, 1.01) scale(0.0705)">
+    <path d="M 130,35 C 190,35 235,70 235,130 C 235,185 190,210 145,210 L 140,210 C 120,210 110,195 125,185 C 135,178 155,175 165,160 C 175,145 165,125 145,125 L 125,125 C 100,125 82,143 82,168 C 82,170 82,172 82,174"
+          fill="none" stroke="url(#blueGrad)" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 85,245 C 85,250 85,255 86,260 C 92,285 110,305 135,305 L 155,305 C 175,305 185,285 170,272 C 160,265 140,262 130,248 C 120,232 132,212 152,212 L 160,212 C 205,212 250,235 250,295 C 250,355 200,390 140,390 L 70,390"
+          fill="none" stroke="url(#blueGrad)" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="122" cy="168" r="14" fill="#05111D"/>
+    <circle cx="152" cy="254" r="14" fill="#05111D"/>
+  </g>
 </svg>

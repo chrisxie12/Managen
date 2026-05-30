@@ -1,40 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-
-  <!-- Cream background -->
-  <rect width="512" height="512" rx="86" fill="#FAF7F2"/>
-
-  <!-- Shield centered in 512×512: scale(1.95) translate(61,24) from 200x250 viewBox -->
-  <g transform="translate(61,24) scale(1.95)">
-
-    <!-- Shield body (navy) -->
-    <path fill="#0A2472" d="M 26,0 Q 2,0 2,24 L 2,118 Q 26,208 100,238 Q 174,208 198,118 L 198,24 Q 198,0 174,0 Z"/>
-
-    <!-- Open book -->
-    <path fill="white" d="M 100,175 Q 65,163 28,172 Q 20,183 30,194 Q 60,210 100,212 Z"/>
-    <path fill="white" d="M 100,175 Q 135,163 172,172 Q 180,183 170,194 Q 140,210 100,212 Z"/>
-    <line x1="40" y1="178" x2="97" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="33" y1="187" x2="97" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="31" y1="196" x2="97" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="160" y1="178" x2="103" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="167" y1="187" x2="103" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="169" y1="196" x2="103" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
-    <line x1="100" y1="175" x2="100" y2="213" stroke="#0A2472" stroke-width="2" stroke-linecap="round"/>
-
-    <!-- S letter -->
-    <text x="100" y="162"
-          text-anchor="middle"
-          font-family="Georgia,'Times New Roman',serif"
-          font-size="144"
-          font-weight="bold"
-          fill="white">S</text>
-
-    <!-- Graduation cap body -->
-    <path fill="white" d="M 76,16 Q 76,9 83,9 L 117,9 Q 124,9 124,16 L 124,47 Q 112,50 100,50 Q 88,50 76,47 Z"/>
-    <circle fill="white" cx="100" cy="10" r="3.5"/>
-    <rect fill="white" x="50" y="46" width="100" height="9" rx="3"/>
-    <line x1="148" y1="51" x2="151" y2="73" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-    <ellipse fill="white" cx="151" cy="78" rx="5.5" ry="5"/>
-
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D2FF"/>
+      <stop offset="50%" stop-color="#0066FF"/>
+      <stop offset="100%" stop-color="#001A99"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="86" fill="#030A16"/>
+  <g transform="translate(82, 25) scale(1.088)">
+    <path d="M 130,35 C 190,35 235,70 235,130 C 235,185 190,210 145,210 L 140,210 C 120,210 110,195 125,185 C 135,178 155,175 165,160 C 175,145 165,125 145,125 L 125,125 C 100,125 82,143 82,168 C 82,170 82,172 82,174"
+          fill="none" stroke="url(#blueGrad)" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 85,245 C 85,250 85,255 86,260 C 92,285 110,305 135,305 L 155,305 C 175,305 185,285 170,272 C 160,265 140,262 130,248 C 120,232 132,212 152,212 L 160,212 C 205,212 250,235 250,295 C 250,355 200,390 140,390 L 70,390"
+          fill="none" stroke="url(#blueGrad)" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="122" cy="168" r="14" fill="#05111D"/>
+    <circle cx="152" cy="254" r="14" fill="#05111D"/>
   </g>
-
 </svg>
