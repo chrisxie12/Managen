@@ -113,7 +113,12 @@ export function GeneralProfileTab({ role }: Props) {
         faviconUrl = uploadRes.data?.favicon_url || faviconUrl;
       }
 
-      const payload = { ...form, logo_url: logoUrl, favicon_url: faviconUrl };
+      // Strip base64 image data from PATCH payload — upload route already persisted them to DB.
+      // Only send text/URL values to avoid re-sending megabytes of base64 over the wire.
+      const { logo_url: _l, favicon_url: _f, ...profileFields } = form;
+      const payload: Record<string, any> = { ...profileFields };
+      if (logoUrl && !logoUrl.startsWith('data:')) payload.logo_url = logoUrl;
+      if (faviconUrl && !faviconUrl.startsWith('data:')) payload.favicon_url = faviconUrl;
       const res = await api.patch<any>("/api/school", payload);
       if (res.data) {
         setLogoFile(null);

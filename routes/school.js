@@ -2380,7 +2380,7 @@ router.patch('/', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         if (!schoolId) return res.status(400).json({ error: 'Unable to determine school ID from token or tenant.' });
-        const allowed = ['name','motto','school_type','year_established','registration_number','email','phone','website','address','city','region','country','logo_url','primary_color','timezone'];
+        const allowed = ['name','motto','school_type','year_established','registration_number','email','phone','website','address','city','region','country','logo_url','favicon_url','primary_color','timezone'];
         const updateData = settingsFields(req, allowed);
         const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
         if (error) return res.status(500).json({ error: error.message });
@@ -2391,18 +2391,20 @@ router.patch('/', protect, async (req, res) => {
     }
 });
 
-// POST /api/school/upload-logo - upload logo as multipart, store as base64
-router.post('/upload-logo', protect, upload.single('logo'), async (req, res) => {
+// POST /api/school/upload-logo - upload logo or favicon as multipart, store as base64
+router.post('/upload-logo', protect, upload.any(), async (req, res) => {
     try {
-        if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
+        if (!req.files || req.files.length === 0) return res.status(400).json({ error: 'No file uploaded.' });
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         if (!schoolId) return res.status(400).json({ error: 'Unable to determine school ID.' });
 
-        const base64Logo = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-        const { error } = await supabase.from('schools').update({ logo_url: base64Logo }).eq('id', schoolId);
+        const file = req.files[0];
+        const base64 = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+        const field = file.fieldname === 'favicon' ? 'favicon_url' : 'logo_url';
+        const { error } = await supabase.from('schools').update({ [field]: base64 }).eq('id', schoolId);
         if (error) return res.status(500).json({ error: error.message });
 
-        res.json({ data: { logo_url: base64Logo } });
+        res.json({ data: { [field]: base64 } });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
