@@ -1,35 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" fill="none">
   <defs>
-    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0069FF"/>
-      <stop offset="100%" stop-color="#003A8C"/>
+    <linearGradient id="sGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1565C0"/>
+      <stop offset="100%" stop-color="#42A5F5"/>
+    </linearGradient>
+    <linearGradient id="osGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1565C0"/>
+      <stop offset="100%" stop-color="#1E88E5"/>
     </linearGradient>
   </defs>
 
-  <!-- Icon: simple "D" droplet shape inspired by DigitalOcean style -->
-  <circle cx="38" cy="45" r="32" fill="url(#blueGrad)"/>
-  <!-- Letter S inside circle -->
-  <text x="38" y="57"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="36"
-    font-weight="800"
-    text-anchor="middle"
-    fill="#FFFFFF">S</text>
+  <!-- S icon mark -->
+  <g transform="translate(0, 5)">
+    <!-- Top arc of S -->
+    <path d="M 20,45 C 20,22 36,10 55,10 C 74,10 85,22 85,35 C 85,48 74,55 60,58 L 50,60 C 42,62 38,67 42,73 C 46,79 55,82 65,78 C 72,75 78,68 78,60"
+          fill="none" stroke="url(#sGrad)" stroke-width="14" stroke-linecap="round"/>
+    <!-- Bottom arc of S -->
+    <path d="M 78,55 C 78,68 65,82 45,82 C 25,82 12,68 12,55 C 12,42 22,36 36,33 L 46,31 C 54,29 58,24 54,18 C 50,12 41,10 32,14 C 25,17 20,24 20,32"
+          fill="none" stroke="url(#sGrad)" stroke-width="14" stroke-linecap="round"/>
+    <!-- Center dot -->
+    <circle cx="49" cy="46" r="5" fill="#FFFFFF"/>
+  </g>
 
-  <!-- Wordmark -->
-  <!-- "School" in dark navy -->
-  <text x="86" y="62"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="42"
+  <!-- "School" wordmark -->
+  <text x="105" y="68"
+    font-family="'Segoe UI', Arial, Helvetica, sans-serif"
+    font-size="48"
     font-weight="700"
-    fill="#1A1A2E"
-    letter-spacing="-0.5">School</text>
+    fill="#0D1B2A">School</text>
 
-  <!-- "OS" in Ocean Blue -->
-  <text x="300" y="62"
-    font-family="Arial, Helvetica, sans-serif"
-    font-size="42"
+  <!-- "OS" in blue -->
+  <text x="333" y="68"
+    font-family="'Segoe UI', Arial, Helvetica, sans-serif"
+    font-size="48"
     font-weight="700"
-    fill="#0069FF"
-    letter-spacing="-0.5">OS</text>
+    fill="url(#osGrad)">OS</text>
+
+  <!-- Tagline -->
+  <text x="106" y="84"
+    font-family="'Segoe UI', Arial, Helvetica, sans-serif"
+    font-size="10"
+    font-weight="400"
+    letter-spacing="2.5"
+    fill="#6B7280">ONE SYSTEM. EVERY SCHOOL.</text>
 </svg>
