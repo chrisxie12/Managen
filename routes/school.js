@@ -42,7 +42,10 @@ const ensureMatchingTenant = (decoded, tenant) => {
 
 const protect = async (req, res, next) => {
     try {
-        const token = req.cookies?.schoolos_token;
+        const token = req.cookies?.schoolos_token
+            || (req.headers.authorization?.startsWith('Bearer ')
+                ? req.headers.authorization.slice(7)
+                : null);
         if (!token)
             return res.status(401).json({ error: 'No token provided.' });
         req.user = jwt.verify(token, process.env.JWT_SECRET);

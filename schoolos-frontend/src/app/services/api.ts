@@ -166,11 +166,13 @@ export const api = {
   },
 
   upload: async <T>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> => {
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       ...defaultFetchInit,
       method: 'POST',
       headers: {
         ...getTenantHeader(),
+        ...authHeaders,
       },
       body: formData,
     });
