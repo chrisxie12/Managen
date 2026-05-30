@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   Building2, BookOpen, Shield, CreditCard, MessageSquare,
-  ClipboardCheck, Download, Globe,
+  ClipboardCheck, Download, Globe, MessageCircle,
 } from "lucide-react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
@@ -13,6 +13,7 @@ import { AdmissionTab } from "./tabs/AdmissionTab";
 import { SecurityAuditTab } from "./tabs/SecurityAuditTab";
 import { BackupsTab } from "./tabs/BackupsTab";
 import { CustomDomainsTab } from "./tabs/CustomDomainsTab";
+import { WhatsAppTab } from "./tabs/WhatsAppTab";
 
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
@@ -24,6 +25,7 @@ const tabs = [
   { key: "academics", label: "Academics & NaCCA", icon: BookOpen },
   { key: "paystack", label: "Paystack Config", icon: CreditCard },
   { key: "arkesel", label: "Arkesel SMS", icon: MessageSquare },
+  { key: "whatsapp", label: "WhatsApp API", icon: MessageCircle },
   { key: "admission", label: "Admission Checklists", icon: ClipboardCheck },
   { key: "security", label: "Security & Audit Logs", icon: Shield },
   { key: "backups", label: "Backups & Export", icon: Download },
@@ -89,6 +91,7 @@ export function SchoolSettings() {
                 case "academics": return <AcademicsTab role={role} />;
                 case "paystack": return <PaystackConfigTab role={role} />;
                 case "arkesel": return <ArkeselSmsTab role={role} />;
+                case "whatsapp": return <WhatsAppTab role={role} />;
                 case "admission": return <AdmissionTab role={role} />;
                 case "security": return <SecurityAuditTab role={role} />;
                 case "backups": return <BackupsTab role={role} />;
