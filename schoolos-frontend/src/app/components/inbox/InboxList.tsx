@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Mail, MailOpen, Loader2, Search, MessageSquare } from "lucide-react";
 import type { InboxMessage } from "./types";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

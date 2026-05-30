@@ -2,9 +2,9 @@ import { useState } from "react";
 import { TrendingUp, ArrowRight } from "lucide-react";
 
 const COLORS = {
-  NAVY: "#0A2472",
-  AMBER: "#10B981",
-  GREEN: "#10B981",
+  NAVY: "#031B4E",
+  AMBER: "#16A34A",
+  GREEN: "#16A34A",
   MUTED: "#6B7280",
 };
 

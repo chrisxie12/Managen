@@ -8,7 +8,7 @@ import { api } from "../services/api";
 import { Button } from "../components/ui/button";
 
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 type HealthStatus = "healthy" | "degraded" | "down" | "unconfigured";
@@ -198,7 +198,7 @@ export function SystemHealth() {
       {s && (
         <div className="flex flex-wrap gap-3 mb-6">
           {[
-            { label: "Healthy", count: s.healthy, color: "#10B981", icon: Check },
+            { label: "Healthy", count: s.healthy, color: "#16A34A", icon: Check },
             { label: "Degraded", count: s.degraded, color: "#F59E0B", icon: AlertTriangle },
             { label: "Down", count: s.down, color: "#EF4444", icon: X },
             { label: "Unconfigured", count: s.unconfigured, color: "#6B7280", icon: AlertCircle },
@@ -268,7 +268,7 @@ export function SystemHealth() {
             </div>
             <div className="p-4 rounded-2xl flex-1 min-w-[140px]" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
               <p className="text-xs" style={{ color: MUTED }}>Success Rate</p>
-              <p className="text-lg font-bold" style={{ color: data.notifications.rate >= 90 ? "#10B981" : data.notifications.rate >= 70 ? "#F59E0B" : "#EF4444" }}>
+              <p className="text-lg font-bold" style={{ color: data.notifications.rate >= 90 ? "#16A34A" : data.notifications.rate >= 70 ? "#F59E0B" : "#EF4444" }}>
                 {data.notifications.rate}%
               </p>
             </div>
@@ -336,7 +336,7 @@ export function SystemHealth() {
 
       {data?.recentFailures && data.recentFailures.records.length === 0 && data?.incidents && data.incidents.records.length === 0 && (
         <div className="text-center py-12">
-          <Check size={40} color="#10B981" className="mx-auto mb-3" />
+          <Check size={40} color="#16A34A" className="mx-auto mb-3" />
           <p className="text-sm font-semibold" style={{ color: "#065F46" }}>No issues detected in the last 7 days</p>
           <p className="text-xs mt-1" style={{ color: MUTED }}>All systems operational. No failed deliveries or critical events found.</p>
         </div>

@@ -7,7 +7,7 @@ import { api } from "../services/api";
 import { DataTable, type Column } from "../components/ui/DataTable";
 import { useStudents, useClasses } from "../hooks/useStudents";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -59,7 +59,7 @@ export function StudentsEnhanced() {
       render: (s) => (
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-            style={{ background: `linear-gradient(135deg, ${NAVY}, #0C2D8A)`, color: CREAM }}>
+            style={{ background: `linear-gradient(135deg, ${NAVY}, #0069D9)`, color: CREAM }}>
             {s.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
           </div>
           <span className="font-medium" style={{ color: NAVY }}>{s.name}</span>

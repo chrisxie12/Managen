@@ -4,11 +4,11 @@ import { Check, School, BookOpen, Palette, Bell } from "lucide-react";
 import confetti from "canvas-confetti";
 
 const INDIGO = "#6366F1";
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const FEATURES = [
-  { label: "Fee Management", color: "#10B981" },
+  { label: "Fee Management", color: "#16A34A" },
   { label: "Attendance Tracking", color: "#F59E0B" },
   { label: "Grade Management", color: "#6366F1" },
   { label: "AI Insights", color: "#8B5CF6" },
@@ -23,8 +23,8 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
     const duration = 2000;
     const end = Date.now() + duration;
     const frame = () => {
-      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: [primaryColor, INDIGO, "#10B981"] });
-      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: [primaryColor, INDIGO, "#10B981"] });
+      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: [primaryColor, INDIGO, "#16A34A"] });
+      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: [primaryColor, INDIGO, "#16A34A"] });
       if (Date.now() < end) requestAnimationFrame(frame);
     };
     frame();
@@ -37,7 +37,7 @@ export function CelebrationStep({ schoolName, currentTerm, academicYear, primary
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 15 }}
         className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-        style={{ background: "#10B981" }}
+        style={{ background: "#16A34A" }}
       >
         <Check size={36} color="white" />
       </motion.div>

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
 import { UserPlus, CreditCard, MessageSquare, Shield } from "lucide-react";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 
 interface QuickActionItem {
   label: string;
@@ -26,7 +26,7 @@ const actions: QuickActionItem[] = [
     label: "Record Paystack / Cash Receipt",
     desc: "Log a payment collection",
     icon: CreditCard,
-    color: "#10B981",
+    color: "#16A34A",
     bg: "rgba(16,185,129,0.1)",
     path: "/dashboard/fees?action=collect",
   },

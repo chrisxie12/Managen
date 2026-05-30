@@ -33,9 +33,9 @@ export function EducationBackground({ className }: { className?: string }) {
 
     // SchoolOS brand colors
     const colors = {
-      navy: '#0A2472',
+      navy: '#031B4E',
       navyLight: '#1a3a8f',
-      amber: '#10B981',
+      amber: '#16A34A',
       amberLight: '#6EE7B7',
       cream: '#F8F9FA',
       white: '#ffffff',

@@ -170,7 +170,7 @@ export function DashboardSettings({ isOpen, onClose, widgets, onSave }: Dashboar
                           height: "24px",
                           borderRadius: "12px",
                           background: widget.enabled
-                            ? "#10B981"
+                            ? "#16A34A"
                             : "#E5E7EB",
                           display: "flex",
                           alignItems: "center",
@@ -226,7 +226,7 @@ export function DashboardSettings({ isOpen, onClose, widgets, onSave }: Dashboar
               padding: "0.75rem",
               borderRadius: "0.75rem",
               border: "none",
-              background: "#0A2472",
+              background: "#031B4E",
               color: "white",
               fontWeight: 600,
               cursor: "pointer",

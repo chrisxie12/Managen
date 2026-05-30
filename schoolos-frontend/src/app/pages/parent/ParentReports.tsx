@@ -4,7 +4,7 @@ import { FileText, Download, Loader2 } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string };
@@ -100,7 +100,7 @@ export function ParentReports() {
                     <p className="text-[11px]" style={{ color: MUTED }}>{card.session?.name || ""}</p>
                   </div>
                   <span className="text-lg font-bold font-mono" style={{
-                    color: card.average >= 80 ? "#10B981" : card.average >= 65 ? "#6366F1" : card.average >= 50 ? "#F59E0B" : "#EF4444",
+                    color: card.average >= 80 ? "#16A34A" : card.average >= 65 ? "#6366F1" : card.average >= 50 ? "#F59E0B" : "#EF4444",
                   }}>
                     {card.average}%
                   </span>

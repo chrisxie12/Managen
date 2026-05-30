@@ -4,11 +4,11 @@ import { Upload, Download, FileText, AlertCircle, CheckCircle, X } from "lucide-
 import { PageTemplate } from "../../components/layout/PageTemplate";
 import { api } from "../../services/api";
 
-const NAVY = "#0A2472";
-const PRIMARY = "#0A2472";
+const NAVY = "#031B4E";
+const PRIMARY = "#031B4E";
 const MUTED = "#6B7280";
 const DANGER = "#EF4444";
-const SUCCESS = "#10B981";
+const SUCCESS = "#16A34A";
 
 interface ParsedStudent {
   student_id: string;

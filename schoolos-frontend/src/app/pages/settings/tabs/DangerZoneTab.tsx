@@ -6,7 +6,7 @@ import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
 import { useAuth } from "../../../contexts/AuthContext";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 const RED = "#DC2626";
 const ORANGE = "#EA580C";

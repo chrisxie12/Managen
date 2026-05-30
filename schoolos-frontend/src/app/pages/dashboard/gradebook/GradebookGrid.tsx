@@ -5,8 +5,8 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { api } from "../../../services/api";
 import { useMetaData, useGradebookData, type AssessmentItem, type StudentBasic } from "../../../hooks/useGradebook";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 const BG = "#F9F1E7";
@@ -307,7 +307,7 @@ export function GradebookGrid() {
                 {examItems.length > 0 && (
                   <th colSpan={examItems.length}
                     className="px-3 py-2 font-semibold text-xs uppercase tracking-wider text-center whitespace-nowrap"
-                    style={{ background: "#0C2D8A", color: CREAM }}>
+                    style={{ background: "#0069D9", color: CREAM }}>
                     Terminal Examination (×70%)
                   </th>
                 )}

@@ -3,10 +3,10 @@ import { useNavigate } from "react-router";
 import { Plus, Download, Calendar, TrendingUp } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
-const PRIMARY = "#0A2472";
-const SUCCESS = "#10B981";
+const PRIMARY = "#031B4E";
+const SUCCESS = "#16A34A";
 const WARNING = "#F59E0B";
 const INFO = "#3B82F6";
 

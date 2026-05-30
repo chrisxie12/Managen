@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 type Invoice = {

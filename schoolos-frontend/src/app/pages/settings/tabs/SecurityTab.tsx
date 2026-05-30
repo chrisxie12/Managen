@@ -9,8 +9,8 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../components/ui/select";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
@@ -83,7 +83,7 @@ function PasswordStrengthBar({ password }: { password: string }) {
   } else if (len < 10 || mixCount < 3) {
     strength = "good"; color = "#EAB308"; width = "75%";
   } else {
-    strength = "strong"; color = "#10B981"; width = "100%";
+    strength = "strong"; color = "#16A34A"; width = "100%";
   }
 
   const labels: Record<string, string> = {
@@ -449,7 +449,7 @@ export function SecurityTab({ role }: Props) {
                   Status: <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
                     style={{
                       background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(10,36,114,0.06)",
-                      color: twoFAEnabled ? "#10B981" : MUTED,
+                      color: twoFAEnabled ? "#16A34A" : MUTED,
                     }}>
                     {twoFAEnabled ? "Enabled" : "Not Enabled"}
                   </span>
@@ -501,7 +501,7 @@ export function SecurityTab({ role }: Props) {
                         <span className="font-medium" style={{ color: NAVY }}>{session.device}</span>
                         {session.is_current && (
                           <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium"
-                            style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>Current</span>
+                            style={{ background: "rgba(16,185,129,0.1)", color: "#16A34A" }}>Current</span>
                         )}
                       </td>
                       <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.browser}</td>
@@ -594,7 +594,7 @@ export function SecurityTab({ role }: Props) {
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
                           style={{
                             background: entry.status === "success" ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                            color: entry.status === "success" ? "#10B981" : "#EF4444",
+                            color: entry.status === "success" ? "#16A34A" : "#EF4444",
                           }}>
                           {entry.status === "success" ? <Check size={10} /> : <X size={10} />}
                           {entry.status === "success" ? "Success" : "Failed"}

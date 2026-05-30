@@ -17,15 +17,18 @@ module.exports = {
         'text-muted': 'var(--text-muted)',
         'border-primary': 'var(--border)',
         'border-hover': 'var(--border-hover)',
-        // Brand palette
-        navy: '#0A2472',
-        'navy-light': '#0C2D8A',
-        amber: '#FFBA08',
-        'amber-dark': '#E5A000',
-        cream: '#F8F9FA',
-        primary: '#0A2472',
-        'primary-hover': '#091E5E',
-        accent: '#FFBA08',
+        // DigitalOcean brand palette
+        'do-blue': '#0080FF',
+        'do-blue-hover': '#0069D9',
+        navy: '#031B4E',
+        'light-blue': '#5CAEFF',
+        background: '#F8F9FC',
+        primary: '#0080FF',
+        'primary-hover': '#0069D9',
+        accent: '#5CAEFF',
+        success: '#16A34A',
+        warning: '#F59E0B',
+        error: '#DC2626',
       },
       fontFamily: {
         headings: 'var(--font-headings)',
@@ -44,6 +47,9 @@ module.exports = {
         md: '8px',
         lg: '16px',
         xl: '24px',
+      },
+      backgroundImage: {
+        'do-gradient': 'linear-gradient(135deg, #031B4E 0%, #0069D9 50%, #0080FF 100%)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',

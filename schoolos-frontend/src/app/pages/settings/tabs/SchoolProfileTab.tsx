@@ -9,7 +9,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { api } from "../../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const GHANA_REGIONS = [

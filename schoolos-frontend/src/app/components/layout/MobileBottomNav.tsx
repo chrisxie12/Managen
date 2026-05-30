@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 // Role-specific bottom nav items (max 5)

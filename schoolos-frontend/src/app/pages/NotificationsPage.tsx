@@ -8,8 +8,8 @@ import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { useRealtimeNotifications } from "../hooks/useRealtimeNotifications";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -209,7 +209,7 @@ export function NotificationsPage() {
                 style={{ background: "white", border: "1px solid rgba(10,36,114,0.05)" }}
               >
                 {log.status === "sent" ? (
-                  <CheckCircle2 size={10} color="#10B981" />
+                  <CheckCircle2 size={10} color="#16A34A" />
                 ) : (
                   <AlertTriangle size={10} color="#EF4444" />
                 )}

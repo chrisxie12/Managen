@@ -9,8 +9,8 @@ import { api } from "../services/api";
 import { db } from "../../lib/offline/db";
 import { useSyncManager } from "../../hooks/useSyncManager";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -30,7 +30,7 @@ type RepeatedAbsence = {
 type ClassOption = { id?: string; name: string };
 
 const STATUS_OPTIONS = [
-  { value: "Present", color: "#10B981", bg: "#D1FAE5", icon: Check },
+  { value: "Present", color: "#16A34A", bg: "#D1FAE5", icon: Check },
   { value: "Absent", color: "#EF4444", bg: "#FEF2F2", icon: X },
   { value: "Late", color: "#F59E0B", bg: "#FEF3C7", icon: Clock },
   { value: "Excused", color: "#6366F1", bg: "#EEF2FF", icon: AlertCircle },
@@ -81,7 +81,7 @@ function TrendBar({ day, max }: { day: DailyTrend; max: number }) {
       <span className="text-[10px] font-medium truncate w-full text-center" style={{ color: MUTED }}>{label}</span>
       <div className="relative w-full flex items-end justify-center" style={{ height: 84 }}>
         <div className="flex flex-col items-center" style={{ height: `${barH}px`, minHeight: 4 }}>
-          <div className="w-6 rounded-t-sm transition-all" style={{ height: `${presentPct}%`, background: "#10B981", minHeight: presentPct > 0 ? 2 : 0 }} />
+          <div className="w-6 rounded-t-sm transition-all" style={{ height: `${presentPct}%`, background: "#16A34A", minHeight: presentPct > 0 ? 2 : 0 }} />
           <div className="w-6 transition-all" style={{ height: `${latePct}%`, background: "#F59E0B", minHeight: latePct > 0 ? 2 : 0 }} />
           <div className="w-6 rounded-b-sm transition-all" style={{ height: `${absentPct}%`, background: "#EF4444", minHeight: absentPct > 0 ? 2 : 0 }} />
         </div>
@@ -261,7 +261,7 @@ function OverviewTab() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <SummaryCard icon={School} label="Today's Records" value={todayStats?.total ?? 0} sub="Total attendance entries" />
         <SummaryCard icon={UserCheck} label="Present" value={todayStats?.present ?? 0}
-          sub={todayStats?.total ? `${((todayStats.present / todayStats.total) * 100).toFixed(1)}% rate` : "No data"} color="#10B981" />
+          sub={todayStats?.total ? `${((todayStats.present / todayStats.total) * 100).toFixed(1)}% rate` : "No data"} color="#16A34A" />
         <SummaryCard icon={UserX} label="Absent" value={todayStats?.absent ?? 0} color="#EF4444"
           sub={todayStats?.total ? `${((todayStats.absent / todayStats.total) * 100).toFixed(1)}%` : "No data"} />
         <SummaryCard icon={Clock} label="Late" value={todayStats?.late ?? 0} color="#F59E0B"
@@ -287,7 +287,7 @@ function OverviewTab() {
             {trends.map(day => <TrendBar key={day.date} day={day} max={maxTotal} />)}
           </div>
           <div className="flex items-center gap-4 mt-3 text-xs" style={{ color: MUTED }}>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: "#10B981" }} /> Present</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: "#16A34A" }} /> Present</span>
             <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: "#F59E0B" }} /> Late</span>
             <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: "#EF4444" }} /> Absent</span>
           </div>

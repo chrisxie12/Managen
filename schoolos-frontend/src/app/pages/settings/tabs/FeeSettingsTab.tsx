@@ -13,7 +13,7 @@ import {
   RadioGroup, RadioGroupItem,
 } from "../../../components/ui/radio-group";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const DEFAULT_FEE_CATEGORIES = [

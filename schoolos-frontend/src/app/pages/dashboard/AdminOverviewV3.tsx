@@ -56,11 +56,11 @@ interface TaskProps {
 // ─────────────────────────────────────────────────────────────────
 
 const COLOR_SCHEME = {
-  primary: "#0A2472",
-  primaryLight: "#0C2D8A",
+  primary: "#031B4E",
+  primaryLight: "#0069D9",
   secondary: "#F8F9FA",
-  accent: "#2563EB",
-  success: "#10B981",
+  accent: "#0080FF",
+  success: "#16A34A",
   warning: "#F59E0B",
   danger: "#EF4444",
   info: "#3B82F6",
@@ -70,7 +70,7 @@ const COLOR_SCHEME = {
 
 const colorMap = {
   blue: { bg: "#E0E7FF", text: "#3B82F6", icon: "#1D4ED8" },
-  green: { bg: "#DCFCE7", text: "#10B981", icon: "#059669" },
+  green: { bg: "#DCFCE7", text: "#16A34A", icon: "#059669" },
   red: { bg: "#FEE2E2", text: "#EF4444", icon: "#DC2626" },
   amber: { bg: "#FEF3C7", text: "#F59E0B", icon: "#D97706" },
   purple: { bg: "#F3E8FF", text: "#A855F7", icon: "#7C3AED" },
@@ -215,13 +215,13 @@ function TaskItem({ title, priority, status, dueDate, owner }: TaskProps) {
   const priorityColors = {
     high: "#EF4444",
     medium: "#F59E0B",
-    low: "#10B981",
+    low: "#16A34A",
   };
 
   const statusIcons = {
     pending: <Clock size={16} style={{ color: "#6B7280" }} />,
     "in-progress": <Activity size={16} style={{ color: "#F59E0B" }} />,
-    completed: <CheckCircle2 size={16} style={{ color: "#10B981" }} />,
+    completed: <CheckCircle2 size={16} style={{ color: "#16A34A" }} />,
   };
 
   return (
@@ -397,7 +397,7 @@ export function AdminOverviewV3() {
       label: "Generate Report Cards",
       description: "Create and distribute reports",
       onClick: () => navigate("/dashboard/report-cards"),
-      color: "#10B981",
+      color: "#16A34A",
     },
     {
       icon: Wallet,
@@ -448,7 +448,7 @@ export function AdminOverviewV3() {
             <p className="text-muted-foreground">
               {school?.name || "School Management"}
               {connected && (
-                <span style={{ color: "#10B981", marginLeft: "1rem" }}>
+                <span style={{ color: "#16A34A", marginLeft: "1rem" }}>
                   ● Live
                 </span>
               )}

@@ -1,7 +1,7 @@
 import { Users, Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 export function Students() {

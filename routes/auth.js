@@ -338,7 +338,10 @@ router.post('/clerk-sync', async (req, res) => {
 // ─── GET /api/auth/me ─────────────────────────────────────────
 router.get('/me', async (req, res) => {
     try {
-        const token = req.cookies?.schoolos_token;
+        const token = req.cookies?.schoolos_token
+            || (req.headers.authorization?.startsWith('Bearer ')
+                ? req.headers.authorization.slice(7)
+                : null);
         if (!token) {
             return res.status(401).json({ error: 'No token provided.' });
         }

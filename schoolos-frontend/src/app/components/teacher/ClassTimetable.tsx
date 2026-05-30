@@ -3,7 +3,7 @@ import { Loader2, Calendar } from "lucide-react";
 import { api } from "../../services/api";
 import type { TimetableEntry } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

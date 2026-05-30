@@ -4,8 +4,8 @@ import { ChevronDown, CalendarCheck, CalendarDays, AlertCircle, Loader2, MapPin,
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -29,7 +29,7 @@ const EVENT_TYPE_LABELS: Record<string, string> = {
   general: "General", holiday: "Holiday", exam: "Exam", sports: "Sports", meeting: "Meeting", deadline: "Deadline",
 };
 const EVENT_TYPE_COLORS: Record<string, string> = {
-  general: "#0A2472", holiday: "#10B981", exam: "#EF4444", sports: "#F59E0B", meeting: "#8B5CF6", deadline: "#EC4899",
+  general: "#031B4E", holiday: "#16A34A", exam: "#EF4444", sports: "#F59E0B", meeting: "#8B5CF6", deadline: "#EC4899",
 };
 
 export function ParentHome() {
@@ -115,8 +115,8 @@ export function ParentHome() {
                     key={day}
                     className="flex items-center justify-center w-8 h-8 rounded-lg text-xs font-medium"
                     style={{
-                      background: status === "present" ? "#10B98120" : status === "absent" ? "#EF444420" : status === "late" ? "#F59E0B20" : "transparent",
-                      color: status ? (status === "present" ? "#10B981" : status === "absent" ? "#EF4444" : "#F59E0B") : MUTED,
+                      background: status === "present" ? "#16A34A20" : status === "absent" ? "#EF444420" : status === "late" ? "#F59E0B20" : "transparent",
+                      color: status ? (status === "present" ? "#16A34A" : status === "absent" ? "#EF4444" : "#F59E0B") : MUTED,
                       border: isToday ? `2px solid ${NAVY}` : "none",
                       fontWeight: isToday ? 700 : 400,
                     }}
@@ -127,7 +127,7 @@ export function ParentHome() {
               })}
             </div>
             <div className="flex gap-4 mt-3 text-[10px]" style={{ color: MUTED }}>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#10B981]" /> Present</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#16A34A]" /> Present</span>
               <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#EF4444]" /> Absent</span>
               <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Late</span>
             </div>

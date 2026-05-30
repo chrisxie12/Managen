@@ -3,13 +3,13 @@ import { Check, X, Clock, AlertCircle, Loader2, CheckCircle2, AlertTriangle } fr
 import { api } from "../../services/api";
 import type { ClassStudent } from "./types";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
 const STATUS_OPTIONS = [
-  { value: "Present", color: "#10B981", bg: "#D1FAE5", icon: Check },
+  { value: "Present", color: "#16A34A", bg: "#D1FAE5", icon: Check },
   { value: "Absent", color: "#EF4444", bg: "#FEF2F2", icon: X },
   { value: "Late", color: "#F59E0B", bg: "#FEF3C7", icon: Clock },
   { value: "Excused", color: "#6366F1", bg: "#EEF2FF", icon: AlertCircle },

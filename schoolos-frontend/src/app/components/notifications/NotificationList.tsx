@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Bell, AlertTriangle, CreditCard, Megaphone, Info, Loader2, CheckCircle2, Filter } from "lucide-react";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -58,7 +58,7 @@ export function NotificationList({ notifications, loading }: { notifications: No
   }
 
   const statusIcon = (status: string) =>
-    status === "sent" ? <CheckCircle2 size={12} color="#10B981" /> :
+    status === "sent" ? <CheckCircle2 size={12} color="#16A34A" /> :
     status === "failed" ? <AlertTriangle size={12} color="#EF4444" /> : null;
 
   const typeLabel = (type: string) => type.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Calendar, Loader2 } from "lucide-react";
 import type { TimetableEntry } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

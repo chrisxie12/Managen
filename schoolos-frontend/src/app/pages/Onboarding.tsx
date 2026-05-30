@@ -7,7 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding/index";
 import { toast } from "sonner";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 

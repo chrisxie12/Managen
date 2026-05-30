@@ -5,9 +5,9 @@ import {
   ArrowRight, CheckCircle2, ArrowLeft,
 } from "lucide-react";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
-const AMBER = "#2563EB";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
+const AMBER = "#0080FF";
 const AMBER_LIGHT = "#EFF6FF";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
@@ -177,10 +177,18 @@ export function AuthPage() {
           { headers }
         );
 
+        const jwtToken = (loginRes as any)?.data?.token;
+        if (jwtToken) {
+          localStorage.setItem('schoolos_jwt', jwtToken);
+        }
+
         await refresh();
 
+        const authHeaders: Record<string, string> = { ...headers };
+        if (jwtToken) authHeaders['Authorization'] = `Bearer ${jwtToken}`;
+
         if (!user) {
-          const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers });
+          const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: authHeaders });
           if (retryRes.data) {
             window.location.href = "/dashboard";
             return;
@@ -468,7 +476,7 @@ export function AuthPage() {
             {mode === "forgot" && resetSent && (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
-                  <Mail size={28} color="#10B981" />
+                  <Mail size={28} color="#16A34A" />
                 </div>
                 <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Check your email</p>
                 <p style={{ color: MUTED, fontSize: "0.85rem" }}>We sent a reset link to <strong>{form.email}</strong></p>
@@ -505,7 +513,7 @@ export function AuthPage() {
             {mode === "verify-email" && verified && (
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#D1FAE5" }}>
-                  <CheckCircle2 size={28} color="#10B981" />
+                  <CheckCircle2 size={28} color="#16A34A" />
                 </div>
                 <p style={{ color: NAVY, fontSize: "1rem", fontWeight: 600, marginBottom: "0.3rem" }}>Email verified!</p>
                 <button type="button" onClick={() => navigate("/auth")}
@@ -720,12 +728,12 @@ export function AuthPage() {
             {mode === "signup" && form.password && (
               <div className="p-3 rounded-2xl text-sm" style={{
                 background: passwordStrength === "weak" ? "#FEF2F2" : passwordStrength === "medium" ? "#FEF3C7" : "#ECFDF5",
-                borderLeft: `3px solid ${passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#10B981"}`,
+                borderLeft: `3px solid ${passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#16A34A"}`,
                 color: NAVY,
               }}>
                 Strength: <span style={{
                   fontWeight: 600,
-                  color: passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#10B981",
+                  color: passwordStrength === "weak" ? "#EF4444" : passwordStrength === "medium" ? "#F59E0B" : "#16A34A",
                   textTransform: "capitalize",
                 }}>{passwordStrength}</span>
               </div>

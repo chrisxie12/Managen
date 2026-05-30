@@ -1,11 +1,14 @@
-export const NAVY = "#0A2472";
-export const NAVY_LIGHT = "#0C2D8A";
-export const NAVY_DARK = "#0C1A3A";
-export const CREAM = "#F8F9FA";
-export const MUTED = "#6B7280";
-export const AMBER = "#FFBA08";
-export const AMBER_LIGHT = "#FFF8E1";
-export const GREEN = "#10B981";
-export const RED = "#EF4444";
-export const INDIGO = "#6366F1";
+export const DO_BLUE = "#0080FF";
+export const DO_BLUE_HOVER = "#0069D9";
+export const NAVY = "#031B4E";
+export const LIGHT_BLUE = "#5CAEFF";
 export const WHITE = "#FFFFFF";
+export const BACKGROUND = "#F8F9FC";
+export const BORDER = "#E5E7EB";
+export const TEXT_PRIMARY = "#111827";
+export const TEXT_SECONDARY = "#6B7280";
+export const SUCCESS = "#16A34A";
+export const WARNING = "#F59E0B";
+export const ERROR = "#DC2626";
+
+export const GRADIENT = "linear-gradient(135deg, #031B4E 0%, #0069D9 50%, #0080FF 100%)";

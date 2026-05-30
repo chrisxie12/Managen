@@ -29,10 +29,10 @@ type DashboardData = {
 type School = { id: string; name: string; email: string; slug: string; plan: string; is_active: boolean; created_at: string };
 
 const activityConfig: Record<string, { bg: string; icon: any; color: string }> = {
-  school_added: { bg: "rgba(16,185,129,0.15)", icon: UserPlus, color: "#10B981" },
+  school_added: { bg: "rgba(16,185,129,0.15)", icon: UserPlus, color: "#16A34A" },
   school_suspended: { bg: "rgba(239,68,68,0.15)", icon: AlertTriangle, color: "#EF4444" },
   plan_upgraded: { bg: "rgba(99,102,241,0.15)", icon: TrendingUp, color: "#6366F1" },
-  payment_received: { bg: "rgba(16,185,129,0.15)", icon: DollarSign, color: "#10B981" },
+  payment_received: { bg: "rgba(16,185,129,0.15)", icon: DollarSign, color: "#16A34A" },
 };
 
 const relativeTime = (iso: string) => {
@@ -121,8 +121,8 @@ export function SuperAdminDashboard() {
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: healthScore >= 80 ? "rgba(16,185,129,0.1)" : "rgba(245,158,11,0.1)", border: `1px solid ${healthScore >= 80 ? "rgba(16,185,129,0.2)" : "rgba(245,158,11,0.2)"}` }}>
-            <div className="w-2 h-2 rounded-full" style={{ background: healthScore >= 80 ? "#10B981" : "#F59E0B" }} />
-            <span style={{ color: healthScore >= 80 ? "#10B981" : "#F59E0B", fontSize: "0.7rem", fontWeight: 600 }}>Health: {healthScore}%</span>
+            <div className="w-2 h-2 rounded-full" style={{ background: healthScore >= 80 ? "#16A34A" : "#F59E0B" }} />
+            <span style={{ color: healthScore >= 80 ? "#16A34A" : "#F59E0B", fontSize: "0.7rem", fontWeight: 600 }}>Health: {healthScore}%</span>
           </div>
           <button onClick={() => navigate("/superadmin/schools")} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium" style={{ background: `${ACCENT}15`, color: ACCENT, border: `1px solid ${ACCENT}25` }}>
             <ExternalLink size={11} /> Schools
@@ -154,11 +154,11 @@ export function SuperAdminDashboard() {
           badge={hasSchools ? { text: "Primary KPI", color: ACCENT } : undefined} />
         <StatCard icon={Users} label="Active Schools"
           value={stats.activeSchools.toLocaleString()}
-          sub={`${activePct}% of total enrollment`} color="#10B981"
+          sub={`${activePct}% of total enrollment`} color="#16A34A"
           trend={stats.trends?.activeSchools ?? (stats.activeSchools > 0 ? { dir: "up" as const, text: "Operational" } : { dir: "neutral" as const, text: "Idle" })} />
         <StatCard icon={AlertCircle} label="Suspended"
           value={stats.suspended.toLocaleString()}
-          sub={`${suspendedPct}% suspension rate`} color={stats.suspended > 0 ? "#EF4444" : "#10B981"}
+          sub={`${suspendedPct}% suspension rate`} color={stats.suspended > 0 ? "#EF4444" : "#16A34A"}
           trend={stats.trends?.suspended ?? (stats.suspended > 0 ? { dir: "down" as const, text: "Action needed" } : { dir: "up" as const, text: "None" })} />
         <StatCard icon={DollarSign} label="Total Revenue"
           value={hasRevenue ? `GHS ${(stats.totalRevenue / 1000).toFixed(1)}K` : "GHS 0"}
@@ -329,8 +329,8 @@ export function SuperAdminDashboard() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-                        style={{ background: school.is_active ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)", color: school.is_active ? "#10B981" : "#EF4444" }}>
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: school.is_active ? "#10B981" : "#EF4444" }} />
+                        style={{ background: school.is_active ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)", color: school.is_active ? "#16A34A" : "#EF4444" }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: school.is_active ? "#16A34A" : "#EF4444" }} />
                         {school.is_active ? "Active" : "Suspended"}
                       </span>
                     </td>
@@ -355,7 +355,7 @@ export function SuperAdminDashboard() {
                             <div style={{ height: 1, background: BORDER }} />
                             <button onClick={() => { setOpenMenuId(null); }}
                               className="flex items-center gap-2 w-full px-3.5 py-2.5 text-xs text-left hover:bg-white/[0.04] transition-colors"
-                              style={{ color: school.is_active ? "#EF4444" : "#10B981" }}>
+                              style={{ color: school.is_active ? "#EF4444" : "#16A34A" }}>
                               <ToggleLeft size={13} />
                               {school.is_active ? "Suspend School" : "Reactivate School"}
                             </button>

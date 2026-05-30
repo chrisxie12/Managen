@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { Check, X, Clock, AlertCircle, Loader2, CalendarCheck } from "lucide-react";
 import type { AttendanceRecord } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const STATUS_MAP: Record<string, { color: string; bg: string; icon: any }> = {
-  Present: { color: "#10B981", bg: "#D1FAE5", icon: Check },
+  Present: { color: "#16A34A", bg: "#D1FAE5", icon: Check },
   Absent: { color: "#EF4444", bg: "#FEF2F2", icon: X },
   Late: { color: "#F59E0B", bg: "#FEF3C7", icon: Clock },
   Excused: { color: "#6366F1", bg: "#EEF2FF", icon: AlertCircle },

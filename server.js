@@ -191,71 +191,134 @@ app.post('/webhooks/momo', express.json(), async (req, res) => {
 });
 
 // ─── WhatsApp Webhook ─────────────────────────────────────────
-app.post('/webhooks/whatsapp', express.raw({ type: 'application/json' }), async (req, res) => {
-    try {
-        const whatsappAIService = require('./services/whatsappAIService');
-        const body = JSON.parse(req.body.toString('utf8'));
+// GET: Meta hub verification challenge
+app.get('/webhooks/whatsapp', (req, res) => {
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
+    if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN) {
+        return res.status(200).send(challenge);
+    }
+    return res.sendStatus(403);
+});
 
-        // Meta/WhatsApp Business API verification
-        if (body.hub?.mode === 'subscribe' && body.hub?.verify_token === process.env.WHATSAPP_VERIFY_TOKEN) {
-            return res.status(200).send(body.hub.challenge);
+// POST: Incoming messages and status updates
+app.post('/webhooks/whatsapp', express.raw({ type: 'application/json' }), async (req, res) => {
+    // Always respond 200 quickly so Meta doesn't retry
+    res.sendStatus(200);
+
+    try {
+        const { verifyWebhookSignature } = require('./services/whatsappService');
+
+        // Signature verification (skip only if APP_SECRET not set, e.g. local dev)
+        if (process.env.WHATSAPP_APP_SECRET) {
+            const sig = req.headers['x-hub-signature-256'];
+            if (!verifyWebhookSignature(req.body, sig, process.env.WHATSAPP_APP_SECRET)) {
+                console.warn('[whatsapp webhook] invalid signature — dropping');
+                return;
+            }
         }
 
-        // Incoming message
+        const body = JSON.parse(req.body.toString('utf8'));
         const entry = body.entry?.[0];
         const change = entry?.changes?.[0];
-        const msg = change?.value?.messages?.[0];
-        const metadata = change?.value?.metadata;
-        if (!msg || !metadata) return res.sendStatus(200);
+        const value = change?.value;
+        const metadata = value?.metadata;
+        const phoneNumberId = metadata?.phone_number_id;
+
+        if (!phoneNumberId) return;
+
+        // Resolve school by whatsapp_phone_id (the correct column)
+        const db = require('./config/db');
+        const { data: school } = await db.from('schools')
+            .select('id, slug, whatsapp_access_token')
+            .eq('whatsapp_phone_id', phoneNumberId)
+            .maybeSingle();
+        if (!school) {
+            // Fall back to env-level single-tenant mode
+            const fallbackSchool = { id: null, slug: null, whatsapp_access_token: process.env.WHATSAPP_ACCESS_TOKEN };
+            if (!fallbackSchool.whatsapp_access_token) return;
+        }
+
+        const accessToken = school?.whatsapp_access_token || process.env.WHATSAPP_ACCESS_TOKEN;
+
+        // ── Handle delivery status updates ────────────────────────
+        const statuses = value?.statuses || [];
+        for (const s of statuses) {
+            await db.from('whatsapp_conversations')
+                .update({ status: s.status, status_updated_at: new Date().toISOString() })
+                .eq('wa_message_id', s.id);
+        }
+
+        // ── Handle opt-outs (STOP keyword) ────────────────────────
+        const msg = value?.messages?.[0];
+        if (!msg || !school?.id) return;
 
         const parentPhone = msg.from;
-        const phoneNumberId = metadata.phone_number_id;
+        if (msg.type === 'text' && /^\s*stop\s*$/i.test(msg.text?.body || '')) {
+            await db.from('whatsapp_rate_limits').delete()
+                .eq('school_id', school.id).eq('parent_phone', parentPhone);
+            await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messaging_product: 'whatsapp',
+                    to: parentPhone,
+                    type: 'text',
+                    text: { body: 'You have been unsubscribed from WhatsApp notifications. Reply START to re-subscribe.' },
+                }),
+            });
+            return;
+        }
 
-        // Resolve school from phone number (configured per school)
-        const { data: school } = await require('./config/db').from('schools')
-            .select('id, slug')
-            .eq('whatsapp_phone', metadata.display_phone_number || phoneNumberId)
-            .maybeSingle();
-        if (!school) return res.status(200).json({ error: 'School not found.' });
+        // ── Route to AI service for full conversation handling ─────
+        const whatsappAIService = require('./services/whatsappAIService');
 
         let messageText = '';
         let audioUrl = null;
 
-        if (msg.type === 'text') messageText = msg.text?.body || '';
-        else if (msg.type === 'audio') {
-            audioUrl = msg.audio?.media_url || '';
-            // Download audio to DigitalOcean Spaces
-            if (audioUrl) {
-                const token = process.env.WHATSAPP_ACCESS_TOKEN;
-                const audioRes = await fetch(audioUrl, { headers: { Authorization: `Bearer ${token}` } });
-                const audioBuffer = Buffer.from(await audioRes.arrayBuffer());
-                const spaces = require('./config/spaces');
-                const key = spaces.buildKey(school.id, 'documents', null, `voice-${Date.now()}.ogg`);
-                await spaces.uploadBuffer('documents', key, audioBuffer, 'audio/ogg');
-                audioUrl = key;
+        if (msg.type === 'text') {
+            messageText = msg.text?.body || '';
+        } else if (msg.type === 'audio') {
+            const mediaId = msg.audio?.id;
+            if (mediaId) {
+                try {
+                    // Fetch media URL from Meta, then download to Spaces
+                    const mediaRes = await fetch(`https://graph.facebook.com/v21.0/${mediaId}`, {
+                        headers: { Authorization: `Bearer ${accessToken}` },
+                    });
+                    const mediaData = await mediaRes.json();
+                    const audioRes = await fetch(mediaData.url, { headers: { Authorization: `Bearer ${accessToken}` } });
+                    const audioBuffer = Buffer.from(await audioRes.arrayBuffer());
+                    const spaces = require('./config/spaces');
+                    const key = spaces.buildKey(school.id, 'documents', null, `voice-${Date.now()}.ogg`);
+                    await spaces.uploadBuffer('documents', key, audioBuffer, 'audio/ogg');
+                    audioUrl = key;
+                } catch (err) {
+                    console.error('[whatsapp webhook] audio download failed:', err.message);
+                }
             }
         } else if (msg.type === 'image') {
             messageText = msg.image?.caption || '[Image received]';
         }
 
-        if (messageText || audioUrl) {
-            const reply = await whatsappAIService.processIncomingMessage(school.id, parentPhone, messageText, null, audioUrl);
-            // Send reply via WhatsApp Business API
-            await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messaging_product: 'whatsapp',
-                    to: parentPhone,
-                    text: { body: reply },
-                }),
-            });
-        }
+        if (!messageText && !audioUrl) return;
 
-        res.sendStatus(200);
+        const reply = await whatsappAIService.processIncomingMessage(school.id, parentPhone, messageText, null, audioUrl);
+
+        // Send reply using per-school access token
+        await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                messaging_product: 'whatsapp',
+                to: parentPhone,
+                type: 'text',
+                text: { body: reply },
+            }),
+        });
     } catch (err) {
-        console.error('WhatsApp webhook error:', err.message);
-        res.sendStatus(200);
+        console.error('[whatsapp webhook] error:', err.message);
     }
 });
 

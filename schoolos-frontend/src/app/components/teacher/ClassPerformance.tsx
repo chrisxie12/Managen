@@ -3,7 +3,7 @@ import { Loader2, Trophy, TrendingDown, BarChart3 } from "lucide-react";
 import { api } from "../../services/api";
 import type { Performer, GradeRule } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -54,7 +54,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
   const gradeColor = (grade: string) => {
     const rule = gradeRules.find(r => r.grade === grade);
     if (!rule) return MUTED;
-    if (rule.min_percent >= 80) return "#10B981";
+    if (rule.min_percent >= 80) return "#16A34A";
     if (rule.min_percent >= 60) return "#6366F1";
     if (rule.min_percent >= 40) return "#F59E0B";
     return "#EF4444";
@@ -83,7 +83,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
         <div className="grid md:grid-cols-2 gap-4">
           <div className="rounded-2xl p-5" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center gap-2 mb-4">
-              <Trophy size={18} color="#10B981" />
+              <Trophy size={18} color="#16A34A" />
               <h3 className="font-semibold text-sm" style={{ color: NAVY }}>Top Performers</h3>
             </div>
             {performers.top.length === 0 ? (
@@ -93,7 +93,7 @@ export function ClassPerformance({ classId }: { classId: string; className: stri
                 {performers.top.map((p, i) => (
                   <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: CREAM }}>
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#10B981", color: "white" }}>{i + 1}</span>
+                      <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "#16A34A", color: "white" }}>{i + 1}</span>
                       <div>
                         <p className="text-sm font-medium" style={{ color: NAVY }}>{p.student?.name || "Unknown"}</p>
                         <p className="text-xs" style={{ color: MUTED }}>{p.student?.admission_no || ""}</p>

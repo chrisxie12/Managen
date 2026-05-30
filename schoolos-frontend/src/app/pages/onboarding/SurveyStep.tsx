@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const INDIGO = "#6366F1";
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 type SurveyAnswers = {

@@ -64,6 +64,13 @@ const testEmailSchema = z.object({ to: z.string().email(), subject: z.string().m
 const testSmsSchema = z.object({ to: z.string().min(1), message: z.string().min(1) });
 const testWhatsAppSchema = z.object({ to: z.string().min(1), body: z.string().min(1) });
 
+const whatsappConfigSchema = z.object({
+  phone_id: z.string().max(50).optional(),
+  access_token: z.string().max(500).optional(),
+  business_account_id: z.string().max(50).optional(),
+  verify_token: z.string().max(100).optional(),
+}).strict();
+
 // ─── All Settings ──────────────────────────────────────────────
 router.get('/', protect, requirePermission('settings.view'), async (req, res) => {
   try {
@@ -225,6 +232,21 @@ router.put('/kv', protect, requirePermission('settings.edit'), async (req, res) 
 router.delete('/kv/:key', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteSetting(req.tenant.id, req.params.key); return res.json({ data: { success: true } }); }
   catch (err) { return res.status(500).json({ error: 'Error deleting setting.' }); }
+});
+
+// ─── WhatsApp Business API Config ─────────────────────────────
+router.get('/whatsapp-config', protect, requirePermission('settings.view'), async (req, res) => {
+  try {
+    const data = await settingsService.getWhatsAppConfig(req.tenant.id);
+    return res.json({ data });
+  } catch (err) { return res.status(500).json({ error: 'Error fetching WhatsApp config.' }); }
+});
+
+router.put('/whatsapp-config', protect, requirePermission('settings.edit'), validate(whatsappConfigSchema), async (req, res) => {
+  try {
+    const data = await settingsService.updateWhatsAppConfig(req.tenant.id, req.body);
+    return res.json({ data });
+  } catch (err) { return res.status(500).json({ error: 'Error saving WhatsApp config.' }); }
 });
 
 // ─── Integrations ──────────────────────────────────────────────

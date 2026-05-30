@@ -32,18 +32,18 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
 import { EmptyState } from "../../components/ui/EmptyState";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
 const COLOR_SCHEME = {
-  primary: NAVY,
-  primaryLight: NAVY_LIGHT,
-  success: "#10B981",
+  primary: "#0080FF",
+  primaryLight: "#0069D9",
+  success: "#16A34A",
   warning: "#F59E0B",
   danger: "#EF4444",
-  info: "#3B82F6",
+  info: "#0080FF",
   purple: "#8B5CF6",
   indigo: "#6366F1",
 };
@@ -61,26 +61,35 @@ interface KPICardProps {
 }
 
 function KPICard({ icon, label, value, color, trend, subtext, onClick, isLoading }: KPICardProps) {
+  if (isLoading) {
+    return (
+      <div className="p-5 rounded-2xl bg-card border border-border animate-pulse">
+        <div className="flex items-start justify-between mb-4">
+          <div className="w-11 h-11 rounded-xl bg-muted" />
+          <div className="w-14 h-6 rounded-lg bg-muted" />
+        </div>
+        <div className="h-8 w-20 rounded bg-muted mb-2" />
+        <div className="h-4 w-28 rounded bg-muted" />
+      </div>
+    );
+  }
+
   return (
     <button
       onClick={onClick}
       disabled={!onClick}
-      className={`p-5 rounded-2xl text-left transition-all ${
-        onClick ? "cursor-pointer hover:shadow-xl hover:-translate-y-0.5 active:scale-95" : "cursor-default"
-      }`}
-      style={{
-        background: "white",
-        border: "1px solid rgba(10,36,114,0.08)",
-        boxShadow: "0 2px 12px rgba(10,36,114,0.06)",
-      }}
+      className={`p-5 rounded-2xl text-left transition-all w-full ${
+        onClick ? "cursor-pointer hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]" : "cursor-default"
+      } bg-card border border-border`}
+      style={{ boxShadow: "0 1px 8px rgba(3,27,78,0.06)" }}
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: `${color}14` }}>
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${color}14` }}>
           <div style={{ color }}>{icon}</div>
         </div>
         {trend && (
           <div
-            className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg"
+            className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg flex-shrink-0"
             style={{
               color: trend.direction === "up" ? COLOR_SCHEME.success : COLOR_SCHEME.danger,
               background: trend.direction === "up" ? `${COLOR_SCHEME.success}15` : `${COLOR_SCHEME.danger}15`,
@@ -91,13 +100,13 @@ function KPICard({ icon, label, value, color, trend, subtext, onClick, isLoading
           </div>
         )}
       </div>
-      <div
-        style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "1.85rem", fontWeight: 700, marginBottom: "0.2rem", lineHeight: 1 }}
+      <div className="font-bold text-foreground truncate"
+        style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(1.4rem, 3vw, 1.85rem)", lineHeight: 1, marginBottom: "0.2rem" }}
       >
-        {isLoading ? <span className="animate-pulse">···</span> : value}
+        {value}
       </div>
-      <div style={{ color: MUTED, fontSize: "0.82rem", fontWeight: 500 }}>{label}</div>
-      {subtext && <div style={{ color: MUTED, fontSize: "0.75rem", marginTop: "0.4rem" }}>{subtext}</div>}
+      <div className="text-muted-foreground text-sm font-medium truncate">{label}</div>
+      {subtext && <div className="text-muted-foreground text-xs mt-1 truncate">{subtext}</div>}
     </button>
   );
 }
@@ -202,7 +211,7 @@ function QuickActionsPanel() {
       label: "Mark Attendance",
       description: "The bell has rung",
       color: COLOR_SCHEME.info,
-      gradient: "linear-gradient(135deg, #2563EB, #3B82F6)",
+      gradient: "linear-gradient(135deg, #0080FF, #3B82F6)",
       onClick: () => navigate("/dashboard/attendance"),
     },
     {
@@ -211,7 +220,7 @@ function QuickActionsPanel() {
       label: "Collect Fee",
       description: "MoMo or cash",
       color: COLOR_SCHEME.success,
-      gradient: "linear-gradient(135deg, #059669, #10B981)",
+      gradient: "linear-gradient(135deg, #059669, #16A34A)",
       onClick: () => navigate("/dashboard/fees/collect"),
     },
     {
@@ -263,7 +272,7 @@ function QuickActionsPanel() {
           <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Quick Actions</h3>
         </div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {actions.map((action) => (
           <button
             id={`quick-action-${action.id}`}
@@ -515,7 +524,7 @@ export function AdminOverview() {
       </div>
 
       {/* ── Primary KPI Cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
           icon={<Users size={22} />}
           label="Total Students"
@@ -556,7 +565,7 @@ export function AdminOverview() {
       </div>
 
       {/* ── Secondary KPIs ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
           icon={<AlertCircle size={22} />}
           label="Fee Defaulters"

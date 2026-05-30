@@ -22,7 +22,7 @@ import {
   DialogFooter, DialogClose,
 } from "../components/ui/dialog";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 // ─── Types ────────────────────────────────────────────────────────
@@ -882,7 +882,7 @@ export function Communication() {
 
       {stats && (
         <div className="flex flex-wrap gap-3 mb-6">
-          <MetricCard icon={Send} label="Sent" value={stats.messages.sent} color="#10B981" />
+          <MetricCard icon={Send} label="Sent" value={stats.messages.sent} color="#16A34A" />
           <MetricCard icon={Clock} label="Scheduled" value={stats.messages.scheduled} color="#3B82F6" />
           <MetricCard icon={FileText} label="Drafts" value={stats.messages.draft} color="#6B7280" />
           <MetricCard icon={FileText} label="Templates" value={stats.templates} color="#8B5CF6" />

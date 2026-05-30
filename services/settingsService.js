@@ -328,6 +328,38 @@ class SettingsService {
     return data;
   }
 
+  // ─── WhatsApp Business API Config ─────────────────────────────
+  async getWhatsAppConfig(schoolId) {
+    const { data, error } = await supabase.from('schools')
+      .select('whatsapp_phone_id, whatsapp_access_token, whatsapp_business_account_id, whatsapp_verify_token')
+      .eq('id', schoolId).single();
+    if (error) throw error;
+    return {
+      phone_id: data.whatsapp_phone_id || '',
+      // Mask token — return only last 8 chars so the UI can show "configured"
+      access_token_hint: data.whatsapp_access_token
+        ? `••••••••${data.whatsapp_access_token.slice(-8)}`
+        : '',
+      has_access_token: !!data.whatsapp_access_token,
+      business_account_id: data.whatsapp_business_account_id || '',
+      verify_token: data.whatsapp_verify_token || '',
+    };
+  }
+
+  async updateWhatsAppConfig(schoolId, { phone_id, access_token, business_account_id, verify_token }) {
+    const payload = {};
+    if (phone_id !== undefined) payload.whatsapp_phone_id = phone_id;
+    if (access_token !== undefined && access_token !== '') payload.whatsapp_access_token = access_token;
+    if (business_account_id !== undefined) payload.whatsapp_business_account_id = business_account_id;
+    if (verify_token !== undefined) payload.whatsapp_verify_token = verify_token;
+
+    if (Object.keys(payload).length === 0) return this.getWhatsAppConfig(schoolId);
+
+    const { error } = await supabase.from('schools').update(payload).eq('id', schoolId);
+    if (error) throw error;
+    return this.getWhatsAppConfig(schoolId);
+  }
+
   // ─── All Settings ──────────────────────────────────────────────
   async getAll(schoolId) {
     const [profile, settingsMap, terms, sessions, gradingScales, integrations, dbIntegrations] = await Promise.all([

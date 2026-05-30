@@ -9,8 +9,8 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../../components/ui/select";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
@@ -314,7 +314,7 @@ export function SecurityAuditTab({ role }: Props) {
             <div>
               <p className="text-xs font-medium" style={{ color: NAVY }}>Authenticator App</p>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
-                style={{ background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(10,36,114,0.06)", color: twoFAEnabled ? "#10B981" : MUTED }}>
+                style={{ background: twoFAEnabled ? "rgba(16,185,129,0.1)" : "rgba(10,36,114,0.06)", color: twoFAEnabled ? "#16A34A" : MUTED }}>
                 {twoFAEnabled ? "Enabled" : "Not Enabled"}
               </span>
             </div>
@@ -361,7 +361,7 @@ export function SecurityAuditTab({ role }: Props) {
                     <td className="py-2.5 pr-3">
                       <span className="font-medium" style={{ color: NAVY }}>{session.device || session.browser || "Unknown"}</span>
                       {session.is_current && (
-                        <span className="ml-1.5 inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>Current</span>
+                        <span className="ml-1.5 inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium" style={{ background: "rgba(16,185,129,0.1)", color: "#16A34A" }}>Current</span>
                       )}
                     </td>
                     <td className="py-2.5 pr-3" style={{ color: NAVY }}>{session.ip}</td>

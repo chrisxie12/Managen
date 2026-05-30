@@ -44,7 +44,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
         {!collapsed && (
           <>
             <span className="font-semibold text-base tracking-tight truncate text-sidebar-foreground">
-              School<span style={{ background: "linear-gradient(135deg,#00D2FF,#0066FF,#001A99)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>OS</span>
+              School<span style={{ background: "linear-gradient(135deg,#0080FF,#0069D9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>OS</span>
             </span>
             <span className="ml-auto flex-shrink-0 text-[10px] bg-sidebar-primary text-sidebar-primary-foreground px-1.5 py-0.5 rounded font-medium">Pro</span>
           </>
@@ -114,7 +114,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
                         isDisabled ? "opacity-50 cursor-not-allowed text-sidebar-foreground/40" : "cursor-pointer"
                       } ${
                         active
-                          ? "bg-sidebar-accent/20 text-sidebar-foreground border-l-[3px] border-sidebar-primary -ml-[3px]"
+                          ? "bg-sidebar-accent/20 text-sidebar-foreground border-l-[3px] border-sidebar-primary pl-[calc(0.75rem-3px)]"
                           : "text-sidebar-foreground/70 hover:bg-sidebar-accent/10 hover:text-sidebar-foreground"
                       }`}
                     >

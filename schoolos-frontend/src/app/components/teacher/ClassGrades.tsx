@@ -3,8 +3,8 @@ import { Loader2, CheckCircle2, X, AlertTriangle, Save } from "lucide-react";
 import { api } from "../../services/api";
 import type { ClassStudent, Assessment, Score } from "./types";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

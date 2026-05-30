@@ -25,8 +25,6 @@ import { ParentReports } from "./pages/parent/ParentReports";
 import { ParentProfile } from "./pages/parent/ParentProfile";
 import { Inbox } from "./pages/Inbox";
 import { NotificationsPage } from "./pages/NotificationsPage";
-import { Students } from "./pages/Students";
-import { StudentsEnhanced } from "./pages/StudentsEnhanced";
 import { AttendanceLinks } from "./pages/AttendanceLinks";
 import { ReportCards } from "./pages/ReportCards";
 import { GradebookGrid } from "./pages/dashboard/gradebook/GradebookGrid";
@@ -40,7 +38,6 @@ import { SmartFeeReminders } from "./pages/SmartFeeReminders";
 import { Communication } from "./pages/Communication";
 import { AdminRoles } from "./pages/AdminRoles";
 import { AdminUsers } from "./pages/AdminUsers";
-import { Attendance } from "./pages/Attendance";
 import { AssessmentsEntry } from "./pages/AssessmentsEntry";
 import { WeightedGradebook } from "./pages/WeightedGradebook";
 import { FeePayment } from "./pages/FeePayment";
@@ -69,7 +66,37 @@ import { ProfileGuard } from "../components/ProfileGuard";
 import { Onboarding } from "./pages/Onboarding";
 import { RoleRouter } from "./components/RoleRouter";
 
-const NAVY = "#0A2472";
+// New dashboard pages — school admin
+import { QuickActionsPage } from "./pages/dashboard/QuickActionsPage";
+import { AddStudentPage } from "./pages/dashboard/AddStudentPage";
+import { ExpensesPage } from "./pages/dashboard/ExpensesPage";
+import { PayrollPage } from "./pages/dashboard/PayrollPage";
+import { BecePrepPage } from "./pages/dashboard/BecePrepPage";
+import { LibraryPage } from "./pages/dashboard/LibraryPage";
+import { HostelPage } from "./pages/dashboard/HostelPage";
+import { TransportPage } from "./pages/dashboard/TransportPage";
+import { InventoryPage } from "./pages/dashboard/InventoryPage";
+
+// Teacher pages
+import { TeacherTimetable } from "./pages/teacher/TeacherTimetable";
+import { TeacherAttendance } from "./pages/teacher/TeacherAttendance";
+import { TeacherGrades } from "./pages/teacher/TeacherGrades";
+import { TeacherStudents } from "./pages/teacher/TeacherStudents";
+import { TeacherHomework } from "./pages/teacher/TeacherHomework";
+import { TeacherNotices } from "./pages/teacher/TeacherNotices";
+import { TeacherMessages } from "./pages/teacher/TeacherMessages";
+
+// Bursar pages
+import { BursarCollect } from "./pages/bursar/BursarCollect";
+import { BursarToday } from "./pages/bursar/BursarToday";
+import { BursarOutstanding } from "./pages/bursar/BursarOutstanding";
+import { BursarReports } from "./pages/bursar/BursarReports";
+import { BursarRevenue } from "./pages/bursar/BursarRevenue";
+import { BursarExpenses } from "./pages/bursar/BursarExpenses";
+import { BursarPayroll } from "./pages/bursar/BursarPayroll";
+import { BursarReconciliation } from "./pages/bursar/BursarReconciliation";
+
+const NAVY = "#031B4E";
 
 function RootLayout() {
   return (
@@ -171,11 +198,23 @@ export const router = createBrowserRouter([
         children: [
           { index: true, Component: RoleRouter },
           { path: "admin", Component: AdminOverview },
+
+          // Students
           { path: "students", Component: StudentsPage },
           { path: "students/import", Component: StudentsImport },
+          { path: "students/add", Component: AddStudentPage },
+
+          // Fees
           { path: "fees", Component: FeesPage },
+          { path: "fees/collect", Component: FeesPage },
+          { path: "fees/structure", Component: FeesPage },
+          { path: "fees/reports", Component: Reports },
+
+          // Attendance & Classes
           { path: "attendance", Component: AttendancePage },
           { path: "classes", Component: ClassesPage },
+
+          // Role dashboards
           { path: "headmaster", Component: HeadmasterDashboard },
           { path: "accountant", Component: AccountantDashboard },
           { path: "teacher", Component: TeacherDashboard },
@@ -186,33 +225,69 @@ export const router = createBrowserRouter([
           { path: "parent", Component: ParentDashboard },
           { path: "librarian", Component: LibrarianDashboard },
           { path: "parent/child/:id", Component: ParentChildDetails },
+
+          // Teacher sub-pages
+          { path: "teacher/timetable", Component: TeacherTimetable },
+          { path: "teacher/attendance", Component: TeacherAttendance },
+          { path: "teacher/grades", Component: TeacherGrades },
+          { path: "teacher/students", Component: TeacherStudents },
+          { path: "teacher/homework", Component: TeacherHomework },
+          { path: "teacher/notices", Component: TeacherNotices },
+          { path: "teacher/messages", Component: TeacherMessages },
+
+          // Bursar sub-pages
+          { path: "bursar/collect", Component: BursarCollect },
+          { path: "bursar/today", Component: BursarToday },
+          { path: "bursar/outstanding", Component: BursarOutstanding },
+          { path: "bursar/reports", Component: BursarReports },
+          { path: "bursar/revenue", Component: BursarRevenue },
+          { path: "bursar/expenses", Component: BursarExpenses },
+          { path: "bursar/payroll", Component: BursarPayroll },
+          { path: "bursar/reconciliation", Component: BursarReconciliation },
+
+          // Communications
           { path: "inbox", Component: Inbox },
           { path: "notifications", Component: NotificationsPage },
+          { path: "communication", Component: Communication },
+          { path: "whatsapp", Component: Communication },
+          { path: "notices", Component: Communication },
+
+          // Academic tools
           { path: "attendance-links", Component: AttendanceLinks },
           { path: "report-cards", Component: ReportCards },
           { path: "bulk-import", Component: BulkImport },
-          { path: "staff", Component: StaffDirectory },
           { path: "daily-signin", Component: DailySignIn },
           { path: "assessments", Component: Assessments },
-          { path: "weighted-gradebook", Component: WeightedGradebook },
+          { path: "ca", Component: Assessments },
           { path: "assessments/entry", Component: AssessmentsEntry },
+          { path: "weighted-gradebook", Component: WeightedGradebook },
           { path: "timetable-scheduler", Component: TimetableScheduler },
+          { path: "gradebook", Component: GradebookGrid },
+          { path: "report-cards", Component: ReportCards },
+          { path: "bece-prep", Component: BecePrepPage },
+
+          // Staff
+          { path: "staff", Component: StaffDirectory },
+
+          // Finance & Operations
+          { path: "expenses", Component: ExpensesPage },
+          { path: "payroll", Component: PayrollPage },
+          { path: "library", Component: LibraryPage },
+          { path: "hostel", Component: HostelPage },
+          { path: "transport", Component: TransportPage },
+          { path: "inventory", Component: InventoryPage },
+          { path: "actions", Component: QuickActionsPage },
+
+          // Analytics & Reports
           { path: "analytics", Component: AnalyticsDashboard },
           { path: "academics", Component: Academics },
           { path: "finance", Component: Finance },
-          { path: "gradebook", Component: GradebookGrid },
           { path: "reports", Component: Reports },
-          { path: "audit-logs", Component: AuditLogs },
           { path: "fee-reminders", Component: SmartFeeReminders },
-          { path: "communication", Component: Communication },
+          { path: "audit-logs", Component: AuditLogs },
           { path: "system-health", Component: SystemHealth },
 
-          // New Navigation Mappings
-          { path: "whatsapp", Component: Communication },
-          { path: "notices", Component: Communication },
-          { path: "fees/collect", Component: FeesPage },
-          { path: "fees/structure", Component: FeesPage },
-          { path: "fees/reports", Component: Reports },
+          // Settings & Profile
           { path: "setup/profile", Component: SchoolSettings },
           { path: "setup/staff", Component: StaffDirectory },
           { path: "setup/branding", Component: SchoolSettings },

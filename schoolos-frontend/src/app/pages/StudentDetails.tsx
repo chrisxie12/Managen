@@ -15,8 +15,8 @@ import { StudentAnnouncements } from "../components/student/StudentAnnouncements
 import { UploadButton } from "../components/ui/UploadButton";
 import type { StudentProfile, AttendanceRecord, ReportCard, TimetableEntry, Invoice, Intervention } from "../components/student/types";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

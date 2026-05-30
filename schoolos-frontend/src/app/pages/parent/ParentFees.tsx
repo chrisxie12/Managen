@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { addToSyncQueue } from "../../lib/offlineSync";
 import { useAuth } from "../../contexts/AuthContext";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -194,7 +194,7 @@ export function ParentFees() {
                       onClick={() => handlePayWithPaystack(inv)}
                       disabled={paying || verifying}
                       className="mt-2 w-full py-2.5 rounded-xl text-xs font-semibold active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                      style={{ background: "#0A2472", color: "white" }}
+                      style={{ background: "#031B4E", color: "white" }}
                     >
                       {paying ? <Loader2 className="animate-spin" size={14} /> : null}
                       {paying ? "Connecting to Paystack..." : `Pay with Paystack — GH₵ ${(due / 100).toLocaleString()}`}
@@ -209,7 +209,7 @@ export function ParentFees() {
           {payments.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: NAVY }}>
-                <ArrowUp size={15} color="#10B981" /> Payment History
+                <ArrowUp size={15} color="#16A34A" /> Payment History
               </h3>
               {payments.slice(0, 10).map((p) => {
                 const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobile Money", cash: "Cash", bank_transfer: "Bank Transfer", paystack: "Online" };
@@ -220,7 +220,7 @@ export function ParentFees() {
                         <span className="text-xs font-medium" style={{ color: NAVY }}>{methodLabel[p.method] || p.method.toUpperCase()}</span>
                         <p className="text-[10px]" style={{ color: MUTED }}>{new Date(p.created_at).toLocaleDateString()}</p>
                       </div>
-                      <span className="text-sm font-mono font-bold" style={{ color: "#10B981" }}>
+                      <span className="text-sm font-mono font-bold" style={{ color: "#16A34A" }}>
                         +GH₵ {(p.amount / 100).toLocaleString()}
                       </span>
                     </div>

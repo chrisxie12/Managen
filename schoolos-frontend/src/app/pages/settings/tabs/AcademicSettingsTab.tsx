@@ -9,7 +9,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Switch } from "../../../components/ui/switch";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const ACADEMIC_YEARS = ["2025/2026", "2026/2027", "2027/2028"];
@@ -578,7 +578,7 @@ export function AcademicSettingsTab({ profile, onSave, saving, role }: Props) {
                       <td className="py-2.5 pr-3">
                         {term.is_current ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-                            style={{ background: "rgba(16,185,129,0.1)", color: "#10B981" }}>
+                            style={{ background: "rgba(16,185,129,0.1)", color: "#16A34A" }}>
                             <Check size={10} /> Current
                           </span>
                         ) : (

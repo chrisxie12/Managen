@@ -6,8 +6,8 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -485,7 +485,7 @@ function AssessmentsTab({ setError, setSuccess }: { setError: (s: string) => voi
       <div className="grid gap-4 sm:grid-cols-4 mb-6">
         <SummaryCard icon={ClipboardCheck} label="Total Assessments" value={assessments.length} />
         <SummaryCard icon={Star} label="Draft" value={assessments.filter(a => a.status === "draft").length} color="#F59E0B" />
-        <SummaryCard icon={Check} label="Open" value={assessments.filter(a => a.status === "open").length} color="#10B981" />
+        <SummaryCard icon={Check} label="Open" value={assessments.filter(a => a.status === "open").length} color="#16A34A" />
         <SummaryCard icon={School} label="Closed" value={assessments.filter(a => a.status === "closed").length} color="#6366F1" />
       </div>
 
@@ -714,7 +714,7 @@ function ScoresTab({ setError, setSuccess }: { setError: (s: string) => void; se
               className="bg-transparent outline-none text-sm flex-1" style={{ color: NAVY }} />
           </div>
           <span className="text-sm" style={{ color: MUTED }}>{students.length} students</span>
-          <span className="text-sm" style={{ color: "#10B981" }}>{filledCount} scored</span>
+          <span className="text-sm" style={{ color: "#16A34A" }}>{filledCount} scored</span>
           {missingIds.length > 0 && <span className="text-sm" style={{ color: "#F59E0B" }}>{missingIds.length} missing</span>}
           <button onClick={handleSaveAll} disabled={saving}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold ml-auto"
@@ -1082,7 +1082,7 @@ function ReportCardsTab({ setError, setSuccess }: { setError: (s: string) => voi
       <div className="grid gap-4 sm:grid-cols-4 mb-6">
         <SummaryCard icon={Star} label="Total Report Cards" value={cards.length} />
         <SummaryCard icon={Eye} label="Draft" value={cards.filter(c => c.status === "draft").length} color="#F59E0B" />
-        <SummaryCard icon={SendHorizonal} label="Published" value={cards.filter(c => c.status === "published").length} color="#10B981" />
+        <SummaryCard icon={SendHorizonal} label="Published" value={cards.filter(c => c.status === "published").length} color="#16A34A" />
         <SummaryCard icon={ShieldCheck} label="Approved" value={cards.filter(c => c.status === "approved").length} color="#6366F1" />
       </div>
 

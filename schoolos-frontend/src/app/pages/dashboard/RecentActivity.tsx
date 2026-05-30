@@ -17,8 +17,8 @@ interface ActivityLog {
 }
 
 const activityTypeConfig: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
-  user_created: { icon: Users, color: "#0A2472", bg: "#E0E7FF" },
-  fee_collected: { icon: Wallet, color: "#10B981", bg: "#DCFCE7" },
+  user_created: { icon: Users, color: "#031B4E", bg: "#E0E7FF" },
+  fee_collected: { icon: Wallet, color: "#16A34A", bg: "#DCFCE7" },
   report_generated: { icon: FileText, color: "#3B82F6", bg: "#DBEAFE" },
   approval_completed: { icon: CheckCircle2, color: "#8B5CF6", bg: "#F3E8FF" },
   alert: { icon: AlertCircle, color: "#EF4444", bg: "#FEE2E2" },
@@ -205,7 +205,7 @@ export function RecentActivity({ activities = [], onActivityClick, maxItems = 6 
           background: "white",
           fontWeight: 600,
           cursor: "pointer",
-          color: "#0A2472",
+          color: "#031B4E",
           fontSize: "0.875rem",
         }}
       >
