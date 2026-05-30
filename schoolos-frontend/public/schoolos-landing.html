@@ -1246,6 +1246,14 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .container { padding: 0 18px; }
   .nav-links, .nav-actions .nav-cta-plain { display: none; }
   .menu-btn { display: flex; }
+  /* Nav: tighten padding so logo + toggle + button fit at 375px */
+  .nav-inner { padding: 0 16px; gap: 8px; }
+  .nav-cta-fill { padding: 9px 14px; font-size: 13px; }
+  /* Case study: stack 2-col card to 1-col */
+  .cs-card { grid-template-columns: 1fr !important; gap: 32px !important; padding: 28px 20px !important; }
+  /* Comparison table: allow the inner overflow-x scroll to work */
+  .compare-section .container { padding: 0; }
+  .compare-section .compare-header { padding: 0 18px; }
 
   /* Hero — reduce excessive top whitespace */
   .hero { padding: 90px 0 44px; min-height: auto; }
@@ -2239,7 +2247,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <h2 class="section-title">What school leaders say.</h2>
       <p class="section-sub" style="margin:0 auto;text-align:center;">From single-campus primary schools to multi-campus secondary schools across Ghana.</p>
     </div>
-    <div class="testi-grid" style="grid-template-columns:repeat(2,1fr);">
+    <div class="testi-grid">
       <div class="testi-card reveal">
         <div class="testi-content">
           <div class="testi-stars">★★★★★</div>
@@ -2318,7 +2326,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="section-eyebrow" style="justify-content:center;">CASE STUDY</div>
       <h2 class="section-title" style="text-align:center;">How Aburi Girls cut fee collection from 3 days to 4 hours.</h2>
     </div>
-    <div class="reveal delay-1" style="background:var(--white);border-radius:var(--r-xl);padding:48px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+    <div class="cs-card reveal delay-1" style="background:var(--white);border-radius:var(--r-xl);padding:48px;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div>
         <p style="font-size:16px;line-height:1.8;color:var(--text-2);margin-bottom:24px;">"Before SchoolOS, our bursar's office handled fee collection manually over three days every term — long queues, cash handling, and inevitable errors. Parents drove in from Accra just to pay and get a receipt."</p>
         <p style="font-size:16px;line-height:1.8;color:var(--text-2);margin-bottom:32px;">"We switched to SchoolOS in November 2024. By the first day of Term 2, 80% of parents paid via MoMo from their phones. By day two, collection was closed. Four hours total."</p>
