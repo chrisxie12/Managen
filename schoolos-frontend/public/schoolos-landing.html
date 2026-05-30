@@ -1346,86 +1346,101 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
   .pricing-grid { max-width: 100%; }
 }
 
-/* ===================== PWA INSTALL BANNER ===================== */
+/* ===================== PWA INSTALL TOAST ===================== */
 @keyframes pwa-shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-.pwa-banner {
+.pwa-toast {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  bottom: 20px; left: 50%;
+  transform: translate(-50%, 20px);
   z-index: 9999;
-  background: var(--dark);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 -12px 48px rgba(0,0,0,0.36);
-  transform: translateY(110%);
-  transition: transform 0.38s cubic-bezier(0.22,1,0.36,1);
-  border-radius: 20px 20px 0 0;
+  width: calc(100vw - 32px); max-width: 380px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 56px rgba(0,0,0,0.16);
+  border: 1px solid rgba(0,0,0,0.07);
   overflow: hidden;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.32s, transform 0.32s cubic-bezier(0.22,1,0.36,1);
 }
-.pwa-banner.visible { transform: translateY(0); }
+[data-theme="dark"] .pwa-toast {
+  background: var(--dark-2);
+  border-color: rgba(255,255,255,0.09);
+  box-shadow: 0 20px 56px rgba(0,0,0,0.55);
+}
+.pwa-toast.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 
-/* Countdown bar shrinks from full → empty over 12 s */
-.pwa-progress {
-  position: absolute; top: 0; left: 0;
+.pwa-toast-bar {
   height: 3px; width: 100%;
-  background: var(--teal);
-  transform-origin: left;
-  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--primary), var(--teal));
+  transform-origin: left; transform: scaleX(0);
 }
-.pwa-banner.visible .pwa-progress {
-  animation: pwa-shrink 12s linear forwards;
-}
+.pwa-toast.visible .pwa-toast-bar { animation: pwa-shrink 15s linear forwards; }
 
-.pwa-banner-inner {
-  display: flex; align-items: center;
-  gap: 14px; padding: 16px 20px;
+.pwa-toast-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-2); border: none;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); cursor: pointer; transition: background 0.15s;
 }
-.pwa-banner-icon {
-  flex-shrink: 0;
-  width: 52px; height: 52px;
-  border-radius: 14px;
+.pwa-toast-close:hover { background: var(--bg-3); }
+[data-theme="dark"] .pwa-toast-close { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+[data-theme="dark"] .pwa-toast-close:hover { background: rgba(255,255,255,0.14); }
+
+.pwa-toast-body { display: flex; align-items: center; gap: 14px; padding: 18px 52px 12px 18px; }
+.pwa-toast-icon {
+  flex-shrink: 0; width: 54px; height: 54px;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.14);
   background: #381932;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
 }
-.pwa-banner-icon img { width: 100%; height: 100%; object-fit: cover; }
-.pwa-banner-text { flex: 1; min-width: 0; }
-.pwa-banner-title {
-  font-family: var(--ff-display);
-  font-size: 15px; font-weight: 700;
-  color: #fff; line-height: 1.2; margin-bottom: 2px;
+.pwa-toast-icon img { width: 100%; height: 100%; object-fit: cover; }
+.pwa-toast-title {
+  font-family: var(--ff-display); font-size: 15px; font-weight: 700;
+  color: var(--text); line-height: 1.25; margin-bottom: 3px;
 }
-.pwa-banner-sub { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
-.pwa-install-btn {
-  flex-shrink: 0;
-  background: var(--teal); color: #fff;
-  border: none; border-radius: 10px;
-  padding: 10px 18px; font-size: 14px; font-weight: 700;
-  cursor: pointer; font-family: var(--ff-display);
-  transition: background 0.2s, transform 0.15s; white-space: nowrap;
-}
-.pwa-install-btn:hover { background: var(--teal-dk); transform: scale(1.03); }
-.pwa-dismiss-btn {
-  flex-shrink: 0; background: none; border: none;
-  color: rgba(255,255,255,0.4); cursor: pointer;
-  padding: 6px; border-radius: 8px; line-height: 1; transition: color 0.2s;
-}
-.pwa-dismiss-btn:hover { color: rgba(255,255,255,0.8); }
+.pwa-toast-sub { font-size: 12px; color: var(--text-2); line-height: 1.5; }
 
-/* iOS manual instructions */
+.pwa-toast-actions { display: flex; gap: 8px; padding: 4px 18px 18px; }
+.pwa-toast-install {
+  flex: 1; background: var(--primary); color: #fff;
+  border: none; border-radius: 10px; padding: 11px 14px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: var(--ff-display);
+  transition: background 0.2s, transform 0.1s;
+}
+.pwa-toast-install:hover { background: var(--primary-dk); transform: translateY(-1px); }
+.pwa-toast-install:active { transform: none; }
+.pwa-toast-notnow {
+  flex: 1; background: var(--bg-2); color: var(--text-2);
+  border: 1px solid var(--bg-3); border-radius: 10px; padding: 11px 14px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: var(--ff-display); transition: background 0.2s;
+}
+.pwa-toast-notnow:hover { background: var(--bg-3); }
+[data-theme="dark"] .pwa-toast-notnow { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); }
+[data-theme="dark"] .pwa-toast-notnow:hover { background: rgba(255,255,255,0.12); }
+
 .pwa-ios-steps {
-  display: none;
-  padding: 12px 20px 16px;
-  font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.7;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  text-align: center;
+  display: none; padding: 10px 18px 16px;
+  font-size: 13px; color: var(--text-2); line-height: 1.75;
+  border-top: 1px solid var(--bg-3); text-align: center;
 }
 .pwa-ios-steps.visible { display: block; }
-.pwa-ios-steps strong { color: #fff; }
+.pwa-ios-steps strong { color: var(--text); }
 .pwa-ios-share {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border: 1.5px solid rgba(255,255,255,0.4);
-  border-radius: 5px; font-size: 11px; vertical-align: middle; margin: 0 3px;
-  line-height: 1;
+  width: 22px; height: 22px; border: 1.5px solid currentColor;
+  border-radius: 5px; font-size: 10px; vertical-align: middle; margin: 0 2px;
+}
+[data-theme="dark"] .pwa-ios-steps { border-color: rgba(255,255,255,0.08); }
+
+@media (min-width: 640px) {
+  .pwa-toast { left: auto; right: 20px; bottom: 20px; transform: translateY(20px); }
+  .pwa-toast.visible { transform: translateY(0); }
+}
 }
 
 @media (min-width: 600px) {
@@ -2926,40 +2941,59 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && !window.ma
 }
 
 /* ========== PWA INSTALL PROMPT ========== */
-
 (function() {
   var deferredPrompt = null;
-  var banner     = document.getElementById('pwaBanner');
+  var toast      = document.getElementById('pwaBanner');
   var installBtn = document.getElementById('pwaInstallBtn');
+  var laterBtn   = document.getElementById('pwaLaterBtn');
   var dismissBtn = document.getElementById('pwaDismissBtn');
   var iosSteps   = document.getElementById('pwaIosSteps');
   var autoTimer  = null;
+  var showTimer  = null;
 
-  if (!banner) return;
-  // Already running as installed PWA — no need to prompt
+  if (!toast) return;
   if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) return;
+
+  var count  = parseInt(localStorage.getItem('soos-pwa-n') || '0');
+  var nextAt = parseInt(localStorage.getItem('soos-pwa-t') || '0');
+  if (count >= 3 || Date.now() < nextAt) return;
 
   var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-  function showBanner() {
-    banner.classList.add('visible');
-    autoTimer = setTimeout(function() { hideBanner(false); }, 12000);
+  function show() {
+    clearTimeout(showTimer);
+    toast.classList.add('visible');
+    autoTimer = setTimeout(function() { hide(true); }, 15000);
   }
 
-  function hideBanner() {
-    banner.classList.remove('visible');
+  function hide(wasDismiss) {
+    toast.classList.remove('visible');
     if (iosSteps) iosSteps.classList.remove('visible');
     clearTimeout(autoTimer);
+    if (wasDismiss) {
+      count++;
+      localStorage.setItem('soos-pwa-n', count);
+      var days = [3, 7, 30][Math.min(count - 1, 2)];
+      localStorage.setItem('soos-pwa-t', Date.now() + days * 864e5);
+    }
   }
 
-  // Capture Android/Chrome native install prompt
   window.addEventListener('beforeinstallprompt', function(e) {
     e.preventDefault();
     deferredPrompt = e;
   });
 
-  // Pop up automatically after 2 seconds — no interaction required
-  setTimeout(showBanner, 2000);
+  // Show after 20 s idle, or 3 s after scrolling past 30% of page
+  showTimer = setTimeout(show, 20000);
+  var scrollFired = false;
+  window.addEventListener('scroll', function() {
+    if (scrollFired) return;
+    if (window.scrollY > document.body.scrollHeight * 0.3) {
+      scrollFired = true;
+      clearTimeout(showTimer);
+      showTimer = setTimeout(show, 3000);
+    }
+  }, { passive: true });
 
   installBtn && installBtn.addEventListener('click', function() {
     if (isIOS) {
@@ -2968,43 +3002,49 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && !window.ma
       return;
     }
     if (deferredPrompt) {
-      hideBanner();
+      hide(false);
       deferredPrompt.prompt();
       deferredPrompt = null;
+      localStorage.setItem('soos-pwa-n', '3'); // don't show again after install
       return;
     }
-    // Fallback for desktop/Firefox
     if (iosSteps) {
-      iosSteps.innerHTML = 'Open this page in <strong>Chrome</strong> or <strong>Safari</strong> on your phone,<br>then tap the install prompt.';
+      iosSteps.innerHTML = 'Open in <strong>Chrome</strong> or <strong>Safari</strong> on your phone<br>to get the install prompt.';
       iosSteps.classList.toggle('visible');
       clearTimeout(autoTimer);
     }
   });
 
-  dismissBtn && dismissBtn.addEventListener('click', hideBanner);
-  window.addEventListener('appinstalled', hideBanner);
+  laterBtn   && laterBtn.addEventListener('click',   function() { hide(true); });
+  dismissBtn && dismissBtn.addEventListener('click', function() { hide(true); });
+  window.addEventListener('appinstalled', function() {
+    hide(false);
+    localStorage.setItem('soos-pwa-n', '3');
+  });
 })();
 </script>
 
-<!-- PWA Install Banner -->
-<div id="pwaBanner" class="pwa-banner" role="complementary" aria-label="Install SchoolOS app">
-  <div class="pwa-progress" id="pwaProgress"></div>
-  <div class="pwa-banner-inner">
-    <div class="pwa-banner-icon">
-      <img src="/icons/icon-192.svg" alt="SchoolOS icon" onerror="this.style.display='none';this.parentNode.innerHTML='<span style=font-family:serif;font-size:28px;font-weight:700;color:#FFF3E6>S</span>'">
+<!-- PWA Install Toast -->
+<div id="pwaBanner" class="pwa-toast" role="dialog" aria-label="Install SchoolOS">
+  <div class="pwa-toast-bar"></div>
+  <button class="pwa-toast-close" id="pwaDismissBtn" aria-label="Close">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+  <div class="pwa-toast-body">
+    <div class="pwa-toast-icon">
+      <img src="/icons/icon-192.svg" alt="SchoolOS" onerror="this.style.display='none'">
     </div>
-    <div class="pwa-banner-text">
-      <div class="pwa-banner-title">Add SchoolOS to Home Screen</div>
-      <div class="pwa-banner-sub" id="pwaBannerSub">Offline access · Faster · No browser needed</div>
+    <div>
+      <div class="pwa-toast-title">Install SchoolOS</div>
+      <div class="pwa-toast-sub">Offline access · Faster · No browser tab needed</div>
     </div>
-    <button class="pwa-install-btn" id="pwaInstallBtn">Install</button>
-    <button class="pwa-dismiss-btn" id="pwaDismissBtn" aria-label="Dismiss">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
+  </div>
+  <div class="pwa-toast-actions">
+    <button class="pwa-toast-install" id="pwaInstallBtn">Install App</button>
+    <button class="pwa-toast-notnow" id="pwaLaterBtn">Not Now</button>
   </div>
   <div id="pwaIosSteps" class="pwa-ios-steps">
-    Tap <strong>Share</strong> <span class="pwa-ios-share">↑</span> at the bottom of Safari,<br>
-    then tap <strong>"Add to Home Screen"</strong>
+    Tap <strong>Share</strong> <span class="pwa-ios-share">↑</span> then tap <strong>"Add to Home Screen"</strong>
   </div>
 </div>
 
