@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Edit2, Trash2, Users, BookOpen, X } from "lucide-react";
+import { toast } from "sonner";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 import { api } from "../../services/api";
 
@@ -74,7 +75,7 @@ export function ClassesPage() {
       await fetchClasses();
     } catch (err) {
       console.error("Failed to create class:", err);
-      alert("Failed to create class. Please try again.");
+      toast.error("Failed to create class. Please try again.");
     } finally {
       setIsSaving(false);
     }

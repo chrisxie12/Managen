@@ -64,7 +64,7 @@ export function useTeacherDashboard() {
     const [homework, setHomework] = useState<Homework[]>([]);
     const [exams, setExams] = useState<UpcomingExam[]>([]);
     const [attendance, setAttendance] = useState<WeeklyAttendance[]>([]);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -75,20 +75,21 @@ export function useTeacherDashboard() {
                 const [
                     statsRes, timetableRes, perfRes, hwRes, examRes, attRes
                 ] = await Promise.all([
-                    api.get<any>('/school/teacher/dashboard/stats'),
-                    api.get<any>('/school/teacher/timetable/today'),
-                    api.get<any>('/school/teacher/my-classes/performance'),
-                    api.get<any>('/school/teacher/homework'),
-                    api.get<any>('/school/teacher/exams/upcoming'),
-                    api.get<any>('/school/teacher/attendance/weekly')
+                    api.get<any>('/api/school/teacher/dashboard/stats'),
+                    api.get<any>('/api/school/teacher/timetable/today'),
+                    api.get<any>('/api/school/teacher/my-classes/performance'),
+                    api.get<any>('/api/school/teacher/homework'),
+                    api.get<any>('/api/school/teacher/exams/upcoming'),
+                    api.get<any>('/api/school/teacher/attendance/weekly')
                 ]);
 
-                setStats(statsRes.data?.data || null);
-                setTimetable(timetableRes.data?.data || []);
-                setPerformance(perfRes.data?.data || []);
-                setHomework(hwRes.data?.data || []);
-                setExams(examRes.data?.data || []);
-                setAttendance(attRes.data?.data || []);
+                // dashboard.js returns { data: <actual_value> }
+                setStats(statsRes.data || null);
+                setTimetable(timetableRes.data || []);
+                setPerformance(perfRes.data || []);
+                setHomework(hwRes.data || []);
+                setExams(examRes.data || []);
+                setAttendance(attRes.data || []);
                 setError(null);
             } catch (err: any) {
                 console.error('Error fetching teacher dashboard:', err);
@@ -101,8 +102,8 @@ export function useTeacherDashboard() {
         fetchData();
     }, []);
 
-    return { 
+    return {
         stats, timetable, performance, homework, exams, attendance,
-        loading, error 
+        loading, error
     };
 }

@@ -77,7 +77,7 @@ export function useStudentDashboard() {
     const [exams, setExams] = useState<StudentUpcomingExam[]>([]);
     const [materials, setMaterials] = useState<StudyMaterial[]>([]);
     const [notices, setNotices] = useState<StudentNotice[]>([]);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -88,22 +88,23 @@ export function useStudentDashboard() {
                 const [
                     statsRes, timetableRes, resRes, hwRes, examRes, matRes, notRes
                 ] = await Promise.all([
-                    api.get<any>('/school/student/dashboard/today'),
-                    api.get<any>('/school/student/timetable/today'),
-                    api.get<any>('/school/student/results/recent'),
-                    api.get<any>('/school/student/homework/active'),
-                    api.get<any>('/school/student/exams/upcoming'),
-                    api.get<any>('/school/student/study-materials'),
-                    api.get<any>('/school/student/notices')
+                    api.get<any>('/api/school/student/dashboard/today'),
+                    api.get<any>('/api/school/student/timetable/today'),
+                    api.get<any>('/api/school/student/results/recent'),
+                    api.get<any>('/api/school/student/homework/active'),
+                    api.get<any>('/api/school/student/exams/upcoming'),
+                    api.get<any>('/api/school/student/study-materials'),
+                    api.get<any>('/api/school/student/notices')
                 ]);
 
-                setStats(statsRes.data?.data || null);
-                setTimetable(timetableRes.data?.data || []);
-                setResults(resRes.data?.data || []);
-                setHomework(hwRes.data?.data || []);
-                setExams(examRes.data?.data || []);
-                setMaterials(matRes.data?.data || []);
-                setNotices(notRes.data?.data || []);
+                // dashboard.js returns { data: <actual_value> }
+                setStats(statsRes.data || null);
+                setTimetable(timetableRes.data || []);
+                setResults(resRes.data || []);
+                setHomework(hwRes.data || []);
+                setExams(examRes.data || []);
+                setMaterials(matRes.data || []);
+                setNotices(notRes.data || []);
                 setError(null);
             } catch (err: any) {
                 console.error('Error fetching student dashboard:', err);
@@ -116,8 +117,8 @@ export function useStudentDashboard() {
         fetchData();
     }, []);
 
-    return { 
+    return {
         stats, timetable, results, homework, exams, materials, notices,
-        loading, error 
+        loading, error
     };
 }

@@ -54,7 +54,7 @@ export function useAccountantDashboard() {
     const [incomeExpense, setIncomeExpense] = useState<IncomeExpense[]>([]);
     const [feeStatusDetail, setFeeStatusDetail] = useState<FeeStatusDetail | null>(null);
     const [classCollection, setClassCollection] = useState<ClassCollection[]>([]);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -65,20 +65,21 @@ export function useAccountantDashboard() {
                 const [
                     statsRes, trendRes, modesRes, incomeRes, detailRes, classRes
                 ] = await Promise.all([
-                    api.get<any>('/school/accountant/dashboard/stats'),
-                    api.get<any>('/school/accountant/fee-trend'),
-                    api.get<any>('/school/accountant/payment-modes'),
-                    api.get<any>('/school/accountant/income-expense'),
-                    api.get<any>('/school/accountant/fee-status-detail'),
-                    api.get<any>('/school/accountant/class-collection')
+                    api.get<any>('/api/school/accountant/dashboard/stats'),
+                    api.get<any>('/api/school/accountant/fee-trend'),
+                    api.get<any>('/api/school/accountant/payment-modes'),
+                    api.get<any>('/api/school/accountant/income-expense'),
+                    api.get<any>('/api/school/accountant/fee-status-detail'),
+                    api.get<any>('/api/school/accountant/class-collection')
                 ]);
 
-                setStats(statsRes.data?.data || null);
-                setFeeTrend(trendRes.data?.data || []);
-                setPaymentModes(modesRes.data?.data || []);
-                setIncomeExpense(incomeRes.data?.data || []);
-                setFeeStatusDetail(detailRes.data?.data || null);
-                setClassCollection(classRes.data?.data || []);
+                // dashboard.js returns { data: <actual_value> }
+                setStats(statsRes.data || null);
+                setFeeTrend(trendRes.data || []);
+                setPaymentModes(modesRes.data || []);
+                setIncomeExpense(incomeRes.data || []);
+                setFeeStatusDetail(detailRes.data || null);
+                setClassCollection(classRes.data || []);
                 setError(null);
             } catch (err: any) {
                 console.error('Error fetching accountant dashboard:', err);
@@ -91,8 +92,8 @@ export function useAccountantDashboard() {
         fetchData();
     }, []);
 
-    return { 
+    return {
         stats, feeTrend, paymentModes, incomeExpense, feeStatusDetail, classCollection,
-        loading, error 
+        loading, error
     };
 }

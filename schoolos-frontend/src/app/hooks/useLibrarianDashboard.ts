@@ -70,7 +70,7 @@ export function useLibrarianDashboard() {
     const [activity, setActivity] = useState<LibraryActivity[]>([]);
     const [lowStock, setLowStock] = useState<LowStockBook[]>([]);
     const [topBooks, setTopBooks] = useState<TopBook[]>([]);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -81,22 +81,23 @@ export function useLibrarianDashboard() {
                 const [
                     statsRes, circRes, breakRes, overdueRes, actRes, lowRes, topRes
                 ] = await Promise.all([
-                    api.get<any>('/school/library/dashboard/stats'),
-                    api.get<any>('/school/library/circulation-trend'),
-                    api.get<any>('/school/library/overdue-breakdown'),
-                    api.get<any>('/school/library/overdue?limit=10'),
-                    api.get<any>('/school/library/activity?limit=10'),
-                    api.get<any>('/school/library/low-stock?limit=8'),
-                    api.get<any>('/school/library/top-books?limit=6')
+                    api.get<any>('/api/school/library/dashboard/stats'),
+                    api.get<any>('/api/school/library/circulation-trend'),
+                    api.get<any>('/api/school/library/overdue-breakdown'),
+                    api.get<any>('/api/school/library/overdue?limit=10'),
+                    api.get<any>('/api/school/library/activity?limit=10'),
+                    api.get<any>('/api/school/library/low-stock?limit=8'),
+                    api.get<any>('/api/school/library/top-books?limit=6')
                 ]);
 
-                setStats(statsRes.data?.data || null);
-                setCirculationTrend(circRes.data?.data || []);
-                setOverdueBreakdown(breakRes.data?.data || []);
-                setOverdueItems(overdueRes.data?.data || []);
-                setActivity(actRes.data?.data || []);
-                setLowStock(lowRes.data?.data || []);
-                setTopBooks(topRes.data?.data || []);
+                // dashboard.js returns { data: <actual_value> }
+                setStats(statsRes.data || null);
+                setCirculationTrend(circRes.data || []);
+                setOverdueBreakdown(breakRes.data || []);
+                setOverdueItems(overdueRes.data || []);
+                setActivity(actRes.data || []);
+                setLowStock(lowRes.data || []);
+                setTopBooks(topRes.data || []);
                 setError(null);
             } catch (err: any) {
                 console.error('Error fetching librarian dashboard:', err);
@@ -109,8 +110,8 @@ export function useLibrarianDashboard() {
         fetchData();
     }, []);
 
-    return { 
+    return {
         stats, circulationTrend, overdueBreakdown, overdueItems, activity, lowStock, topBooks,
-        loading, error 
+        loading, error
     };
 }

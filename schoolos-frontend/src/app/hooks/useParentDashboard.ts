@@ -74,7 +74,7 @@ export interface Notice {
 export function useParentDashboard() {
     const [children, setChildren] = useState<Child[]>([]);
     const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
-    
+
     const [summary, setSummary] = useState<ChildSummary | null>(null);
     const [weekSummary, setWeekSummary] = useState<WeekSummary[]>([]);
     const [attendance, setAttendance] = useState<ChildAttendance | null>(null);
@@ -83,16 +83,16 @@ export function useParentDashboard() {
     const [homework, setHomework] = useState<ChildHomework[]>([]);
     const [exams, setExams] = useState<ChildExam[]>([]);
     const [notices, setNotices] = useState<Notice[]>([]);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Fetch children on mount
     useEffect(() => {
         const fetchChildren = async () => {
             try {
-                const res = await api.get<any>('/school/parent/children');
-                const kids = res.data?.data || [];
+                const res = await api.get<any>('/api/school/parent/children');
+                // school.js returns { data: { children: [...] } }
+                const kids = res.data?.children || [];
                 setChildren(kids);
                 if (kids.length > 0) {
                     setSelectedChildId(kids[0].id);
@@ -105,7 +105,6 @@ export function useParentDashboard() {
         fetchChildren();
     }, []);
 
-    // Fetch details when selectedChildId changes
     useEffect(() => {
         if (!selectedChildId) return;
 
@@ -115,24 +114,25 @@ export function useParentDashboard() {
                 const [
                     sumRes, weekRes, attRes, feeRes, resRes, hwRes, examRes, noticeRes
                 ] = await Promise.all([
-                    api.get<any>(`/school/parent/child/${selectedChildId}/summary`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/week-summary`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/attendance`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/fees`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/results`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/homework`),
-                    api.get<any>(`/school/parent/child/${selectedChildId}/exams`),
-                    api.get<any>('/school/parent/notices')
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/summary`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/week-summary`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/attendance`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/fees`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/results`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/homework`),
+                    api.get<any>(`/api/school/parent/child/${selectedChildId}/exams`),
+                    api.get<any>('/api/school/parent/notices')
                 ]);
 
-                setSummary(sumRes.data?.data || null);
-                setWeekSummary(weekRes.data?.data || []);
-                setAttendance(attRes.data?.data || null);
-                setFees(feeRes.data?.data || null);
-                setResults(resRes.data?.data || null);
-                setHomework(hwRes.data?.data || []);
-                setExams(examRes.data?.data || []);
-                setNotices(noticeRes.data?.data || []);
+                // dashboard.js returns { data: <actual_value> } for all child detail routes
+                setSummary(sumRes.data || null);
+                setWeekSummary(weekRes.data || []);
+                setAttendance(attRes.data || null);
+                setFees(feeRes.data || null);
+                setResults(resRes.data || null);
+                setHomework(hwRes.data || []);
+                setExams(examRes.data || []);
+                setNotices(noticeRes.data || []);
                 setError(null);
             } catch (err: any) {
                 console.error('Error fetching child data:', err);

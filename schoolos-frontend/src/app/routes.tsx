@@ -263,7 +263,6 @@ export const router = createBrowserRouter([
           { path: "weighted-gradebook", Component: WeightedGradebook },
           { path: "timetable-scheduler", Component: TimetableScheduler },
           { path: "gradebook", Component: GradebookGrid },
-          { path: "report-cards", Component: ReportCards },
           { path: "bece-prep", Component: BecePrepPage },
 
           // Staff
