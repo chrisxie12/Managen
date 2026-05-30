@@ -2407,6 +2407,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
       <div class="p-card reveal">
         <div class="p-plan">STARTER</div>
         <div class="p-price" id="price-starter" data-monthly="299" data-annual="239" data-currency="₵">₵299<span class="p-price-mo">/mo</span></div>
+        <div class="p-annual-total" id="annual-total-starter" style="display:none;font-size:12px;color:var(--teal-dk);font-weight:600;margin-top:2px;margin-bottom:2px;">₵2,868 billed annually</div>
         <div class="p-limit">Up to 300 students · 1 campus</div>
         <div class="p-divider"></div>
         <ul class="p-feats">
@@ -2422,6 +2423,7 @@ footer { background: var(--dark-2); color: var(--text-inv); padding: 72px 0 32px
         <div class="popular-tag">Most Popular</div>
         <div class="p-plan">GROWTH</div>
         <div class="p-price" id="price-growth" data-monthly="599" data-annual="479" data-currency="₵">₵599<span class="p-price-mo">/mo</span></div>
+        <div class="p-annual-total" id="annual-total-growth" style="display:none;font-size:12px;color:var(--teal-dk);font-weight:600;margin-top:2px;margin-bottom:2px;">₵5,748 billed annually</div>
         <div class="p-limit">Up to 1,000 students · 3 campuses</div>
         <div class="p-divider"></div>
         <ul class="p-feats">
@@ -2828,13 +2830,20 @@ function calcPrice() {
   document.getElementById("calcPrice").textContent = price > 0 ? "₵" + price : "Custom";
   document.getElementById("calcPlan").textContent = price > 0 ? plan + " plan recommended" : "Custom pricing — contact sales";
   const starterEl = document.getElementById('price-starter');
-  const growthEl = document.getElementById('price-growth');
+  const growthEl  = document.getElementById('price-growth');
+  const starterAnnual = document.getElementById('annual-total-starter');
+  const growthAnnual  = document.getElementById('annual-total-growth');
+  const isAnnual = type === 'annual';
   if (plan === 'Enterprise') {
     if (starterEl) starterEl.innerHTML = '—<span class="p-price-mo"></span>';
-    if (growthEl) growthEl.innerHTML = 'Custom<span class="p-price-mo"></span>';
+    if (growthEl)  growthEl.innerHTML  = 'Custom<span class="p-price-mo"></span>';
+    if (starterAnnual) starterAnnual.style.display = 'none';
+    if (growthAnnual)  growthAnnual.style.display  = 'none';
   } else {
-    if (starterEl) starterEl.innerHTML = (type === 'annual' ? '₵239' : '₵299') + '<span class="p-price-mo">/mo</span>';
-    if (growthEl) growthEl.innerHTML = (type === 'annual' ? '₵479' : '₵599') + '<span class="p-price-mo">/mo</span>';
+    if (starterEl) starterEl.innerHTML = (isAnnual ? '₵239' : '₵299') + '<span class="p-price-mo">/mo</span>';
+    if (growthEl)  growthEl.innerHTML  = (isAnnual ? '₵479' : '₵599') + '<span class="p-price-mo">/mo</span>';
+    if (starterAnnual) { starterAnnual.textContent = '₵2,868 billed annually'; starterAnnual.style.display = isAnnual ? 'block' : 'none'; }
+    if (growthAnnual)  { growthAnnual.textContent  = '₵5,748 billed annually'; growthAnnual.style.display  = isAnnual ? 'block' : 'none'; }
   }
 }
 function setPricing(type, btn) {
