@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Plus, BedDouble, Users, DoorOpen, Banknote } from "lucide-react";
+import { Plus, BedDouble, Users, DoorOpen, Banknote, X } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
 const NAVY = "#031B4E";
@@ -161,10 +160,11 @@ const blockTypeColor: Record<"Boys" | "Girls" | "Mixed", string> = {
 };
 
 export function HostelPage() {
-  const navigate = useNavigate();
   const [blockFilter, setBlockFilter] = useState<BlockFilter>("All");
-  const [students] = useState(mockStudents);
+  const [students, setStudents] = useState(mockStudents);
   const [blocks] = useState(mockBlocks);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignForm, setAssignForm] = useState({ name: "", admissionNo: "", block: "Block A" as Exclude<BlockFilter,"All">, room: "", moveInDate: new Date().toISOString().split("T")[0] });
 
   const totalBeds = blocks.reduce((s, b) => s + b.totalBeds, 0);
   const occupied = blocks.reduce((s, b) => s + b.occupied, 0);
@@ -188,7 +188,7 @@ export function HostelPage() {
       ]}
       actions={
         <button
-          onClick={() => navigate("/dashboard/hostel/assign")}
+          onClick={() => setShowAssignModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-white"
           style={{ background: PRIMARY }}
         >
@@ -388,6 +388,60 @@ export function HostelPage() {
           <strong>{students.length}</strong> resident students
         </p>
       </div>
+      {/* Assign Room Modal */}
+      {showAssignModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold" style={{ color: NAVY }}>Assign Hostel Room</h3>
+              <button onClick={() => setShowAssignModal(false)} className="p-1 hover:bg-gray-100 rounded-lg"><X size={16} style={{ color: MUTED }} /></button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Student Name *</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="Full name" value={assignForm.name} onChange={e => setAssignForm(f => ({ ...f, name: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Admission Number</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. 2024/001" value={assignForm.admissionNo} onChange={e => setAssignForm(f => ({ ...f, admissionNo: e.target.value }))} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Block</label>
+                  <select className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} value={assignForm.block} onChange={e => setAssignForm(f => ({ ...f, block: e.target.value as any }))}>
+                    {(["Block A","Block B","Block C"] as Exclude<BlockFilter,"All">[]).map(b => <option key={b}>{b}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Room No.</label>
+                  <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. A-101" value={assignForm.room} onChange={e => setAssignForm(f => ({ ...f, room: e.target.value }))} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Move-in Date</label>
+                <input type="date" className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} value={assignForm.moveInDate} onChange={e => setAssignForm(f => ({ ...f, moveInDate: e.target.value }))} />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-5">
+              <button onClick={() => setShowAssignModal(false)} className="px-4 py-2 rounded-lg text-sm font-medium" style={{ color: MUTED, background: `${NAVY}08` }}>Cancel</button>
+              <button
+                disabled={!assignForm.name}
+                onClick={() => {
+                  if (!assignForm.name) return;
+                  const s: any = { id: String(Date.now()), name: assignForm.name, admissionNo: assignForm.admissionNo || "—", class: "—", block: assignForm.block, room: assignForm.room || "—", feeStatus: "outstanding" as const, monthlyFee: 0, moveInDate: assignForm.moveInDate, moveOutDate: "—" };
+                  setStudents(prev => [s, ...prev]);
+                  setAssignForm({ name: "", admissionNo: "", block: "Block A", room: "", moveInDate: new Date().toISOString().split("T")[0] });
+                  setShowAssignModal(false);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+                style={{ background: PRIMARY, opacity: !assignForm.name ? 0.6 : 1 }}
+              >
+                Assign Room
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageTemplate>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Search, Filter, Download, DollarSign, AlertCircle } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
@@ -24,48 +24,41 @@ interface FeeRecord {
   status: "paid" | "partial" | "outstanding";
 }
 
-const mockFees: FeeRecord[] = [
-  {
-    id: "1",
-    studentName: "Ama Owusu",
-    admissionNo: "2024/001",
-    class: "Form 1A",
-    totalBilled: 5000,
-    amountPaid: 5000,
-    balance: 0,
-    paymentMethod: "MoMo",
-    lastPaymentDate: "2024-05-15",
-    status: "paid",
-  },
-  {
-    id: "2",
-    studentName: "Kwesi Mensah",
-    admissionNo: "2024/002",
-    class: "Form 1A",
-    totalBilled: 5000,
-    amountPaid: 2500,
-    balance: 2500,
-    paymentMethod: "MoMo",
-    lastPaymentDate: "2024-05-10",
-    status: "partial",
-  },
-  {
-    id: "3",
-    studentName: "Abena Boateng",
-    admissionNo: "2024/003",
-    class: "Form 2B",
-    totalBilled: 6000,
-    amountPaid: 0,
-    balance: 6000,
-    status: "outstanding",
-  },
-];
-
 export function FeesPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [fees] = useState(mockFees);
+  const [fees, setFees] = useState<FeeRecord[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<"all" | "paid" | "partial" | "outstanding">("all");
+
+  const fetchFees = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get<{ fees: any[] }>("/api/school/fees");
+      const raw = res.data?.fees ?? [];
+      const mapped: FeeRecord[] = raw.map((f: any) => ({
+        id: String(f.id ?? f._id ?? ""),
+        studentName: f.studentName ?? f.student_name ?? "",
+        admissionNo: f.admissionNo ?? f.admission_no ?? f.admission_number ?? "",
+        class: f.class ?? f.class_name ?? f.className ?? "",
+        totalBilled: Number(f.totalBilled ?? f.total_billed ?? 0),
+        amountPaid: Number(f.amountPaid ?? f.amount_paid ?? 0),
+        balance: Number(f.balance ?? 0),
+        paymentMethod: f.paymentMethod ?? f.payment_method ?? undefined,
+        lastPaymentDate: f.lastPaymentDate ?? f.last_payment_date ?? undefined,
+        status: f.status ?? "outstanding",
+      }));
+      setFees(mapped);
+    } catch (err) {
+      console.error("Failed to fetch fees:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFees();
+  }, []);
 
   const [selectedFee, setSelectedFee] = useState<FeeRecord | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"MoMo" | "Cash" | "Bank">("MoMo");
@@ -96,6 +89,7 @@ export function FeesPage() {
         alert(paymentMethod + " payment recorded successfully.");
       }
       setSelectedFee(null);
+      await fetchFees();
     } catch (err) {
       alert("Error processing payment.");
       console.error(err);
@@ -293,6 +287,21 @@ export function FeesPage() {
       </div>
 
       {/* Fees Table */}
+      {loading ? (
+        <div
+          className="p-12 text-center rounded-lg"
+          style={{ background: "white", border: `1px solid ${NAVY}20` }}
+        >
+          <p style={{ color: MUTED }}>Loading fees...</p>
+        </div>
+      ) : fees.length === 0 ? (
+        <div
+          className="p-12 text-center rounded-lg"
+          style={{ background: "white", border: `1px dashed ${NAVY}40` }}
+        >
+          <p style={{ color: MUTED }}>No fee records found.</p>
+        </div>
+      ) : (
       <div
         className="rounded-lg overflow-hidden"
         style={{ border: `1px solid ${NAVY}20` }}
@@ -424,6 +433,7 @@ export function FeesPage() {
           </table>
         </div>
       </div>
+      )}
 
       {/* Stats Footer */}
       <div

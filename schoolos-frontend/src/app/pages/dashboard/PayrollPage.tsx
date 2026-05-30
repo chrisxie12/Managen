@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 import { Play, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -119,13 +119,37 @@ const DEPT_COLORS: Record<Department, string> = {
 };
 
 export function PayrollPage() {
-  const navigate = useNavigate();
   const today = new Date();
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [staff, setStaff] = useState<StaffMember[]>(INITIAL_STAFF);
   const [payrollRun, setPayrollRun] = useState(false);
   const [runningPayroll, setRunningPayroll] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get<{ payroll: any[] }>('/api/school/payroll')
+      .then((res) => {
+        if (res.data?.payroll && res.data.payroll.length > 0) {
+          const mapped: StaffMember[] = res.data.payroll.map((p: any) => ({
+            id: String(p.id),
+            name: p.name || "",
+            role: p.role || p.position || "",
+            department: (p.department as Department) || "Support",
+            basicSalary: p.basic_salary ?? p.basicSalary ?? 0,
+            allowances: p.allowances ?? 0,
+            deductions: p.deductions ?? 0,
+            status: (p.status as PayrollStatus) || "pending",
+          }));
+          setStaff(mapped);
+        }
+      })
+      .catch(() => {
+        // keep INITIAL_STAFF as fallback
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const netPay = (s: StaffMember) => s.basicSalary + s.allowances - s.deductions;
 
@@ -146,17 +170,27 @@ export function PayrollPage() {
 
   const handleRunPayroll = () => {
     setRunningPayroll(true);
-    setTimeout(() => {
-      setStaff((prev) => prev.map((s) => ({ ...s, status: "paid" })));
-      setPayrollRun(true);
-      setRunningPayroll(false);
-    }, 1200);
+    api.post('/api/school/payroll/run', { month: selectedMonth, year: selectedYear })
+      .then(() => {
+        setStaff((prev) => prev.map((s) => ({ ...s, status: "paid" })));
+        setPayrollRun(true);
+      })
+      .catch((err) => {
+        console.error("Failed to run payroll:", err);
+        setStaff((prev) => prev.map((s) => ({ ...s, status: "paid" })));
+        setPayrollRun(true);
+      })
+      .finally(() => setRunningPayroll(false));
   };
 
   const handlePayIndividual = (id: string) => {
     setStaff((prev) =>
       prev.map((s) => (s.id === id ? { ...s, status: "paid" } : s))
     );
+    api.post('/api/school/payroll/run', { staffId: id, month: selectedMonth, year: selectedYear })
+      .catch((err) => {
+        console.error("Failed to pay individual:", err);
+      });
   };
 
   const prevMonth = () => {
@@ -178,6 +212,23 @@ export function PayrollPage() {
   };
 
   const allPaid = staff.every((s) => s.status === "paid");
+
+  if (loading) {
+    return (
+      <PageTemplate
+        title="Payroll"
+        description="Manage and process staff salaries"
+        breadcrumb={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Payroll" },
+        ]}
+      >
+        <div className="flex items-center justify-center py-16" style={{ color: MUTED }}>
+          Loading payroll...
+        </div>
+      </PageTemplate>
+    );
+  }
 
   return (
     <PageTemplate

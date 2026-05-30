@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Plus, Search, Download, BookOpen, BookMarked, AlertCircle, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Search, Download, BookOpen, BookMarked, AlertCircle, Users, X } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -168,11 +168,61 @@ const statusConfig: Record<CheckoutStatus, { label: string; color: string }> = {
 };
 
 export function LibraryPage() {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<Category>("All");
-  const [books] = useState(mockBooks);
+  const [books, setBooks] = useState<Book[]>(mockBooks);
   const [checkouts] = useState(mockCheckouts);
+  const [loading, setLoading] = useState(true);
+  const [showAddBook, setShowAddBook] = useState(false);
+  const [addBookForm, setAddBookForm] = useState({ title: "", author: "", category: "", isbn: "", copies: "" });
+  const [addBookLoading, setAddBookLoading] = useState(false);
+
+  const fetchBooks = () => {
+    setLoading(true);
+    api.get<{ books: any[] }>('/api/school/library/books')
+      .then((res) => {
+        if (res.data?.books && res.data.books.length > 0) {
+          const mapped: Book[] = res.data.books.map((b: any) => ({
+            id: String(b.id),
+            title: b.title || "",
+            author: b.author || "",
+            category: (b.category as Exclude<Category, "All">) || "Textbooks",
+            copies: b.copies ?? 0,
+            available: b.available ?? b.available_copies ?? 0,
+            isbn: b.isbn || "",
+          }));
+          setBooks(mapped);
+        }
+      })
+      .catch(() => {
+        // keep mockBooks as fallback
+      })
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const handleAddBook = () => {
+    setAddBookLoading(true);
+    api.post('/api/school/library/books', {
+      title: addBookForm.title,
+      author: addBookForm.author,
+      category: addBookForm.category,
+      isbn: addBookForm.isbn,
+      copies: Number(addBookForm.copies),
+    })
+      .then(() => {
+        setShowAddBook(false);
+        setAddBookForm({ title: "", author: "", category: "", isbn: "", copies: "" });
+        fetchBooks();
+      })
+      .catch((err) => {
+        console.error("Failed to add book:", err);
+      })
+      .finally(() => setAddBookLoading(false));
+  };
 
   const totalBooks = books.reduce((sum, b) => sum + b.copies, 0);
   const booksOut = books.reduce((sum, b) => sum + (b.copies - b.available), 0);
@@ -205,7 +255,7 @@ export function LibraryPage() {
             Export
           </button>
           <button
-            onClick={() => navigate("/dashboard/library/add")}
+            onClick={() => setShowAddBook(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-white"
             style={{ background: PRIMARY }}
           >
@@ -437,9 +487,71 @@ export function LibraryPage() {
         style={{ background: `${NAVY}08`, border: `1px solid ${NAVY}20` }}
       >
         <p style={{ color: MUTED, fontSize: "0.875rem" }}>
-          Showing <strong>{filteredBooks.length}</strong> of <strong>{books.length}</strong> books
+          {loading ? "Loading books..." : <>Showing <strong>{filteredBooks.length}</strong> of <strong>{books.length}</strong> books</>}
         </p>
       </div>
+
+      {/* Add Book Modal */}
+      {showAddBook && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: "rgba(0,0,0,0.4)" }}
+          onClick={() => setShowAddBook(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h2 style={{ color: NAVY, fontWeight: 700, fontSize: "1.1rem" }}>Add New Book</h2>
+              <button onClick={() => setShowAddBook(false)} className="p-1 rounded hover:bg-gray-100">
+                <X size={18} style={{ color: MUTED }} />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              {[
+                { key: "title", label: "Title", placeholder: "Book title" },
+                { key: "author", label: "Author", placeholder: "Author name" },
+                { key: "category", label: "Category", placeholder: "e.g. Fiction, Science..." },
+                { key: "isbn", label: "ISBN", placeholder: "ISBN number" },
+                { key: "copies", label: "Copies", placeholder: "Number of copies", type: "number" },
+              ].map(({ key, label, placeholder, type }) => (
+                <div key={key}>
+                  <label className="block text-xs font-semibold mb-1" style={{ color: NAVY }}>{label}</label>
+                  <input
+                    type={type ?? "text"}
+                    placeholder={placeholder}
+                    value={(addBookForm as any)[key]}
+                    onChange={(e) => setAddBookForm((prev) => ({ ...prev, [key]: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg border text-sm outline-none"
+                    style={{ borderColor: `${NAVY}25`, color: NAVY }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => setShowAddBook(false)}
+                className="flex-1 px-4 py-2 rounded-lg text-sm font-medium border"
+                style={{ color: MUTED, borderColor: `${NAVY}20` }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddBook}
+                disabled={addBookLoading || !addBookForm.title || !addBookForm.author}
+                className="flex-1 px-4 py-2 rounded-lg text-sm font-medium text-white"
+                style={{
+                  background: addBookLoading ? `${PRIMARY}60` : PRIMARY,
+                  cursor: addBookLoading ? "not-allowed" : "pointer",
+                }}
+              >
+                {addBookLoading ? "Saving..." : "Add Book"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageTemplate>
   );
 }

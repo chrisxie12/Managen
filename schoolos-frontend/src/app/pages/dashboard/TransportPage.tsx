@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Plus, Bus, Route, Users, Banknote, Search } from "lucide-react";
+import { Plus, Bus, Route, Users, Banknote, Search, X } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
 const NAVY = "#031B4E";
@@ -187,10 +186,11 @@ const routeStatusConfig: Record<RouteStatus, { label: string; color: string }> =
 };
 
 export function TransportPage() {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [routes] = useState(mockRoutes);
+  const [routes, setRoutes] = useState(mockRoutes);
   const [students] = useState(mockStudents);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({ name: "", driver: "", driverPhone: "", vehicle: "", capacity: "", status: "active" as RouteStatus });
 
   const totalBuses = routes.length;
   const activeRoutes = routes.filter((r) => r.status === "active").length;
@@ -214,7 +214,7 @@ export function TransportPage() {
       ]}
       actions={
         <button
-          onClick={() => navigate("/dashboard/transport/add")}
+          onClick={() => setShowAddModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-white"
           style={{ background: PRIMARY }}
         >
@@ -425,6 +425,55 @@ export function TransportPage() {
           <strong>{activeRoutes}</strong> active routes
         </p>
       </div>
+      {/* Add Route Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold" style={{ color: NAVY }}>Add Bus Route</h3>
+              <button onClick={() => setShowAddModal(false)} className="p-1 hover:bg-gray-100 rounded-lg"><X size={16} style={{ color: MUTED }} /></button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Route Name *</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. Tema Route" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Driver Name</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="Full name" value={addForm.driver} onChange={e => setAddForm(f => ({ ...f, driver: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Vehicle / Bus Plate</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. GR-1234-20" value={addForm.vehicle} onChange={e => setAddForm(f => ({ ...f, vehicle: e.target.value }))} />
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Status</label>
+                <select className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} value={addForm.status} onChange={e => setAddForm(f => ({ ...f, status: e.target.value as RouteStatus }))}>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-5">
+              <button onClick={() => setShowAddModal(false)} className="px-4 py-2 rounded-lg text-sm font-medium" style={{ color: MUTED, background: `${NAVY}08` }}>Cancel</button>
+              <button
+                disabled={!addForm.name}
+                onClick={() => {
+                  if (!addForm.name) return;
+                  const newRoute: TransportRoute = { id: String(Date.now()), name: addForm.name, bus: addForm.vehicle || "—", driver: addForm.driver || "—", stops: 0, students: 0, status: addForm.status };
+                  setRoutes(prev => [newRoute, ...prev]);
+                  setAddForm({ name: "", driver: "", driverPhone: "", vehicle: "", capacity: "", status: "active" });
+                  setShowAddModal(false);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+                style={{ background: PRIMARY, opacity: !addForm.name ? 0.6 : 1 }}
+              >
+                Add Route
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageTemplate>
   );
 }

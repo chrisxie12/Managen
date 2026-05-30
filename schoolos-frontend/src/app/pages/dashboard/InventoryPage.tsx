@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Plus, Download, Package, AlertTriangle, Building2, DollarSign } from "lucide-react";
+import { Plus, Download, Package, AlertTriangle, Building2, DollarSign, X } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
 const NAVY = "#031B4E";
@@ -214,10 +213,13 @@ const CATEGORIES: ItemCategory[] = [
   "Stationery",
 ];
 
+const ITEM_CATEGORIES: Exclude<ItemCategory, "All">[] = ["Furniture", "Electronics", "Lab Equipment", "Sports", "Stationery"];
+
 export function InventoryPage() {
-  const navigate = useNavigate();
-  const [items] = useState(mockItems);
+  const [items, setItems] = useState(mockItems);
   const [activeCategory, setActiveCategory] = useState<ItemCategory>("All");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({ name: "", category: "Furniture" as Exclude<ItemCategory,"All">, quantity: "", minQuantity: "", unit: "Pcs", location: "", condition: "Good" as ItemCondition, unitValue: "" });
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const lowStockItems = items.filter((i) => i.quantity < i.minQuantity).length;
@@ -249,7 +251,7 @@ export function InventoryPage() {
             Export
           </button>
           <button
-            onClick={() => navigate("/dashboard/inventory/add")}
+            onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-white"
             style={{ background: PRIMARY }}
           >
@@ -454,6 +456,78 @@ export function InventoryPage() {
           </strong>
         </p>
       </div>
+      {/* Add Item Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold" style={{ color: NAVY }}>Add Inventory Item</h3>
+              <button onClick={() => setShowAddModal(false)} className="p-1 hover:bg-gray-100 rounded-lg"><X size={16} style={{ color: MUTED }} /></button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Item Name *</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. Student Chair" value={addForm.name} onChange={e => setAddForm(f => ({ ...f, name: e.target.value }))} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Category</label>
+                  <select className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} value={addForm.category} onChange={e => setAddForm(f => ({ ...f, category: e.target.value as any }))}>
+                    {ITEM_CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Condition</label>
+                  <select className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} value={addForm.condition} onChange={e => setAddForm(f => ({ ...f, condition: e.target.value as any }))}>
+                    {(["New","Good","Fair","Poor"] as ItemCondition[]).map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Quantity *</label>
+                  <input type="number" min="0" className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="0" value={addForm.quantity} onChange={e => setAddForm(f => ({ ...f, quantity: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Unit (Pcs/Sets…)</label>
+                  <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="Pcs" value={addForm.unit} onChange={e => setAddForm(f => ({ ...f, unit: e.target.value }))} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Min Stock Level</label>
+                  <input type="number" min="0" className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="0" value={addForm.minQuantity} onChange={e => setAddForm(f => ({ ...f, minQuantity: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Unit Value (GHS)</label>
+                  <input type="number" min="0" className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="0" value={addForm.unitValue} onChange={e => setAddForm(f => ({ ...f, unitValue: e.target.value }))} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-medium mb-1 block" style={{ color: MUTED }}>Location</label>
+                <input className="w-full px-3 py-2 rounded-lg border text-sm outline-none" style={{ borderColor: `${NAVY}25`, color: NAVY }} placeholder="e.g. Classrooms" value={addForm.location} onChange={e => setAddForm(f => ({ ...f, location: e.target.value }))} />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-5">
+              <button onClick={() => setShowAddModal(false)} className="px-4 py-2 rounded-lg text-sm font-medium" style={{ color: MUTED, background: `${NAVY}08` }}>Cancel</button>
+              <button
+                disabled={!addForm.name || !addForm.quantity}
+                onClick={() => {
+                  if (!addForm.name || !addForm.quantity) return;
+                  const newItem: InventoryItem = { id: String(Date.now()), name: addForm.name, category: addForm.category, quantity: Number(addForm.quantity), minQuantity: Number(addForm.minQuantity) || 0, unit: addForm.unit || "Pcs", location: addForm.location || "—", condition: addForm.condition, unitValue: Number(addForm.unitValue) || 0, lastUpdated: new Date().toISOString().split("T")[0] };
+                  setItems(prev => [newItem, ...prev]);
+                  setAddForm({ name: "", category: "Furniture", quantity: "", minQuantity: "", unit: "Pcs", location: "", condition: "Good", unitValue: "" });
+                  setShowAddModal(false);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity"
+                style={{ background: PRIMARY, opacity: !addForm.name || !addForm.quantity ? 0.6 : 1 }}
+              >
+                Add Item
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageTemplate>
   );
 }

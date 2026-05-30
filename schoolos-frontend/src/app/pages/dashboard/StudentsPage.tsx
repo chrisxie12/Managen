@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Search, Filter, Download, Upload, Trash2 } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -18,40 +19,36 @@ interface Student {
   status: "active" | "inactive" | "left";
 }
 
-const mockStudents: Student[] = [
-  {
-    id: "1",
-    name: "Ama Owusu",
-    admissionNo: "2024/001",
-    class: "Form 1A",
-    gender: "Female",
-    parentPhone: "+233 54 123 4567",
-    status: "active",
-  },
-  {
-    id: "2",
-    name: "Kwesi Mensah",
-    admissionNo: "2024/002",
-    class: "Form 1A",
-    gender: "Male",
-    parentPhone: "+233 54 234 5678",
-    status: "active",
-  },
-  {
-    id: "3",
-    name: "Abena Boateng",
-    admissionNo: "2024/003",
-    class: "Form 2B",
-    gender: "Female",
-    parentPhone: "+233 54 345 6789",
-    status: "active",
-  },
-];
-
 export function StudentsPage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [students] = useState(mockStudents);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get<{ students: any[]; total: number }>("/api/school/students");
+        const raw = res.data?.students ?? [];
+        const mapped: Student[] = raw.map((s: any) => ({
+          id: String(s.id ?? s._id ?? ""),
+          name: s.name ?? s.full_name ?? "",
+          admissionNo: s.admissionNo ?? s.admission_number ?? s.admission_no ?? "",
+          class: s.class ?? s.class_name ?? s.className ?? "",
+          gender: s.gender ?? "",
+          parentPhone: s.parentPhone ?? s.parent_phone ?? s.phone ?? "",
+          status: s.status ?? "active",
+        }));
+        setStudents(mapped);
+      } catch (err) {
+        console.error("Failed to fetch students:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStudents();
+  }, []);
 
   const filteredStudents = students.filter(
     (student) =>
@@ -114,8 +111,16 @@ export function StudentsPage() {
         </button>
       </div>
 
-      {/* Students Table or Empty State */}
-      {students.length === 0 ? (
+      {/* Loading state */}
+      {loading ? (
+        <div
+          className="p-12 text-center rounded-lg"
+          style={{ background: "white", border: `1px solid ${NAVY}20` }}
+        >
+          <p style={{ color: MUTED }}>Loading students...</p>
+        </div>
+      ) : students.length === 0 ? (
+        /* Empty state */
         <div
           className="p-12 text-center rounded-lg"
           style={{ background: "white", border: `1px dashed ${NAVY}40` }}
@@ -151,6 +156,7 @@ export function StudentsPage() {
           </div>
         </div>
       ) : (
+        /* Students Table */
         <div
           className="rounded-lg overflow-hidden"
           style={{ border: `1px solid ${NAVY}20` }}
@@ -247,6 +253,7 @@ export function StudentsPage() {
                           View
                         </button>
                         <button
+                          onClick={() => api.delete(`/api/school/students/${student.id}`).then(() => setStudents((prev) => prev.filter((s) => s.id !== student.id)))}
                           className="p-1.5 hover:bg-red-50 rounded transition-colors"
                           title="Delete"
                         >

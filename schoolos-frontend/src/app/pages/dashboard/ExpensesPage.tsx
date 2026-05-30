@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { Plus, Search, Download, Filter } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
@@ -174,14 +173,12 @@ const emptyForm: NewExpenseForm = {
 };
 
 export function ExpensesPage() {
-  const navigate = useNavigate();
   const [expenses, setExpenses] = useState<Expense[]>(mockExpenses);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<ExpenseCategory | "All">("All");
   const [filterMonth, setFilterMonth] = useState(4); // 0-indexed, May = 4
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<NewExpenseForm>(emptyForm);
-  const [submitting, setSubmitting] = useState(false);
 
   const totalExpenses = expenses
     .filter((e) => e.status !== "rejected")
@@ -204,22 +201,18 @@ export function ExpensesPage() {
 
   const handleAddExpense = () => {
     if (!form.amount || !form.description) return;
-    setSubmitting(true);
-    setTimeout(() => {
-      const newExpense: Expense = {
-        id: String(Date.now()),
-        date: form.date,
-        description: form.description,
-        category: form.category,
-        amount: Number(form.amount),
-        paidBy: "Current User",
-        status: "pending",
-      };
-      setExpenses((prev) => [newExpense, ...prev]);
-      setForm(emptyForm);
-      setShowForm(false);
-      setSubmitting(false);
-    }, 600);
+    const newExpense: Expense = {
+      id: String(Date.now()),
+      date: form.date,
+      description: form.description,
+      category: form.category,
+      amount: Number(form.amount),
+      paidBy: "Current User",
+      status: "pending",
+    };
+    setExpenses((prev) => [newExpense, ...prev]);
+    setForm(emptyForm);
+    setShowForm(false);
   };
 
   const statusStyle = (status: ExpenseStatus) => {
@@ -362,11 +355,11 @@ export function ExpensesPage() {
             </button>
             <button
               onClick={handleAddExpense}
-              disabled={submitting || !form.amount || !form.description}
+              disabled={!form.amount || !form.description}
               className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-opacity"
-              style={{ background: PRIMARY, opacity: submitting || !form.amount || !form.description ? 0.6 : 1 }}
+              style={{ background: PRIMARY, opacity: !form.amount || !form.description ? 0.6 : 1 }}
             >
-              {submitting ? "Saving..." : "Save Expense"}
+              Save Expense
             </button>
           </div>
         </div>

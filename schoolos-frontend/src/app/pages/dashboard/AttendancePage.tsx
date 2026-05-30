@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Plus, Download, Calendar, TrendingUp } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -66,22 +67,110 @@ const last7DaysData = [
 
 export function AttendancePage() {
   const navigate = useNavigate();
-  const [attendance] = useState(mockAttendance);
-  const [selectedDate, setSelectedDate] = useState("2024-05-21");
+  const todayStr = new Date().toISOString().split("T")[0];
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>(mockAttendance);
+  const [selectedDate, setSelectedDate] = useState(todayStr);
+  const [trendData, setTrendData] = useState(last7DaysData);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch attendance stats on mount
+  useEffect(() => {
+    api.get<any>('/api/school/attendance/stats')
+      .then((res) => {
+        if (res.data) {
+          const d = res.data;
+          const total = d.totalStudents ?? d.total_students ?? 0;
+          const present = d.present ?? 0;
+          const absent = d.absent ?? 0;
+          if (total > 0) {
+            const syntheticRecord: AttendanceRecord = {
+              id: "api-stats",
+              date: todayStr,
+              class: "All Classes",
+              totalStudents: total,
+              present,
+              absent,
+              excused: d.excused ?? 0,
+              rate: Math.round((present / total) * 100),
+            };
+            setAttendance([syntheticRecord]);
+          }
+        }
+      })
+      .catch(() => {
+        // keep mockAttendance as fallback
+      });
+  }, []);
+
+  // Fetch 7-day trend on mount
+  useEffect(() => {
+    const end = todayStr;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 6);
+    const start = startDate.toISOString().split("T")[0];
+    api.get<any>(`/api/school/attendance/trends?start=${start}&end=${end}`)
+      .then((res) => {
+        if (res.data) {
+          const raw: any[] = Array.isArray(res.data) ? res.data : res.data.trends ?? [];
+          if (raw.length > 0) {
+            const mapped = raw.map((d: any) => ({
+              day: d.day ?? new Date(d.date).toLocaleDateString("en-US", { weekday: "short" }),
+              rate: d.rate ?? d.attendance_rate ?? 0,
+            }));
+            setTrendData(mapped);
+          }
+        }
+      })
+      .catch(() => {
+        // keep last7DaysData as fallback
+      });
+  }, []);
+
+  // Fetch records when date changes
+  useEffect(() => {
+    setLoading(true);
+    api.get<any>(`/api/school/attendance?date=${selectedDate}`)
+      .then((res) => {
+        if (res.data) {
+          const raw: any[] = Array.isArray(res.data)
+            ? res.data
+            : (res.data.records ?? res.data.attendance ?? []);
+          if (raw.length > 0) {
+            const mapped: AttendanceRecord[] = raw.map((r: any, i: number) => ({
+              id: String(r.id ?? i),
+              date: r.date ?? selectedDate,
+              class: r.class ?? r.class_name ?? r.className ?? "",
+              totalStudents: r.totalStudents ?? r.total_students ?? 0,
+              present: r.present ?? 0,
+              absent: r.absent ?? 0,
+              excused: r.excused ?? 0,
+              rate: r.rate ?? r.attendance_rate ?? Math.round(((r.present ?? 0) / Math.max(r.totalStudents ?? r.total_students ?? 1, 1)) * 100),
+            }));
+            setAttendance(mapped);
+          } else {
+            setAttendance(mockAttendance);
+          }
+        }
+      })
+      .catch(() => {
+        setAttendance(mockAttendance);
+      })
+      .finally(() => setLoading(false));
+  }, [selectedDate]);
 
   const todayStats = {
     totalStudents: attendance.reduce((sum, a) => sum + a.totalStudents, 0),
     present: attendance.reduce((sum, a) => sum + a.present, 0),
     absent: attendance.reduce((sum, a) => sum + a.absent, 0),
-    rate: Math.round(
-      (attendance.reduce((sum, a) => sum + a.present, 0) /
-        attendance.reduce((sum, a) => sum + a.totalStudents, 0)) *
-        100
-    ),
+    rate: (() => {
+      const total = attendance.reduce((sum, a) => sum + a.totalStudents, 0);
+      const present = attendance.reduce((sum, a) => sum + a.present, 0);
+      return total > 0 ? Math.round((present / total) * 100) : 0;
+    })(),
   };
 
   const last7DaysAvg = Math.round(
-    last7DaysData.reduce((sum, d) => sum + d.rate, 0) / last7DaysData.length
+    trendData.reduce((sum, d) => sum + d.rate, 0) / Math.max(trendData.length, 1)
   );
 
   return (
@@ -95,7 +184,7 @@ export function AttendancePage() {
       actions={
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate("/dashboard/attendance/mark")}
+            onClick={() => navigate("/dashboard/attendance")}
             className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all text-sm text-white"
             style={{ background: PRIMARY }}
           >
@@ -217,7 +306,7 @@ export function AttendancePage() {
           </div>
         </div>
         <div className="h-40 flex items-end gap-1">
-          {last7DaysData.map((data, i) => (
+          {trendData.map((data, i) => (
             <div key={i} className="flex-1 flex flex-col items-center">
               <div
                 className="w-full rounded-t transition-all hover:opacity-80 cursor-pointer"
@@ -348,11 +437,7 @@ export function AttendancePage() {
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <button
-                        onClick={() =>
-                          navigate(
-                            `/dashboard/attendance/mark/${record.class}`
-                          )
-                        }
+                        onClick={() => navigate("/dashboard/attendance")}
                         className="text-xs font-medium px-3 py-1 rounded transition-colors"
                         style={{
                           color: PRIMARY,
@@ -379,7 +464,7 @@ export function AttendancePage() {
         }}
       >
         <p style={{ color: MUTED, fontSize: "0.875rem" }}>
-          Showing attendance for <strong>{selectedDate}</strong>
+          {loading ? "Loading attendance records..." : <>Showing attendance for <strong>{selectedDate}</strong></>}
         </p>
       </div>
     </PageTemplate>
