@@ -10,6 +10,7 @@ const roleHomeRoutes: Record<string, string> = {
   admin: "/dashboard/admin",
   headmaster: "/dashboard/headmaster",
   accountant: "/dashboard/accountant",
+  bursar: "/dashboard/bursar/today",
   teacher: "/dashboard/teacher",
   student: "/dashboard/student",
   parent: "/dashboard/parent",
