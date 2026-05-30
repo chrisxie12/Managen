@@ -46,6 +46,9 @@ async function getAuthHeaders() {
   if (!token) {
     try { token = await db.getCache('auth_token'); } catch { /* ignore */ }
   }
+  if (!token) {
+    try { token = localStorage.getItem('schoolos_jwt'); } catch { /* ignore */ }
+  }
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 

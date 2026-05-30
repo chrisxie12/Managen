@@ -177,10 +177,18 @@ export function AuthPage() {
           { headers }
         );
 
+        const jwtToken = (loginRes as any)?.data?.token;
+        if (jwtToken) {
+          localStorage.setItem('schoolos_jwt', jwtToken);
+        }
+
         await refresh();
 
+        const authHeaders: Record<string, string> = { ...headers };
+        if (jwtToken) authHeaders['Authorization'] = `Bearer ${jwtToken}`;
+
         if (!user) {
-          const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers });
+          const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: authHeaders });
           if (retryRes.data) {
             window.location.href = "/dashboard";
             return;

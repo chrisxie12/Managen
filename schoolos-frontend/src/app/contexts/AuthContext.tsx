@@ -106,7 +106,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loadFromCookie = useCallback(async () => {
     try {
       const subdomainHeader = getSubdomainHeader();
-      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: subdomainHeader });
+      const jwt = typeof window !== 'undefined' ? localStorage.getItem('schoolos_jwt') : null;
+      const headers: Record<string, string> = { ...subdomainHeader };
+      if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+      const res = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers });
       if (res.data) {
         setUserFromApi(res.data);
       }
@@ -130,6 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     await api.post("/api/auth/logout", {});
     await signOut();
+    try { localStorage.removeItem('schoolos_jwt'); } catch { /* ignore */ }
     setUser(null);
     setSchool(null);
   }, [signOut]);
