@@ -11,42 +11,7 @@ interface Conversation {
   messages: Message[];
 }
 
-const mockConversations: Conversation[] = [
-  {
-    id: "1", parentName: "Mrs. Owusu", studentName: "Ama Owusu", studentClass: "Form 1A",
-    unread: 2, lastMessage: "Thank you teacher, we will work on it.", lastTime: "10:32am",
-    messages: [
-      { id: "m1", sender: "teacher", text: "Good morning Mrs. Owusu. Ama did very well in today's test!", time: "9:15am" },
-      { id: "m2", sender: "parent", text: "Oh wonderful! Thank you for letting me know.", time: "9:45am" },
-      { id: "m3", sender: "teacher", text: "However, she needs to work on her algebra. I recommend extra practice.", time: "9:50am" },
-      { id: "m4", sender: "parent", text: "Thank you teacher, we will work on it.", time: "10:32am" },
-    ],
-  },
-  {
-    id: "2", parentName: "Mr. Mensah", studentName: "Kwesi Mensah", studentClass: "Form 1A",
-    unread: 1, lastMessage: "I understand. He was sick last week.", lastTime: "Yesterday",
-    messages: [
-      { id: "m5", sender: "teacher", text: "Hello Mr. Mensah, Kwesi has missed 3 classes this week.", time: "Yesterday 2pm" },
-      { id: "m6", sender: "parent", text: "I understand. He was sick last week.", time: "Yesterday 4pm" },
-    ],
-  },
-  {
-    id: "3", parentName: "Mrs. Boateng", studentName: "Abena Boateng", studentClass: "Form 1A",
-    unread: 0, lastMessage: "We will attend. Thank you!", lastTime: "Mon",
-    messages: [
-      { id: "m7", sender: "teacher", text: "Reminder: Parent-teacher meeting is on June 15 at 2pm.", time: "Mon 11am" },
-      { id: "m8", sender: "parent", text: "We will attend. Thank you!", time: "Mon 3pm" },
-    ],
-  },
-  {
-    id: "4", parentName: "Mr. Asante", studentName: "Kofi Asante", studentClass: "Form 1A",
-    unread: 0, lastMessage: "Please how does Kofi participate in class?", lastTime: "Fri",
-    messages: [
-      { id: "m9", sender: "parent", text: "Please how does Kofi participate in class?", time: "Fri 9am" },
-      { id: "m10", sender: "teacher", text: "Kofi is very participative and always raises his hand. He's a joy to teach!", time: "Fri 10am" },
-    ],
-  },
-];
+const mockConversations: Conversation[] = [];
 
 export function TeacherMessages() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -76,13 +41,18 @@ export function TeacherMessages() {
       <div>
         <h1 className="text-2xl font-bold" style={{ color: NAVY }}>Parent Messages</h1>
         <p className="text-sm mt-1" style={{ color: MUTED }}>
-          {mockConversations.reduce((a, c) => a + c.unread, 0)} unread messages
+          {mockConversations.reduce((a, c) => a + c.unread, 0) || "No"} unread messages
         </p>
       </div>
 
       <div className="flex gap-0 bg-card border border-border rounded-2xl overflow-hidden" style={{ minHeight: 480 }}>
         {/* Conversation list */}
         <div className={`${showList ? "flex" : "hidden"} md:flex flex-col border-r border-border w-full md:w-72 flex-shrink-0`}>
+          {mockConversations.length === 0 && (
+            <div className="flex-1 flex items-center justify-center p-6 text-center">
+              <p className="text-sm" style={{ color: MUTED }}>No conversations yet.</p>
+            </div>
+          )}
           {mockConversations.map(c => (
             <button key={c.id} onClick={() => handleSelectConv(c.id)}
               className="flex items-start gap-3 px-4 py-3.5 border-b border-border last:border-0 text-left transition-colors hover:bg-muted/30"

@@ -22,55 +22,13 @@ interface AttendanceRecord {
   rate: number;
 }
 
-const mockAttendance: AttendanceRecord[] = [
-  {
-    id: "1",
-    date: "2024-05-21",
-    class: "Form 1A",
-    totalStudents: 30,
-    present: 28,
-    absent: 2,
-    excused: 0,
-    rate: 93,
-  },
-  {
-    id: "2",
-    date: "2024-05-21",
-    class: "Form 1B",
-    totalStudents: 28,
-    present: 25,
-    absent: 3,
-    excused: 0,
-    rate: 89,
-  },
-  {
-    id: "3",
-    date: "2024-05-21",
-    class: "Form 2A",
-    totalStudents: 32,
-    present: 30,
-    absent: 2,
-    excused: 0,
-    rate: 94,
-  },
-];
-
-const last7DaysData = [
-  { day: "Mon", rate: 88 },
-  { day: "Tue", rate: 89 },
-  { day: "Wed", rate: 87 },
-  { day: "Thu", rate: 90 },
-  { day: "Fri", rate: 92 },
-  { day: "Mon", rate: 85 },
-  { day: "Tue", rate: 91 },
-];
 
 export function AttendancePage() {
   const navigate = useNavigate();
   const todayStr = new Date().toISOString().split("T")[0];
-  const [attendance, setAttendance] = useState<AttendanceRecord[]>(mockAttendance);
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [selectedDate, setSelectedDate] = useState(todayStr);
-  const [trendData, setTrendData] = useState(last7DaysData);
+  const [trendData, setTrendData] = useState<{ day: string; rate: number }[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Fetch attendance stats on mount
@@ -148,12 +106,12 @@ export function AttendancePage() {
             }));
             setAttendance(mapped);
           } else {
-            setAttendance(mockAttendance);
+            setAttendance([]);
           }
         }
       })
       .catch(() => {
-        setAttendance(mockAttendance);
+        setAttendance([]);
       })
       .finally(() => setLoading(false));
   }, [selectedDate]);
@@ -305,6 +263,11 @@ export function AttendancePage() {
             Avg: <strong>{last7DaysAvg}%</strong>
           </div>
         </div>
+        {trendData.length === 0 && (
+          <div className="h-40 flex items-center justify-center" style={{ color: MUTED, fontSize: "0.875rem" }}>
+            No trend data available yet
+          </div>
+        )}
         <div className="h-40 flex items-end gap-1">
           {trendData.map((data, i) => (
             <div key={i} className="flex-1 flex flex-col items-center">

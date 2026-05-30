@@ -10,13 +10,7 @@ interface Assignment {
   status: "active" | "overdue" | "graded";
 }
 
-const mockAssignments: Assignment[] = [
-  { id: "1", title: "Chapter 4 Exercise Questions", subject: "Mathematics", class: "Form 1A", dueDate: "2024-06-05", maxMarks: 20, submitted: 22, total: 30, status: "active" },
-  { id: "2", title: "Essay: My Community", subject: "English", class: "Form 2A", dueDate: "2024-05-30", maxMarks: 30, submitted: 18, total: 28, status: "overdue" },
-  { id: "3", title: "Physics Lab Report", subject: "Science", class: "Form 1B", dueDate: "2024-05-20", maxMarks: 25, submitted: 24, total: 24, status: "graded" },
-  { id: "4", title: "History Quiz – Colonial Period", subject: "Social Studies", class: "Form 2A", dueDate: "2024-06-10", maxMarks: 15, submitted: 5, total: 28, status: "active" },
-  { id: "5", title: "Reading Comprehension Test", subject: "English", class: "Form 1A", dueDate: "2024-05-15", maxMarks: 20, submitted: 30, total: 30, status: "graded" },
-];
+const mockAssignments: Assignment[] = [];
 
 const statusColors: Record<string, { bg: string; text: string }> = {
   active: { bg: "#DBEAFE", text: "#0080FF" },

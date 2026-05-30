@@ -9,12 +9,7 @@ interface Notice {
   channels: string[]; delivered: number; total: number;
 }
 
-const mockNotices: Notice[] = [
-  { id: "1", title: "Mid-term exams next week — revision tips", target: "Form 1A, Form 1B", date: "2024-05-28", channels: ["WhatsApp", "SMS"], delivered: 48, total: 54 },
-  { id: "2", title: "Class trip payment deadline — Friday", target: "Form 2A", date: "2024-05-25", channels: ["WhatsApp"], delivered: 27, total: 28 },
-  { id: "3", title: "Homework due reminder — Chapter 4", target: "Form 1A", date: "2024-05-22", channels: ["In-App"], delivered: 30, total: 30 },
-  { id: "4", title: "Parent-teacher meeting scheduled for June 15", target: "All My Classes", date: "2024-05-20", channels: ["WhatsApp", "SMS", "In-App"], delivered: 78, total: 82 },
-];
+const mockNotices: Notice[] = [];
 
 export function TeacherNotices() {
   const [title, setTitle] = useState("");
@@ -116,32 +111,35 @@ export function TeacherNotices() {
       {/* History */}
       <div>
         <h3 className="text-sm font-semibold mb-3" style={{ color: NAVY }}>Sent Notices</h3>
-        <div className="space-y-3">
-          {mockNotices.map(n => (
-            <div key={n.id} className="bg-card border border-border rounded-2xl p-4 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#DBEAFE" }}>
-                <MessageSquare size={15} color="#0080FF" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-medium" style={{ color: NAVY }}>{n.title}</p>
-                  <span className="text-xs flex-shrink-0" style={{ color: MUTED }}>{n.date}</span>
+        {mockNotices.length === 0 ? (
+          <div className="bg-card border border-border rounded-2xl p-10 text-center">
+            <MessageSquare size={32} className="mx-auto mb-3" style={{ color: MUTED }} />
+            <p className="text-sm" style={{ color: MUTED }}>No notices sent yet. Use the form above to send your first notice.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {mockNotices.map(n => (
+              <div key={n.id} className="bg-card border border-border rounded-2xl p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#DBEAFE" }}>
+                  <MessageSquare size={15} color="#0080FF" />
                 </div>
-                <div className="flex items-center gap-3 mt-1 flex-wrap">
-                  <span className="flex items-center gap-1 text-xs" style={{ color: MUTED }}>
-                    <Users size={11} /> {n.target}
-                  </span>
-                  <span className="text-xs" style={{ color: MUTED }}>
-                    {n.channels.join(", ")}
-                  </span>
-                  <span className="text-xs font-medium" style={{ color: "#16A34A" }}>
-                    {n.delivered}/{n.total} delivered
-                  </span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium" style={{ color: NAVY }}>{n.title}</p>
+                    <span className="text-xs flex-shrink-0" style={{ color: MUTED }}>{n.date}</span>
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 flex-wrap">
+                    <span className="flex items-center gap-1 text-xs" style={{ color: MUTED }}>
+                      <Users size={11} /> {n.target}
+                    </span>
+                    <span className="text-xs" style={{ color: MUTED }}>{n.channels.join(", ")}</span>
+                    <span className="text-xs font-medium" style={{ color: "#16A34A" }}>{n.delivered}/{n.total} delivered</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
