@@ -34,18 +34,21 @@ export function BursarToday() {
 
   function fetchToday() {
     setLoading(true);
-    api.get<{ payments: any[] }>("/api/school/payments/today")
+    const today = new Date().toISOString().split("T")[0];
+    api.get<any>(`/api/school/payments?start_date=${today}&end_date=${today}&limit=100`)
       .then((res) => {
         const raw = res.data?.payments ?? [];
         setTransactions(raw.map((p: any, i: number) => ({
           id: String(p.id ?? i),
-          time: p.time || new Date(p.created_at || p.date || Date.now()).toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" }),
-          student: p.student_name || p.studentName || "",
-          class: p.class || p.class_name || "",
+          time: p.payment_date
+            ? new Date(p.payment_date + "T00:00:00").toLocaleDateString("en-GH", { day: "numeric", month: "short" })
+            : new Date().toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" }),
+          student: p.student?.name || p.student_name || p.studentName || "",
+          class: p.student?.class_name || p.class || p.class_name || "",
           amount: Number(p.amount),
           method: p.payment_method === "bank_transfer" ? "Bank Transfer"
             : p.payment_method === "momo" ? "MoMo" : "Cash",
-          receipt: p.receipt_no || `RCP-${String(p.id ?? i).padStart(3, "0")}`,
+          receipt: p.reference || p.transaction_id || `RCP-${String(p.id ?? i).padStart(3, "0")}`,
         })));
         setLastUpdated(new Date());
       })

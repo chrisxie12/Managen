@@ -20,22 +20,20 @@ export function BursarRevenue() {
 
   useEffect(() => {
     setLoading(true);
-    api.get<any>("/api/school/revenue/monthly")
+    api.get<any>("/api/school/finance/monthly?months=12")
       .then((res) => {
         const d = res.data ?? {};
-        const raw = d.monthly ?? d.monthlyData ?? d.data ?? [];
+        const raw = d.monthly ?? [];
         setMonthlyData(raw.map((r: any) => ({
-          month: r.month ?? r.period ?? "",
-          schoolFees: Number(r.schoolFees ?? r.school_fees ?? r.fees ?? 0),
-          hostel: Number(r.hostel ?? 0),
-          transport: Number(r.transport ?? 0),
-          other: Number(r.other ?? 0),
+          month: r.label ?? r.month ?? "",
+          schoolFees: Number(r.amount ?? r.schoolFees ?? 0),
+          hostel: 0,
+          transport: 0,
+          other: 0,
         })));
-        setEnrolledCount(Number(d.enrolledCount ?? d.enrolled_count ?? d.total_students ?? 0));
+        setEnrolledCount(0);
       })
-      .catch(() => {
-        setMonthlyData([]);
-      })
+      .catch(() => setMonthlyData([]))
       .finally(() => setLoading(false));
   }, []);
 

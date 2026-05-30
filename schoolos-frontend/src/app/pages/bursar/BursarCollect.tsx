@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import type { ReactElement } from "react";
 import {
   Search, User, Printer, Send, CheckCircle, CreditCard,
-  Smartphone, Banknote, Clock, Receipt, X, Loader2,
+  Smartphone, Banknote, Clock, Receipt, X, Loader2, FileText,
 } from "lucide-react";
+import { toast } from "sonner";
 import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
@@ -12,7 +13,10 @@ const SUCCESS = "#16A34A";
 
 interface Student {
   id: string; name: string; admissionNo: string; class: string;
-  totalFees: number; paid: number;
+}
+
+interface Invoice {
+  id: string; invoiceNumber: string; total: number; paid: number; balance: number;
 }
 
 interface Payment {
@@ -35,6 +39,9 @@ export function BursarCollect() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [searchResults, setSearchResults] = useState<Student[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState("");
+  const [invoicesLoading, setInvoicesLoading] = useState(false);
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState("Cash");
   const [reference, setReference] = useState("");
@@ -44,43 +51,47 @@ export function BursarCollect() {
   const [recording, setRecording] = useState(false);
   const [recorded, setRecorded] = useState(false);
   const [recentPayments, setRecentPayments] = useState<Payment[]>([]);
-  const searchTimer = useRef<ReturnType<typeof setTimeout>>();
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    api.get<{ payments: any[] }>("/api/school/payments/today")
+    api.get<any>(`/api/school/payments?start_date=${today}&end_date=${today}&limit=20`)
       .then((res) => {
         const raw = res.data?.payments ?? [];
-        setRecentPayments(raw.slice(0, 10).map((p: any) => ({
+        setRecentPayments(raw.map((p: any) => ({
           id: String(p.id),
-          student: p.student_name || p.studentName || "",
-          class: p.class || p.class_name || "",
+          student: p.student?.name || p.student_name || "",
+          class: p.student?.class_name || "",
           amount: Number(p.amount),
           method: p.payment_method === "bank_transfer" ? "Bank Transfer"
             : p.payment_method === "momo" ? "MoMo" : "Cash",
-          time: p.time || new Date(p.created_at || p.date).toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" }),
-          receipt: p.receipt_no || `RCP-${p.id}`,
+          time: p.payment_date
+            ? new Date(p.payment_date + "T00:00:00").toLocaleDateString("en-GH", { day: "numeric", month: "short" })
+            : "",
+          receipt: p.reference || p.transaction_id || `RCP-${p.id}`,
         })));
       })
       .catch(() => {});
-  }, []);
+  }, [today]);
 
   function handleSearch(q: string) {
     setQuery(q);
     setSelectedStudent(null);
+    setInvoices([]);
+    setSelectedInvoiceId("");
     setRecorded(false);
     if (!q.trim()) { setSearchResults([]); return; }
     clearTimeout(searchTimer.current);
     searchTimer.current = setTimeout(() => {
       setSearchLoading(true);
-      api.get<{ students: any[] }>(`/api/school/students?q=${encodeURIComponent(q)}&limit=8`)
+      api.get<any>(`/api/school/students?q=${encodeURIComponent(q)}&limit=8`)
         .then((res) => {
           setSearchResults((res.data?.students ?? []).map((s: any) => ({
             id: String(s.id),
             name: s.name || s.full_name || "",
-            admissionNo: s.admissionNo || s.admission_no || s.admission_number || "",
-            class: s.class || s.class_name || s.className || "",
-            totalFees: Number(s.totalFees || s.total_fees || 0),
-            paid: Number(s.amountPaid || s.amount_paid || s.paid || 0),
+            admissionNo: s.admission_no || s.admissionNo || "",
+            class: s.class_name || s.className || s.class || "",
           })));
         })
         .catch(() => setSearchResults([]))
@@ -98,25 +109,70 @@ export function BursarCollect() {
     setMomoPhone("");
     setMomoSent(false);
     setRecorded(false);
+
+    setInvoicesLoading(true);
+    api.get<any>(`/api/school/invoices?student_id=${s.id}&status=issued&limit=10`)
+      .then((res) => {
+        const raw = res.data?.invoices ?? [];
+        const mapped: Invoice[] = raw.map((inv: any) => ({
+          id: String(inv.id),
+          invoiceNumber: inv.invoice_number || `INV-${inv.id}`,
+          total: Number(inv.total_amount ?? 0),
+          paid: Number(inv.paid_amount ?? 0),
+          balance: Number(inv.total_amount ?? 0) - Number(inv.paid_amount ?? 0),
+        })).filter((inv: Invoice) => inv.balance > 0);
+        setInvoices(mapped);
+        if (mapped.length > 0) {
+          setSelectedInvoiceId(mapped[0].id);
+          setAmount(String(mapped[0].balance));
+        }
+      })
+      .catch(() => setInvoices([]))
+      .finally(() => setInvoicesLoading(false));
   }
+
+  const selectedInvoice = invoices.find(inv => inv.id === selectedInvoiceId) ?? null;
+  const totalBalance = invoices.reduce((s, inv) => s + inv.balance, 0);
 
   async function handleRecord() {
     if (!selectedStudent || !amount || recording) return;
+    if (!selectedInvoiceId) {
+      toast.error("No outstanding invoice found for this student");
+      return;
+    }
     setRecording(true);
     try {
-      const res = await api.post<{ receipt_no?: string; id?: number }>("/api/school/payments", {
-        student_id: selectedStudent.id,
-        amount: Number(amount),
-        payment_method: method === "Bank Transfer" ? "bank_transfer"
-          : method === "MoMo" ? "momo" : "cash",
-        reference: reference || undefined,
-        notes: notes || undefined,
-        phone: method === "MoMo" ? momoPhone : undefined,
-      });
+      const paymentMethod = method === "Bank Transfer" ? "bank_transfer"
+        : method === "MoMo" ? "momo" : "cash";
+
+      let res: any;
+      if (method === "MoMo" && momoPhone) {
+        res = await api.post<any>("/api/school/payments/momo", {
+          amount: Number(amount),
+          phone: momoPhone,
+          studentId: selectedStudent.id,
+          studentName: selectedStudent.name,
+          invoiceId: selectedInvoiceId,
+        });
+        toast.success("MoMo payment prompt sent to " + momoPhone);
+      } else {
+        res = await api.post<any>("/api/school/payments", {
+          invoice_id: selectedInvoiceId,
+          amount: Number(amount),
+          payment_method: paymentMethod,
+          reference: reference || undefined,
+          notes: notes || undefined,
+          payment_date: today,
+        });
+        toast.success(`Payment of GHS ${Number(amount).toLocaleString()} recorded`);
+      }
+
+      const payment = res.data?.payment ?? {};
       const now = new Date();
       const timeStr = now.toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" });
-      const receiptNo = res.data?.receipt_no ||
-        `RCP-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}-${String(Date.now()).slice(-4)}`;
+      const receiptNo = payment.reference || payment.transaction_id ||
+        `RCP-${today.replace(/-/g, "")}-${String(Date.now()).slice(-4)}`;
+
       setRecentPayments((prev) => [{
         id: receiptNo,
         student: selectedStudent.name,
@@ -126,21 +182,20 @@ export function BursarCollect() {
         time: timeStr,
         receipt: receiptNo,
       }, ...prev.slice(0, 9)]);
+
       setRecorded(true);
       setAmount("");
       setReference("");
       setNotes("");
       setMomoSent(false);
-    } catch (err) {
-      console.error("Failed to record payment:", err);
+      setInvoices([]);
+      setSelectedInvoiceId("");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to record payment");
     } finally {
       setRecording(false);
     }
   }
-
-  const outstanding = selectedStudent ? selectedStudent.totalFees - selectedStudent.paid : 0;
-  const collectionPct = selectedStudent && selectedStudent.totalFees > 0
-    ? Math.round((selectedStudent.paid / selectedStudent.totalFees) * 100) : 0;
 
   return (
     <div className="space-y-6">
@@ -150,7 +205,6 @@ export function BursarCollect() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left – search + student card + form */}
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-card border border-border rounded-2xl p-5">
             <label className="block text-sm font-medium mb-2" style={{ color: NAVY }}>Student Search</label>
@@ -164,7 +218,7 @@ export function BursarCollect() {
               />
               {query && (
                 <button className="absolute right-3 top-1/2 -translate-y-1/2"
-                  onClick={() => { setQuery(""); setSearchResults([]); setSelectedStudent(null); }}>
+                  onClick={() => { setQuery(""); setSearchResults([]); setSelectedStudent(null); setInvoices([]); }}>
                   <X className="w-4 h-4" style={{ color: MUTED }} />
                 </button>
               )}
@@ -206,83 +260,126 @@ export function BursarCollect() {
               <div className="flex items-start gap-4 mb-5">
                 <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold flex-shrink-0"
                   style={{ background: NAVY }}>{initials(selectedStudent.name)}</div>
-                <div className="flex-1">
+                <div>
                   <h2 className="text-lg font-bold" style={{ color: NAVY }}>{selectedStudent.name}</h2>
                   <p className="text-sm" style={{ color: MUTED }}>{selectedStudent.admissionNo} · {selectedStudent.class}</p>
-                  <div className="mt-2 w-full bg-slate-100 rounded-full h-2">
-                    <div className="h-2 rounded-full"
-                      style={{ width: `${collectionPct}%`, background: collectionPct === 100 ? SUCCESS : NAVY }} />
-                  </div>
-                  <p className="text-xs mt-1" style={{ color: MUTED }}>{collectionPct}% paid</p>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-3 mb-5">
-                {[
-                  { label: "Total Fees", value: selectedStudent.totalFees, color: NAVY },
-                  { label: "Amount Paid", value: selectedStudent.paid, color: SUCCESS },
-                  { label: "Outstanding", value: outstanding, color: outstanding > 0 ? "#EF4444" : SUCCESS },
-                ].map((item) => (
-                  <div key={item.label} className="bg-slate-50 rounded-xl p-3 text-center">
-                    <p className="text-xs mb-1" style={{ color: MUTED }}>{item.label}</p>
-                    <p className="text-base font-bold" style={{ color: item.color }}>GHS {item.value.toLocaleString()}</p>
-                  </div>
-                ))}
               </div>
 
-              <div className="border-t border-border pt-5 space-y-4">
-                <h3 className="text-sm font-semibold" style={{ color: NAVY }}>Record Payment</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Amount (GHS)</label>
-                    <input type="number"
-                      className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Payment Method</label>
-                    <select
-                      className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
-                      value={method} onChange={(e) => { setMethod(e.target.value); setMomoSent(false); }}>
-                      <option value="Cash">Cash</option>
-                      <option value="MoMo">Mobile Money (MoMo)</option>
-                      <option value="Bank Transfer">Bank Transfer</option>
-                    </select>
-                  </div>
-                  {method === "MoMo" && (
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>MoMo Phone Number</label>
-                      <div className="flex gap-2">
-                        <input
-                          className="flex-1 border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                          placeholder="024 XXX XXXX" value={momoPhone} onChange={(e) => setMomoPhone(e.target.value)} />
-                        <button onClick={() => setMomoSent(true)} disabled={!momoPhone}
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-colors"
-                          style={{ background: momoSent ? SUCCESS : "#F59E0B", opacity: !momoPhone ? 0.6 : 1 }}>
-                          {momoSent ? <CheckCircle className="w-4 h-4" /> : <Send className="w-4 h-4" />}
-                          {momoSent ? "Sent!" : "Send Request"}
-                        </button>
-                      </div>
+              {invoicesLoading ? (
+                <div className="flex items-center justify-center py-6" style={{ color: MUTED }}>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Loading invoices…
+                </div>
+              ) : invoices.length === 0 ? (
+                <div className="text-center py-6 text-sm" style={{ color: MUTED }}>
+                  No outstanding invoices for this student.
+                </div>
+              ) : (
+                <>
+                  {invoices.length > 1 && (
+                    <div className="mb-4">
+                      <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Select Invoice</label>
+                      <select
+                        className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white"
+                        value={selectedInvoiceId}
+                        onChange={(e) => {
+                          setSelectedInvoiceId(e.target.value);
+                          const inv = invoices.find(i => i.id === e.target.value);
+                          if (inv) setAmount(String(inv.balance));
+                        }}>
+                        {invoices.map(inv => (
+                          <option key={inv.id} value={inv.id}>
+                            {inv.invoiceNumber} — Balance: GHS {inv.balance.toLocaleString()}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Reference / Receipt No</label>
-                    <input className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      placeholder="Optional" value={reference} onChange={(e) => setReference(e.target.value)} />
+
+                  <div className="grid grid-cols-3 gap-3 mb-5">
+                    {[
+                      { label: "Invoice Total", value: selectedInvoice?.total ?? 0, color: NAVY },
+                      { label: "Already Paid", value: selectedInvoice?.paid ?? 0, color: SUCCESS },
+                      { label: "Balance Due", value: totalBalance, color: totalBalance > 0 ? "#EF4444" : SUCCESS },
+                    ].map((item) => (
+                      <div key={item.label} className="bg-slate-50 rounded-xl p-3 text-center">
+                        <p className="text-xs mb-1" style={{ color: MUTED }}>{item.label}</p>
+                        <p className="text-base font-bold" style={{ color: item.color }}>GHS {item.value.toLocaleString()}</p>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Notes</label>
-                    <input className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
-                      placeholder="Optional" value={notes} onChange={(e) => setNotes(e.target.value)} />
+
+                  <div className="border-t border-border pt-5 space-y-4">
+                    <h3 className="text-sm font-semibold" style={{ color: NAVY }}>Record Payment</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Amount (GHS)</label>
+                        <input type="number"
+                          className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Payment Method</label>
+                        <select
+                          className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+                          value={method} onChange={(e) => { setMethod(e.target.value); setMomoSent(false); }}>
+                          <option value="Cash">Cash</option>
+                          <option value="MoMo">Mobile Money (MoMo)</option>
+                          <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                      </div>
+                      {method === "MoMo" && (
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>MoMo Phone Number</label>
+                          <div className="flex gap-2">
+                            <input
+                              className="flex-1 border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                              placeholder="024 XXX XXXX" value={momoPhone} onChange={(e) => setMomoPhone(e.target.value)} />
+                            <button
+                              onClick={async () => {
+                                if (!momoPhone || !amount) return;
+                                try {
+                                  await api.post("/api/school/payments/momo", {
+                                    amount: Number(amount), phone: momoPhone,
+                                    studentId: selectedStudent.id, studentName: selectedStudent.name,
+                                    invoiceId: selectedInvoiceId,
+                                  });
+                                  setMomoSent(true);
+                                  toast.success("MoMo prompt sent to " + momoPhone);
+                                } catch (err: any) {
+                                  toast.error(err?.message || "Failed to send MoMo prompt");
+                                }
+                              }}
+                              disabled={!momoPhone || !amount}
+                              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-colors"
+                              style={{ background: momoSent ? SUCCESS : "#F59E0B", opacity: (!momoPhone || !amount) ? 0.6 : 1 }}>
+                              {momoSent ? <CheckCircle className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                              {momoSent ? "Sent!" : "Send Request"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Reference / Receipt No</label>
+                        <input className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          placeholder="Optional" value={reference} onChange={(e) => setReference(e.target.value)} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium mb-1" style={{ color: MUTED }}>Notes</label>
+                        <input className="w-full border border-border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                          placeholder="Optional" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                      </div>
+                    </div>
+                    <button onClick={handleRecord}
+                      disabled={!amount || Number(amount) <= 0 || recording}
+                      className="w-full py-3.5 rounded-xl text-white font-bold text-base transition-all flex items-center justify-center gap-2"
+                      style={{ background: !amount || Number(amount) <= 0 || recording ? "#9CA3AF" : SUCCESS }}>
+                      {recording && <Loader2 className="w-4 h-4 animate-spin" />}
+                      {recording ? "Recording…" : `Record Payment — GHS ${Number(amount || 0).toLocaleString()}`}
+                    </button>
                   </div>
-                </div>
-                <button onClick={handleRecord}
-                  disabled={!amount || Number(amount) <= 0 || recording}
-                  className="w-full py-3.5 rounded-xl text-white font-bold text-base transition-all flex items-center justify-center gap-2"
-                  style={{ background: !amount || Number(amount) <= 0 || recording ? "#9CA3AF" : SUCCESS }}>
-                  {recording && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {recording ? "Recording…" : `Record Payment — GHS ${Number(amount || 0).toLocaleString()}`}
-                </button>
-              </div>
+                </>
+              )}
             </div>
           )}
 
@@ -294,7 +391,6 @@ export function BursarCollect() {
           )}
         </div>
 
-        {/* Right – recent payments */}
         <div className="space-y-4">
           <div className="bg-card border border-border rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">

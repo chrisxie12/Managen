@@ -28,23 +28,37 @@ export function BursarReports() {
 
   useEffect(() => {
     setLoading(true);
-    api.get<any>(`/api/school/reports/fees?period=${encodeURIComponent(period)}`)
-      .then((res) => {
-        const d = res.data ?? {};
-        const raw = d.classSummary ?? d.class_summary ?? d.classes ?? [];
-        setClassSummary(raw.map((r: any) => ({
-          class: r.class ?? r.class_name ?? "",
-          students: Number(r.students ?? r.student_count ?? 0),
-          expected: Number(r.expected ?? r.total_billed ?? 0),
-          collected: Number(r.collected ?? r.amount_paid ?? 0),
-          outstanding: Number(r.outstanding ?? r.balance ?? 0),
-        })));
-        const methods = d.methodData ?? d.payment_methods ?? d.methods ?? [];
+    const now = new Date();
+    const end = now.toISOString().split("T")[0];
+    const start = period === "Last Month"
+      ? new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().split("T")[0]
+      : period === "This Year"
+      ? new Date(now.getFullYear(), 0, 1).toISOString().split("T")[0]
+      : new Date(now.getFullYear(), now.getMonth() - 3, 1).toISOString().split("T")[0];
+
+    Promise.all([
+      api.get<any>("/api/school/finance/summary"),
+      api.get<any>(`/api/school/finance/revenue?start=${start}&end=${end}`),
+    ])
+      .then(([summaryRes, revenueRes]) => {
+        const summary = summaryRes.data ?? {};
+        const revenue = revenueRes.data ?? {};
+
+        setClassSummary([{
+          class: "All Classes",
+          students: 0,
+          expected: Number(summary.totalBilled ?? 0),
+          collected: Number(summary.totalCollected ?? summary.totalPaid ?? 0),
+          outstanding: Number(summary.totalOutstanding ?? 0),
+        }]);
+
+        const methods = revenue.byMethod ?? [];
         const total = methods.reduce((s: number, m: any) => s + Number(m.amount ?? 0), 0);
         setMethodData(methods.map((m: any) => {
           const amt = Number(m.amount ?? 0);
           const label = m.method === "bank_transfer" ? "Bank Transfer"
             : m.method === "momo" ? "MoMo"
+            : m.method === "cash" ? "Cash"
             : m.method ?? "Other";
           return {
             method: label,
@@ -54,10 +68,7 @@ export function BursarReports() {
           };
         }));
       })
-      .catch(() => {
-        setClassSummary([]);
-        setMethodData([]);
-      })
+      .catch(() => { setClassSummary([]); setMethodData([]); })
       .finally(() => setLoading(false));
   }, [period]);
 

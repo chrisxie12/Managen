@@ -331,7 +331,7 @@ router.get('/students', protect, requirePermission('students.view'), async (req,
         const page = parseInteger(req.query.page, 1, 1, 1000000);
         const limit = parseInteger(req.query.limit, 20, 1, 100);
         
-        const { students, count } = await schoolService.getStudents(req.tenant.id, page, limit, req.query.className);
+        const { students, count } = await schoolService.getStudents(req.tenant.id, page, limit, req.query.className, req.query.q || req.query.search);
         
         return res.json({ data: { students, total: count, page, limit } });
     } catch (err) {

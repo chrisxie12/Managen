@@ -23,13 +23,14 @@ const buildTeacherPayload = async (payload = {}) => {
 };
 
 class SchoolService {
-    async getStudents(tenantId, page, limit, className) {
+    async getStudents(tenantId, page, limit, className, search) {
         let query = supabase.from('students').select('*', { count: 'exact' })
             .eq('tenant_id', tenantId)
             .eq('is_active', true)
             .range((page - 1) * limit, page * limit - 1);
-            
+
         if (className) query = query.eq('class_name', className);
+        if (search) query = query.or(`name.ilike.%${search}%,admission_no.ilike.%${search}%`);
         
         const { data, count, error } = await query;
         if (error) {

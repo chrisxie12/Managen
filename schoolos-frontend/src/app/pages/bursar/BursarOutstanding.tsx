@@ -46,21 +46,20 @@ export function BursarOutstanding() {
 
   useEffect(() => {
     setLoading(true);
-    api.get<{ fees: any[] }>("/api/school/fees?status=outstanding")
+    api.get<any>("/api/school/finance/outstanding")
       .then((res) => {
-        const raw = res.data?.fees ?? [];
+        const raw = res.data?.outstanding ?? [];
         setStudents(raw.map((f: any) => {
-          const total = Number(f.totalBilled ?? f.total_billed ?? f.total ?? 0);
-          const paid = Number(f.amountPaid ?? f.amount_paid ?? f.paid ?? 0);
+          const student = f.student ?? {};
           return {
-            id: String(f.id ?? f.student_id),
-            name: f.studentName ?? f.student_name ?? "",
-            admNo: f.admissionNo ?? f.admission_no ?? "",
-            class: f.class ?? f.class_name ?? "",
-            total,
-            paid,
-            outstanding: total - paid,
-            daysSince: Number(f.daysSince ?? f.days_since ?? f.days_overdue ?? 0),
+            id: String(student.admission_no ?? f.id ?? Math.random()),
+            name: student.name ?? f.name ?? "",
+            admNo: student.admission_no ?? "",
+            class: student.class_name ?? "",
+            total: Number(f.totalBilled ?? f.total_billed ?? 0),
+            paid: Number(f.totalPaid ?? f.total_paid ?? 0),
+            outstanding: Number(f.balance ?? 0),
+            daysSince: 0,
           };
         }));
       })
@@ -101,7 +100,7 @@ export function BursarOutstanding() {
   async function sendReminder(id: string) {
     setReminderLoading(prev => new Set([...prev, id]));
     try {
-      await api.post("/api/school/notifications/reminder", { student_ids: [id] });
+      await api.post("/api/school/fees/reminders/send", { limit: 1 });
     } catch {
       // still mark as sent locally even if API unavailable
     } finally {
@@ -112,9 +111,9 @@ export function BursarOutstanding() {
 
   async function sendBulkReminders() {
     const ids = Array.from(selected);
-    setReminderLoading(prev => new Set([...prev, ...ids]));
+    ids.forEach(id => setReminderLoading(prev => new Set([...prev, id])));
     try {
-      await api.post("/api/school/notifications/reminder", { student_ids: ids });
+      await api.post("/api/school/fees/reminders/send", { limit: ids.length });
     } catch {
       // mark sent locally
     } finally {
