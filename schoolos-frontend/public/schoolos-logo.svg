@@ -1,44 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 90" fill="none">
   <defs>
-    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#4B0082"/>
-      <stop offset="100%" stop-color="#6A0DAD"/>
-    </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#C9A84C"/>
-      <stop offset="100%" stop-color="#F5D078"/>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0069FF"/>
+      <stop offset="100%" stop-color="#003A8C"/>
     </linearGradient>
   </defs>
 
-  <!-- Icon: graduation cap -->
-  <g transform="translate(10, 18)">
-    <!-- Cap base -->
-    <polygon points="32,12 64,28 32,44 0,28" fill="url(#purpleGrad)"/>
-    <!-- Cap top board -->
-    <rect x="20" y="6" width="24" height="6" rx="2" fill="url(#goldGrad)"/>
-    <!-- Tassel string -->
-    <line x1="64" y1="28" x2="64" y2="50" stroke="url(#goldGrad)" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="64" cy="53" r="3.5" fill="url(#goldGrad)"/>
-    <!-- Left leg (diploma tube) -->
-    <rect x="28" y="38" width="8" height="18" rx="2" fill="url(#purpleGrad)"/>
-  </g>
+  <!-- Icon: simple "D" droplet shape inspired by DigitalOcean style -->
+  <circle cx="38" cy="45" r="32" fill="url(#blueGrad)"/>
+  <!-- Letter S inside circle -->
+  <text x="38" y="57"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="36"
+    font-weight="800"
+    text-anchor="middle"
+    fill="#FFFFFF">S</text>
 
-  <!-- Wordmark: School -->
-  <text x="92" y="68"
-    font-family="Georgia, 'Times New Roman', serif"
-    font-size="52"
+  <!-- Wordmark -->
+  <!-- "School" in dark navy -->
+  <text x="86" y="62"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="42"
     font-weight="700"
-    letter-spacing="-1"
-    fill="url(#purpleGrad)">School</text>
+    fill="#1A1A2E"
+    letter-spacing="-0.5">School</text>
 
-  <!-- Wordmark: OS in gold -->
-  <text x="298" y="68"
-    font-family="Georgia, 'Times New Roman', serif"
-    font-size="52"
+  <!-- "OS" in Ocean Blue -->
+  <text x="300" y="62"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="42"
     font-weight="700"
-    letter-spacing="-1"
-    fill="url(#goldGrad)">OS</text>
-
-  <!-- Gold underline accent -->
-  <rect x="92" y="76" width="310" height="3.5" rx="1.75" fill="url(#goldGrad)"/>
+    fill="#0069FF"
+    letter-spacing="-0.5">OS</text>
 </svg>
