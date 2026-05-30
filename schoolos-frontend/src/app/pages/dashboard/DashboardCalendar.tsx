@@ -152,14 +152,14 @@ export function DashboardCalendar({ events = [], onDateSelect }: DashboardCalend
               style={{
                 padding: "0.5rem",
                 borderRadius: "0.5rem",
-                border: isToday ? "2px solid #0A2472" : "1px solid #E5E7EB",
+                border: isToday ? "2px solid #031B4E" : "1px solid #E5E7EB",
                 background: isToday ? "#E0E7FF" : day ? "#FAFAFA" : "transparent",
                 cursor: day ? "pointer" : "default",
                 position: "relative",
                 minHeight: "2.5rem",
                 fontSize: "0.875rem",
                 fontWeight: day ? 500 : 400,
-                color: day ? (isToday ? "#0A2472" : "#1F2937") : "#D1D5DB",
+                color: day ? (isToday ? "#031B4E" : "#1F2937") : "#D1D5DB",
               }}
               title={event?.title}
             >
@@ -189,7 +189,7 @@ export function DashboardCalendar({ events = [], onDateSelect }: DashboardCalend
           {[
             { color: "#EF4444", label: "Exam" },
             { color: "#F59E0B", label: "Holiday" },
-            { color: "#10B981", label: "Event" },
+            { color: "#16A34A", label: "Event" },
             { color: "#3B82F6", label: "Deadline" },
           ].map((item) => (
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.75rem" }}>

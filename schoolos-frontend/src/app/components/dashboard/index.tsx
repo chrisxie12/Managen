@@ -1,8 +1,8 @@
 import { Loader2, ChevronRight, TrendingUp, TrendingDown, AlertCircle, CheckCircle2, Info, X, LucideIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -114,7 +114,7 @@ export function KpiCard({ value, label, sub, positive, onClick }: { value: strin
       <div style={{ fontFamily: "'JetBrains Mono', monospace", color: NAVY, fontSize: "clamp(1rem, 2vw, 1.4rem)", fontWeight: 700, lineHeight: 1.1, marginBottom: "0.3rem" }}>{value}</div>
       <div style={{ color: MUTED, fontSize: "0.75rem" }}>{label}</div>
       {sub && (
-        <div className="flex items-center gap-1 text-xs mt-1" style={{ color: positive !== undefined ? (positive ? "#10B981" : "#EF4444") : MUTED }}>
+        <div className="flex items-center gap-1 text-xs mt-1" style={{ color: positive !== undefined ? (positive ? "#16A34A" : "#EF4444") : MUTED }}>
           {positive !== undefined && (positive ? <TrendingUp size={11} /> : <TrendingDown size={11} />)}
           {sub}
         </div>

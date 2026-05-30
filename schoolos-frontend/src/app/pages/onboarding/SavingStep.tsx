@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { api } from "../../services/api";
 
 const INDIGO = "#6366F1";
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const STEPS = [
@@ -82,7 +82,7 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
               <div key={step.key} className="flex items-center gap-3">
                 <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
                   style={{
-                    background: done ? "#10B981" : active ? INDIGO : "#f3f4f6",
+                    background: done ? "#16A34A" : active ? INDIGO : "#f3f4f6",
                   }}>
                   {done ? (
                     <Check size={14} color="white" />
@@ -93,7 +93,7 @@ export function SavingStep({ schoolData, logoData, onComplete, onError }: {
                   )}
                 </div>
                 <span className="text-sm" style={{
-                  color: done ? "#10B981" : active ? NAVY : MUTED,
+                  color: done ? "#16A34A" : active ? NAVY : MUTED,
                   fontWeight: done || active ? 500 : 400,
                 }}>
                   {step.label}

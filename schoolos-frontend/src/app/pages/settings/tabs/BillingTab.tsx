@@ -5,8 +5,8 @@ import { api } from "../../../services/api";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const MUTED = "#6B7280";
 
 const PLAN_NAMES: Record<string, string> = {
@@ -22,7 +22,7 @@ const PLAN_PRICES: Record<string, string> = {
 };
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
-  active: { label: "Active", bg: "rgba(16,185,129,0.1)", color: "#10B981" },
+  active: { label: "Active", bg: "rgba(16,185,129,0.1)", color: "#16A34A" },
   trial: { label: "Trial", bg: "rgba(245,158,11,0.1)", color: "#F59E0B" },
   expired: { label: "Expired", bg: "rgba(239,68,68,0.1)", color: "#EF4444" },
 };
@@ -230,7 +230,7 @@ export function BillingTab({ profile, role }: Props) {
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
                           style={{
                             background: entry.status === "paid" ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                            color: entry.status === "paid" ? "#10B981" : "#EF4444",
+                            color: entry.status === "paid" ? "#16A34A" : "#EF4444",
                           }}>
                           {entry.status === "paid" ? <Check size={10} /> : <X size={10} />}
                           {entry.status === "paid" ? "Paid" : "Unpaid"}

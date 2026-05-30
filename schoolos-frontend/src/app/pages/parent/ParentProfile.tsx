@@ -4,8 +4,8 @@ import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "sonner";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -125,7 +125,7 @@ export function ParentProfile() {
               <div
                 onClick={() => item.set(!item.value)}
                 className="w-10 h-6 rounded-full relative cursor-pointer transition-colors"
-                style={{ background: item.value ? "#10B981" : "rgba(10,36,114,0.15)" }}
+                style={{ background: item.value ? "#16A34A" : "rgba(10,36,114,0.15)" }}
               >
                 <div className="w-4 h-4 rounded-full bg-white absolute top-1 transition-all shadow-sm"
                   style={{ left: item.value ? "22px" : "4px" }} />

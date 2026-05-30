@@ -1,7 +1,7 @@
 import { FileSpreadsheet, Loader2 } from "lucide-react";
 import type { ReportCard } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loading: boolean }) {
@@ -21,7 +21,7 @@ export function ReportCardView({ cards, loading }: { cards: ReportCard[]; loadin
   return (
     <div className="space-y-3">
       {cards.map(c => {
-        const gradeColor = c.average >= 80 ? "#10B981" : c.average >= 60 ? "#6366F1" : c.average >= 40 ? "#F59E0B" : "#EF4444";
+        const gradeColor = c.average >= 80 ? "#16A34A" : c.average >= 60 ? "#6366F1" : c.average >= 40 ? "#F59E0B" : "#EF4444";
         return (
           <div key={c.id} className="p-4 rounded-xl" style={{ background: "white", border: "1px solid rgba(10,36,114,0.07)" }}>
             <div className="flex items-center justify-between mb-2">

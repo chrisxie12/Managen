@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { Slider } from "../../../components/ui/slider";
 import { ArrowRight, TrendingUp, Clock } from "lucide-react";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 
 function formatCurrency(value: number): string {
   return `GHS ${value.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -65,7 +65,7 @@ export function RoiCalculator() {
             value={tuition}
             onChange={(e) => setTuition(e.target.value)}
             min={0}
-            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm font-semibold tabular-nums outline-none transition focus:border-[#0A2472] focus:ring-2 focus:ring-[#0A2472]/20"
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm font-semibold tabular-nums outline-none transition focus:border-[#031B4E] focus:ring-2 focus:ring-[#031B4E]/20"
             style={{ color: NAVY }}
           />
         </div>

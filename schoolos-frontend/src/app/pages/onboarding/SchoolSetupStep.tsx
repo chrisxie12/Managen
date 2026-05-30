@@ -3,7 +3,7 @@ import { Upload, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
 const INDIGO = "#6366F1";
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const GHANA_REGIONS = [
@@ -20,7 +20,7 @@ const GRADING_SYSTEMS = [
   { value: "gpa", label: "GPA (4.0 scale)" },
 ];
 
-const PRESET_COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#10B981", "#EF4444"];
+const PRESET_COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#F59E0B", "#16A34A", "#EF4444"];
 
 type SchoolFormData = {
   name: string; motto: string; type: string; year_established: string;

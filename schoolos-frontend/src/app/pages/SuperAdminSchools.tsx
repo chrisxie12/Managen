@@ -178,7 +178,7 @@ export function SuperAdminSchools() {
                   <td className="px-5 py-4"><Badge text={school.plan.charAt(0).toUpperCase() + school.plan.slice(1)} color={planColors[school.plan] || MUTED} /></td>
                   <td className="px-5 py-4">
                     {school.status === "active" ? (
-                      <div className="flex items-center gap-1.5" aria-label="Status: Active" style={{ color: "#10B981", fontSize: "0.82rem" }}><CheckCircle size={13} aria-hidden="true" /> Active</div>
+                      <div className="flex items-center gap-1.5" aria-label="Status: Active" style={{ color: "#16A34A", fontSize: "0.82rem" }}><CheckCircle size={13} aria-hidden="true" /> Active</div>
                     ) : (
                       <div className="flex items-center gap-1.5" aria-label="Status: Suspended" style={{ color: "#EF4444", fontSize: "0.82rem" }}><XCircle size={13} aria-hidden="true" /> Suspended</div>
                     )}
@@ -233,7 +233,7 @@ export function SuperAdminSchools() {
                   {detail.status === "active" ? (
                     <button onClick={() => handleAction(detail.id, "suspend")} className="px-4 py-2 rounded-full text-xs" style={{ background: "rgba(239,68,68,0.15)", color: "#EF4444" }}>Suspend</button>
                   ) : (
-                    <button onClick={() => handleAction(detail.id, "reactivate")} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(16,185,129,0.15)", color: "#10B981" }}>Reactivate</button>
+                    <button onClick={() => handleAction(detail.id, "reactivate")} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(16,185,129,0.15)", color: "#16A34A" }}>Reactivate</button>
                   )}
                   <button onClick={() => handleDeleteSchool(detail.id, detail.schoolName)} disabled={deleting} className="px-4 py-2 rounded-full text-xs flex items-center gap-1.5" style={{ background: "rgba(239,68,68,0.15)", color: "#EF4444", opacity: deleting ? 0.5 : 1 }}>
                     {deleting ? "Deleting..." : <><Trash2 size={12} /> Delete</>}
@@ -245,7 +245,7 @@ export function SuperAdminSchools() {
                   <h4 style={{ fontWeight: 600, fontSize: "0.9rem", color: TEXT }}>Information</h4>
                   {[
                     { label: "Plan", value: detail.plan, color: planColors[detail.plan] || MUTED },
-                    { label: "Status", value: detail.status === "active" ? "Active" : "Suspended", color: detail.status === "active" ? "#10B981" : "#EF4444" },
+                    { label: "Status", value: detail.status === "active" ? "Active" : "Suspended", color: detail.status === "active" ? "#16A34A" : "#EF4444" },
                     { label: "Phone", value: detail.phone || "—" },
                     { label: "Slug", value: detail.slug },
                     { label: "Created", value: detail.createdAt ? new Date(detail.createdAt).toLocaleDateString() : "—" },
@@ -276,7 +276,7 @@ export function SuperAdminSchools() {
                         )}
                         {credentials.tempPassword && (
                           <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,107,53,0.15)" }}>
-                            <span style={{ color: "#10B981", fontSize: "0.78rem", fontWeight: 600 }}>Temporary Password</span>
+                            <span style={{ color: "#16A34A", fontSize: "0.78rem", fontWeight: 600 }}>Temporary Password</span>
                             <div className="flex items-center gap-2">
                               <span style={{ fontFamily: "'JetBrains Mono', monospace", color: TEXT, fontSize: "0.82rem", fontWeight: 600, letterSpacing: "1px" }}>{credentials.tempPassword}</span>
                               <button onClick={() => { navigator.clipboard.writeText(credentials.tempPassword!); }} className="p-1 rounded" style={{ color: MUTED }}>
@@ -298,7 +298,7 @@ export function SuperAdminSchools() {
                     <div className="space-y-2">
                       {detail.payments.slice(0, 10).map((p) => (
                         <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.02)" }}>
-                          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "#10B981", fontSize: "0.82rem", fontWeight: 600 }}>GHS {p.amount.toLocaleString()}</span>
+                          <span style={{ fontFamily: "'JetBrains Mono', monospace", color: "#16A34A", fontSize: "0.82rem", fontWeight: 600 }}>GHS {p.amount.toLocaleString()}</span>
                           <span style={{ color: MUTED, fontSize: "0.75rem" }}>{p.paidAt ? new Date(p.paidAt).toLocaleDateString() : "—"}</span>
                         </div>
                       ))}

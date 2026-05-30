@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -23,7 +23,7 @@ type InterventionItem = { id: string; type: string; severity: string; status: st
 type ReportCard = { id: string; student_id: string; average: number; grade: string; rank: number; student?: { name: string; admission_no?: string }; class?: { name: string } };
 type TermOption = { id: string; name: string; is_current?: boolean };
 
-const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
+const COLORS = ["#6366F1", "#16A34A", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
 
 function AlertBanner({ type, message, onClose }: { type: "error" | "success"; message: string; onClose: () => void }) {
   const bg = type === "error" ? "#FEF2F2" : "#D1FAE5";
@@ -195,12 +195,12 @@ export function AnalyticsDashboard() {
           {/* Metric Cards */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <MetricCard icon={TrendingUp} label="Avg Attendance (30d)" value={`${avgAttendance}%`}
-              sub={`${attTrend.length} days tracked`} color="#10B981" />
+              sub={`${attTrend.length} days tracked`} color="#16A34A" />
             <MetricCard icon={Star} label="Avg Performance" value={perfTrend.length > 0 ? `${avgPerformance}%` : "—"}
               sub={perfTrend.length > 0 ? `${perfTrend.length} assessments` : "No data yet"} color="#6366F1" />
             <MetricCard icon={ShieldAlert} label="Risk Alerts" value={alertCount}
               sub={`${riskData?.alerts.filter(a => a.severity === "high").length || 0} high severity`}
-              color={alertCount > 0 ? "#EF4444" : "#10B981"} trend={alertCount > 0 ? "down" : "up"} />
+              color={alertCount > 0 ? "#EF4444" : "#16A34A"} trend={alertCount > 0 ? "down" : "up"} />
             <MetricCard icon={Users} label="Students Tracked" value={totalStudents || "—"}
               sub={riskData ? `${interventionCount} open intervention(s)` : "No data"}
               color="#F59E0B" />
@@ -220,8 +220,8 @@ export function AnalyticsDashboard() {
                       contentStyle={{ borderRadius: 12, border: "none", boxShadow: "0 4px 20px rgba(10,36,114,0.15)" }}
                       labelFormatter={(d) => new Date(d).toLocaleDateString("en", { weekday: "long", month: "long", day: "numeric" })}
                       formatter={(value: number) => [`${value}%`, "Attendance"]} />
-                    <Line type="monotone" dataKey="rate" stroke="#10B981" strokeWidth={2.5} dot={false}
-                      activeDot={{ r: 4, fill: "#10B981", stroke: "white", strokeWidth: 2 }} />
+                    <Line type="monotone" dataKey="rate" stroke="#16A34A" strokeWidth={2.5} dot={false}
+                      activeDot={{ r: 4, fill: "#16A34A", stroke: "white", strokeWidth: 2 }} />
                   </LineChart>
                 </ResponsiveContainer>
               )}
@@ -358,7 +358,7 @@ export function AnalyticsDashboard() {
                   {performers.top.map((p, i) => (
                     <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "rgba(16,185,129,0.06)" }}>
                       <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                        style={{ background: i === 0 ? "#F59E0B" : i === 1 ? "#94A3B8" : i === 2 ? "#CD7F32" : "#10B981" }}>
+                        style={{ background: i === 0 ? "#F59E0B" : i === 1 ? "#94A3B8" : i === 2 ? "#CD7F32" : "#16A34A" }}>
                         {i + 1}
                       </div>
                       <div className="flex-1 min-w-0">

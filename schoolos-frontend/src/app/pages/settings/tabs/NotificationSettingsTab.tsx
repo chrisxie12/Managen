@@ -7,8 +7,8 @@ import { Switch } from "../../../components/ui/switch";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { api } from "../../../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const MUTED = "#6B7280";
 
 const TRIGGER_EVENTS = [

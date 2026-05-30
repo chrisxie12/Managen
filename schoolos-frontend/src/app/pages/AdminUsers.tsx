@@ -5,8 +5,8 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -228,7 +228,7 @@ export function AdminUsers() {
                         <td className="px-4 py-3">
                           <button onClick={() => toggleUserStatus(u)}
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all active:scale-95"
-                            style={{ background: u.is_active ? "rgba(239,68,68,0.1)" : "rgba(16,185,129,0.1)", color: u.is_active ? "#EF4444" : "#10B981" }}>
+                            style={{ background: u.is_active ? "rgba(239,68,68,0.1)" : "rgba(16,185,129,0.1)", color: u.is_active ? "#EF4444" : "#16A34A" }}>
                             {u.is_active ? <UserX size={12} /> : <UserCheck size={12} />}
                             {u.is_active ? "Suspend" : "Activate"}
                           </button>
@@ -294,7 +294,7 @@ export function AdminUsers() {
                       <Copy size={14} color={NAVY_LIGHT} />
                     </button>
                   </div>
-                  {copied && <p className="text-xs mt-1" style={{ color: "#10B981" }}>Copied!</p>}
+                  {copied && <p className="text-xs mt-1" style={{ color: "#16A34A" }}>Copied!</p>}
                 </div>
                 <button onClick={() => { setShowInvite(false); setInviteResult(null); }}
                   className="w-full py-3 rounded-full text-sm font-semibold" style={{ background: NAVY, color: CREAM }}>

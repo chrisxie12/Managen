@@ -4,10 +4,10 @@ import { Plus, Search, Filter, Download, DollarSign, AlertCircle } from "lucide-
 import { PageTemplate } from "../../components/layout/PageTemplate";
 import { api } from "../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
-const PRIMARY = "#0A2472";
-const SUCCESS = "#10B981";
+const PRIMARY = "#031B4E";
+const SUCCESS = "#16A34A";
 const WARNING = "#F59E0B";
 const DANGER = "#EF4444";
 

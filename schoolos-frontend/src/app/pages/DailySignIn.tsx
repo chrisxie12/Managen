@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Clock, LogIn, LogOut, Loader2, Check, X, AlertCircle, Calendar, Users, Edit3, ChevronLeft, ChevronRight } from "lucide-react";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 

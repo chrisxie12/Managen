@@ -6,8 +6,8 @@ import { useNavigate } from "react-router";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { api } from "../../../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const MUTED = "#6B7280";
 
 interface CompetencyItem {
@@ -19,7 +19,7 @@ interface CompetencyItem {
 }
 
 const COLORS = {
-  ee: "#10B981",
+  ee: "#16A34A",
   me: "#6366F1",
   ae: "#F59E0B",
   b: "#EF4444",

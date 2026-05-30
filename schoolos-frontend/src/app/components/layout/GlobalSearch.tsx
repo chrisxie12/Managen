@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { Search, Users, GraduationCap, Building2, FileText, X, Clock } from "lucide-react";
 import { api } from "../../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -156,53 +156,55 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
 
   const typeIcon = (type: string) => {
     switch (type) {
-      case "student": return <Users size={14} color={NAVY} />;
-      case "staff": return <GraduationCap size={14} color={NAVY} />;
-      case "class": return <Building2 size={14} color={NAVY} />;
-      default: return <FileText size={14} color={NAVY} />;
+      case "student": return <Users size={14} className="text-foreground" />;
+      case "staff": return <GraduationCap size={14} className="text-foreground" />;
+      case "class": return <Building2 size={14} className="text-foreground" />;
+      default: return <FileText size={14} className="text-foreground" />;
     }
   };
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-[10vh] sm:pt-[15vh]">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div
-        className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
-        style={{ background: "white", border: "1px solid rgba(10,36,114,0.1)" }}
-      >
-        <div
-          className="flex items-center gap-3 px-4 py-3"
-          style={{ borderBottom: "1px solid rgba(10,36,114,0.07)" }}
-        >
-          <Search size={16} color={MUTED} />
+      <div className="relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden bg-card border border-border">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+          <Search size={16} className="text-muted-foreground flex-shrink-0" />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search students, staff, classes..."
-            className="flex-1 bg-transparent outline-none text-sm"
-            style={{ color: NAVY }}
+            className="flex-1 bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground min-w-0"
           />
-          {query && (
-            <button onClick={() => setQuery("")}>
-              <X size={16} color={MUTED} />
+          {loading && (
+            <span className="w-4 h-4 rounded-full border-2 border-muted border-t-primary animate-spin flex-shrink-0" />
+          )}
+          {query && !loading && (
+            <button onClick={() => setQuery("")} className="flex-shrink-0">
+              <X size={16} className="text-muted-foreground" />
             </button>
           )}
         </div>
 
-        <div className="max-h-80 overflow-y-auto">
+        <div className="max-h-[60vh] overflow-y-auto overscroll-contain">
           {loading && (
-            <div className="text-center py-8 text-sm" style={{ color: MUTED }}>
-              Searching...
+            <div className="py-2">
+              {[1,2,3].map(i => (
+                <div key={i} className="flex items-center gap-3 px-4 py-2.5 animate-pulse">
+                  <div className="w-8 h-8 rounded-lg bg-muted flex-shrink-0" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-3.5 bg-muted rounded w-2/3" />
+                    <div className="h-3 bg-muted rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
           {!loading && query && results.length === 0 && (
-            <div className="text-center py-8 text-sm" style={{ color: MUTED }}>
-              No results found
-            </div>
+            <div className="text-center py-8 text-sm text-muted-foreground">No results found</div>
           )}
 
           {!loading && results.length > 0 && (
@@ -211,18 +213,14 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item)}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:opacity-80 transition-colors"
-                  style={{ color: NAVY }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-muted/50 transition-colors text-foreground"
                 >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: `${NAVY}10` }}
-                  >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-muted">
                     {typeIcon(item.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate">{item.label}</div>
-                    <div className="text-xs truncate" style={{ color: MUTED }}>{item.subtitle}</div>
+                    <div className="text-xs truncate text-muted-foreground">{item.subtitle}</div>
                   </div>
                 </button>
               ))}
@@ -231,25 +229,21 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
 
           {!query && recent.length > 0 && (
             <div className="py-2">
-              <div className="px-4 py-2 flex items-center gap-2 text-xs font-medium" style={{ color: MUTED }}>
+              <div className="px-4 py-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
                 <Clock size={12} /> Recent Searches
               </div>
               {recent.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item)}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:opacity-80 transition-colors"
-                  style={{ color: NAVY }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-muted/50 transition-colors text-foreground"
                 >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: `${NAVY}08` }}
-                  >
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-muted">
                     {typeIcon(item.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate">{item.label}</div>
-                    <div className="text-xs truncate" style={{ color: MUTED }}>{item.subtitle}</div>
+                    <div className="text-xs truncate text-muted-foreground">{item.subtitle}</div>
                   </div>
                 </button>
               ))}
@@ -257,12 +251,9 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
           )}
         </div>
 
-        <div
-          className="px-4 py-2 text-xs flex items-center gap-3"
-          style={{ color: MUTED, borderTop: "1px solid rgba(10,36,114,0.07)" }}
-        >
-          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>↑↓</kbd> Navigate</span>
-          <span><kbd className="px-1 py-0.5 rounded text-[10px]" style={{ background: `${NAVY}08` }}>ESC</kbd> Close</span>
+        <div className="px-4 py-2 text-xs flex items-center gap-3 text-muted-foreground border-t border-border">
+          <span><kbd className="px-1 py-0.5 rounded text-[10px] bg-muted">↑↓</kbd> Navigate</span>
+          <span><kbd className="px-1 py-0.5 rounded text-[10px] bg-muted">ESC</kbd> Close</span>
         </div>
       </div>
     </div>

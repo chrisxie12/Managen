@@ -15,7 +15,7 @@ import { Separator } from "../../../components/ui/separator";
 import { Alert, AlertTitle, AlertDescription } from "../../../components/ui/alert";
 import { Switch } from "../../../components/ui/switch";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 function AdminProfile() {
@@ -232,8 +232,8 @@ function AdminProfile() {
         <CardContent className="space-y-5">
           {twoFAEnabled && (
             <Alert className="rounded-xl border" style={{ background: "rgba(16,185,129,0.06)", borderColor: "rgba(16,185,129,0.2)" }}>
-              <Shield size={16} color="#10B981" />
-              <AlertTitle className="text-xs font-medium" style={{ color: "#10B981" }}>
+              <Shield size={16} color="#16A34A" />
+              <AlertTitle className="text-xs font-medium" style={{ color: "#16A34A" }}>
                 <Check size={12} className="inline mr-1" />Two-factor authentication is active
               </AlertTitle>
               <AlertDescription className="text-xs" style={{ color: MUTED }}>

@@ -5,8 +5,8 @@ import {
 } from "lucide-react";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -170,7 +170,7 @@ export function AdminRoles() {
             <div className="flex items-center justify-between p-4" style={{ borderBottom: editingRole === role.id ? "none" : "1px solid rgba(10,36,114,0.07)" }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: role.is_system ? "rgba(99,102,241,0.12)" : "rgba(16,185,129,0.12)" }}>
-                  <Shield size={18} color={role.is_system ? "#6366F1" : "#10B981"} />
+                  <Shield size={18} color={role.is_system ? "#6366F1" : "#16A34A"} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">

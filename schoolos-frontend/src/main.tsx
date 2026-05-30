@@ -44,11 +44,11 @@ function SentryErrorFallback() {
   return (
     <div className="min-h-screen flex items-center justify-center p-8" style={{ background: "#F8F9FA" }}>
       <div className="max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-2" style={{ color: "#0A2472", fontFamily: "'Playfair Display', serif" }}>Something went wrong</h1>
+        <h1 className="text-2xl font-bold mb-2" style={{ color: "#031B4E", fontFamily: "'Playfair Display', serif" }}>Something went wrong</h1>
         <p className="text-sm mb-4" style={{ color: "#6B7280" }}>An unexpected error occurred. Our team has been notified.</p>
         <button onClick={() => window.location.reload()}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white"
-          style={{ background: "#0A2472" }}>
+          style={{ background: "#031B4E" }}>
           Reload Page
         </button>
       </div>

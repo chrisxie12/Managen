@@ -91,7 +91,7 @@ export function SuperAdminBilling() {
       {/* KPI Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={DollarSign} label="Total Revenue" value={`GHS ${(totalRevenue / 1000).toFixed(1)}K`}
-          sub={`${paymentCount} payment${paymentCount !== 1 ? "s" : ""} all-time`} color="#10B981"
+          sub={`${paymentCount} payment${paymentCount !== 1 ? "s" : ""} all-time`} color="#16A34A"
           trend={hasPayments ? { dir: "up", text: "Lifetime" } : { dir: "neutral", text: "No revenue" }} />
         <StatCard icon={CreditCard} label="Transactions" value={String(paymentCount)}
           sub={hasPayments ? `${paymentCount} completed` : "No transactions"} color="#6366F1"
@@ -112,8 +112,8 @@ export function SuperAdminBilling() {
             </div>
             {hasMonthlyTrend && trendDir !== "neutral" && (
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg" style={{ background: trendDir === "up" ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)" }}>
-                {trendDir === "up" ? <ArrowUp size={12} color="#10B981" /> : <ArrowDown size={12} color="#EF4444" />}
-                <span style={{ color: trendDir === "up" ? "#10B981" : "#EF4444", fontSize: "0.7rem", fontWeight: 600 }}>
+                {trendDir === "up" ? <ArrowUp size={12} color="#16A34A" /> : <ArrowDown size={12} color="#EF4444" />}
+                <span style={{ color: trendDir === "up" ? "#16A34A" : "#EF4444", fontSize: "0.7rem", fontWeight: 600 }}>
                   {trendPct}% vs prev month
                 </span>
               </div>
@@ -145,7 +145,7 @@ export function SuperAdminBilling() {
           {hasPayments ? (
             <div className="space-y-3">
               {[
-                { label: "Gross Revenue", value: `GHS ${totalRevenue.toLocaleString()}`, color: "#10B981" },
+                { label: "Gross Revenue", value: `GHS ${totalRevenue.toLocaleString()}`, color: "#16A34A" },
                 { label: "Avg per Transaction", value: `GHS ${avgPayment.toFixed(0)}`, color: "#6366F1" },
                 { label: "Total Transactions", value: String(paymentCount), color: "#F59E0B" },
                 { label: "Highest Payment", value: `GHS ${highestPayment.toLocaleString()}`, color: "#8B5CF6" },
@@ -157,7 +157,7 @@ export function SuperAdminBilling() {
               ))}
               {monthlyData.length > 0 && (
                 <div className="p-3.5 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)" }}>
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", color: trendDir === "up" ? "#10B981" : trendDir === "down" ? "#EF4444" : MUTED, fontSize: "1.1rem", fontWeight: 700 }}>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", color: trendDir === "up" ? "#16A34A" : trendDir === "down" ? "#EF4444" : MUTED, fontSize: "1.1rem", fontWeight: 700 }}>
                     {trendPct !== "—" ? `${trendPct}%` : "—"}
                   </div>
                   <div style={{ color: MUTED, fontSize: "0.72rem", marginTop: "0.15rem" }}>
@@ -218,8 +218,8 @@ export function SuperAdminBilling() {
                       {p.paidAt ? new Date(p.paidAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—"}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium" aria-label="Status: Completed" style={{ background: "rgba(16,185,129,0.12)", color: "#10B981" }}>
-                        <span className="w-1.5 h-1.5 rounded-full" aria-hidden="true" style={{ background: "#10B981" }} />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium" aria-label="Status: Completed" style={{ background: "rgba(16,185,129,0.12)", color: "#16A34A" }}>
+                        <span className="w-1.5 h-1.5 rounded-full" aria-hidden="true" style={{ background: "#16A34A" }} />
                         Completed
                       </span>
                     </td>

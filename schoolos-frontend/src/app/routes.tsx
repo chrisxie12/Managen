@@ -69,7 +69,7 @@ import { ProfileGuard } from "../components/ProfileGuard";
 import { Onboarding } from "./pages/Onboarding";
 import { RoleRouter } from "./components/RoleRouter";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 
 function RootLayout() {
   return (

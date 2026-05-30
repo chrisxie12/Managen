@@ -20,8 +20,8 @@ import { api } from "../services/api";
 import type { SyncItem } from "../lib/offlineSync";
 import { useHealthStatus } from "../hooks/useHealthStatus";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -71,7 +71,7 @@ function HealthBadge({
   status: "active" | "error" | "pilot";
   tooltip?: string;
 }) {
-  const dotColor = status === "active" ? "#10B981" : status === "pilot" ? "#F59E0B" : "#EF4444";
+  const dotColor = status === "active" ? "#16A34A" : status === "pilot" ? "#F59E0B" : "#EF4444";
   const labelText = status === "active" ? "Online" : status === "pilot" ? "Pilot" : "Down";
 
   return (
@@ -99,7 +99,7 @@ function HealthBadge({
 }
 
 function SyncBadge({ isOnline }: { isOnline: boolean }) {
-  const color = isOnline ? "#10B981" : "#F59E0B";
+  const color = isOnline ? "#16A34A" : "#F59E0B";
   return (
     <div
       className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg cursor-default"
@@ -221,13 +221,13 @@ function DashboardLayoutInner() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div className="fixed inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="relative z-50 h-full bg-sidebar shadow-xl">
-             <Sidebar role={user?.role || "school-admin"} onClose={() => setMobileOpen(false)} />
+          <div className="relative z-50 h-full w-[260px] max-w-[80vw] bg-sidebar shadow-xl flex-shrink-0">
+            <Sidebar role={user?.role || "school-admin"} onClose={() => setMobileOpen(false)} />
           </div>
         </div>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px] md:ml-16">
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px] md:ml-16 min-w-0">
         <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3 bg-background/85 backdrop-blur-xl border-b border-border">
           <div className="flex items-center gap-3">
             <button onClick={() => setMobileOpen(true)} className="lg:hidden text-foreground">
@@ -297,7 +297,7 @@ function DashboardLayoutInner() {
               {showNotifDropdown && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl shadow-lg overflow-hidden bg-card border border-border">
+                  <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-card border border-border sm:w-80">
                     <div className="p-3 text-center text-sm text-muted-foreground">
                       <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }}
                         className="text-xs font-medium text-foreground hover:text-primary transition-colors">
@@ -316,7 +316,7 @@ function DashboardLayoutInner() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 max-w-7xl w-full mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 w-full min-w-0">
           {!pilotDismissed && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg mb-6 p-4 flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />

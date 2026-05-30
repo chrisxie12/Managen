@@ -24,11 +24,11 @@ import {
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 const CREAM = "#F8F9FA";
 
-const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
+const COLORS = ["#6366F1", "#16A34A", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
 
 // ─── Types ──────────────────────────────────────────────────────
 type FeeStructure = { id: string; name: string; category: string; amount: number; class_id: string | null; term_id: string | null; is_optional: boolean; description: string | null; is_active: boolean; class?: { name: string } | null; term?: { name: string } | null };
@@ -253,7 +253,7 @@ function OverviewTab() {
         <MetricCard icon={DollarSign} label="Total Collected"
           value={formatCedi(summary.totalCollected)}
           sub={`${summary.paymentCount} payment(s)`}
-          color="#10B981" />
+          color="#16A34A" />
         <MetricCard icon={Receipt} label="Total Billed"
           value={formatCedi(summary.totalBilled)}
           sub={`${summary.invoiceCount} invoice(s)`}
@@ -261,15 +261,15 @@ function OverviewTab() {
         <MetricCard icon={AlertCircle} label="Outstanding Balance"
           value={formatCedi(summary.totalOutstanding)}
           sub={summary.overdueCount > 0 ? `${summary.overdueCount} overdue` : "All paid"}
-          color={summary.overdueCount > 0 ? "#F59E0B" : "#10B981"} />
+          color={summary.overdueCount > 0 ? "#F59E0B" : "#16A34A"} />
         <MetricCard icon={XCircle} label="Failed Payments"
           value={failedCount}
           sub={failedCount === 0 ? "No failures" : "Requires attention"}
-          color={failedCount > 0 ? "#EF4444" : "#10B981"} />
+          color={failedCount > 0 ? "#EF4444" : "#16A34A"} />
         <MetricCard icon={Users} label="Fee Defaulters"
           value={defaulterCount}
           sub={defaulterCount === 0 ? "All current" : `${defThreshold}d+ overdue`}
-          color={defaulterCount > 0 ? "#EF4444" : "#10B981"} />
+          color={defaulterCount > 0 ? "#EF4444" : "#16A34A"} />
       </div>
 
       {/* ── Charts Row ── */}
@@ -310,7 +310,7 @@ function OverviewTab() {
                     label={({ status, percent }) => `${status} (${(percent * 100).toFixed(0)}%)`}>
                     {paymentBreakdown.map((item, i) => {
                       const colorMap: Record<string, string> = {
-                        completed: "#10B981",
+                        completed: "#16A34A",
                         failed: "#EF4444",
                         pending: "#F59E0B",
                         refunded: "#8B5CF6",

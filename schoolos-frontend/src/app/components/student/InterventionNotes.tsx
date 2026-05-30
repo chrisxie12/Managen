@@ -1,7 +1,7 @@
 import { Loader2, CheckCircle2 } from "lucide-react";
 import type { Intervention } from "./types";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 const SEVERITY_COLORS: Record<string, { bg: string; color: string }> = {

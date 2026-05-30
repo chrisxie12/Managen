@@ -5,7 +5,7 @@ import { Button } from "../../../../components/ui/button";
 import { Switch } from "../../../../components/ui/switch";
 import { api } from "../../../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {

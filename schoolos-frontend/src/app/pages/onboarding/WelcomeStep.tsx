@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Sparkles, Zap, BarChart3, Clock, ArrowRight } from "lucide-react";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 

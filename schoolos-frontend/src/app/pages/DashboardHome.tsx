@@ -20,7 +20,7 @@ const { NAVY, NAVY_LIGHT, MUTED } = palette;
 const quickActions = [
   { label: "Mark Attendance", icon: Clock, color: "#6366F1", path: "/dashboard/students" },
   { label: "Send Fee Reminder", icon: Bell, color: "#F59E0B", path: "/dashboard/communication" },
-  { label: "Generate Report", icon: BookOpen, color: "#10B981", path: "/dashboard/academics" },
+  { label: "Generate Report", icon: BookOpen, color: "#16A34A", path: "/dashboard/academics" },
   { label: "Add Student", icon: Users, color: "#EC4899", path: "/dashboard/students" },
 ];
 
@@ -43,7 +43,7 @@ type RiskAlert = { type: string; severity: string; student_id: string; student: 
 type AuditLog = { id: string; user: { name: string; role: string }; action: string; resource: string; created_at: string };
 
 const STATUS_COLORS: Record<string, string> = {
-  completed: "#10B981", paid: "#10B981",
+  completed: "#16A34A", paid: "#16A34A",
   pending: "#F59E0B", partial: "#F59E0B",
   failed: "#EF4444", overdue: "#EF4444",
   refunded: "#8B5CF6",
@@ -160,7 +160,7 @@ export function DashboardHome() {
       : log.action === 'updated' ? BookOpen
       : log.action === 'deleted' ? AlertTriangle
       : Clock,
-    color: log.action === 'created' ? "#10B981"
+    color: log.action === 'created' ? "#16A34A"
       : log.action === 'updated' ? "#6366F1"
       : log.action === 'deleted' ? "#EF4444"
       : "#F59E0B",
@@ -173,7 +173,7 @@ export function DashboardHome() {
       {/* ─── PHASE 1+2: Stat cards row ─────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users} label="Total Students" value={totalStudents.toLocaleString()} color="#6366F1" path="/dashboard/students" badge={`${totalTeachers} teacher${totalTeachers !== 1 ? "s" : ""}`} />
-        <StatCard icon={Wallet} label="Total Revenue" value={`GHS ${(totalCollected / 100).toLocaleString()}`} color="#10B981" path="/dashboard/finance" badge={`${collectionRate}% collected`} />
+        <StatCard icon={Wallet} label="Total Revenue" value={`GHS ${(totalCollected / 100).toLocaleString()}`} color="#16A34A" path="/dashboard/finance" badge={`${collectionRate}% collected`} />
         <StatCard icon={Clock} label="Avg Attendance" value={`${attendanceRate}%`} color="#F59E0B" path="/dashboard/attendance" badge="Today" />
         <StatCard icon={Briefcase} label="Total Staff" value={totalStaff.toLocaleString()} color="#6366F1" path="/dashboard/staff" badge={`${teachingStaff} teaching`} />
       </div>
@@ -183,7 +183,7 @@ export function DashboardHome() {
         <StatCard icon={MessageSquare} label="Fee Collection" value={`${collectionRate}%`} color="#25D366" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
         <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" onClick={() => { console.warn('Staff attendance detail page not yet implemented – navigating to staff directory'); navigate('/dashboard/staff'); }} badge="Today" />
         <StatCard icon={Wallet} label="Outstanding" value={`GHS ${(totalOutstanding / 100).toLocaleString()}`} color="#EF4444" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
-        <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#10B981" path="/dashboard/finance" badge={`${totalCollected}/${totalBilled}`} />
+        <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#16A34A" path="/dashboard/finance" badge={`${totalCollected}/${totalBilled}`} />
       </div>
 
       {/* ─── PHASE 1: Fee Collection chart + Payment Status pie (replaced) ── */}

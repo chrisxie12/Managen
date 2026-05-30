@@ -4,7 +4,7 @@ import { CheckCircle2, XCircle, Loader2, ArrowLeft, Wallet } from "lucide-react"
 import { toast } from "sonner";
 import { api } from "../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 export function PaymentVerify() {

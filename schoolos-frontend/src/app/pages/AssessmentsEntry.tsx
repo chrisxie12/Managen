@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
-const COLORS = { NAVY: "#0A2472", CREAM: "#F8F9FA", MUTED: "#6B7280" };
+const COLORS = { NAVY: "#031B4E", CREAM: "#F8F9FA", MUTED: "#6B7280" };
 
 type GradeRule = { id: string; min_percent: number; max_percent: number; grade: string };
 type AssessmentType = { id: string; name: string; weight: number };

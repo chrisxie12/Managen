@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 import { Plus, Search, Filter, Download, Upload, Trash2 } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
-const PRIMARY = "#0A2472";
+const PRIMARY = "#031B4E";
 const INFO = "#3B82F6";
 
 interface Student {

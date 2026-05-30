@@ -6,7 +6,7 @@ const MUTED = "#64748b";
 const ACCENT = "#ff6b35";
 
 export const planColors: Record<string, string> = {
-  trial: "#F59E0B", growth: "#6366F1", pro: "#10B981", enterprise: "#8B5CF6",
+  trial: "#F59E0B", growth: "#6366F1", pro: "#16A34A", enterprise: "#8B5CF6",
 };
 
 export function ChartTooltip({ active, payload, label }: any) {
@@ -38,7 +38,7 @@ export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }:
           {typeof trend === "object" && trend && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium" style={{
               background: trend.dir === "up" ? "rgba(16,185,129,0.15)" : trend.dir === "down" ? "rgba(239,68,68,0.15)" : "rgba(100,116,139,0.15)",
-              color: trend.dir === "up" ? "#10B981" : trend.dir === "down" ? "#EF4444" : "#94a3b8",
+              color: trend.dir === "up" ? "#16A34A" : trend.dir === "down" ? "#EF4444" : "#94a3b8",
             }}>
               <span style={{ fontSize: "0.65rem" }}>{trend.dir === "up" ? "↑" : trend.dir === "down" ? "↓" : "→"}</span>
               {trend.text}
@@ -50,7 +50,7 @@ export function StatCard({ icon: Icon, label, value, sub, color, trend, badge }:
       <div style={{ color: "#64748b", fontSize: "0.75rem", fontWeight: 500 }}>{label}</div>
       {sub && <div style={{ color: "#94a3b8", fontSize: "0.68rem", marginTop: "0.15rem" }}>{sub}</div>}
       {numericDelta !== null && numericDelta !== 0 && (
-        <div style={{ color: numericDelta > 0 ? "#10B981" : "#EF4444", fontSize: "0.68rem", marginTop: "0.2rem", fontWeight: 500 }}>
+        <div style={{ color: numericDelta > 0 ? "#16A34A" : "#EF4444", fontSize: "0.68rem", marginTop: "0.2rem", fontWeight: 500 }}>
           {numericDelta > 0 ? "↑" : "↓"} {Math.abs(numericDelta).toFixed(1)}% vs last 30d
         </div>
       )}
@@ -66,7 +66,7 @@ export function AlertBanner({ type, title, message, action }: {
     warning: { bg: "rgba(245,158,11,0.1)", border: "rgba(245,158,11,0.25)", text: "#F59E0B", icon: "⚠" },
     error: { bg: "rgba(239,68,68,0.1)", border: "rgba(239,68,68,0.25)", text: "#EF4444", icon: "✕" },
     info: { bg: "rgba(99,102,241,0.1)", border: "rgba(99,102,241,0.25)", text: "#6366F1", icon: "ℹ" },
-    success: { bg: "rgba(16,185,129,0.1)", border: "rgba(16,185,129,0.25)", text: "#10B981", icon: "✓" },
+    success: { bg: "rgba(16,185,129,0.1)", border: "rgba(16,185,129,0.25)", text: "#16A34A", icon: "✓" },
   };
   const c = colors[type];
   return (
@@ -192,7 +192,7 @@ export function PlatformStatus({ data }: any) {
       <div className="flex items-center justify-between">
         <div>
           <p style={{ color: MUTED, fontSize: "0.75rem" }}>Platform Status</p>
-          <p style={{ color: platformData.healthy ? "#10B981" : "#EF4444", fontSize: "1rem", fontWeight: 600 }}>
+          <p style={{ color: platformData.healthy ? "#16A34A" : "#EF4444", fontSize: "1rem", fontWeight: 600 }}>
             {platformData.healthy ? "Healthy" : "Issues Detected"}
           </p>
           <p style={{ color: TEXT, fontSize: "0.8rem" }}>Up: {platformData.uptime}</p>
@@ -217,7 +217,7 @@ export function TenantHealthSummary({ data }: any) {
           <p style={{ color: MUTED, fontSize: "0.7rem" }}>Total</p>
         </div>
         <div className="text-center">
-          <p style={{ color: "#10B981", fontSize: "1.2rem", fontWeight: 700 }}>{tenantHealth.healthy}</p>
+          <p style={{ color: "#16A34A", fontSize: "1.2rem", fontWeight: 700 }}>{tenantHealth.healthy}</p>
           <p style={{ color: MUTED, fontSize: "0.7rem" }}>Healthy</p>
         </div>
         <div className="text-center">

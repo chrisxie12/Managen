@@ -8,7 +8,7 @@ import {
 } from "../../../../components/ui/select";
 import { api } from "../../../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
@@ -124,7 +124,7 @@ export function BackupsTab({ role }: Props) {
           )}
         </div>
         {schedule !== "never" && (
-          <p className="text-[11px] mt-2 flex items-center gap-1" style={{ color: "#10B981" }}>
+          <p className="text-[11px] mt-2 flex items-center gap-1" style={{ color: "#16A34A" }}>
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
             Auto-backup is {schedule}
           </p>

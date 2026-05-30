@@ -6,7 +6,7 @@ import { Button } from "../../../../components/ui/button";
 import { Badge } from "../../../../components/ui/badge";
 import { api } from "../../../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
@@ -24,8 +24,8 @@ type ValidationStatus = "pending_dns" | "validating_ssl" | "active" | "failed" |
 const STATUS_CONFIG: Record<ValidationStatus, { label: string; color: string; bg: string }> = {
   not_configured: { label: "Not Configured", color: MUTED, bg: "rgba(10,36,114,0.06)" },
   pending_dns: { label: "Pending DNS", color: "#D97706", bg: "rgba(217,119,6,0.1)" },
-  validating_ssl: { label: "Validating SSL", color: "#2563EB", bg: "rgba(37,99,235,0.1)" },
-  active: { label: "Active", color: "#10B981", bg: "rgba(16,185,129,0.1)" },
+  validating_ssl: { label: "Validating SSL", color: "#0080FF", bg: "rgba(37,99,235,0.1)" },
+  active: { label: "Active", color: "#16A34A", bg: "rgba(16,185,129,0.1)" },
   failed: { label: "Validation Failed", color: "#EF4444", bg: "rgba(239,68,68,0.1)" },
 };
 
@@ -191,7 +191,7 @@ export function CustomDomainsTab({ role }: Props) {
         )}
 
         {status === "validating_ssl" && (
-          <div className="mt-4 flex items-center gap-2 text-xs" style={{ color: "#2563EB" }}>
+          <div className="mt-4 flex items-center gap-2 text-xs" style={{ color: "#0080FF" }}>
             <Loader2 size={14} className="animate-spin" />
             Checking DNS records and provisioning SSL certificate... This may take a few minutes.
           </div>
@@ -199,7 +199,7 @@ export function CustomDomainsTab({ role }: Props) {
 
         {status === "active" && (
           <div className="mt-4 p-3 rounded-xl text-xs" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-            <p className="font-medium" style={{ color: "#10B981" }}>
+            <p className="font-medium" style={{ color: "#16A34A" }}>
               <Check size={12} className="inline mr-1" />
               Your domain is active and secured with an SSL certificate.
             </p>

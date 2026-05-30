@@ -8,8 +8,8 @@ import {
 import { api } from "../services/api";
 import { TimetableScheduler } from "./TimetableScheduler";
 
-const NAVY = "#0A2472";
-const NAVY_LIGHT = "#0C2D8A";
+const NAVY = "#031B4E";
+const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -590,7 +590,7 @@ function SubjectsTab({ setError, setSuccess }: { setError: (s: string) => void; 
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked={subjectForm.is_core} onChange={(e) => setSubjectForm(p => ({ ...p, is_core: e.target.checked }))}
-              className="rounded accent-[#0A2472]" />
+              className="rounded accent-[#031B4E]" />
             <span className="text-sm" style={{ color: NAVY_LIGHT }}>Core subject</span>
           </label>
         </Modal>
@@ -731,8 +731,8 @@ function TermsTab({ setError, setSuccess }: { setError: (s: string) => void; set
       <div className="grid gap-4 sm:grid-cols-4 mb-6">
         <SummaryCard icon={CalendarDays} label="Sessions" value={sessions.length} />
         <SummaryCard icon={Star} label="Terms" value={terms.length} />
-        <SummaryCard icon={Check} label="Current Session" value={currentSession?.name || "None"} color="#10B981" />
-        <SummaryCard icon={Check} label="Current Term" value={currentTerm?.name || "None"} color="#10B981" />
+        <SummaryCard icon={Check} label="Current Session" value={currentSession?.name || "None"} color="#16A34A" />
+        <SummaryCard icon={Check} label="Current Term" value={currentTerm?.name || "None"} color="#16A34A" />
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">

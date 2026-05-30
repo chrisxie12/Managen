@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Check, X } from "lucide-react";
 import { api } from "../app/services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 
@@ -58,7 +58,7 @@ export function SetupChecklist() {
       <div className="mb-4 p-4 rounded-2xl" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.15)" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#10B981" }}>
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#16A34A" }}>
               <Check size={16} color="white" />
             </div>
             <p className="text-sm font-medium" style={{ color: "#065F46" }}>🎉 Setup complete! You're all set.</p>
@@ -92,10 +92,10 @@ export function SetupChecklist() {
             <button key={item.key} onClick={() => navigate(item.path)}
               className="w-full flex items-center gap-2 py-1.5 text-left active:scale-[0.99] transition-transform">
               <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: done ? "#10B981" : "transparent", border: done ? "none" : "2px solid #d1d5db" }}>
+                style={{ background: done ? "#16A34A" : "transparent", border: done ? "none" : "2px solid #d1d5db" }}>
                 {done && <Check size={10} color="white" />}
               </div>
-              <span className="text-xs" style={{ color: done ? "#10B981" : NAVY, textDecoration: done ? "line-through" : "none" }}>
+              <span className="text-xs" style={{ color: done ? "#16A34A" : NAVY, textDecoration: done ? "line-through" : "none" }}>
                 {item.label}
               </span>
             </button>

@@ -7,7 +7,7 @@ import { Switch } from "../../../../components/ui/switch";
 import { Badge } from "../../../../components/ui/badge";
 import { api } from "../../../../services/api";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
 
 function SectionCard({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
@@ -136,7 +136,7 @@ export function ArkeselSmsTab({ role }: Props) {
       <SectionCard title="SMS Balance">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: isLowBalance ? "rgba(239,68,68,0.1)" : "rgba(16,185,129,0.1)" }}>
-            <Wallet size={22} color={isLowBalance ? "#EF4444" : "#10B981"} />
+            <Wallet size={22} color={isLowBalance ? "#EF4444" : "#16A34A"} />
           </div>
           <div>
             <p className="text-lg font-bold font-mono" style={{ color: NAVY }}>

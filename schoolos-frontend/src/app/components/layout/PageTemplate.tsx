@@ -1,6 +1,4 @@
 import { ReactNode } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { type UserRole } from "../../config/navigation";
 
 interface PageTemplateProps {
   title: string;
@@ -10,39 +8,19 @@ interface PageTemplateProps {
   breadcrumb?: Array<{ label: string; href?: string }>;
 }
 
-const NAVY = "#0A2472";
-const MUTED = "#6B7280";
-
-export function PageTemplate({
-  title,
-  description,
-  children,
-  actions,
-  breadcrumb,
-}: PageTemplateProps) {
-  const { user } = useAuth();
-  const userRole = (user?.role || "school-admin") as UserRole;
-
+export function PageTemplate({ title, description, children, actions, breadcrumb }: PageTemplateProps) {
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       {/* Breadcrumb */}
       {breadcrumb && breadcrumb.length > 0 && (
-        <div className="mb-6 flex items-center gap-2 text-sm">
+        <div className="mb-4 flex items-center gap-2 text-sm overflow-hidden">
           {breadcrumb.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-2">
-              {idx > 0 && <span style={{ color: MUTED }}>/</span>}
+            <div key={idx} className="flex items-center gap-2 min-w-0">
+              {idx > 0 && <span className="text-muted-foreground flex-shrink-0">/</span>}
               {item.href ? (
-                <a
-                  href={item.href}
-                  style={{ color: NAVY, fontWeight: 500 }}
-                  className="hover:underline"
-                >
-                  {item.label}
-                </a>
+                <a href={item.href} className="text-primary font-medium hover:underline truncate">{item.label}</a>
               ) : (
-                <span style={{ color: NAVY, fontWeight: 500 }}>
-                  {item.label}
-                </span>
+                <span className="text-foreground font-medium truncate">{item.label}</span>
               )}
             </div>
           ))}
@@ -50,25 +28,21 @@ export function PageTemplate({
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
-        <div>
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div className="min-w-0 flex-1">
           <h1
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              color: NAVY,
-              fontSize: "2rem",
-              fontWeight: 700,
-            }}
+            className="text-foreground font-bold"
+            style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.4rem, 3vw, 2rem)", lineHeight: 1.2 }}
           >
             {title}
           </h1>
           {description && (
-            <p style={{ color: MUTED, fontSize: "0.95rem", marginTop: "0.5rem" }}>
-              {description}
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{description}</p>
           )}
         </div>
-        {actions && <div className="flex items-center gap-3">{actions}</div>}
+        {actions && (
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">{actions}</div>
+        )}
       </div>
 
       {/* Content */}

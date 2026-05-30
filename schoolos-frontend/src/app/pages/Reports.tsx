@@ -20,9 +20,9 @@ import {
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 
-const NAVY = "#0A2472";
+const NAVY = "#031B4E";
 const MUTED = "#6B7280";
-const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
+const COLORS = ["#6366F1", "#16A34A", "#F59E0B", "#EF4444", "#EC4899", "#8B5CF6", "#14B8A6", "#F97316"];
 
 // ─── Shared Types ───────────────────────────────────────────────
 type ClassOption = { id: string; name: string };
@@ -198,7 +198,7 @@ function AttendanceTab() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
             <MetricCard icon={Calendar} label="Total Records" value={s.total} sub={`${data.totalRecords} total in range`} color="#6366F1" />
-            <MetricCard icon={Check} label="Present" value={s.present} sub={`${s.presentRate}% rate`} color="#10B981" />
+            <MetricCard icon={Check} label="Present" value={s.present} sub={`${s.presentRate}% rate`} color="#16A34A" />
             <MetricCard icon={AlertCircle} label="Absent" value={s.absent} sub={s.total > 0 ? `${((s.absent / s.total) * 100).toFixed(1)}%` : "0%"} color="#EF4444" />
             <MetricCard icon={AlertTriangle} label="Late" value={s.late} sub={s.excused > 0 ? `${s.excused} excused` : "No excused"} color="#F59E0B" />
           </div>
@@ -279,7 +279,7 @@ function StaffAttendanceTab() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
             <MetricCard icon={Users} label="Staff Tracked" value={s.uniqueStaff} sub={`${s.total} record(s)`} color="#6366F1" />
-            <MetricCard icon={Check} label="Present" value={s.present} sub={`${s.presentRate}% rate`} color="#10B981" />
+            <MetricCard icon={Check} label="Present" value={s.present} sub={`${s.presentRate}% rate`} color="#16A34A" />
             <MetricCard icon={AlertCircle} label="Absent" value={s.absent} color="#EF4444" />
             <MetricCard icon={AlertTriangle} label="Late" value={s.late} color="#F59E0B" />
           </div>
@@ -377,9 +377,9 @@ function AcademicPerformanceTab() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
             <MetricCard icon={BookOpen} label="Assessments" value={s.totalAssessments} color="#6366F1" />
-            <MetricCard icon={TrendingUp} label="Avg Score" value={`${s.avgScore}%`} color="#10B981" />
+            <MetricCard icon={TrendingUp} label="Avg Score" value={`${s.avgScore}%`} color="#16A34A" />
             <MetricCard icon={Users} label="Students Assessed" value={s.totalStudents} color="#3B82F6" />
-            <MetricCard icon={Check} label="Pass Rate" value={`${s.passRate}%`} color={Number(s.passRate) >= 50 ? "#10B981" : "#EF4444"} />
+            <MetricCard icon={Check} label="Pass Rate" value={`${s.passRate}%`} color={Number(s.passRate) >= 50 ? "#16A34A" : "#EF4444"} />
           </div>
 
           {data.subjectBreakdown?.length > 0 && (
@@ -499,7 +499,7 @@ function ClassComparisonTab() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
             <MetricCard icon={School} label="Classes" value={s?.totalClasses || 0} color="#6366F1" />
-            <MetricCard icon={TrendingUp} label="School Avg" value={`${s?.avgRateAll || 0}%`} color="#10B981" />
+            <MetricCard icon={TrendingUp} label="School Avg" value={`${s?.avgRateAll || 0}%`} color="#16A34A" />
           </div>
 
           <ChartCard title="Class Comparison" subtitle="Average performance by class">
@@ -597,7 +597,7 @@ function SubjectPerformanceTab() {
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
             <MetricCard icon={BookOpen} label="Subjects" value={s?.totalSubjects || 0} color="#6366F1" />
-            <MetricCard icon={TrendingUp} label="Overall Avg" value={`${s?.avgRateAll || 0}%`} color="#10B981" />
+            <MetricCard icon={TrendingUp} label="Overall Avg" value={`${s?.avgRateAll || 0}%`} color="#16A34A" />
           </div>
 
           <ChartCard title="Subject Performance" subtitle="Average score by subject">
@@ -681,7 +681,7 @@ function FeeCollectionTab() {
       ) : (
         <>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-            <MetricCard icon={DollarSign} label="Total Collected" value={formatCedi(s.totalCollected)} sub={`${s.completedCount} payment(s)`} color="#10B981" />
+            <MetricCard icon={DollarSign} label="Total Collected" value={formatCedi(s.totalCollected)} sub={`${s.completedCount} payment(s)`} color="#16A34A" />
             <MetricCard icon={AlertCircle} label="Failed Amount" value={formatCedi(s.totalFailed)} sub={`${s.failedCount} failed`} color="#EF4444" />
             <MetricCard icon={AlertTriangle} label="Pending Amount" value={formatCedi(s.totalPending)} color="#F59E0B" />
             <MetricCard icon={Receipt} label="Total Payments" value={s.paymentCount} color="#6366F1" />
@@ -851,7 +851,7 @@ function AdmissionsTab() {
             <MetricCard icon={Users} label="Total Students" value={s.totalStudents} sub={`${s.totalActive} active`} color="#6366F1" />
             <MetricCard icon={UserPlus} label="Male" value={s.maleCount} color="#3B82F6" />
             <MetricCard icon={UserPlus} label="Female" value={s.femaleCount} color="#EC4899" />
-            <MetricCard icon={AlertTriangle} label="Unassigned" value={s.unassigned} color={s.unassigned > 0 ? "#F59E0B" : "#10B981"} />
+            <MetricCard icon={AlertTriangle} label="Unassigned" value={s.unassigned} color={s.unassigned > 0 ? "#F59E0B" : "#16A34A"} />
           </div>
 
           {data.monthly?.length > 0 && (
@@ -953,7 +953,7 @@ function IncidentsTab() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
             <MetricCard icon={AlertTriangle} label="Total Incidents" value={s.total} color="#6366F1" />
             <MetricCard icon={AlertCircle} label="Open" value={s.openCount} color="#EF4444" />
-            <MetricCard icon={Check} label="Resolved" value={s.resolvedCount} color="#10B981" />
+            <MetricCard icon={Check} label="Resolved" value={s.resolvedCount} color="#16A34A" />
           </div>
 
           {s.byType?.length > 0 && (
