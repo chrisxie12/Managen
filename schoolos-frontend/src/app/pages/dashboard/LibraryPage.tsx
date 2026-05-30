@@ -33,131 +33,6 @@ interface Checkout {
   status: CheckoutStatus;
 }
 
-const mockBooks: Book[] = [
-  {
-    id: "1",
-    title: "The Beautyful Ones Are Not Yet Born",
-    author: "Ayi Kwei Armah",
-    category: "Fiction",
-    copies: 12,
-    available: 8,
-    isbn: "978-0-435-90002-1",
-  },
-  {
-    id: "2",
-    title: "Things Fall Apart",
-    author: "Chinua Achebe",
-    category: "Fiction",
-    copies: 20,
-    available: 14,
-    isbn: "978-0-385-47454-2",
-  },
-  {
-    id: "3",
-    title: "West African Senior School Certificate Mathematics",
-    author: "S. A. Acquah",
-    category: "Mathematics",
-    copies: 40,
-    available: 22,
-    isbn: "978-9988-0-0102-3",
-  },
-  {
-    id: "4",
-    title: "New School Chemistry for West Africa",
-    author: "Osei Yaw Ababio",
-    category: "Science",
-    copies: 35,
-    available: 18,
-    isbn: "978-9988-0-0210-5",
-  },
-  {
-    id: "5",
-    title: "Ghana: The Autobiography of Kwame Nkrumah",
-    author: "Kwame Nkrumah",
-    category: "History",
-    copies: 8,
-    available: 5,
-    isbn: "978-0-901787-03-3",
-  },
-  {
-    id: "6",
-    title: "Integrated Science for Senior High Schools",
-    author: "Tetteh & Acheampong",
-    category: "Science",
-    copies: 30,
-    available: 11,
-    isbn: "978-9988-0-0315-7",
-  },
-  {
-    id: "7",
-    title: "Government for Senior High Schools",
-    author: "John Bing Quartey",
-    category: "Textbooks",
-    copies: 25,
-    available: 17,
-    isbn: "978-9988-0-0421-5",
-  },
-  {
-    id: "8",
-    title: "Oxford English Dictionary (Compact Edition)",
-    author: "Oxford University Press",
-    category: "Reference",
-    copies: 5,
-    available: 5,
-    isbn: "978-0-19-861186-8",
-  },
-];
-
-const mockCheckouts: Checkout[] = [
-  {
-    id: "c1",
-    studentName: "Ama Owusu",
-    admissionNo: "2024/001",
-    book: "Things Fall Apart",
-    dueDate: "2024-06-05",
-    status: "active",
-  },
-  {
-    id: "c2",
-    studentName: "Kwesi Mensah",
-    admissionNo: "2024/002",
-    book: "New School Chemistry for West Africa",
-    dueDate: "2024-05-28",
-    status: "overdue",
-  },
-  {
-    id: "c3",
-    studentName: "Abena Boateng",
-    admissionNo: "2024/003",
-    book: "Ghana: The Autobiography of Kwame Nkrumah",
-    dueDate: "2024-05-20",
-    status: "returned",
-  },
-  {
-    id: "c4",
-    studentName: "Kofi Asante",
-    admissionNo: "2024/004",
-    book: "West African Senior School Certificate Mathematics",
-    dueDate: "2024-06-10",
-    status: "active",
-  },
-  {
-    id: "c5",
-    studentName: "Efua Darko",
-    admissionNo: "2024/005",
-    book: "The Beautyful Ones Are Not Yet Born",
-    dueDate: "2024-05-15",
-    status: "overdue",
-  },
-  {
-    id: "c6",
-    studentName: "Yaw Acheampong",
-    admissionNo: "2024/006",
-    book: "Integrated Science for Senior High Schools",
-    dueDate: "2024-06-08",
-    status: "active",
-  },
-];
 
 const CATEGORIES: Category[] = ["All", "Textbooks", "Fiction", "Science", "Mathematics", "History", "Reference"];
 
@@ -170,8 +45,8 @@ const statusConfig: Record<CheckoutStatus, { label: string; color: string }> = {
 export function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<Category>("All");
-  const [books, setBooks] = useState<Book[]>(mockBooks);
-  const [checkouts] = useState(mockCheckouts);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [checkouts] = useState<Checkout[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddBook, setShowAddBook] = useState(false);
   const [addBookForm, setAddBookForm] = useState({ title: "", author: "", category: "", isbn: "", copies: "" });
@@ -195,7 +70,7 @@ export function LibraryPage() {
         }
       })
       .catch(() => {
-        // keep mockBooks as fallback
+        // leave books as empty on error
       })
       .finally(() => setLoading(false));
   };

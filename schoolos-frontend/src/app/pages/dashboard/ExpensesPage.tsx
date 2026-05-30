@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Download, Filter } from "lucide-react";
+import { Plus, Search, Download } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
 const NAVY = "#031B4E";
@@ -47,116 +47,12 @@ const CATEGORY_COLORS: Record<ExpenseCategory, string> = {
   Events: "#EC4899",
 };
 
-const mockExpenses: Expense[] = [
-  {
-    id: "1",
-    date: "2025-05-02",
-    description: "May staff salaries",
-    category: "Salaries",
-    amount: 48500,
-    paidBy: "Akosua Amponsah",
-    status: "approved",
-  },
-  {
-    id: "2",
-    date: "2025-05-05",
-    description: "ECG electricity bill",
-    category: "Utilities",
-    amount: 1250,
-    paidBy: "Yaw Darko",
-    status: "approved",
-  },
-  {
-    id: "3",
-    date: "2025-05-07",
-    description: "Water tank repair",
-    category: "Maintenance",
-    amount: 850,
-    paidBy: "Kweku Asante",
-    status: "pending",
-  },
-  {
-    id: "4",
-    date: "2025-05-09",
-    description: "Exercise books & pencils",
-    category: "Supplies",
-    amount: 630,
-    paidBy: "Ama Boateng",
-    status: "approved",
-  },
-  {
-    id: "5",
-    date: "2025-05-11",
-    description: "School bus diesel refill",
-    category: "Transport",
-    amount: 980,
-    paidBy: "Kofi Agyei",
-    status: "approved",
-  },
-  {
-    id: "6",
-    date: "2025-05-14",
-    description: "Parents' speech day decoration",
-    category: "Events",
-    amount: 1400,
-    paidBy: "Abena Mensah",
-    status: "pending",
-  },
-  {
-    id: "7",
-    date: "2025-05-16",
-    description: "Ghana Water Company bill",
-    category: "Utilities",
-    amount: 420,
-    paidBy: "Yaw Darko",
-    status: "approved",
-  },
-  {
-    id: "8",
-    date: "2025-05-18",
-    description: "Classroom door hinge replacement",
-    category: "Maintenance",
-    amount: 310,
-    paidBy: "Kweku Asante",
-    status: "rejected",
-  },
-  {
-    id: "9",
-    date: "2025-05-21",
-    description: "Science lab chemicals",
-    category: "Supplies",
-    amount: 750,
-    paidBy: "Efua Quansah",
-    status: "pending",
-  },
-  {
-    id: "10",
-    date: "2025-05-24",
-    description: "Inter-schools sports transport",
-    category: "Transport",
-    amount: 560,
-    paidBy: "Kofi Agyei",
-    status: "approved",
-  },
-];
-
-const MONTHLY_BUDGET = 60000;
+const MONTHLY_BUDGET = 0;
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
-
-const monthlyBreakdown: Record<ExpenseCategory, number> = {
-  Salaries: 48500,
-  Utilities: 1670,
-  Maintenance: 1160,
-  Supplies: 1380,
-  Transport: 1540,
-  Events: 1400,
-};
-
-const maxMonthlyValue = Math.max(...Object.values(monthlyBreakdown));
 
 interface NewExpenseForm {
   amount: string;
@@ -173,7 +69,7 @@ const emptyForm: NewExpenseForm = {
 };
 
 export function ExpensesPage() {
-  const [expenses, setExpenses] = useState<Expense[]>(mockExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<ExpenseCategory | "All">("All");
   const [filterMonth, setFilterMonth] = useState(4); // 0-indexed, May = 4
@@ -184,11 +80,16 @@ export function ExpensesPage() {
     .filter((e) => e.status !== "rejected")
     .reduce((sum, e) => sum + e.amount, 0);
 
-  const budgetUsed = Math.round((totalExpenses / MONTHLY_BUDGET) * 100);
+  const budgetUsed = MONTHLY_BUDGET > 0 ? Math.round((totalExpenses / MONTHLY_BUDGET) * 100) : 0;
   const pendingCount = expenses.filter((e) => e.status === "pending").length;
-  const largestCategory = Object.entries(monthlyBreakdown).reduce(
-    (a, b) => (b[1] > a[1] ? b : a)
-  )[0] as ExpenseCategory;
+  const monthlyBreakdown = CATEGORIES.reduce((acc, cat) => {
+    acc[cat] = expenses.filter(e => e.category === cat && e.status !== "rejected").reduce((sum, e) => sum + e.amount, 0);
+    return acc;
+  }, {} as Record<ExpenseCategory, number>);
+  const maxMonthlyValue = Math.max(...Object.values(monthlyBreakdown), 1);
+  const largestEntry = Object.entries(monthlyBreakdown).reduce((a, b) => b[1] > a[1] ? b : a, ["—", 0]);
+  const largestCategory = largestEntry[0] as ExpenseCategory | "—";
+  const largestAmount = largestEntry[1] as number;
 
   const filtered = expenses.filter((e) => {
     const matchesSearch =
@@ -285,10 +186,10 @@ export function ExpensesPage() {
             Largest Category
           </div>
           <div style={{ color: NAVY, fontSize: "1.1rem", fontWeight: 700, marginTop: "0.5rem" }}>
-            {largestCategory}
+            {largestAmount > 0 ? largestCategory : "—"}
           </div>
           <div style={{ color: MUTED, fontSize: "0.8rem", marginTop: "0.2rem" }}>
-            ₵{monthlyBreakdown[largestCategory].toLocaleString()}
+            {largestAmount > 0 ? `₵${largestAmount.toLocaleString()}` : "No expenses yet"}
           </div>
         </div>
       </div>

@@ -29,89 +29,6 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December",
 ];
 
-const INITIAL_STAFF: StaffMember[] = [
-  {
-    id: "1",
-    name: "Mr. Kwame Asante",
-    role: "Senior Teacher – Mathematics",
-    department: "Teaching",
-    basicSalary: 3800,
-    allowances: 450,
-    deductions: 320,
-    status: "paid",
-  },
-  {
-    id: "2",
-    name: "Mrs. Abena Owusu",
-    role: "Class Teacher – JHS 2",
-    department: "Teaching",
-    basicSalary: 3100,
-    allowances: 380,
-    deductions: 260,
-    status: "paid",
-  },
-  {
-    id: "3",
-    name: "Mr. Kofi Mensah",
-    role: "Science Teacher",
-    department: "Teaching",
-    basicSalary: 2700,
-    allowances: 300,
-    deductions: 225,
-    status: "pending",
-  },
-  {
-    id: "4",
-    name: "Ms. Akosua Boateng",
-    role: "English & Literature Teacher",
-    department: "Teaching",
-    basicSalary: 2500,
-    allowances: 280,
-    deductions: 210,
-    status: "pending",
-  },
-  {
-    id: "5",
-    name: "Mr. Yaw Darko",
-    role: "School Accountant",
-    department: "Admin",
-    basicSalary: 2400,
-    allowances: 250,
-    deductions: 200,
-    status: "paid",
-  },
-  {
-    id: "6",
-    name: "Mrs. Efua Quansah",
-    role: "Administrative Secretary",
-    department: "Admin",
-    basicSalary: 1900,
-    allowances: 180,
-    deductions: 150,
-    status: "paid",
-  },
-  {
-    id: "7",
-    name: "Mr. Kweku Aidoo",
-    role: "School Librarian",
-    department: "Admin",
-    basicSalary: 1800,
-    allowances: 160,
-    deductions: 140,
-    status: "pending",
-  },
-  {
-    id: "8",
-    name: "Mr. Emmanuel Tetteh",
-    role: "School Gardener & Maintenance",
-    department: "Support",
-    basicSalary: 950,
-    allowances: 80,
-    deductions: 60,
-    status: "pending",
-  },
-];
-
 const DEPT_COLORS: Record<Department, string> = {
   Teaching: "#3B82F6",
   Admin: "#8B5CF6",
@@ -122,7 +39,7 @@ export function PayrollPage() {
   const today = new Date();
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
-  const [staff, setStaff] = useState<StaffMember[]>(INITIAL_STAFF);
+  const [staff, setStaff] = useState<StaffMember[]>([]);
   const [payrollRun, setPayrollRun] = useState(false);
   const [runningPayroll, setRunningPayroll] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -146,7 +63,7 @@ export function PayrollPage() {
         }
       })
       .catch(() => {
-        // keep INITIAL_STAFF as fallback
+        // leave staff as empty on error
       })
       .finally(() => setLoading(false));
   }, []);

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Plus, Download, BookOpen, TrendingUp } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 
 const NAVY = "#031B4E";
@@ -59,80 +58,6 @@ interface BECEStudent {
   scores: StudentScores;
 }
 
-const mockStudents: BECEStudent[] = [
-  {
-    id: "1",
-    name: "Ama Owusu",
-    gender: "F",
-    scores: { English: 72, Maths: 68, Science: 75, Social: 70, RME: 80, ICT: 65, French: 58, "Ghanaian Lang": 74, "Creative Arts": 82, "Career Tech": 71 },
-  },
-  {
-    id: "2",
-    name: "Kwame Asante",
-    gender: "M",
-    scores: { English: 55, Maths: 80, Science: 78, Social: 60, RME: 62, ICT: 85, French: 44, "Ghanaian Lang": 58, "Creative Arts": 55, "Career Tech": 76 },
-  },
-  {
-    id: "3",
-    name: "Abena Boateng",
-    gender: "F",
-    scores: { English: 45, Maths: 42, Science: 48, Social: 50, RME: 55, ICT: 40, French: 36, "Ghanaian Lang": 52, "Creative Arts": 60, "Career Tech": 45 },
-  },
-  {
-    id: "4",
-    name: "Kofi Mensah",
-    gender: "M",
-    scores: { English: 30, Maths: 28, Science: 35, Social: 38, RME: 42, ICT: 32, French: 25, "Ghanaian Lang": 40, "Creative Arts": 48, "Career Tech": 30 },
-  },
-  {
-    id: "5",
-    name: "Akosua Agyei",
-    gender: "F",
-    scores: { English: 88, Maths: 91, Science: 85, Social: 82, RME: 90, ICT: 78, French: 70, "Ghanaian Lang": 86, "Creative Arts": 88, "Career Tech": 84 },
-  },
-  {
-    id: "6",
-    name: "Yaw Darko",
-    gender: "M",
-    scores: { English: 60, Maths: 55, Science: 62, Social: 58, RME: 65, ICT: 70, French: 48, "Ghanaian Lang": 62, "Creative Arts": 68, "Career Tech": 60 },
-  },
-  {
-    id: "7",
-    name: "Efua Quansah",
-    gender: "F",
-    scores: { English: 42, Maths: 38, Science: 44, Social: 46, RME: 50, ICT: 35, French: 30, "Ghanaian Lang": 48, "Creative Arts": 55, "Career Tech": 40 },
-  },
-  {
-    id: "8",
-    name: "Kweku Aidoo",
-    gender: "M",
-    scores: { English: 78, Maths: 82, Science: 80, Social: 75, RME: 70, ICT: 88, French: 62, "Ghanaian Lang": 72, "Creative Arts": 65, "Career Tech": 80 },
-  },
-  {
-    id: "9",
-    name: "Maame Serwaa",
-    gender: "F",
-    scores: { English: 65, Maths: 48, Science: 52, Social: 60, RME: 72, ICT: 55, French: 42, "Ghanaian Lang": 68, "Creative Arts": 75, "Career Tech": 58 },
-  },
-  {
-    id: "10",
-    name: "Nana Kwesi",
-    gender: "M",
-    scores: { English: 35, Maths: 32, Science: 38, Social: 40, RME: 45, ICT: 30, French: 22, "Ghanaian Lang": 42, "Creative Arts": 50, "Career Tech": 35 },
-  },
-  {
-    id: "11",
-    name: "Adwoa Frimpong",
-    gender: "F",
-    scores: { English: 70, Maths: 75, Science: 68, Social: 72, RME: 78, ICT: 65, French: 55, "Ghanaian Lang": 70, "Creative Arts": 80, "Career Tech": 72 },
-  },
-  {
-    id: "12",
-    name: "Ato Armah",
-    gender: "M",
-    scores: { English: 52, Maths: 58, Science: 55, Social: 50, RME: 60, ICT: 62, French: 40, "Ghanaian Lang": 55, "Creative Arts": 58, "Career Tech": 54 },
-  },
-];
 
 function avgScore(scores: StudentScores): number {
   const vals = Object.values(scores);
@@ -171,16 +96,15 @@ function scoreColor(score: number): string {
 
 const SUBJECT_DISPLAY = ["English", "Maths", "Science", "Social"] as const;
 
-const mockExamsCompleted = 3;
-
 export function BecePrepPage() {
-  const navigate = useNavigate();
+  const [students] = useState<BECEStudent[]>([]);
   const [filterBand, setFilterBand] = useState<PerformanceBand>("All");
   const [showMockForm, setShowMockForm] = useState(false);
   const [mockExamDate, setMockExamDate] = useState("");
   const [mockExamSubject, setMockExamSubject] = useState("All Subjects");
+  const mockExamsCompleted = 0;
 
-  const enriched = mockStudents.map((s) => ({
+  const enriched = students.map((s) => ({
     ...s,
     avg: avgScore(s.scores),
     grade: predictedGrade(avgScore(s.scores)),
@@ -195,8 +119,8 @@ export function BecePrepPage() {
   const onTrackCount = enriched.filter((s) => s.status === "On Track").length;
   const atRiskCount = enriched.filter((s) => s.status === "At Risk").length;
   const criticalCount = enriched.filter((s) => s.status === "Critical").length;
-  const overallAvg = Math.round(enriched.reduce((sum, s) => sum + s.avg, 0) / enriched.length);
-  const readyPct = Math.round((onTrackCount / enriched.length) * 100);
+  const overallAvg = enriched.length > 0 ? Math.round(enriched.reduce((sum, s) => sum + s.avg, 0) / enriched.length) : 0;
+  const readyPct = enriched.length > 0 ? Math.round((onTrackCount / enriched.length) * 100) : 0;
 
   return (
     <PageTemplate

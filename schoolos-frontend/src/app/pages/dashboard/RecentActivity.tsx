@@ -36,66 +36,7 @@ interface RecentActivityProps {
 }
 
 export function RecentActivity({ activities = [], onActivityClick, maxItems = 6 }: RecentActivityProps) {
-  // Mock activities if none provided
-  const mockActivities: ActivityLog[] = [
-    {
-      id: "1",
-      type: "fee_collected",
-      title: "Fee Payment Received",
-      description: "KES 15,000 payment from Jane Kipchoge",
-      user: "System",
-      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
-      severity: "success",
-    },
-    {
-      id: "2",
-      type: "report_generated",
-      title: "Report Cards Generated",
-      description: "Term 2 report cards for Class 4 Blue",
-      user: "Mrs. Kamau",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      severity: "success",
-    },
-    {
-      id: "3",
-      type: "user_created",
-      title: "New Student Enrolled",
-      description: "Samuel Kipchoge - Class 3 Green",
-      user: "John Mutua",
-      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
-      severity: "info",
-    },
-    {
-      id: "4",
-      type: "fee_reminder",
-      title: "Fee Reminder Sent",
-      description: "Automated reminder to 42 parents",
-      user: "System",
-      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
-      severity: "info",
-    },
-    {
-      id: "5",
-      type: "alert",
-      title: "System Alert",
-      description: "Database backup completed successfully",
-      user: "System",
-      timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000),
-      severity: "success",
-    },
-    {
-      id: "6",
-      type: "approval_completed",
-      title: "Exam Results Approved",
-      description: "Class 4 Blue exam results approved",
-      user: "Dr. Kipchoge",
-      timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000),
-      severity: "success",
-    },
-  ];
-
-  const displayActivities = activities.length > 0 ? activities : mockActivities;
-  const limitedActivities = displayActivities.slice(0, maxItems);
+  const limitedActivities = activities.slice(0, maxItems);
 
   return (
     <div
@@ -106,8 +47,14 @@ export function RecentActivity({ activities = [], onActivityClick, maxItems = 6 
         Recent Activity
       </h3>
 
+      {limitedActivities.length === 0 && (
+        <div style={{ textAlign: "center", padding: "2rem 0", color: "#9CA3AF", fontSize: "0.875rem" }}>
+          No recent activity yet.
+        </div>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {limitedActivities.map((activity, idx) => {
+        {limitedActivities.map((activity) => {
           const config = activityTypeConfig[activity.type];
           const Icon = config.icon;
           const timeAgo = formatDistanceToNow(activity.timestamp, { addSuffix: true });

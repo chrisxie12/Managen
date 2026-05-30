@@ -9,37 +9,20 @@ interface Expense {
   amount: number; paidBy: string; method: string; status: "approved" | "pending" | "rejected";
 }
 
-const mockExpenses: Expense[] = [
-  { id: "1", date: "2024-06-01", description: "PURC Electricity Bill", category: "Utilities", amount: 4200, paidBy: "Ama Mensah", method: "Bank", status: "approved" },
-  { id: "2", date: "2024-05-30", description: "Stationery for exams", category: "Stationery", amount: 850, paidBy: "Kofi Boateng", method: "Cash", status: "approved" },
-  { id: "3", date: "2024-05-28", description: "Generator fuel", category: "Maintenance", amount: 1500, paidBy: "Ama Mensah", method: "Cash", status: "approved" },
-  { id: "4", date: "2024-05-25", description: "Prize giving day decoration", category: "Events", amount: 3200, paidBy: "Principal", method: "Cash", status: "pending" },
-  { id: "5", date: "2024-05-22", description: "Ghana Water bill", category: "Utilities", amount: 980, paidBy: "Ama Mensah", method: "Bank", status: "approved" },
-  { id: "6", date: "2024-05-20", description: "Sports equipment", category: "Equipment", amount: 2750, paidBy: "Mr. Quaye", method: "Bank", status: "pending" },
-  { id: "7", date: "2024-05-18", description: "Canteen food supplies", category: "Food", amount: 5600, paidBy: "Cook", method: "Cash", status: "approved" },
-];
-
 const categories = ["Utilities", "Salaries", "Maintenance", "Stationery", "Transport", "Events", "Food", "Equipment"];
-
-const budgets: Record<string, { budget: number; spent: number; color: string }> = {
-  Utilities: { budget: 8000, spent: 5180, color: "#0080FF" },
-  Salaries: { budget: 50000, spent: 50000, color: "#16A34A" },
-  Maintenance: { budget: 5000, spent: 1500, color: "#8B5CF6" },
-  Stationery: { budget: 2000, spent: 850, color: "#F59E0B" },
-  Events: { budget: 5000, spent: 3200, color: "#EC4899" },
-  Food: { budget: 20000, spent: 5600, color: "#6B7280" },
-};
 
 const fmt = (n: number) => `GHS ${n.toLocaleString()}`;
 
 const statusColors = { approved: { bg: "#DCFCE7", text: "#16A34A" }, pending: { bg: "#FEF3C7", text: "#D97706" }, rejected: { bg: "#FEE2E2", text: "#DC2626" } };
 
 export function BursarExpenses() {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [newExp, setNewExp] = useState({ description: "", amount: "", category: "Utilities", date: new Date().toISOString().split("T")[0], notes: "" });
 
-  const totalSpent = mockExpenses.filter(e => e.status === "approved").reduce((s, e) => s + e.amount, 0);
-  const pending = mockExpenses.filter(e => e.status === "pending").length;
+  const totalSpent = expenses.filter(e => e.status === "approved").reduce((s, e) => s + e.amount, 0);
+  const pending = expenses.filter(e => e.status === "pending").length;
+  const largestAmount = expenses.length > 0 ? Math.max(...expenses.map(e => e.amount)) : 0;
 
   return (
     <div className="space-y-6">
@@ -59,8 +42,8 @@ export function BursarExpenses() {
         {[
           { label: "This Month", value: fmt(totalSpent), color: NAVY },
           { label: "Pending Approval", value: pending.toString(), color: "#D97706" },
-          { label: "Largest Expense", value: fmt(5600), color: "#DC2626" },
-          { label: "Transactions", value: mockExpenses.length.toString(), color: "#0080FF" },
+          { label: "Largest Expense", value: largestAmount > 0 ? fmt(largestAmount) : "—", color: "#DC2626" },
+          { label: "Transactions", value: expenses.length.toString(), color: "#0080FF" },
         ].map(k => (
           <div key={k.label} className="bg-card border border-border rounded-2xl p-4">
             <p className="text-xl font-bold" style={{ color: k.color }}>{k.value}</p>
@@ -101,32 +84,17 @@ export function BursarExpenses() {
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setShowForm(false)}
               className="px-4 py-2 rounded-xl text-sm border border-border" style={{ color: MUTED }}>Cancel</button>
-            <button type="button" onClick={() => setShowForm(false)}
+            <button type="button" onClick={() => {
+              if (!newExp.description || !newExp.amount) return;
+              const e: Expense = { id: String(Date.now()), date: newExp.date, description: newExp.description, category: newExp.category, amount: Number(newExp.amount), paidBy: "Current User", method: "Cash", status: "pending" };
+              setExpenses(prev => [e, ...prev]);
+              setNewExp({ description: "", amount: "", category: "Utilities", date: new Date().toISOString().split("T")[0], notes: "" });
+              setShowForm(false);
+            }}
               className="px-5 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: NAVY }}>Save Expense</button>
           </div>
         </div>
       )}
-
-      {/* Budget overview */}
-      <div className="bg-card border border-border rounded-2xl p-5">
-        <h3 className="text-sm font-semibold mb-4" style={{ color: NAVY }}>Budget vs. Actual</h3>
-        <div className="space-y-3">
-          {Object.entries(budgets).map(([cat, b]) => {
-            const pct = Math.min(100, Math.round((b.spent / b.budget) * 100));
-            return (
-              <div key={cat}>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="font-medium" style={{ color: NAVY }}>{cat}</span>
-                  <span style={{ color: MUTED }}>{fmt(b.spent)} / {fmt(b.budget)}</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-muted/30">
-                  <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: pct >= 100 ? "#DC2626" : pct >= 80 ? "#F59E0B" : b.color }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Table */}
       <div className="bg-card border border-border rounded-2xl overflow-hidden">
@@ -139,7 +107,14 @@ export function BursarExpenses() {
             </tr>
           </thead>
           <tbody>
-            {mockExpenses.map(e => (
+            {expenses.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
+                  No expenses recorded yet. Use the form above to add one.
+                </td>
+              </tr>
+            )}
+            {expenses.map(e => (
               <tr key={e.id} className="border-b border-border last:border-0 hover:bg-muted/10">
                 <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{e.date}</td>
                 <td className="px-4 py-3 text-sm" style={{ color: NAVY }}>{e.description}</td>

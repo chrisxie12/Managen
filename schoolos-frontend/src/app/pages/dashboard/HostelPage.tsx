@@ -34,119 +34,6 @@ interface HostelStudent {
   moveOutDate: string;
 }
 
-const mockBlocks: HostelBlock[] = [
-  {
-    id: "A",
-    name: "Block A",
-    type: "Boys",
-    totalBeds: 120,
-    occupied: 108,
-    warden: "Mr. Emmanuel Asante",
-    wardenPhone: "+233 24 501 2233",
-  },
-  {
-    id: "B",
-    name: "Block B",
-    type: "Girls",
-    totalBeds: 100,
-    occupied: 94,
-    warden: "Mrs. Grace Mensah",
-    wardenPhone: "+233 24 601 3344",
-  },
-  {
-    id: "C",
-    name: "Block C",
-    type: "Mixed",
-    totalBeds: 80,
-    occupied: 61,
-    warden: "Mr. Isaac Appiah",
-    wardenPhone: "+233 24 701 4455",
-  },
-];
-
-const mockStudents: HostelStudent[] = [
-  {
-    id: "1",
-    name: "Kofi Asante",
-    admissionNo: "2024/011",
-    class: "Form 2A",
-    room: "A-14",
-    block: "Block A",
-    feeStatus: "paid",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "2",
-    name: "Kwame Adjei",
-    admissionNo: "2024/012",
-    class: "Form 3B",
-    room: "A-07",
-    block: "Block A",
-    feeStatus: "partial",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "3",
-    name: "Abena Owusu",
-    admissionNo: "2024/013",
-    class: "Form 1C",
-    room: "B-03",
-    block: "Block B",
-    feeStatus: "paid",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "4",
-    name: "Ama Boateng",
-    admissionNo: "2024/014",
-    class: "Form 2B",
-    room: "B-11",
-    block: "Block B",
-    feeStatus: "outstanding",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "5",
-    name: "Efua Darko",
-    admissionNo: "2024/015",
-    class: "Form 3A",
-    room: "B-22",
-    block: "Block B",
-    feeStatus: "paid",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "6",
-    name: "Yaw Acheampong",
-    admissionNo: "2024/016",
-    class: "Form 1A",
-    room: "C-05",
-    block: "Block C",
-    feeStatus: "partial",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "7",
-    name: "Nana Ama Frimpong",
-    admissionNo: "2024/017",
-    class: "Form 2C",
-    room: "C-09",
-    block: "Block C",
-    feeStatus: "paid",
-    moveOutDate: "2024-08-30",
-  },
-  {
-    id: "8",
-    name: "Kojo Twum",
-    admissionNo: "2024/018",
-    class: "Form 3C",
-    room: "A-18",
-    block: "Block A",
-    feeStatus: "outstanding",
-    moveOutDate: "2024-08-30",
-  },
-];
-
 const feeStatusConfig: Record<FeeStatus, { label: string; color: string }> = {
   paid: { label: "Paid", color: SUCCESS },
   partial: { label: "Partial", color: WARNING },
@@ -161,15 +48,15 @@ const blockTypeColor: Record<"Boys" | "Girls" | "Mixed", string> = {
 
 export function HostelPage() {
   const [blockFilter, setBlockFilter] = useState<BlockFilter>("All");
-  const [students, setStudents] = useState(mockStudents);
-  const [blocks] = useState(mockBlocks);
+  const [students, setStudents] = useState<HostelStudent[]>([]);
+  const [blocks] = useState<HostelBlock[]>([]);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignForm, setAssignForm] = useState({ name: "", admissionNo: "", block: "Block A" as Exclude<BlockFilter,"All">, room: "", moveInDate: new Date().toISOString().split("T")[0] });
 
   const totalBeds = blocks.reduce((s, b) => s + b.totalBeds, 0);
   const occupied = blocks.reduce((s, b) => s + b.occupied, 0);
   const vacant = totalBeds - occupied;
-  const monthlyRevenue = 78400;
+  const monthlyRevenue = 0;
 
   const filteredStudents =
     blockFilter === "All"

@@ -33,147 +33,6 @@ interface TransportStudent {
   feeStatus: FeeStatus;
 }
 
-const mockRoutes: TransportRoute[] = [
-  {
-    id: "r1",
-    name: "Accra Central → School",
-    bus: "GR-1234-22",
-    driver: "Mr. Kwabena Ofori",
-    stops: 7,
-    students: 42,
-    status: "active",
-  },
-  {
-    id: "r2",
-    name: "Tema → School",
-    bus: "GR-5678-21",
-    driver: "Mr. Samuel Agyei",
-    stops: 5,
-    students: 35,
-    status: "active",
-  },
-  {
-    id: "r3",
-    name: "Adenta → School",
-    bus: "GR-9012-20",
-    driver: "Mr. Emmanuel Boateng",
-    stops: 6,
-    students: 29,
-    status: "active",
-  },
-  {
-    id: "r4",
-    name: "Madina → School",
-    bus: "GR-3456-23",
-    driver: "Mr. Joseph Amankwah",
-    stops: 4,
-    students: 21,
-    status: "active",
-  },
-  {
-    id: "r5",
-    name: "Spintex → School",
-    bus: "GR-7890-19",
-    driver: "Mr. Daniel Quartey",
-    stops: 3,
-    students: 18,
-    status: "inactive",
-  },
-];
-
-const mockStudents: TransportStudent[] = [
-  {
-    id: "s1",
-    name: "Ama Owusu",
-    admissionNo: "2024/001",
-    class: "Form 1A",
-    route: "Accra Central → School",
-    pickupPoint: "Kwame Nkrumah Circle",
-    feeStatus: "paid",
-  },
-  {
-    id: "s2",
-    name: "Kofi Asante",
-    admissionNo: "2024/002",
-    class: "Form 2B",
-    route: "Tema → School",
-    pickupPoint: "Tema Community 1",
-    feeStatus: "paid",
-  },
-  {
-    id: "s3",
-    name: "Abena Mensah",
-    admissionNo: "2024/003",
-    class: "Form 3A",
-    route: "Adenta → School",
-    pickupPoint: "Adenta Market",
-    feeStatus: "partial",
-  },
-  {
-    id: "s4",
-    name: "Kwesi Boateng",
-    admissionNo: "2024/004",
-    class: "Form 1C",
-    route: "Madina → School",
-    pickupPoint: "Madina Zongo Junction",
-    feeStatus: "outstanding",
-  },
-  {
-    id: "s5",
-    name: "Efua Darko",
-    admissionNo: "2024/005",
-    class: "Form 2A",
-    route: "Accra Central → School",
-    pickupPoint: "Osu Oxford Street",
-    feeStatus: "paid",
-  },
-  {
-    id: "s6",
-    name: "Yaw Acheampong",
-    admissionNo: "2024/006",
-    class: "Form 3B",
-    route: "Tema → School",
-    pickupPoint: "Tema Community 9",
-    feeStatus: "paid",
-  },
-  {
-    id: "s7",
-    name: "Akua Frimpong",
-    admissionNo: "2024/007",
-    class: "Form 1B",
-    route: "Adenta → School",
-    pickupPoint: "Adenta Housing Down",
-    feeStatus: "paid",
-  },
-  {
-    id: "s8",
-    name: "Nana Ama Adjei",
-    admissionNo: "2024/008",
-    class: "Form 2C",
-    route: "Accra Central → School",
-    pickupPoint: "Accra Mall Junction",
-    feeStatus: "partial",
-  },
-  {
-    id: "s9",
-    name: "Kojo Twum",
-    admissionNo: "2024/009",
-    class: "Form 3C",
-    route: "Madina → School",
-    pickupPoint: "Madina Total Station",
-    feeStatus: "paid",
-  },
-  {
-    id: "s10",
-    name: "Adwoa Appiah",
-    admissionNo: "2024/010",
-    class: "Form 1A",
-    route: "Tema → School",
-    pickupPoint: "Tema Community 5",
-    feeStatus: "outstanding",
-  },
-];
-
 const feeStatusConfig: Record<FeeStatus, { label: string; color: string }> = {
   paid: { label: "Paid", color: SUCCESS },
   partial: { label: "Partial", color: WARNING },
@@ -187,15 +46,15 @@ const routeStatusConfig: Record<RouteStatus, { label: string; color: string }> =
 
 export function TransportPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [routes, setRoutes] = useState(mockRoutes);
-  const [students] = useState(mockStudents);
+  const [routes, setRoutes] = useState<TransportRoute[]>([]);
+  const [students] = useState<TransportStudent[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({ name: "", driver: "", driverPhone: "", vehicle: "", capacity: "", status: "active" as RouteStatus });
 
   const totalBuses = routes.length;
   const activeRoutes = routes.filter((r) => r.status === "active").length;
   const totalStudents = routes.reduce((sum, r) => sum + r.students, 0);
-  const monthlyRevenue = 34500;
+  const monthlyRevenue = 0;
 
   const filteredStudents = students.filter(
     (s) =>
