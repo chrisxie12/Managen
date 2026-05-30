@@ -1,10 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0F172A"/>
-  <!-- Left: diamond frame (navy) -->
-  <path fill="#0A2472" fill-rule="evenodd"
-    d="M10 3 L3 10 L10 17 L17 10 Z M10 5.5 L14.5 10 L10 14.5 L5.5 10 Z"/>
-  <!-- Right: arrow diamond (vibrant blue) -->
-  <path fill="#2563EB" d="M21 14 L14 21 L21 28 L28 21 Z"/>
-  <path fill="#0F172A" d="M21 17 L25 21 L21 25 L17 21 Z"/>
-  <path fill="#2563EB" d="M18 19.5 L21 17.5 L21 22.5 L18 19.5 Z M21 17.5 L24 19.5 Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="7" fill="#07143B"/>
+  <!-- Hexagon (pointy-top) -->
+  <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#0A2472"/>
+  <!-- S letterform -->
+  <path d="M 11 13
+           C 11 10, 13 8.5, 16 8.5
+           C 19 8.5, 21 10, 21 12.5
+           C 21 14.5, 19.5 15.5, 16 16.5
+           C 12.5 17.5, 11 18.5, 11 20.5
+           C 11 23, 13 24.5, 16 24.5
+           C 19 24.5, 21 23, 21 20.5"
+        stroke="white" stroke-width="3" fill="none"
+        stroke-linecap="round"/>
+  <!-- Book line -->
+  <line x1="10" y1="28" x2="22" y2="28" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Top dot -->
+  <circle cx="16" cy="2" r="1.5" fill="#3B82F6"/>
 </svg>

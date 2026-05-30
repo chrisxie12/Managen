@@ -1,65 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 60" fill="none">
+  <!-- Hexagonal badge (pointy-top), navy fill -->
+  <polygon points="28,2 52,16 52,44 28,58 4,44 4,16" fill="#0A2472"/>
 
-  <!-- Left shape: diamond frame (back/bracket) -->
-  <path fill="#0A2472" fill-rule="evenodd" d="
-    M82 6
-    C76 6 71 8 67 12
-    L10 69
-    C6 73 4 78 4 83
-    C4 88 6 93 10 97
-    L67 154
-    C71 158 76 160 82 160
-    C88 160 93 158 97 154
-    L154 97
-    C158 93 160 88 160 83
-    C160 78 158 73 154 69
-    L97 12
-    C93 8 88 6 82 6 Z
+  <!-- Inner hex border glow -->
+  <polygon points="28,6 48,18 48,42 28,54 8,42 8,18"
+           fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
 
-    M82 30
-    L136 84
-    L82 138
-    L28 84
-    Z
-  "/>
+  <!-- S letterform -->
+  <path d="M 19 24
+           C 19 17, 23 14, 28 14
+           C 33 14, 37 17, 37 22
+           C 37 26, 34 28, 28 30
+           C 22 32, 19 34, 19 38
+           C 19 43, 23 46, 28 46
+           C 33 46, 37 43, 37 38"
+        stroke="white" stroke-width="5" fill="none"
+        stroke-linecap="round"/>
 
-  <!-- Right shape: arrow diamond -->
-  <path fill="#2563EB" d="
-    M178 40
-    C172 40 167 42 163 46
-    L106 103
-    C102 107 100 112 100 117
-    C100 122 102 127 106 131
-    L163 188
-    C167 192 172 194 178 194
-    C184 194 189 192 193 188
-    L250 131
-    C254 127 256 122 256 117
-    C256 112 254 107 250 103
-    L193 46
-    C189 42 184 40 178 40 Z
-  "/>
+  <!-- Book waves -->
+  <line x1="18" y1="51" x2="38" y2="51" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="20" y1="55" x2="36" y2="55" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/>
 
-  <!-- Dark inner void in right shape -->
-  <path fill="#0F172A" d="
-    M178 66
-    L232 120
-    L178 174
-    L124 120
-    Z
-  "/>
-
-  <!-- Arrow mark visible inside right shape -->
-  <path fill="#2563EB" d="
-    M153 107
-    L178 94
-    L178 118
-    Z
-    M178 94
-    L200 106
-    L178 118
-    L196 106
-    Z
-  "/>
-
+  <!-- Dot accents -->
+  <circle cx="28" cy="2"  r="2"   fill="#3B82F6"/>
+  <circle cx="52" cy="16" r="1.5" fill="#1D4ED8"/>
+  <circle cx="52" cy="44" r="1.5" fill="#1D4ED8"/>
+  <circle cx="28" cy="58" r="2"   fill="#3B82F6"/>
+  <circle cx="4"  cy="44" r="1.5" fill="#1D4ED8"/>
+  <circle cx="4"  cy="16" r="1.5" fill="#1D4ED8"/>
 </svg>

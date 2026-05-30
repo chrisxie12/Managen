@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { getNavigation, UserRole } from "../../config/navigation";
-import { GraduationCap, ChevronRight, Bell } from "lucide-react";
+import { ChevronRight, Bell } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 interface SidebarProps {
@@ -40,7 +40,7 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
     >
       {/* Header */}
       <div className={`h-14 px-4 flex items-center gap-3 border-b border-sidebar-border flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
-        <GraduationCap className="w-7 h-7 text-sidebar-foreground flex-shrink-0" />
+        <img src="/schoolos-logo.svg" alt="SchoolOS" className="w-7 h-8 flex-shrink-0" />
         {!collapsed && (
           <>
             <span className="text-sidebar-foreground font-semibold text-base tracking-tight truncate">SchoolOS</span>
