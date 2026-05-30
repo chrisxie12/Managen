@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Plus, Search, Filter, Download, DollarSign, AlertCircle } from "lucide-react";
+import { Plus, Search, Download, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 import { api } from "../../services/api";
 
@@ -78,7 +79,7 @@ export function FeesPage() {
           studentName: selectedFee.studentName,
           invoiceId: selectedFee.id,
         });
-        alert("MoMo prompt sent successfully to " + momoPhone);
+        toast.success("MoMo prompt sent successfully to " + momoPhone);
       } else {
         await api.post('/api/school/payments', {
           amount: Number(paymentAmount),
@@ -86,12 +87,12 @@ export function FeesPage() {
           student_id: selectedFee.id,
           invoice_id: selectedFee.id,
         });
-        alert(paymentMethod + " payment recorded successfully.");
+        toast.success(paymentMethod + " payment recorded successfully.");
       }
       setSelectedFee(null);
       await fetchFees();
     } catch (err) {
-      alert("Error processing payment.");
+      toast.error((err as any)?.message || "Error processing payment.");
       console.error(err);
     } finally {
       setIsProcessing(false);

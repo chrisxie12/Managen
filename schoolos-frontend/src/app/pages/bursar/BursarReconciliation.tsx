@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { CheckCircle, AlertTriangle, XCircle, Upload } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CheckCircle, AlertTriangle, XCircle, Upload, Loader2 } from "lucide-react";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -11,44 +12,61 @@ interface ReconcRow {
   status: "balanced" | "minor" | "major";
 }
 
-function makeRows(): ReconcRow[] {
-  const rows: ReconcRow[] = [];
-  let balance = 12500;
-  for (let day = 1; day <= 20; day++) {
-    const cashIn = [8200, 5400, 11200, 3800, 9600, 7100, 4200, 13400, 6800, 8900,
-      5100, 9800, 7600, 4400, 12100, 6300, 8700, 5900, 10400, 7800][day - 1] || 6000;
-    const cashOut = [4100, 2300, 3800, 1500, 4200, 3100, 1900, 5600, 2800, 3700,
-      2100, 4200, 3200, 1800, 5100, 2600, 3600, 2500, 4400, 3300][day - 1] || 2500;
-    const expectedClosing = balance + cashIn - cashOut;
-    const varianceRaw = [0, 0, -20, 0, 0, 0, 15, 0, 0, -50, 0, 0, 0, 0, 0, 30, 0, 0, 0, 0][day - 1] || 0;
-    const actualClosing = expectedClosing + varianceRaw;
-    const variance = actualClosing - expectedClosing;
-    const status: ReconcRow["status"] = variance === 0 ? "balanced" : Math.abs(variance) <= 30 ? "minor" : "major";
-    rows.push({
-      date: `2024-06-${String(day).padStart(2, "0")}`,
-      opening: balance, cashIn, cashOut, expectedClosing, actualClosing, variance, status,
-    });
-    balance = actualClosing;
-  }
-  return rows;
-}
-
-const rows = makeRows();
 const fmt = (n: number) => `GHS ${Math.abs(n).toLocaleString()}`;
 
+function classifyStatus(variance: number): ReconcRow["status"] {
+  if (variance === 0) return "balanced";
+  if (Math.abs(variance) <= 30) return "minor";
+  return "major";
+}
+
+const StatusIcon = ({ status }: { status: ReconcRow["status"] }) => {
+  if (status === "balanced") return <CheckCircle size={14} color={SUCCESS} />;
+  if (status === "minor") return <AlertTriangle size={14} color="#D97706" />;
+  return <XCircle size={14} color="#DC2626" />;
+};
+
+const PERIOD_OPTIONS = (() => {
+  const now = new Date();
+  return Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    return d.toLocaleString("en-GH", { month: "long", year: "numeric" });
+  });
+})();
+
 export function BursarReconciliation() {
-  const [dateRange, setDateRange] = useState("June 2024");
+  const [dateRange, setDateRange] = useState(PERIOD_OPTIONS[0]);
+  const [rows, setRows] = useState<ReconcRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    api.get<any>(`/api/school/reconciliation?period=${encodeURIComponent(dateRange)}`)
+      .then((res) => {
+        const d = res.data ?? {};
+        const raw = d.rows ?? d.reconciliation ?? d.data ?? [];
+        setRows(raw.map((r: any) => {
+          const opening = Number(r.opening ?? r.opening_balance ?? 0);
+          const cashIn = Number(r.cashIn ?? r.cash_in ?? 0);
+          const cashOut = Number(r.cashOut ?? r.cash_out ?? 0);
+          const expectedClosing = Number(r.expectedClosing ?? r.expected_closing ?? opening + cashIn - cashOut);
+          const actualClosing = Number(r.actualClosing ?? r.actual_closing ?? expectedClosing);
+          const variance = actualClosing - expectedClosing;
+          return {
+            date: r.date ?? "",
+            opening, cashIn, cashOut, expectedClosing, actualClosing, variance,
+            status: (r.status as ReconcRow["status"]) ?? classifyStatus(variance),
+          };
+        }));
+      })
+      .catch(() => setRows([]))
+      .finally(() => setLoading(false));
+  }, [dateRange]);
 
   const balanced = rows.filter(r => r.status === "balanced").length;
   const minor = rows.filter(r => r.status === "minor").length;
   const major = rows.filter(r => r.status === "major").length;
   const totalVariance = rows.reduce((s, r) => s + Math.abs(r.variance), 0);
-
-  const StatusIcon = ({ status }: { status: ReconcRow["status"] }) => {
-    if (status === "balanced") return <CheckCircle size={14} color={SUCCESS} />;
-    if (status === "minor") return <AlertTriangle size={14} color="#D97706" />;
-    return <XCircle size={14} color="#DC2626" />;
-  };
 
   return (
     <div className="space-y-6">
@@ -60,11 +78,20 @@ export function BursarReconciliation() {
         <div className="flex items-center gap-2">
           <select value={dateRange} onChange={e => setDateRange(e.target.value)}
             className="h-9 px-3 rounded-xl text-sm border border-border bg-card appearance-none focus:outline-none">
-            {["June 2024", "May 2024", "April 2024"].map(m => <option key={m}>{m}</option>)}
+            {PERIOD_OPTIONS.map(m => <option key={m}>{m}</option>)}
           </select>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-border bg-card hover:bg-muted/50" style={{ color: MUTED }}>
+          <label className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-border bg-card hover:bg-muted/50 cursor-pointer" style={{ color: MUTED }}>
             <Upload size={14} /> Upload Statement
-          </button>
+            <input type="file" accept=".csv,.xlsx" className="hidden" onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("period", dateRange);
+                api.post("/api/school/reconciliation/upload", formData).catch(() => {});
+              }
+            }} />
+          </label>
         </div>
       </div>
 
@@ -87,45 +114,54 @@ export function BursarReconciliation() {
         ))}
       </div>
 
-      {/* Table */}
-      <div className="bg-card border border-border rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-muted/30 border-b border-border">
-                {["Date", "Opening", "Cash In", "Cash Out", "Expected", "Actual", "Variance", "Status"].map(h => (
-                  <th key={h} className="text-left px-3 py-3 text-xs font-semibold whitespace-nowrap" style={{ color: MUTED }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(r => (
-                <tr key={r.date}
-                  className="border-b border-border last:border-0 hover:bg-muted/10"
-                  style={{
-                    background: r.status === "major" ? "#FEF2F2" : r.status === "minor" ? "#FFFBEB" : undefined,
-                  }}>
-                  <td className="px-3 py-2.5 text-xs font-medium" style={{ color: NAVY }}>{r.date}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono" style={{ color: MUTED }}>{fmt(r.opening)}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono" style={{ color: SUCCESS }}>{fmt(r.cashIn)}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono" style={{ color: "#DC2626" }}>{fmt(r.cashOut)}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono" style={{ color: NAVY }}>{fmt(r.expectedClosing)}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono" style={{ color: NAVY }}>{fmt(r.actualClosing)}</td>
-                  <td className="px-3 py-2.5 text-xs font-mono font-semibold"
-                    style={{ color: r.variance === 0 ? SUCCESS : r.variance > 0 ? SUCCESS : "#DC2626" }}>
-                    {r.variance === 0 ? "0" : r.variance > 0 ? `+${fmt(r.variance)}` : `-${fmt(r.variance)}`}
-                  </td>
-                  <td className="px-3 py-2.5">
-                    <div className="flex items-center gap-1">
-                      <StatusIcon status={r.status} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {loading ? (
+        <div className="flex items-center justify-center py-16" style={{ color: MUTED }}>
+          <Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading reconciliation data…
         </div>
-      </div>
+      ) : (
+        <div className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-muted/30 border-b border-border">
+                  {["Date", "Opening", "Cash In", "Cash Out", "Expected", "Actual", "Variance", "Status"].map(h => (
+                    <th key={h} className="text-left px-3 py-3 text-xs font-semibold whitespace-nowrap" style={{ color: MUTED }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
+                      No reconciliation data for this period.
+                    </td>
+                  </tr>
+                ) : rows.map(r => (
+                  <tr key={r.date}
+                    className="border-b border-border last:border-0 hover:bg-muted/10"
+                    style={{
+                      background: r.status === "major" ? "#FEF2F2" : r.status === "minor" ? "#FFFBEB" : undefined,
+                    }}>
+                    <td className="px-3 py-2.5 text-xs font-medium" style={{ color: NAVY }}>{r.date}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono" style={{ color: MUTED }}>{fmt(r.opening)}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono" style={{ color: SUCCESS }}>{fmt(r.cashIn)}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono" style={{ color: "#DC2626" }}>{fmt(r.cashOut)}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono" style={{ color: NAVY }}>{fmt(r.expectedClosing)}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono" style={{ color: NAVY }}>{fmt(r.actualClosing)}</td>
+                    <td className="px-3 py-2.5 text-xs font-mono font-semibold"
+                      style={{ color: r.variance === 0 ? SUCCESS : r.variance > 0 ? SUCCESS : "#DC2626" }}>
+                      {r.variance === 0 ? "0" : r.variance > 0 ? `+${fmt(r.variance)}` : `-${fmt(r.variance)}`}
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <StatusIcon status={r.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

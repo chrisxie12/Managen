@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -21,9 +23,33 @@ const fmt = (n: number) => `GHS ${n.toLocaleString()}`;
 
 export function BursarPayroll() {
   const [payroll, setPayroll] = useState<StaffPayroll[]>([]);
+  const [loading, setLoading] = useState(true);
   const [month, setMonth] = useState(months[new Date().getMonth()]);
   const [processing, setProcessing] = useState(false);
   const [processDone, setProcessDone] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setProcessDone(false);
+    api.get<any>(`/api/school/payroll?month=${encodeURIComponent(month)}`)
+      .then((res) => {
+        const raw = res.data?.payroll ?? res.data?.staff ?? res.data?.data ?? [];
+        setPayroll(raw.map((p: any) => ({
+          id: String(p.id ?? p.staff_id ?? Math.random()),
+          name: p.name ?? p.staff_name ?? "",
+          position: p.position ?? p.role ?? "",
+          department: p.department ?? "",
+          basic: Number(p.basic ?? p.basic_salary ?? 0),
+          allowances: Number(p.allowances ?? 0),
+          ssnit: Number(p.ssnit ?? p.ssnit_employee ?? 0),
+          tax: Number(p.tax ?? p.income_tax ?? 0),
+          net: Number(p.net ?? p.net_pay ?? 0),
+          status: (p.status as StaffPayroll["status"]) ?? "pending",
+        })));
+      })
+      .catch(() => setPayroll([]))
+      .finally(() => setLoading(false));
+  }, [month]);
 
   const gross = payroll.reduce((s, p) => s + p.basic + p.allowances, 0);
   const deductions = payroll.reduce((s, p) => s + p.ssnit + p.tax, 0);
@@ -35,9 +61,32 @@ export function BursarPayroll() {
 
   const handleProcess = async () => {
     setProcessing(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setProcessing(false);
-    setProcessDone(true);
+    try {
+      const res = await api.post<any>("/api/school/payroll/run", { month });
+      const updated = res.data?.payroll ?? res.data?.staff ?? [];
+      if (updated.length > 0) {
+        setPayroll(updated.map((p: any) => ({
+          id: String(p.id ?? p.staff_id ?? Math.random()),
+          name: p.name ?? p.staff_name ?? "",
+          position: p.position ?? p.role ?? "",
+          department: p.department ?? "",
+          basic: Number(p.basic ?? p.basic_salary ?? 0),
+          allowances: Number(p.allowances ?? 0),
+          ssnit: Number(p.ssnit ?? p.ssnit_employee ?? 0),
+          tax: Number(p.tax ?? p.income_tax ?? 0),
+          net: Number(p.net ?? p.net_pay ?? 0),
+          status: (p.status as StaffPayroll["status"]) ?? "paid",
+        })));
+      } else {
+        setPayroll(prev => prev.map(p => ({ ...p, status: "paid" as const })));
+      }
+      setProcessDone(true);
+      toast.success(`Payroll processed for ${month}`);
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to process payroll");
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -52,9 +101,9 @@ export function BursarPayroll() {
             className="h-9 px-3 rounded-xl text-sm border border-border bg-card appearance-none focus:outline-none">
             {months.map(m => <option key={m}>{m}</option>)}
           </select>
-          <button onClick={handleProcess} disabled={processing || processDone}
+          <button onClick={handleProcess} disabled={processing || processDone || loading}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
-            style={{ background: processDone ? SUCCESS : NAVY, opacity: (processing || processDone) ? 0.8 : 1 }}>
+            style={{ background: processDone ? SUCCESS : NAVY, opacity: (processing || processDone || loading) ? 0.8 : 1 }}>
             {processing ? <Loader2 size={14} className="animate-spin" /> : null}
             {processDone ? "Payroll Processed ✓" : processing ? "Processing…" : "Run Payroll"}
           </button>
@@ -89,14 +138,19 @@ export function BursarPayroll() {
               </tr>
             </thead>
             <tbody>
-              {payroll.length === 0 && (
+              {loading ? (
                 <tr>
                   <td colSpan={8} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
-                    No payroll data available yet.
+                    <Loader2 className="w-4 h-4 animate-spin inline mr-2" /> Loading payroll…
                   </td>
                 </tr>
-              )}
-              {payroll.map(p => (
+              ) : payroll.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
+                    No payroll data available for {month}.
+                  </td>
+                </tr>
+              ) : payroll.map(p => (
                 <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/10">
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium" style={{ color: NAVY }}>{p.name}</p>
@@ -117,17 +171,19 @@ export function BursarPayroll() {
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr className="border-t-2 border-border bg-muted/10">
-                <td colSpan={2} className="px-4 py-3 text-sm font-bold" style={{ color: NAVY }}>Total</td>
-                <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: NAVY }}>{fmt(payroll.reduce((s, p) => s + p.basic, 0))}</td>
-                <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: NAVY }}>{fmt(payroll.reduce((s, p) => s + p.allowances, 0))}</td>
-                <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: "#DC2626" }}>-{fmt(deductions)}</td>
-                <td className="px-4 py-3" />
-                <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: SUCCESS }}>{fmt(netPayroll)}</td>
-                <td className="px-4 py-3" />
-              </tr>
-            </tfoot>
+            {payroll.length > 0 && (
+              <tfoot>
+                <tr className="border-t-2 border-border bg-muted/10">
+                  <td colSpan={2} className="px-4 py-3 text-sm font-bold" style={{ color: NAVY }}>Total</td>
+                  <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: NAVY }}>{fmt(payroll.reduce((s, p) => s + p.basic, 0))}</td>
+                  <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: NAVY }}>{fmt(payroll.reduce((s, p) => s + p.allowances, 0))}</td>
+                  <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: "#DC2626" }}>-{fmt(deductions)}</td>
+                  <td className="px-4 py-3" />
+                  <td className="px-4 py-3 text-xs font-bold font-mono" style={{ color: SUCCESS }}>{fmt(netPayroll)}</td>
+                  <td className="px-4 py-3" />
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
       </div>

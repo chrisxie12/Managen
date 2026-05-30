@@ -76,7 +76,7 @@ export function AddStudentPage() {
       toast.success(`${form.fullName} enrolled successfully!`);
       navigate("/dashboard/students");
     } catch (err: any) {
-      toast.error(err?.response?.data?.error || "Failed to enroll student");
+      toast.error(err?.message || "Failed to enroll student");
     } finally {
       setSaving(false);
     }

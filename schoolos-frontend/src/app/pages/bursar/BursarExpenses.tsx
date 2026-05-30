@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, X, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { api } from "../../services/api";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";
@@ -13,12 +15,86 @@ const categories = ["Utilities", "Salaries", "Maintenance", "Stationery", "Trans
 
 const fmt = (n: number) => `GHS ${n.toLocaleString()}`;
 
-const statusColors = { approved: { bg: "#DCFCE7", text: "#16A34A" }, pending: { bg: "#FEF3C7", text: "#D97706" }, rejected: { bg: "#FEE2E2", text: "#DC2626" } };
+const statusColors = {
+  approved: { bg: "#DCFCE7", text: "#16A34A" },
+  pending: { bg: "#FEF3C7", text: "#D97706" },
+  rejected: { bg: "#FEE2E2", text: "#DC2626" },
+};
 
 export function BursarExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [newExp, setNewExp] = useState({ description: "", amount: "", category: "Utilities", date: new Date().toISOString().split("T")[0], notes: "" });
+  const [saving, setSaving] = useState(false);
+  const [newExp, setNewExp] = useState({
+    description: "", amount: "", category: "Utilities",
+    date: new Date().toISOString().split("T")[0], notes: "",
+  });
+
+  useEffect(() => {
+    setLoading(true);
+    api.get<any>("/api/school/expenses")
+      .then((res) => {
+        const raw = res.data?.expenses ?? res.data?.data ?? [];
+        setExpenses(raw.map((e: any) => ({
+          id: String(e.id ?? e._id ?? Date.now()),
+          date: e.date ?? e.created_at?.split("T")[0] ?? "",
+          description: e.description ?? e.title ?? "",
+          category: e.category ?? "Other",
+          amount: Number(e.amount ?? 0),
+          paidBy: e.paidBy ?? e.paid_by ?? e.created_by ?? "",
+          method: e.method ?? e.payment_method ?? "Cash",
+          status: (e.status as Expense["status"]) ?? "pending",
+        })));
+      })
+      .catch(() => setExpenses([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    if (!newExp.description || !newExp.amount) return;
+    setSaving(true);
+    try {
+      const res = await api.post<any>("/api/school/expenses", {
+        description: newExp.description,
+        amount: Number(newExp.amount),
+        category: newExp.category,
+        date: newExp.date,
+        notes: newExp.notes,
+        method: "Cash",
+      });
+      const created = res.data?.expense ?? res.data;
+      const newEntry: Expense = created?.id
+        ? {
+            id: String(created.id),
+            date: created.date ?? newExp.date,
+            description: created.description ?? newExp.description,
+            category: created.category ?? newExp.category,
+            amount: Number(created.amount ?? newExp.amount),
+            paidBy: created.paid_by ?? "Current User",
+            method: created.method ?? "Cash",
+            status: (created.status as Expense["status"]) ?? "pending",
+          }
+        : {
+            id: String(Date.now()),
+            date: newExp.date,
+            description: newExp.description,
+            category: newExp.category,
+            amount: Number(newExp.amount),
+            paidBy: "Current User",
+            method: "Cash",
+            status: "pending",
+          };
+      setExpenses(prev => [newEntry, ...prev]);
+      setNewExp({ description: "", amount: "", category: "Utilities", date: new Date().toISOString().split("T")[0], notes: "" });
+      setShowForm(false);
+      toast.success("Expense recorded successfully");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to save expense");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const totalSpent = expenses.filter(e => e.status === "approved").reduce((s, e) => s + e.amount, 0);
   const pending = expenses.filter(e => e.status === "pending").length;
@@ -40,7 +116,7 @@ export function BursarExpenses() {
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "This Month", value: fmt(totalSpent), color: NAVY },
+          { label: "This Month (Approved)", value: fmt(totalSpent), color: NAVY },
           { label: "Pending Approval", value: pending.toString(), color: "#D97706" },
           { label: "Largest Expense", value: largestAmount > 0 ? fmt(largestAmount) : "—", color: "#DC2626" },
           { label: "Transactions", value: expenses.length.toString(), color: "#0080FF" },
@@ -84,14 +160,12 @@ export function BursarExpenses() {
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setShowForm(false)}
               className="px-4 py-2 rounded-xl text-sm border border-border" style={{ color: MUTED }}>Cancel</button>
-            <button type="button" onClick={() => {
-              if (!newExp.description || !newExp.amount) return;
-              const e: Expense = { id: String(Date.now()), date: newExp.date, description: newExp.description, category: newExp.category, amount: Number(newExp.amount), paidBy: "Current User", method: "Cash", status: "pending" };
-              setExpenses(prev => [e, ...prev]);
-              setNewExp({ description: "", amount: "", category: "Utilities", date: new Date().toISOString().split("T")[0], notes: "" });
-              setShowForm(false);
-            }}
-              className="px-5 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: NAVY }}>Save Expense</button>
+            <button type="button" onClick={handleSave} disabled={saving || !newExp.description || !newExp.amount}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-white"
+              style={{ background: NAVY, opacity: saving ? 0.7 : 1 }}>
+              {saving && <Loader2 size={13} className="animate-spin" />}
+              {saving ? "Saving…" : "Save Expense"}
+            </button>
           </div>
         </div>
       )}
@@ -107,14 +181,19 @@ export function BursarExpenses() {
             </tr>
           </thead>
           <tbody>
-            {expenses.length === 0 && (
+            {loading ? (
               <tr>
                 <td colSpan={5} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
-                  No expenses recorded yet. Use the form above to add one.
+                  <Loader2 className="w-4 h-4 animate-spin inline mr-2" /> Loading expenses…
                 </td>
               </tr>
-            )}
-            {expenses.map(e => (
+            ) : expenses.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-10 text-center text-sm" style={{ color: MUTED }}>
+                  No expenses recorded yet.
+                </td>
+              </tr>
+            ) : expenses.map(e => (
               <tr key={e.id} className="border-b border-border last:border-0 hover:bg-muted/10">
                 <td className="px-4 py-3 text-xs" style={{ color: MUTED }}>{e.date}</td>
                 <td className="px-4 py-3 text-sm" style={{ color: NAVY }}>{e.description}</td>
