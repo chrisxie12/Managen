@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import { Shield, LayoutDashboard, Building2, CreditCard, LogOut, Menu, X } from "lucide-react";
-import { SadexLogo } from '../components/SadexLogo';
 
 const DARK = "#080810";
 const CARD_BG = "#0f0f1a";
@@ -52,7 +51,10 @@ export function SuperAdminLayout() {
       </div>
 
       <div style={{ margin: "0 12px 12px", padding: "12px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: `1px solid ${BORDER}`, display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-        <SadexLogo size={22} variant="dark" />
+        <div className="flex items-center gap-2">
+          <img src="/schoolos-logo.svg" alt="SchoolOS" style={{ height: "28px", width: "auto", filter: "brightness(0) invert(1)" }} />
+          <span style={{ color: "#e2e8f0", fontSize: "0.9rem", fontWeight: 700, letterSpacing: "-0.01em" }}>SchoolOS</span>
+        </div>
         <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "12px" }}>
           <button onClick={() => { document.cookie = "schoolos_admin_token=; path=/api/superadmin; max-age=0"; navigate("/auth"); }}
             className="flex items-center gap-2 w-full text-left hover:opacity-70" style={{ color: "#64748b", fontSize: "0.82rem" }}>

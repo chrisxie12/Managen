@@ -1,31 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 60" fill="none">
-  <!-- Hexagonal badge (pointy-top), navy fill -->
-  <polygon points="28,2 52,16 52,44 28,58 4,44 4,16" fill="#0A2472"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" fill="none">
 
-  <!-- Inner hex border glow -->
-  <polygon points="28,6 48,18 48,42 28,54 8,42 8,18"
-           fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <!-- Shield body (navy) -->
+  <path fill="#0A2472" d="M 26,0 Q 2,0 2,24 L 2,118 Q 26,208 100,238 Q 174,208 198,118 L 198,24 Q 198,0 174,0 Z"/>
 
-  <!-- S letterform -->
-  <path d="M 19 24
-           C 19 17, 23 14, 28 14
-           C 33 14, 37 17, 37 22
-           C 37 26, 34 28, 28 30
-           C 22 32, 19 34, 19 38
-           C 19 43, 23 46, 28 46
-           C 33 46, 37 43, 37 38"
-        stroke="white" stroke-width="5" fill="none"
-        stroke-linecap="round"/>
+  <!-- Open book (bottom of shield) -->
+  <!-- Left page -->
+  <path fill="white" d="M 100,175 Q 65,163 28,172 Q 20,183 30,194 Q 60,210 100,212 Z"/>
+  <!-- Right page -->
+  <path fill="white" d="M 100,175 Q 135,163 172,172 Q 180,183 170,194 Q 140,210 100,212 Z"/>
+  <!-- Page lines (left) -->
+  <line x1="40" y1="178" x2="97" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <line x1="33" y1="187" x2="97" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <line x1="31" y1="196" x2="97" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Page lines (right) -->
+  <line x1="160" y1="178" x2="103" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <line x1="167" y1="187" x2="103" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <line x1="169" y1="196" x2="103" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- Spine -->
+  <line x1="100" y1="175" x2="100" y2="213" stroke="#0A2472" stroke-width="2" stroke-linecap="round"/>
 
-  <!-- Book waves -->
-  <line x1="18" y1="51" x2="38" y2="51" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="20" y1="55" x2="36" y2="55" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/>
+  <!-- S letter (draws below cap so cap overlays it) -->
+  <text x="100" y="162"
+        text-anchor="middle"
+        font-family="Georgia,'Times New Roman',serif"
+        font-size="144"
+        font-weight="bold"
+        fill="white">S</text>
 
-  <!-- Dot accents -->
-  <circle cx="28" cy="2"  r="2"   fill="#3B82F6"/>
-  <circle cx="52" cy="16" r="1.5" fill="#1D4ED8"/>
-  <circle cx="52" cy="44" r="1.5" fill="#1D4ED8"/>
-  <circle cx="28" cy="58" r="2"   fill="#3B82F6"/>
-  <circle cx="4"  cy="44" r="1.5" fill="#1D4ED8"/>
-  <circle cx="4"  cy="16" r="1.5" fill="#1D4ED8"/>
+  <!-- Graduation cap body -->
+  <path fill="white" d="M 76,16 Q 76,9 83,9 L 117,9 Q 124,9 124,16 L 124,47 Q 112,50 100,50 Q 88,50 76,47 Z"/>
+  <!-- Cap top button -->
+  <circle fill="white" cx="100" cy="10" r="3.5"/>
+  <!-- Mortarboard board (flat, overlays top of S) -->
+  <rect fill="white" x="50" y="46" width="100" height="9" rx="3"/>
+  <!-- Tassel cord -->
+  <line x1="148" y1="51" x2="151" y2="73" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Tassel fluff -->
+  <ellipse fill="white" cx="151" cy="78" rx="5.5" ry="5"/>
+
 </svg>

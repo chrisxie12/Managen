@@ -1,34 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Background tile -->
-  <rect width="512" height="512" rx="96" fill="#07143B"/>
 
-  <!-- Outer hexagon fill (pointy-top) -->
-  <polygon points="256,48 435,152 435,360 256,464 77,360 77,152" fill="#0A2472"/>
+  <!-- Cream background -->
+  <rect width="512" height="512" rx="86" fill="#FAF7F2"/>
 
-  <!-- Inner hexagon border glow -->
-  <polygon points="256,64 419,163 419,349 256,448 93,349 93,163"
-           fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"/>
+  <!-- Shield centered in 512×512: scale(1.95) translate(61,24) from 200x250 viewBox -->
+  <g transform="translate(61,24) scale(1.95)">
 
-  <!-- Bold S letterform -->
-  <path d="M 182 213
-           C 182 165, 214 144, 256 144
-           C 298 144, 330 165, 330 200
-           C 330 229, 309 245, 256 261
-           C 203 277, 182 293, 182 325
-           C 182 360, 214 380, 256 380
-           C 298 380, 332 360, 332 325"
-        stroke="white" stroke-width="42" fill="none"
-        stroke-linecap="round"/>
+    <!-- Shield body (navy) -->
+    <path fill="#0A2472" d="M 26,0 Q 2,0 2,24 L 2,118 Q 26,208 100,238 Q 174,208 198,118 L 198,24 Q 198,0 174,0 Z"/>
 
-  <!-- Book waves -->
-  <line x1="170" y1="415" x2="342" y2="415" stroke="#3B82F6" stroke-width="11" stroke-linecap="round"/>
-  <line x1="182" y1="434" x2="330" y2="434" stroke="#60A5FA" stroke-width="8" stroke-linecap="round"/>
+    <!-- Open book -->
+    <path fill="white" d="M 100,175 Q 65,163 28,172 Q 20,183 30,194 Q 60,210 100,212 Z"/>
+    <path fill="white" d="M 100,175 Q 135,163 172,172 Q 180,183 170,194 Q 140,210 100,212 Z"/>
+    <line x1="40" y1="178" x2="97" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="33" y1="187" x2="97" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="31" y1="196" x2="97" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="160" y1="178" x2="103" y2="188" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="167" y1="187" x2="103" y2="197" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="169" y1="196" x2="103" y2="206" stroke="#0A2472" stroke-width="1.6" stroke-linecap="round"/>
+    <line x1="100" y1="175" x2="100" y2="213" stroke="#0A2472" stroke-width="2" stroke-linecap="round"/>
 
-  <!-- Dot accents at hex vertices -->
-  <circle cx="256" cy="48" r="12" fill="#3B82F6"/>
-  <circle cx="435" cy="152" r="9" fill="#1D4ED8"/>
-  <circle cx="435" cy="360" r="9" fill="#1D4ED8"/>
-  <circle cx="256" cy="464" r="12" fill="#3B82F6"/>
-  <circle cx="77" cy="360" r="9" fill="#1D4ED8"/>
-  <circle cx="77" cy="152" r="9" fill="#1D4ED8"/>
+    <!-- S letter -->
+    <text x="100" y="162"
+          text-anchor="middle"
+          font-family="Georgia,'Times New Roman',serif"
+          font-size="144"
+          font-weight="bold"
+          fill="white">S</text>
+
+    <!-- Graduation cap body -->
+    <path fill="white" d="M 76,16 Q 76,9 83,9 L 117,9 Q 124,9 124,16 L 124,47 Q 112,50 100,50 Q 88,50 76,47 Z"/>
+    <circle fill="white" cx="100" cy="10" r="3.5"/>
+    <rect fill="white" x="50" y="46" width="100" height="9" rx="3"/>
+    <line x1="148" y1="51" x2="151" y2="73" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse fill="white" cx="151" cy="78" rx="5.5" ry="5"/>
+
+  </g>
+
 </svg>
