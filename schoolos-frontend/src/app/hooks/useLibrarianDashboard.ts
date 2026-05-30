@@ -81,13 +81,13 @@ export function useLibrarianDashboard() {
                 const [
                     statsRes, circRes, breakRes, overdueRes, actRes, lowRes, topRes
                 ] = await Promise.all([
-                    api.get('/school/library/dashboard/stats'),
-                    api.get('/school/library/circulation-trend'),
-                    api.get('/school/library/overdue-breakdown'),
-                    api.get('/school/library/overdue?limit=10'),
-                    api.get('/school/library/activity?limit=10'),
-                    api.get('/school/library/low-stock?limit=8'),
-                    api.get('/school/library/top-books?limit=6')
+                    api.get<any>('/school/library/dashboard/stats'),
+                    api.get<any>('/school/library/circulation-trend'),
+                    api.get<any>('/school/library/overdue-breakdown'),
+                    api.get<any>('/school/library/overdue?limit=10'),
+                    api.get<any>('/school/library/activity?limit=10'),
+                    api.get<any>('/school/library/low-stock?limit=8'),
+                    api.get<any>('/school/library/top-books?limit=6')
                 ]);
 
                 setStats(statsRes.data?.data || null);

@@ -76,7 +76,7 @@ export function useRealtime({ schoolId, userId }: RealtimeConfig) {
           realtime: { params: { apikey: token } },
           global: { headers: { Authorization: `Bearer ${token}` } },
         });
-        supabaseRef.current = supabase;
+        supabaseRef.current = supabase as any;
 
         const channel = supabase.channel("live-dashboard");
 

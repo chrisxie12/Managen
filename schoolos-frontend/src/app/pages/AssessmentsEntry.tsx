@@ -38,17 +38,17 @@ export function AssessmentsEntry() {
   
   // Data Loaders
   useEffect(() => {
-    api.get("/api/school/classes").then(r => setClasses(r.data?.data || []));
-    api.get("/api/school/subjects").then(r => setSubjects(r.data?.data || []));
-    api.get("/api/school/terms").then(r => setTerms(r.data?.data || []));
+    api.get<any>("/api/school/classes").then(r => setClasses(r.data?.data || []));
+    api.get<any>("/api/school/subjects").then(r => setSubjects(r.data?.data || []));
+    api.get<any>("/api/school/terms").then(r => setTerms(r.data?.data || []));
   }, []);
 
   const fetchGrid = useCallback(async () => {
     if (!selectedClass || !selectedSubject || !selectedTerm) return;
     setFetching(true);
     try {
-      const res = await api.get(`/api/assessments/grid?class_id=${selectedClass}&subject_id=${selectedSubject}&term_id=${selectedTerm}`);
-      const d = res.data.data;
+      const res = await api.get<any>(`/api/assessments/grid?class_id=${selectedClass}&subject_id=${selectedSubject}&term_id=${selectedTerm}`);
+      const d = res.data?.data ?? res.data;
       setStudents(d.students || []);
       setAssessmentTypes(d.assessmentTypes || []);
       setAssessments(d.assessments || []);
@@ -172,8 +172,8 @@ export function AssessmentsEntry() {
         await api.patch(`/api/assessments/scores/${currentObj.id}`, { score: currentObj.score });
         setScores(prev => ({ ...prev, [key]: { ...prev[key], _status: 'saved' } }));
       } else {
-        const res = await api.post(`/api/assessments/scores`, { student_id: studentId, assessment_id: assessmentId, score: currentObj.score });
-        setScores(prev => ({ ...prev, [key]: { ...res.data.data, _status: 'saved' } }));
+        const res = await api.post<any>(`/api/assessments/scores`, { student_id: studentId, assessment_id: assessmentId, score: currentObj.score });
+        setScores(prev => ({ ...prev, [key]: { ...(res.data?.data ?? res.data ?? {}), _status: 'saved' } }));
       }
     } catch (err) {
       setScores(prev => ({ ...prev, [key]: { ...prev[key], _status: 'error' } }));
@@ -210,8 +210,8 @@ export function AssessmentsEntry() {
               newScores[key] = { id: existingId, student_id: student.id, assessment_id: assessment.id, score: numVal, _status: 'unsaved' };
               patched = true;
               // Trigger save asynchronously
-              api.post(`/api/assessments/scores`, { student_id: student.id, assessment_id: assessment.id, score: numVal })
-                .then(res => { setScores(prev => ({ ...prev, [key]: { ...res.data.data, _status: 'saved' } })) })
+              api.post<any>(`/api/assessments/scores`, { student_id: student.id, assessment_id: assessment.id, score: numVal })
+                .then(res => { setScores(prev => ({ ...prev, [key]: { ...(res.data?.data ?? res.data ?? {}), _status: 'saved' } })) })
                 .catch(() => { setScores(prev => ({ ...prev, [key]: { ...newScores[key], _status: 'error' } })) });
             }
           }
@@ -315,7 +315,7 @@ export function AssessmentsEntry() {
                           {status === 'saving' && <Loader2 size={12} className="absolute right-2 top-2 animate-spin text-blue-500" />}
                           {status === 'saved' && <CheckCircle2 size={12} className="absolute right-2 top-2 text-green-500 opacity-50" />}
                           {status === 'unsaved' && <div className="absolute right-2 top-2 w-2 h-2 rounded-full bg-orange-400" title="Unsaved changes" />}
-                          {status === 'error' && <XCircle size={12} className="absolute right-2 top-2 text-red-500" title="Save failed" />}
+                          {status === 'error' && <span title="Save failed"><XCircle size={12} className="absolute right-2 top-2 text-red-500" /></span>}
                         </td>
                       );
                     })}

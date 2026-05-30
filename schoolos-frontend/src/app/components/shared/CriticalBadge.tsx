@@ -2,6 +2,7 @@ import React from 'react';
 
 interface CriticalBadgeProps {
   label?: string;
+  count?: number;
 }
 
 export const CriticalBadge: React.FC<CriticalBadgeProps> = ({ label = 'CRITICAL' }) => {

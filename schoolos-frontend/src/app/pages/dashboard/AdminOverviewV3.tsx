@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import {
-  Users, Wallet, TrendingUp, AlertCircle, Clock, CheckCircle2, 
+  Users, Wallet, TrendingUp, AlertCircle, Clock, CheckCircle2,
   ArrowUpRight, ArrowDownRight, Activity, MessageSquare, FileText,
   BarChart3, Calendar, Settings, Download, Bell, Search,
   ChevronRight, MoreHorizontal, Zap, DollarSign, BookOpen,
-  GraduationCap, ClipboardList, LucideIcon
+  GraduationCap, ClipboardList, LucideIcon, CalendarCheck
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
@@ -303,7 +303,7 @@ export function AdminOverviewV3() {
   const navigate = useNavigate();
   const { user, school } = useAuth();
   const { data: dashData, isLoading } = useDashboardStats();
-  const { connected } = useRealtime({ schoolId: school?.id || school?.slug || "", userId: user?.id || "" });
+  const { connected } = useRealtime({ schoolId: school?.slug || "", userId: user?.id || "" });
   const [timeRange, setTimeRange] = useState("month");
 
   // Mock data for charts
@@ -332,7 +332,7 @@ export function AdminOverviewV3() {
   const totalBilled = dashData?.finance?.totalBilled ?? 0;
   const totalCollected = dashData?.finance?.totalCollected ?? 0;
   const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
-  const defaultersCount = dashData?.defaulters?.count ?? 0;
+  const defaultersCount = (dashData as any)?.defaulters?.count ?? 0;
   const pendingApprovals = dashData?.pendingCount ?? 0;
 
   // Mock alerts
@@ -443,7 +443,7 @@ export function AdminOverviewV3() {
               }}
               className="text-foreground"
             >
-              Welcome back, {user?.firstName || "Admin"}
+              Welcome back, {user?.fullName?.split(' ')[0] || "Admin"}
             </h1>
             <p className="text-muted-foreground">
               {school?.name || "School Management"}
@@ -593,7 +593,7 @@ export function AdminOverviewV3() {
         <KPICard
           icon={BookOpen}
           label="Active Classes"
-          value={dashData?.stats?.activeClasses ?? 0}
+          value={(dashData?.stats as any)?.activeClasses ?? 0}
           color="purple"
           subtext="Scheduled today"
           isLoading={isLoading}

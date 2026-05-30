@@ -1,4 +1,3 @@
-import { StatCard } from '../../../../components/shared/StatCard';
 import type { StatsData } from '../../hooks/useDashboardData';
 import { formatCurrency } from '../../../../utils/formatters';
 
@@ -104,17 +103,29 @@ export function KpiCards({ stats, loading, error, onRetry }: KpiCardsProps) {
           : 'badge' in card ? (card.badge as any) : undefined;
 
         return (
-          <StatCard
-            key={card.label}
-            bg={card.bg}
-            label={card.label}
-            value={stats ? card.valueKey(stats) : '—'}
-            icon={card.icon}
-            subtitle={stats ? card.subtitleKey(stats) : undefined}
-            badge={badge}
-            href={card.href}
-            loading={loading}
-          />
+          <div key={card.label}
+            className="rounded-xl p-3 flex flex-col justify-between min-h-[100px] cursor-pointer hover:opacity-90 transition-opacity"
+            style={{ background: card.bg }}
+            onClick={() => window.location.href = card.href}
+          >
+            <div className="flex items-start justify-between">
+              <span className="text-lg">{card.icon}</span>
+              {badge && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white/20 text-white">
+                  {(badge as any).text}
+                </span>
+              )}
+            </div>
+            <div>
+              <p className="text-lg font-bold text-white leading-tight">
+                {loading ? <span className="opacity-50">…</span> : (stats ? card.valueKey(stats) : '—')}
+              </p>
+              <p className="text-[10px] font-semibold text-white/80 uppercase tracking-wide mt-0.5">{card.label}</p>
+              {stats && (
+                <p className="text-[10px] text-white/60 mt-0.5">{card.subtitleKey(stats)}</p>
+              )}
+            </div>
+          </div>
         );
       })}
     </div>

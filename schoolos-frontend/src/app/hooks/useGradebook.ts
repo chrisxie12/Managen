@@ -49,9 +49,9 @@ export function useMetaData() {
     queryKey: ["gradebook-meta"],
     queryFn: async () => {
       const [clsRes, subRes, termRes] = await Promise.all([
-        api.get<{ data: ClassItem[] }>("/api/school/classes"),
-        api.get<{ data: Subject[] }>("/api/school/subjects"),
-        api.get<{ data: Term[] }>("/api/school/terms"),
+        api.get<ClassItem[]>("/api/school/classes"),
+        api.get<Subject[]>("/api/school/subjects"),
+        api.get<Term[]>("/api/school/terms"),
       ]);
       return {
         classes: clsRes.data ?? [],
@@ -68,19 +68,19 @@ export function useGradebookData(classId: string, subjectId: string, termId: str
     queryKey: ["gradebook", { classId, subjectId, termId }],
     queryFn: async () => {
       const [itemsRes, scoresRes, studentsRes] = await Promise.all([
-        api.get<{ data: AssessmentItem[] }>(
+        api.get<AssessmentItem[]>(
           `/api/grades/items?class_id=${classId}&subject_id=${subjectId}&term_id=${termId}`
         ),
-        api.get<{ data: ScoreEntry[] }>(
+        api.get<ScoreEntry[]>(
           `/api/grades/scores?class_id=${classId}&subject_id=${subjectId}&term_id=${termId}`
         ),
-        api.get<{ data: StudentBasic[] }>(
+        api.get<StudentBasic[]>(
           `/api/school/students?class_id=${classId}`
         ),
       ]);
 
       const scoreMap: Record<string, Record<string, string>> = {};
-      (scoresRes.data || []).forEach((s: ScoreEntry) => {
+      (scoresRes.data ?? []).forEach((s: ScoreEntry) => {
         if (!scoreMap[s.student_id]) scoreMap[s.student_id] = {};
         scoreMap[s.student_id][s.assessment_item_id] = String(s.score_achieved);
       });

@@ -46,7 +46,7 @@ export function useMarkAttendance() {
     onMutate: async ({ classId, date, records }) => {
       await queryClient.cancelQueries({ queryKey: ["attendance", { classId, date }] });
       const previous = queryClient.getQueryData<AttendanceRecord[]>(["attendance", { classId, date }]);
-      queryClient.setQueryData<AttendanceRecord[]>(["attendance", { classId, date }], (old) => {
+      queryClient.setQueryData<AttendanceRecord[]>(["attendance", { classId, date }], (old): AttendanceRecord[] | undefined => {
         if (!old) return records.map((r) => ({ ...r, date, class_id: classId }));
         const updated = old.map(
           (o) => records.find((r) => r.student_id === o.student_id) ?? o
@@ -54,7 +54,7 @@ export function useMarkAttendance() {
         const added = records.filter(
           (r) => !old.some((o) => o.student_id === r.student_id)
         );
-        return [...updated, ...added.map((a) => ({ ...a, date, class_id: classId }))];
+        return [...updated, ...added.map((a) => ({ ...a, date, class_id: classId }))] as AttendanceRecord[];
       });
       return { previous };
     },

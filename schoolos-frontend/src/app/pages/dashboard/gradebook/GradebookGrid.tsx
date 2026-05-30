@@ -151,7 +151,7 @@ export function GradebookGrid() {
     if (!newItemName.trim() || !newItemMax) return;
     setAddingItem(true);
     try {
-      const res = await api.post<{ data: AssessmentItem }>("/api/grades/items", {
+      const res = await api.post<AssessmentItem>("/api/grades/items", {
         class_id: selectedClass,
         subject_id: selectedSubject,
         term_id: selectedTerm,

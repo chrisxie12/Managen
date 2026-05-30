@@ -2,12 +2,12 @@ import React from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface SectionErrorProps {
-  name: string;
-  onRetry: () => void;
+  name?: string;
+  onRetry?: () => void;
   message?: string;
 }
 
-export const SectionError: React.FC<SectionErrorProps> = ({ name, onRetry, message }) => {
+export const SectionError: React.FC<SectionErrorProps> = ({ name = 'data', onRetry, message }) => {
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-red-50 border border-red-100 rounded-xl">
       <AlertTriangle className="w-8 h-8 text-red-500 mb-3" />

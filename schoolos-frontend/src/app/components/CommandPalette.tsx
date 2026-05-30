@@ -74,7 +74,7 @@ export function CommandPalette() {
     const timer = setTimeout(async () => {
       setSearching(true);
       try {
-        const res = await api.get<{ data: { students: { id: string; name: string; class_name: string; path: string }[] } }>(`/api/school/search?q=${encodeURIComponent(query)}`);
+        const res = await api.get<{ students: { id: string; name: string; class_name: string; path: string }[] }>(`/api/school/search?q=${encodeURIComponent(query)}`);
         if (!controller.signal.aborted) {
           setResults(res.data?.students || []);
         }

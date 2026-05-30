@@ -39,7 +39,6 @@ export function SchoolSettings() {
     <Tabs value={activeTab} onValueChange={setActiveTab} className="flex gap-0 min-h-[calc(100vh-80px)]">
       {/* Desktop sidebar */}
       <TabsList
-        orientation="vertical"
         className="hidden lg:flex flex-col w-[240px] flex-shrink-0 p-4 gap-1 h-fit rounded-2xl bg-transparent"
         style={{ background: "#F9F1E7", borderRight: "1px solid rgba(10,36,114,0.07)" }}
       >

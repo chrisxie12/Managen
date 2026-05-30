@@ -5,6 +5,7 @@ interface MiniSparklineProps {
   data: number[];
   color?: string;
   height?: number;
+  width?: number;
 }
 
 export const MiniSparkline: React.FC<MiniSparklineProps> = ({ 

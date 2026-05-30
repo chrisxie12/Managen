@@ -103,7 +103,7 @@ export function SettingsPage() {
   };
 
   const renderTab = () => {
-    const props = { profile, onSave: handleSave, saving, role, redirectOnComplete: !!missingFromGuard };
+    const props = { profile: profile as Record<string, any>, onSave: handleSave, saving, role, redirectOnComplete: !!missingFromGuard };
     switch (activeTab) {
       case "profile": return <SchoolProfileTab />;
       case "academic": return profile ? <AcademicSettingsTab {...props} /> : null;

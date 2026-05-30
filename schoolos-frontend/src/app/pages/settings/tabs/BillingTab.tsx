@@ -318,8 +318,7 @@ export function BillingTab({ profile, role }: Props) {
                   className={`flex items-center justify-between p-3 rounded-xl ${planKey === p ? "ring-2" : ""}`}
                   style={{
                     background: planKey === p ? "rgba(10,36,114,0.04)" : "white",
-                    border: "1px solid rgba(10,36,114,0.1)",
-                    ringColor: planKey === p ? NAVY : "transparent",
+                    border: planKey === p ? `2px solid ${NAVY}` : "1px solid rgba(10,36,114,0.1)",
                   }}>
                   <div>
                     <span className="text-sm font-semibold" style={{ color: NAVY }}>{PLAN_NAMES[p]}</span>

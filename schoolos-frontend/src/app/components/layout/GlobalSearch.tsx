@@ -28,9 +28,9 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
   const [loading, setLoading] = useState(false);
   const [recent, setRecent] = useState<SearchResult[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const focusTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const focusTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (open) {

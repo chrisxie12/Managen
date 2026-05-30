@@ -107,7 +107,7 @@ export function StudentsImport() {
     formData.append('file', file);
 
     try {
-      const res = await api.upload('/api/school/students/import', formData);
+      const res = await api.upload<{ errors?: string[]; imported?: number }>('/api/school/students/import', formData);
       if (res.data?.errors) {
         setErrors(res.data.errors);
       } else {

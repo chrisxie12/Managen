@@ -1,11 +1,14 @@
 import React from 'react';
 
 interface DashboardSkeletonProps {
-  layout: 'cards' | 'chart' | 'table' | 'list' | 'timeline';
+  layout?: 'cards' | 'chart' | 'table' | 'list' | 'timeline';
   count?: number;
+  sections?: number;
+  cardsPerSection?: number;
 }
 
-export const DashboardSkeleton: React.FC<DashboardSkeletonProps> = ({ layout, count = 1 }) => {
+export const DashboardSkeleton: React.FC<DashboardSkeletonProps> = ({ layout = 'cards', count, sections, cardsPerSection }) => {
+  count = count ?? (sections && cardsPerSection ? sections * cardsPerSection : sections ?? cardsPerSection ?? 1);
   const elements = Array.from({ length: count });
 
   if (layout === 'cards') {

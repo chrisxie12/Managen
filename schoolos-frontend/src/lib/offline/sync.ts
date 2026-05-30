@@ -46,7 +46,7 @@ export async function processSyncQueue(): Promise<SyncResult> {
     const response = await api.post('/api/school/attendance/bulk', { records, from_offline_sync: true });
     
     // Check conflicts
-    const data = response.data;
+    const data = response.data as { inserted?: number; conflicts?: any[] } | undefined;
     const syncedCount = data?.inserted || 0;
     const conflictCount = data?.conflicts?.length || 0;
 

@@ -65,12 +65,12 @@ export function useAccountantDashboard() {
                 const [
                     statsRes, trendRes, modesRes, incomeRes, detailRes, classRes
                 ] = await Promise.all([
-                    api.get('/school/accountant/dashboard/stats'),
-                    api.get('/school/accountant/fee-trend'),
-                    api.get('/school/accountant/payment-modes'),
-                    api.get('/school/accountant/income-expense'),
-                    api.get('/school/accountant/fee-status-detail'),
-                    api.get('/school/accountant/class-collection')
+                    api.get<any>('/school/accountant/dashboard/stats'),
+                    api.get<any>('/school/accountant/fee-trend'),
+                    api.get<any>('/school/accountant/payment-modes'),
+                    api.get<any>('/school/accountant/income-expense'),
+                    api.get<any>('/school/accountant/fee-status-detail'),
+                    api.get<any>('/school/accountant/class-collection')
                 ]);
 
                 setStats(statsRes.data?.data || null);

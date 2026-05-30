@@ -108,9 +108,10 @@ export function UploadButton({
       if (confirmRes.error) throw new Error(confirmRes.error);
 
       setProgress(100);
-      setPreview(confirmKey);
+      const fileUrl = (confirmRes.data as any)?.url || key;
+      setPreview(fileUrl);
       setTimeout(() => {
-        onUploadComplete?.({ url: confirmKey, key: confirmKey });
+        onUploadComplete?.({ url: fileUrl, key });
         setProgress(0);
       }, 500);
     } catch (err: any) {

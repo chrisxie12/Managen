@@ -91,7 +91,7 @@ export function useParentDashboard() {
     useEffect(() => {
         const fetchChildren = async () => {
             try {
-                const res = await api.get('/school/parent/children');
+                const res = await api.get<any>('/school/parent/children');
                 const kids = res.data?.data || [];
                 setChildren(kids);
                 if (kids.length > 0) {
@@ -115,14 +115,14 @@ export function useParentDashboard() {
                 const [
                     sumRes, weekRes, attRes, feeRes, resRes, hwRes, examRes, noticeRes
                 ] = await Promise.all([
-                    api.get(`/school/parent/child/${selectedChildId}/summary`),
-                    api.get(`/school/parent/child/${selectedChildId}/week-summary`),
-                    api.get(`/school/parent/child/${selectedChildId}/attendance`),
-                    api.get(`/school/parent/child/${selectedChildId}/fees`),
-                    api.get(`/school/parent/child/${selectedChildId}/results`),
-                    api.get(`/school/parent/child/${selectedChildId}/homework`),
-                    api.get(`/school/parent/child/${selectedChildId}/exams`),
-                    api.get('/school/parent/notices')
+                    api.get<any>(`/school/parent/child/${selectedChildId}/summary`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/week-summary`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/attendance`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/fees`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/results`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/homework`),
+                    api.get<any>(`/school/parent/child/${selectedChildId}/exams`),
+                    api.get<any>('/school/parent/notices')
                 ]);
 
                 setSummary(sumRes.data?.data || null);

@@ -75,12 +75,12 @@ export function useTeacherDashboard() {
                 const [
                     statsRes, timetableRes, perfRes, hwRes, examRes, attRes
                 ] = await Promise.all([
-                    api.get('/school/teacher/dashboard/stats'),
-                    api.get('/school/teacher/timetable/today'),
-                    api.get('/school/teacher/my-classes/performance'),
-                    api.get('/school/teacher/homework'),
-                    api.get('/school/teacher/exams/upcoming'),
-                    api.get('/school/teacher/attendance/weekly')
+                    api.get<any>('/school/teacher/dashboard/stats'),
+                    api.get<any>('/school/teacher/timetable/today'),
+                    api.get<any>('/school/teacher/my-classes/performance'),
+                    api.get<any>('/school/teacher/homework'),
+                    api.get<any>('/school/teacher/exams/upcoming'),
+                    api.get<any>('/school/teacher/attendance/weekly')
                 ]);
 
                 setStats(statsRes.data?.data || null);

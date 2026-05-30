@@ -2,13 +2,15 @@ import React from 'react';
 import { getInitials, getAvatarColor } from '../../utils/formatters';
 
 interface AvatarInitialsProps {
-  name: string;
+  name?: string;
+  initials?: string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
-export const AvatarInitials: React.FC<AvatarInitialsProps> = ({ 
-  name, 
+export const AvatarInitials: React.FC<AvatarInitialsProps> = ({
+  name = '',
+  initials: initialsOverride,
   size = 'md',
   className = ''
 }) => {
@@ -19,10 +21,10 @@ export const AvatarInitials: React.FC<AvatarInitialsProps> = ({
   };
 
   const backgroundColor = getAvatarColor(name);
-  const initials = getInitials(name);
+  const initials = initialsOverride || getInitials(name);
 
   return (
-    <div 
+    <div
       className={`rounded-full flex items-center justify-center text-white font-bold shrink-0 ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor }}
       title={name}

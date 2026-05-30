@@ -134,7 +134,7 @@ export function Attendance() {
   const [tab, setTab] = useState("overview");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { isOnline, syncing, pendingCount, triggerSync, lastResult, clearResult, wifiOnly, toggleWifiOnly } = useSyncManager();
+  const { isOnline, syncing, pendingCount, triggerSync, lastResult, clearResult, wifiOnly, toggleWifiOnly, refreshQueue } = useSyncManager();
 
   useEffect(() => {
     if (lastResult) {
@@ -345,8 +345,8 @@ function MarkTab({ setError, setSuccess }: { setError: (s: string) => void; setS
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
-  const { refreshQueue, isOnline } = useSyncManager();
   const [offlineStatuses, setOfflineStatuses] = useState<Record<string, boolean>>({});
+  const { refreshQueue, isOnline } = useSyncManager();
 
   const loadClasses = useCallback(async () => {
     try {

@@ -88,13 +88,13 @@ export function useStudentDashboard() {
                 const [
                     statsRes, timetableRes, resRes, hwRes, examRes, matRes, notRes
                 ] = await Promise.all([
-                    api.get('/school/student/dashboard/today'),
-                    api.get('/school/student/timetable/today'),
-                    api.get('/school/student/results/recent'),
-                    api.get('/school/student/homework/active'),
-                    api.get('/school/student/exams/upcoming'),
-                    api.get('/school/student/study-materials'),
-                    api.get('/school/student/notices')
+                    api.get<any>('/school/student/dashboard/today'),
+                    api.get<any>('/school/student/timetable/today'),
+                    api.get<any>('/school/student/results/recent'),
+                    api.get<any>('/school/student/homework/active'),
+                    api.get<any>('/school/student/exams/upcoming'),
+                    api.get<any>('/school/student/study-materials'),
+                    api.get<any>('/school/student/notices')
                 ]);
 
                 setStats(statsRes.data?.data || null);

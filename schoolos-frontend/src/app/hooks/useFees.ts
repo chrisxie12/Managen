@@ -79,7 +79,7 @@ export function useRecordFeePayment() {
         amount,
         method,
       });
-      return { studentId, amount, ...res.data };
+      return { studentId, amount, ...(res.data as Record<string, any> ?? {}) };
     },
 
     onMutate: async ({ studentId, amount }) => {
