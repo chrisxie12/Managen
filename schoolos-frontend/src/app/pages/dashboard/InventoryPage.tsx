@@ -1,0 +1,459 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { Plus, Download, Package, AlertTriangle, Building2, DollarSign } from "lucide-react";
+import { PageTemplate } from "../../components/layout/PageTemplate";
+
+const NAVY = "#031B4E";
+const MUTED = "#6B7280";
+const PRIMARY = "#031B4E";
+const SUCCESS = "#16A34A";
+const WARNING = "#F59E0B";
+const DANGER = "#EF4444";
+const INFO = "#3B82F6";
+
+type ItemCategory = "All" | "Furniture" | "Electronics" | "Lab Equipment" | "Sports" | "Stationery";
+type ItemCondition = "Good" | "Fair" | "Poor" | "New";
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  category: Exclude<ItemCategory, "All">;
+  quantity: number;
+  minQuantity: number;
+  unit: string;
+  location: string;
+  condition: ItemCondition;
+  unitValue: number;
+  lastUpdated: string;
+}
+
+const mockItems: InventoryItem[] = [
+  {
+    id: "i1",
+    name: "Student Desk & Chair (Set)",
+    category: "Furniture",
+    quantity: 285,
+    minQuantity: 250,
+    unit: "Sets",
+    location: "Classrooms",
+    condition: "Good",
+    unitValue: 450,
+    lastUpdated: "2024-05-10",
+  },
+  {
+    id: "i2",
+    name: "Teacher's Desk",
+    category: "Furniture",
+    quantity: 18,
+    minQuantity: 15,
+    unit: "Pcs",
+    location: "Classrooms",
+    condition: "Good",
+    unitValue: 850,
+    lastUpdated: "2024-04-22",
+  },
+  {
+    id: "i3",
+    name: "Whiteboard",
+    category: "Furniture",
+    quantity: 14,
+    minQuantity: 15,
+    unit: "Pcs",
+    location: "Classrooms",
+    condition: "Fair",
+    unitValue: 600,
+    lastUpdated: "2024-05-01",
+  },
+  {
+    id: "i4",
+    name: "Desktop Computer",
+    category: "Electronics",
+    quantity: 32,
+    minQuantity: 30,
+    unit: "Units",
+    location: "ICT Lab",
+    condition: "Good",
+    unitValue: 3200,
+    lastUpdated: "2024-03-15",
+  },
+  {
+    id: "i5",
+    name: "Projector",
+    category: "Electronics",
+    quantity: 4,
+    minQuantity: 6,
+    unit: "Units",
+    location: "Conference / Classrooms",
+    condition: "Good",
+    unitValue: 4500,
+    lastUpdated: "2024-04-10",
+  },
+  {
+    id: "i6",
+    name: "Printer (Laser)",
+    category: "Electronics",
+    quantity: 3,
+    minQuantity: 3,
+    unit: "Units",
+    location: "Admin Block",
+    condition: "Fair",
+    unitValue: 2800,
+    lastUpdated: "2024-05-05",
+  },
+  {
+    id: "i7",
+    name: "Microscope (Compound)",
+    category: "Lab Equipment",
+    quantity: 22,
+    minQuantity: 20,
+    unit: "Units",
+    location: "Biology Lab",
+    condition: "Good",
+    unitValue: 1800,
+    lastUpdated: "2024-02-20",
+  },
+  {
+    id: "i8",
+    name: "Bunsen Burner",
+    category: "Lab Equipment",
+    quantity: 18,
+    minQuantity: 20,
+    unit: "Units",
+    location: "Chemistry Lab",
+    condition: "Good",
+    unitValue: 320,
+    lastUpdated: "2024-03-08",
+  },
+  {
+    id: "i9",
+    name: "Beaker Set (500ml)",
+    category: "Lab Equipment",
+    quantity: 45,
+    minQuantity: 40,
+    unit: "Sets",
+    location: "Chemistry Lab",
+    condition: "Good",
+    unitValue: 85,
+    lastUpdated: "2024-04-18",
+  },
+  {
+    id: "i10",
+    name: "Football",
+    category: "Sports",
+    quantity: 8,
+    minQuantity: 10,
+    unit: "Balls",
+    location: "Sports Store",
+    condition: "Good",
+    unitValue: 180,
+    lastUpdated: "2024-05-12",
+  },
+  {
+    id: "i11",
+    name: "Volleyball Net",
+    category: "Sports",
+    quantity: 2,
+    minQuantity: 2,
+    unit: "Nets",
+    location: "Sports Store",
+    condition: "New",
+    unitValue: 450,
+    lastUpdated: "2024-05-15",
+  },
+  {
+    id: "i12",
+    name: "Exercise Book (A4, 80 pages)",
+    category: "Stationery",
+    quantity: 420,
+    minQuantity: 500,
+    unit: "Books",
+    location: "Storeroom",
+    condition: "New",
+    unitValue: 8,
+    lastUpdated: "2024-05-18",
+  },
+  {
+    id: "i13",
+    name: "Whiteboard Marker (Box)",
+    category: "Stationery",
+    quantity: 12,
+    minQuantity: 20,
+    unit: "Boxes",
+    location: "Storeroom",
+    condition: "New",
+    unitValue: 55,
+    lastUpdated: "2024-05-18",
+  },
+  {
+    id: "i14",
+    name: "Chalk (Box, White)",
+    category: "Stationery",
+    quantity: 35,
+    minQuantity: 30,
+    unit: "Boxes",
+    location: "Storeroom",
+    condition: "New",
+    unitValue: 18,
+    lastUpdated: "2024-05-20",
+  },
+];
+
+const conditionColor: Record<ItemCondition, string> = {
+  New: SUCCESS,
+  Good: INFO,
+  Fair: WARNING,
+  Poor: DANGER,
+};
+
+const CATEGORIES: ItemCategory[] = [
+  "All",
+  "Furniture",
+  "Electronics",
+  "Lab Equipment",
+  "Sports",
+  "Stationery",
+];
+
+export function InventoryPage() {
+  const navigate = useNavigate();
+  const [items] = useState(mockItems);
+  const [activeCategory, setActiveCategory] = useState<ItemCategory>("All");
+
+  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
+  const lowStockItems = items.filter((i) => i.quantity < i.minQuantity).length;
+  const departments = new Set(items.map((i) => i.location)).size;
+  const totalValue = items.reduce((sum, i) => sum + i.quantity * i.unitValue, 0);
+
+  const filteredItems =
+    activeCategory === "All"
+      ? items
+      : items.filter((i) => i.category === activeCategory);
+
+  const isLowStock = (item: InventoryItem) => item.quantity < item.minQuantity;
+
+  return (
+    <PageTemplate
+      title="Inventory"
+      description="Track school assets, equipment and stock levels"
+      breadcrumb={[
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Inventory" },
+      ]}
+      actions={
+        <div className="flex items-center gap-2">
+          <button
+            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm"
+            style={{ background: "white", color: PRIMARY, border: `1px solid ${PRIMARY}30` }}
+          >
+            <Download size={16} />
+            Export
+          </button>
+          <button
+            onClick={() => navigate("/dashboard/inventory/add")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm text-white"
+            style={{ background: PRIMARY }}
+          >
+            <Plus size={16} />
+            Add Item
+          </button>
+        </div>
+      }
+    >
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "Total Items", value: totalItems.toLocaleString(), icon: Package, color: NAVY },
+          { label: "Low Stock", value: lowStockItems, icon: AlertTriangle, color: DANGER },
+          { label: "Departments", value: departments, icon: Building2, color: INFO },
+          {
+            label: "Total Value (GHS)",
+            value: `₵${(totalValue / 1000).toFixed(0)}K`,
+            icon: DollarSign,
+            color: SUCCESS,
+          },
+        ].map(({ label, value, icon: Icon, color }) => (
+          <div
+            key={label}
+            className="p-5 rounded-lg flex items-start gap-4"
+            style={{ background: "white", border: `1px solid ${NAVY}20` }}
+          >
+            <div
+              className="p-2.5 rounded-lg flex-shrink-0"
+              style={{ background: `${color}15` }}
+            >
+              <Icon size={20} style={{ color }} />
+            </div>
+            <div>
+              <div style={{ color: MUTED, fontSize: "0.8rem", fontWeight: 500 }}>{label}</div>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  color,
+                  fontSize: "1.4rem",
+                  fontWeight: 700,
+                  marginTop: "0.25rem",
+                }}
+              >
+                {value}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Low Stock Alert */}
+      {lowStockItems > 0 && (
+        <div
+          className="p-4 rounded-lg flex items-start gap-3"
+          style={{ background: `${WARNING}12`, border: `1px solid ${WARNING}35` }}
+        >
+          <AlertTriangle size={20} style={{ color: WARNING, flexShrink: 0, marginTop: "0.1rem" }} />
+          <div>
+            <div style={{ color: WARNING, fontWeight: 600, fontSize: "0.95rem" }}>
+              {lowStockItems} item{lowStockItems > 1 ? "s are" : " is"} below minimum stock level
+            </div>
+            <div style={{ color: MUTED, fontSize: "0.875rem", marginTop: "0.25rem" }}>
+              Highlighted rows below indicate items that need restocking.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Category Tabs */}
+      <div
+        className="p-1 rounded-xl flex items-center gap-1 flex-wrap"
+        style={{ background: `${NAVY}06`, border: `1px solid ${NAVY}15` }}
+      >
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+            style={{
+              background: activeCategory === cat ? "white" : "transparent",
+              color: activeCategory === cat ? NAVY : MUTED,
+              boxShadow: activeCategory === cat ? `0 1px 3px ${NAVY}15` : "none",
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Inventory Table */}
+      <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${NAVY}20` }}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ background: `${NAVY}08`, borderBottom: `1px solid ${NAVY}20` }}>
+                {["Item Name", "Category", "Qty", "Unit", "Location", "Condition", "Unit Value", "Last Updated"].map(
+                  (h) => (
+                    <th
+                      key={h}
+                      className="px-5 py-3 text-left text-xs font-semibold"
+                      style={{ color: NAVY, textTransform: "uppercase" }}
+                    >
+                      {h}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredItems.map((item) => {
+                const lowStock = isLowStock(item);
+                return (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-gray-50 transition-colors"
+                    style={{
+                      borderBottom: `1px solid ${NAVY}10`,
+                      background: lowStock ? `${DANGER}06` : undefined,
+                    }}
+                  >
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2">
+                        {lowStock && (
+                          <AlertTriangle size={13} style={{ color: DANGER, flexShrink: 0 }} />
+                        )}
+                        <div style={{ color: NAVY, fontWeight: 600 }}>{item.name}</div>
+                      </div>
+                      {lowStock && (
+                        <div style={{ color: DANGER, fontSize: "0.72rem", marginTop: "0.1rem" }}>
+                          Min required: {item.minQuantity} {item.unit}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-xs font-medium"
+                        style={{ background: `${INFO}15`, color: INFO }}
+                      >
+                        {item.category}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: lowStock ? DANGER : item.quantity > item.minQuantity * 1.5 ? SUCCESS : WARNING,
+                        }}
+                      >
+                        {item.quantity}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5" style={{ color: MUTED }}>
+                      {item.unit}
+                    </td>
+                    <td className="px-5 py-3.5" style={{ color: MUTED }}>
+                      {item.location}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                        style={{
+                          background: `${conditionColor[item.condition]}15`,
+                          color: conditionColor[item.condition],
+                        }}
+                      >
+                        {item.condition}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5" style={{ color: MUTED }}>
+                      ₵{item.unitValue.toLocaleString()}
+                    </td>
+                    <td className="px-5 py-3.5" style={{ color: MUTED, fontSize: "0.8rem" }}>
+                      {item.lastUpdated}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        {filteredItems.length === 0 && (
+          <div className="py-12 text-center" style={{ color: MUTED }}>
+            No items in this category.
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div
+        className="p-4 rounded-lg"
+        style={{ background: `${NAVY}08`, border: `1px solid ${NAVY}20` }}
+      >
+        <p style={{ color: MUTED, fontSize: "0.875rem" }}>
+          Showing <strong>{filteredItems.length}</strong> of <strong>{items.length}</strong> items
+          &nbsp;·&nbsp; Total value:{" "}
+          <strong style={{ color: SUCCESS }}>
+            ₵
+            {filteredItems
+              .reduce((s, i) => s + i.quantity * i.unitValue, 0)
+              .toLocaleString()}
+          </strong>
+        </p>
+      </div>
+    </PageTemplate>
+  );
+}
