@@ -9,16 +9,17 @@ import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
 
-const NAVY    = "#1C1917";      // stone-900 — headings, key text
-const MUTED   = "#78716C";      // stone-500 — secondary text
-const PRIMARY = "#0B4F30";      // forest green — primary brand
-const GOLD    = "#D4A017";      // warm gold — secondary CTA
-const SUCCESS = "#22C55E";      // green-500
-const WARNING = "#F59E0B";      // amber-500
-const DANGER  = "#EF4444";      // red-500
-const INFO    = "#3B82F6";      // blue-500
-const PURPLE  = "#8B5CF6";      // purple
-const ACCENT  = "#F0FDF4";      // green-50 bg
+const NAVY    = "#031B4E";
+const NAVY_L  = "#0069D9";
+const CREAM   = "#F8F9FC";
+const MUTED   = "#6B7280";
+const PRIMARY = "#0080FF";
+const SUCCESS = "#16A34A";
+const WARNING = "#F59E0B";
+const DANGER  = "#EF4444";
+const INFO    = "#3B82F6";
+const PURPLE  = "#8B5CF6";
+const BLUE_BG = "#EFF6FF";
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 function Sparkline({ data, color }: { data: number[]; color: string }) {
@@ -84,10 +85,10 @@ function DonutChart({
         offset -= pct;
         return el;
       })}
-      <text x={cx} y={cy - 8} textAnchor="middle" style={{ fontSize: 9, fill: MUTED, fontFamily: "DM Sans, sans-serif" }}>
+      <text x={cx} y={cy - 8} textAnchor="middle" style={{ fontSize: 9, fill: MUTED, fontFamily: "Inter, sans-serif" }}>
         {centerLabel}
       </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontSize: 22, fontWeight: 700, fill: NAVY, fontFamily: "JetBrains Mono, monospace" }}>
+      <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontSize: 20, fontWeight: 700, fill: NAVY, fontFamily: "JetBrains Mono, monospace" }}>
         {centerValue}
       </text>
     </svg>
@@ -324,10 +325,10 @@ export function AdminOverview() {
 
   // Activity split for donut
   const activitySegments = [
-    { value: 45, color: PRIMARY,  label: "Attendance" },
-    { value: 25, color: SUCCESS,  label: "Fee Collection" },
-    { value: 20, color: PURPLE,   label: "Assessments" },
-    { value: 10, color: WARNING,  label: "Reports" },
+    { value: 45, color: PRIMARY, label: "Attendance" },
+    { value: 25, color: SUCCESS, label: "Fee Collection" },
+    { value: 20, color: PURPLE,  label: "Assessments" },
+    { value: 10, color: WARNING, label: "Reports" },
   ];
 
   // Pending tasks table
@@ -346,10 +347,10 @@ export function AdminOverview() {
 
   // Quick action buttons
   const quickActions = [
-    { icon: <CalendarCheck size={20} />, label: "Mark Attendance", desc: "Record daily register", color: PRIMARY, gradient: `linear-gradient(135deg,${PRIMARY},#16A34A)`, href: "/dashboard/attendance" },
-    { icon: <Banknote size={20} />, label: "Collect Fee", desc: "MoMo or cash", color: GOLD, gradient: "linear-gradient(135deg,#B8860B,#D4A017)", href: "/dashboard/fees/collect" },
-    { icon: <MessageCircle size={20} />, label: "Send Notice", desc: "WhatsApp broadcast", color: PURPLE, gradient: "linear-gradient(135deg,#6D28D9,#8B5CF6)", href: "/dashboard/whatsapp" },
-    { icon: <Plus size={20} />, label: "Add Student", desc: "Enrol new pupil", color: INFO, gradient: "linear-gradient(135deg,#2563EB,#3B82F6)", href: "/dashboard/students" },
+    { icon: <CalendarCheck size={20} />, label: "Mark Attendance", desc: "Record daily register", color: PRIMARY, gradient: "linear-gradient(135deg,#0080FF,#3B82F6)", href: "/dashboard/attendance" },
+    { icon: <Banknote size={20} />,      label: "Collect Fee",      desc: "MoMo or cash",         color: SUCCESS, gradient: "linear-gradient(135deg,#059669,#16A34A)", href: "/dashboard/fees/collect" },
+    { icon: <MessageCircle size={20} />, label: "Send Notice",      desc: "WhatsApp broadcast",    color: PURPLE,  gradient: "linear-gradient(135deg,#6D28D9,#8B5CF6)", href: "/dashboard/whatsapp" },
+    { icon: <Plus size={20} />,          label: "Add Student",      desc: "Enrol new pupil",       color: NAVY,    gradient: `linear-gradient(135deg,${NAVY},${NAVY_L})`, href: "/dashboard/students" },
   ];
 
   if (totalStudents === 0 && !isLoading) {
@@ -365,7 +366,7 @@ export function AdminOverview() {
         style={{ animationFillMode: "forwards" }}
       >
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: PRIMARY }}>
+          <p className="text-[11px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: MUTED }}>
             {school?.name}
           </p>
           <h1 className="font-bold" style={{ color: NAVY, fontSize: "1.5rem", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
@@ -383,9 +384,9 @@ export function AdminOverview() {
               onClick={() => setTimeFilter(r)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
-                background: timeFilter === r ? PRIMARY : "white",
+                background: timeFilter === r ? NAVY : "white",
                 color: timeFilter === r ? "white" : MUTED,
-                border: `1px solid ${timeFilter === r ? PRIMARY : "#E7E5E4"}`,
+                border: `1px solid ${timeFilter === r ? NAVY : "#E5E7EB"}`,
               }}
             >
               {r.charAt(0).toUpperCase() + r.slice(1)}
@@ -394,7 +395,7 @@ export function AdminOverview() {
           <button
             onClick={handleRefresh}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white hover:bg-gray-50 transition-colors"
-            style={{ color: MUTED, borderColor: "#E7E5E4" }}
+            style={{ color: MUTED, borderColor: "#E5E7EB" }}
           >
             <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
@@ -623,7 +624,7 @@ export function AdminOverview() {
           style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "300ms", animationFillMode: "forwards" }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg,${PRIMARY},#16A34A)` }}>
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg,${NAVY},${PRIMARY})` }}>
               <Zap size={12} style={{ color: "white" }} />
             </div>
             <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>Quick Actions</h3>
@@ -654,17 +655,17 @@ export function AdminOverview() {
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: "#E7E5E4" }}>
-            <div className="text-[11px] font-semibold uppercase tracking-wider mb-2.5" style={{ color: "#A8A29E" }}>At a glance</div>
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="text-[11px] font-semibold uppercase tracking-wider mb-2.5" style={{ color: MUTED }}>At a glance</div>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "Defaulters",     value: defaulters,          color: DANGER   },
-                { label: "Active Classes", value: activeClasses,       color: PRIMARY  },
-                { label: "Fee Target",     value: `${collectionRate}%`, color: GOLD    },
-                { label: "Attendance",     value: `${attendanceRate}%`, color: SUCCESS },
+                { label: "Defaulters",     value: defaulters,           color: DANGER   },
+                { label: "Active Classes", value: activeClasses,        color: PRIMARY  },
+                { label: "Fee Target",     value: `${collectionRate}%`, color: SUCCESS  },
+                { label: "Attendance",     value: `${attendanceRate}%`, color: PURPLE   },
               ].map((stat) => (
                 <div key={stat.label} className="p-2.5 rounded-xl" style={{ background: `${stat.color}0D`, border: `1px solid ${stat.color}20` }}>
-                  <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: "#A8A29E" }}>{stat.label}</div>
+                  <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: MUTED }}>{stat.label}</div>
                   <div className="text-[15px] font-bold mt-0.5" style={{ color: stat.color, fontFamily: "JetBrains Mono, monospace" }}>{stat.value}</div>
                 </div>
               ))}

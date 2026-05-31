@@ -330,7 +330,7 @@ function DashboardLayoutInner() {
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#FAFAF9"; (e.currentTarget as HTMLElement).style.borderColor = "#E7E5E4"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.borderColor = "transparent"; }}
               >
-                <div style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg, #0B4F30, #22C55E)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span style={{ color: "#fff", fontSize: 11, fontWeight: 700 }}>{initials}</span>
                 </div>
                 <ChevronDown size={13} style={{ color: "#A8A29E" }} className="hidden sm:block" />
