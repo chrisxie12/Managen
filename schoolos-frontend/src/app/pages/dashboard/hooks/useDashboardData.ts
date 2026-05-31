@@ -136,7 +136,7 @@ const initialLoading: DashboardLoading = {
 };
 
 export default function useDashboardData() {
-  const { user, school } = useAuth();
+  useAuth();
   const [data, setData] = useState<DashboardData>(initialData);
   const [errors, setErrors] = useState<DashboardErrors>(initialErrors);
   const [loading, setLoading] = useState<DashboardLoading>(initialLoading);

@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { Loader2, Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../services/api";
 import { useMetaData, useGradebookData, type AssessmentItem, type StudentBasic } from "../../../hooks/useGradebook";
 
 const NAVY = "#031B4E";
-const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 const BG = "#F9F1E7";
@@ -23,7 +22,7 @@ function getGradeBand(pct: number) {
 }
 
 export function GradebookGrid() {
-  const queryClient = useQueryClient();
+  useQueryClient();
   const [items, setItems] = useState<AssessmentItem[]>([]);
   const [students, setStudents] = useState<StudentBasic[]>([]);
   const [scores, setScores] = useState<Record<string, Record<string, string>>>({});

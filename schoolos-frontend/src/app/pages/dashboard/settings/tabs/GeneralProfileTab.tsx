@@ -7,7 +7,6 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "../../../../components/ui/select";
 import { Button } from "../../../../components/ui/button";
-import { Switch } from "../../../../components/ui/switch";
 import { api } from "../../../../services/api";
 
 const NAVY = "#031B4E";

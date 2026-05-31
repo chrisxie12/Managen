@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Save, Loader2, Camera, Key, Shield, Sun, Moon, Bell,
-  Smartphone, Eye, EyeOff, Check, X,
+  Smartphone, Eye, EyeOff, Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -25,7 +25,7 @@ function AdminProfile() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [_avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
   const [savingPersonal, setSavingPersonal] = useState(false);
 
@@ -102,13 +102,11 @@ function AdminProfile() {
     if (!fullName.trim()) { toast.error("Full name is required"); return; }
     setSavingPersonal(true);
     try {
-      let newAvatarUrl = avatarUrl;
       if (avatarDataUri) {
-        const uploadRes = await api.post<any>("/api/user/upload-avatar", {
+        await api.post<any>("/api/user/upload-avatar", {
           userId: user.id,
           imageDataUri: avatarDataUri,
         });
-        newAvatarUrl = uploadRes.data?.avatar_url || avatarUrl;
       }
       const res = await api.put<any>(`/api/school/users/${user.id}`, {
         full_name: fullName.trim(),

@@ -238,7 +238,7 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { school, user } = useAuth();
+  const { school } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(new Set(['Dashboard']));
 

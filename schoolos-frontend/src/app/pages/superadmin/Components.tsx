@@ -265,7 +265,7 @@ export function QuickLinksCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function AlertList({ endpoint }: { endpoint: string }) {
+export function AlertList({ endpoint: _endpoint }: { endpoint: string }) {
   return (
     <div className="p-4 rounded-xl space-y-2" style={{ background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.1)" }}>
       <p style={{ color: "#F59E0B", fontSize: "0.75rem", marginBottom: "0.5rem" }}>No active security alerts</p>

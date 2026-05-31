@@ -1,12 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { ChevronDown, CalendarCheck, CalendarDays, AlertCircle, Loader2, MapPin, Clock } from "lucide-react";
 import { api } from "../../services/api";
 import { toast } from "sonner";
 
 const NAVY = "#031B4E";
-const NAVY_LIGHT = "#0069D9";
-const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string; admission_no?: string };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, MessageSquare, Users, AlertTriangle } from "lucide-react";
+import { Send, MessageSquare, Users } from "lucide-react";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";

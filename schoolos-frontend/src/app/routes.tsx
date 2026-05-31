@@ -40,7 +40,6 @@ import { AdminRoles } from "./pages/AdminRoles";
 import { AdminUsers } from "./pages/AdminUsers";
 import { AssessmentsEntry } from "./pages/AssessmentsEntry";
 import { WeightedGradebook } from "./pages/WeightedGradebook";
-import { FeePayment } from "./pages/FeePayment";
 import { PaymentVerify } from "./pages/PaymentVerify";
 import { TimetableScheduler } from "./pages/TimetableScheduler";
 import { Assessments } from "./pages/Assessments";

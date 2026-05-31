@@ -87,8 +87,6 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
   const [editingFeeStructureId, setEditingFeeStructureId] = useState<string | null>(null);
   const [editFeeData, setEditFeeData] = useState({ name: "", amount: 0, frequency: "termly", is_mandatory: false });
 
-  const [reminderDays, setReminderDays] = useState<number[]>([]);
-  const [reminderTime, setReminderTime] = useState("09:00");
 
   useEffect(() => {
     fetchFeeStructures();
@@ -152,9 +150,6 @@ export function FeeSettingsTab({ profile, onSave, saving, role }: Props) {
     }
   };
 
-  const toggleReminderDay = (day: number) => {
-    setReminderDays((prev) => prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]);
-  };
 
   const FEE_REMINDER_DAYS = [1, 3, 7, 14];
 

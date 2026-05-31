@@ -8,7 +8,6 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
-const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
 type Child = { id: string; name: string; class_name: string };

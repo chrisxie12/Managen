@@ -18,7 +18,6 @@ import { WhatsAppTab } from "./tabs/WhatsAppTab";
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
-const MUTED = "#6B7280";
 
 const tabs = [
   { key: "profile", label: "General Profile", icon: Building2 },

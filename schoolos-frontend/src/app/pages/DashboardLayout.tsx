@@ -134,7 +134,7 @@ function DashboardLayoutInner() {
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [pilotDismissed, setPilotDismissed] = useState(() => sessionStorage.getItem("pilotBannerDismissed") === "true");
-  const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
+  const [_installPrompt, setInstallPrompt] = useState<Event | null>(null);
   const [syncing, setSyncing] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 

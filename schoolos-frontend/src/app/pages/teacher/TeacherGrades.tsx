@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Lock, Save, BookOpen, CheckCircle2 } from "lucide-react";
+import { ChevronDown, Lock, Save, BookOpen } from "lucide-react";
 
 const NAVY = "#031B4E";
 const MUTED = "#6B7280";

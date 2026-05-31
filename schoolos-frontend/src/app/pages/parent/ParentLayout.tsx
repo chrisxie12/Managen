@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Home, User, Wallet, FileText, Settings, Bell, LogOut, RefreshCw,
+  Home, User, Wallet, FileText, Settings, LogOut,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { processSyncQueue } from "../../lib/offlineSync";
@@ -9,7 +9,6 @@ import { api } from "../../services/api";
 import { toast } from "sonner";
 
 const NAVY = "#031B4E";
-const NAVY_LIGHT = "#0069D9";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -26,7 +25,6 @@ export function ParentLayout() {
   const location = useLocation();
   const { user, logout } = useAuth();
 
-  const activeTab = NAV_ITEMS.find((item) => location.pathname === item.path)?.path || "/parent";
 
   // PWA install
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);

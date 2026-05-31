@@ -9,8 +9,6 @@ interface BirthdaysWidgetProps {
 }
 
 export function BirthdaysWidget({ birthdays, loading, error, onRetry }: BirthdaysWidgetProps) {
-  const today = new Date();
-  const todayStr = formatShortDate(today);
 
   return (
     <div className="bg-card rounded-lg border border-border p-3">

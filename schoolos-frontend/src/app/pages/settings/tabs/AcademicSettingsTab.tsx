@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Save, Loader2, Plus, Trash2, ArrowUp, ArrowDown, Check, X, BookOpen, Pencil } from "lucide-react";
+import { Save, Loader2, Plus, Trash2, ArrowUp, ArrowDown, Check, X, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../services/api";
 import { Input } from "../../../components/ui/input";

@@ -14,7 +14,7 @@ interface DashboardTopbarProps {
 export function DashboardTopbar({ onToggleSidebar, unreadAlerts = 0, overdueFeesCount = 0 }: DashboardTopbarProps) {
   const navigate = useNavigate();
   const { user, school } = useAuth();
-  const [commandOpen, setCommandOpen] = useState(false);
+  const [_commandOpen, setCommandOpen] = useState(false);
 
   const userName = user?.fullName || 'Admin';
   const role = user?.role || 'school_admin';

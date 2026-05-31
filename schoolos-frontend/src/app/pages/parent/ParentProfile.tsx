@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Phone, Mail, User, Loader2, RotateCcw } from "lucide-react";
+import { Bell, Phone, Mail, Loader2 } from "lucide-react";
 import { api } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "sonner";
