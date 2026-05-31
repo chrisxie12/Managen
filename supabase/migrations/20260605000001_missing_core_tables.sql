@@ -1,7 +1,12 @@
 -- Missing core tables referenced in code but absent from migrations.
 -- All use CREATE TABLE IF NOT EXISTS so they are safe to run on existing DBs.
+--
+-- Column naming follows the actual live schema:
+--   tenant_id  → original base tables (students, attendance, fees, users, timetable uses school_id)
+--   school_id  → tables created via migration files (classes, timetable, gradebook_entries, etc.)
 
 -- ── attendance ─────────────────────────────────────────────────────────────
+-- Base table (pre-migration). Uses tenant_id to match students/users schema.
 CREATE TABLE IF NOT EXISTS attendance (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -18,9 +23,10 @@ CREATE INDEX IF NOT EXISTS idx_attendance_student ON attendance(student_id);
 CREATE INDEX IF NOT EXISTS idx_attendance_class ON attendance(tenant_id, class_name);
 
 -- ── timetable ──────────────────────────────────────────────────────────────
+-- Uses school_id (confirmed by normalize_timetable migration referencing t.school_id).
 CREATE TABLE IF NOT EXISTS timetable (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+    school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
     class_name TEXT,
     class_id UUID REFERENCES classes(id) ON DELETE SET NULL,
     subject TEXT,
@@ -34,10 +40,11 @@ CREATE TABLE IF NOT EXISTS timetable (
     room TEXT,
     created_at TIMESTAMPTZ DEFAULT now()
 );
-CREATE INDEX IF NOT EXISTS idx_timetable_tenant ON timetable(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_timetable_class ON timetable(tenant_id, class_name);
+CREATE INDEX IF NOT EXISTS idx_timetable_school ON timetable(school_id);
+CREATE INDEX IF NOT EXISTS idx_timetable_class ON timetable(school_id, class_name);
 
 -- ── fees ───────────────────────────────────────────────────────────────────
+-- Base table (pre-migration). Uses tenant_id.
 CREATE TABLE IF NOT EXISTS fees (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -45,7 +52,6 @@ CREATE TABLE IF NOT EXISTS fees (
     fee_structure_id UUID REFERENCES fee_structures(id) ON DELETE SET NULL,
     amount NUMERIC(12, 2) NOT NULL,
     paid_amount NUMERIC(12, 2) DEFAULT 0,
-    balance NUMERIC(12, 2) GENERATED ALWAYS AS (amount - paid_amount) STORED,
     status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'partial', 'paid', 'overdue', 'waived')),
     due_date DATE,
     term TEXT,
@@ -58,6 +64,7 @@ CREATE INDEX IF NOT EXISTS idx_fees_student ON fees(student_id);
 CREATE INDEX IF NOT EXISTS idx_fees_status ON fees(tenant_id, status);
 
 -- ── gradebook_entries ──────────────────────────────────────────────────────
+-- Uses school_id (matches service code at school.js:2696).
 CREATE TABLE IF NOT EXISTS gradebook_entries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -75,6 +82,7 @@ CREATE INDEX IF NOT EXISTS idx_gradebook_school ON gradebook_entries(school_id);
 CREATE INDEX IF NOT EXISTS idx_gradebook_student ON gradebook_entries(student_id);
 
 -- ── exam_results ───────────────────────────────────────────────────────────
+-- Base table (pre-migration). Uses tenant_id.
 CREATE TABLE IF NOT EXISTS exam_results (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -92,6 +100,7 @@ CREATE INDEX IF NOT EXISTS idx_exam_results_tenant ON exam_results(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_exam_results_student ON exam_results(student_id);
 
 -- ── library_books ──────────────────────────────────────────────────────────
+-- New table. Uses tenant_id to match service code (schoolService.js addBook).
 CREATE TABLE IF NOT EXISTS library_books (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -108,6 +117,7 @@ CREATE TABLE IF NOT EXISTS library_books (
 CREATE INDEX IF NOT EXISTS idx_library_books_tenant ON library_books(tenant_id);
 
 -- ── library_issues ─────────────────────────────────────────────────────────
+-- New table. Uses tenant_id to match service code (schoolService.js issueBook).
 CREATE TABLE IF NOT EXISTS library_issues (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -126,6 +136,7 @@ CREATE INDEX IF NOT EXISTS idx_library_issues_book ON library_issues(book_id);
 CREATE INDEX IF NOT EXISTS idx_library_issues_student ON library_issues(student_id);
 
 -- ── payroll ────────────────────────────────────────────────────────────────
+-- New table. Uses tenant_id to match service code (schoolService.js getPayroll).
 CREATE TABLE IF NOT EXISTS payroll (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
@@ -146,6 +157,7 @@ CREATE INDEX IF NOT EXISTS idx_payroll_tenant ON payroll(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_payroll_month ON payroll(tenant_id, month, year);
 
 -- ── notification_logs ──────────────────────────────────────────────────────
+-- New table. Uses tenant_id to match service code (schoolService.js getNotificationLogs).
 CREATE TABLE IF NOT EXISTS notification_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,

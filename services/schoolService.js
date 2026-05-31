@@ -195,17 +195,17 @@ class SchoolService {
     async getClasses(tenantId) {
         const { data, error } = await supabase.from('classes')
             .select('*')
-            .eq('tenant_id', tenantId);
+            .eq('school_id', tenantId);
         if (error) throw error;
         return data || [];
     }
 
     async createClass(tenantId, payload) {
         const { data, error } = await supabase.from('classes')
-            .insert({ 
+            .insert({
                 id: crypto.randomUUID(),
-                ...payload, 
-                tenant_id: tenantId 
+                ...payload,
+                school_id: tenantId
             })
             .select()
             .single();
@@ -350,14 +350,14 @@ class SchoolService {
     async getTimetable(tenantId) {
         const { data, error } = await supabase.from('timetable')
             .select('*')
-            .eq('tenant_id', tenantId);
+            .eq('school_id', tenantId);
         if (error) throw error;
         return data || [];
     }
 
     async assignPeriod(tenantId, payload) {
         const { data, error } = await supabase.from('timetable')
-            .insert({ id: crypto.randomUUID(), ...payload, tenant_id: tenantId })
+            .insert({ id: crypto.randomUUID(), ...payload, school_id: tenantId })
             .select()
             .single();
         if (error) throw error;
@@ -656,7 +656,7 @@ class SchoolService {
         const { data, error } = await supabase.from('classes')
             .update(payload)
             .eq('id', id)
-            .eq('tenant_id', tenantId)
+            .eq('school_id', tenantId)
             .select()
             .single();
         if (error) throw error;
@@ -667,7 +667,7 @@ class SchoolService {
         const { error } = await supabase.from('classes')
             .delete()
             .eq('id', id)
-            .eq('tenant_id', tenantId);
+            .eq('school_id', tenantId);
         if (error) throw error;
         return true;
     }
@@ -676,7 +676,7 @@ class SchoolService {
         const { data, error } = await supabase.from('timetable')
             .update(payload)
             .eq('id', id)
-            .eq('tenant_id', tenantId)
+            .eq('school_id', tenantId)
             .select()
             .single();
         if (error) throw error;
@@ -687,7 +687,7 @@ class SchoolService {
         const { error } = await supabase.from('timetable')
             .delete()
             .eq('id', id)
-            .eq('tenant_id', tenantId);
+            .eq('school_id', tenantId);
         if (error) throw error;
         return true;
     }
@@ -889,7 +889,7 @@ class SchoolService {
         const [teachers, subjectTeachers, timetableEntries] = await Promise.all([
             supabase.from('users').select('id, name, email').eq('tenant_id', schoolId).eq('role', 'teacher'),
             supabase.from('subject_teachers').select('*, subject:subjects(name), class:classes(name)').eq('school_id', schoolId),
-            supabase.from('timetable').select('teacher, day, period, class_name, subject').eq('tenant_id', schoolId),
+            supabase.from('timetable').select('*').eq('school_id', schoolId),
         ]);
 
         const workload = {};
@@ -1832,7 +1832,7 @@ class SchoolService {
         const [studentRes, attendanceRes, timetableRes, invoicesRes, interventionsRes] = await Promise.all([
             supabase.from('students').select('*').eq('id', studentId).single(),
             supabase.from('attendance').select('*').eq('tenant_id', schoolId).eq('student_id', studentId).order('date', { ascending: false }).limit(30),
-            supabase.from('timetable').select('*').eq('tenant_id', schoolId),
+            supabase.from('timetable').select('*').eq('school_id', schoolId),
             supabase.from('invoices').select('*, term:academic_terms(name)').eq('school_id', schoolId).eq('student_id', studentId).order('created_at', { ascending: false }).limit(10),
             supabase.from('interventions').select('*, assigned:users!assigned_to(full_name)').eq('school_id', schoolId).eq('student_id', studentId).eq('status', 'open').order('created_at', { ascending: false }).limit(10),
         ]);

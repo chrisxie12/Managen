@@ -471,7 +471,7 @@ router.post('/students/import', protect, requirePermission('students.create'), u
 
         // Pre-fetch validations from DB
         const { data: existingStudents } = await supabase.from('students').select('admission_no').eq('tenant_id', req.tenant.id);
-        const { data: existingClasses } = await supabase.from('classes').select('name').eq('tenant_id', req.tenant.id);
+        const { data: existingClasses } = await supabase.from('classes').select('name').eq('school_id', req.tenant.id);
 
         const studentIdsInDb = new Set((existingStudents || []).map(s => s.admission_no).filter(Boolean));
         const classesInDb = new Set((existingClasses || []).map(c => c.name));
