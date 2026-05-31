@@ -451,19 +451,31 @@ ul { list-style: none; }
 
 /* Phone mockup */
 .phone-frame {
-  width: 240px;
+  width: 280px;
   background: #0B0F1C;
-  border-radius: 44px;
-  padding: 10px;
-  box-shadow: 0 24px 56px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08);
+  border-radius: 48px;
+  padding: 12px;
+  box-shadow: 0 28px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
   position: relative;
   z-index: 2;
 }
 .phone-screen {
   background: white;
-  border-radius: 36px;
+  border-radius: 40px;
   overflow: hidden;
   aspect-ratio: 9 / 19.5;
+  position: relative;
+}
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 26px;
+  background: #0B0F1C;
+  border-radius: 0 0 18px 18px;
+  z-index: 10;
 }
 .phone-screen-inner {
   display: flex;
@@ -583,7 +595,7 @@ ul { list-style: none; }
 }
 .float-card-b {
   top: 30%;
-  right: -14%;
+  right: -2%;
   color: #0B0F1C;
   animation: bobFloat 3s ease-in-out infinite;
   animation-delay: 0.6s;
@@ -778,11 +790,31 @@ ul { list-style: none; }
   box-shadow: var(--shadow-md);
   margin-top: 48px;
 }
-.calc-grid {
+.calc-fields-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
   align-items: end;
+}
+.calc-plan-display {
+  width: 100%;
+  background: #0B0F1C;
+  border: 2px solid #0B0F1C;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  color: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.calc-plan-display.active {
+  color: #D4FF00;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 .calc-label {
   font-size: 14px;
@@ -814,8 +846,7 @@ ul { list-style: none; }
   box-shadow: 0 0 0 4px rgba(11,15,28,0.08);
 }
 .calc-result {
-  grid-column: 1 / -1;
-  margin-top: 8px;
+  margin-top: 24px;
   background: linear-gradient(135deg, #0B0F1C 0%, #1a1f2e 100%);
   border-radius: 14px;
   padding: 28px;
@@ -1510,7 +1541,7 @@ ul { list-style: none; }
   .pricing-grid { grid-template-columns: 1fr; }
 
   /* Calculator */
-  .calc-grid { grid-template-columns: 1fr; }
+  .calc-fields-row { grid-template-columns: 1fr; }
   .calc-result { flex-direction: column; align-items: flex-start; gap: 12px; }
 
   /* How it works */
@@ -1630,6 +1661,7 @@ ul { list-style: none; }
 
         <div class="phone-frame">
           <div class="phone-screen">
+            <div class="phone-notch"></div>
             <div class="phone-screen-inner">
               <div class="phone-topbar">
                 <span class="phone-topbar-title">Managen</span>
@@ -1815,7 +1847,7 @@ ul { list-style: none; }
     </div>
 
     <div class="calc-card reveal" style="transition-delay:0.1s">
-      <div class="calc-grid">
+      <div class="calc-fields-row">
 
         <div>
           <label class="calc-label" for="calcStudents">How many students?</label>
@@ -1839,18 +1871,22 @@ ul { list-style: none; }
           </select>
         </div>
 
-        <div class="calc-result" id="calcResult" style="display:none">
-          <div class="calc-result-left">
-            <div class="calc-result-label">Recommended plan:</div>
-            <div class="calc-result-plan" id="calcPlanName"></div>
-            <div class="calc-result-saving" id="calcSaving"></div>
-          </div>
-          <div class="calc-result-right">
-            <div class="calc-result-price" id="calcPrice"></div>
-            <span class="calc-result-period">per month</span>
-          </div>
+        <div>
+          <label class="calc-label">Recommended plan</label>
+          <div class="calc-plan-display" id="calcPlanDisplay">Select options →</div>
         </div>
 
+      </div>
+
+      <div class="calc-result" id="calcResult" style="display:none">
+        <div class="calc-result-left">
+          <div class="calc-result-label">You'll save:</div>
+          <div class="calc-result-saving" id="calcSaving"></div>
+        </div>
+        <div class="calc-result-right">
+          <div class="calc-result-price" id="calcPrice"></div>
+          <span class="calc-result-period">per month</span>
+        </div>
       </div>
     </div>
   </div>
@@ -2095,7 +2131,8 @@ ul { list-style: none; }
 
     <div class="showcase-phone-wrap reveal" style="transition-delay:0.2s">
       <div class="showcase-phone">
-        <div class="showcase-screen">
+        <div class="showcase-screen" style="position:relative">
+          <div class="phone-notch"></div>
           <div class="showcase-screen-inner">
             <div class="showcase-topbar">
               <span class="showcase-topbar-title">Managen</span>
@@ -2383,9 +2420,11 @@ ul { list-style: none; }
     } else {
       plan = 'Enterprise'; price = 'Custom'; saving = 'Save 30+ hours/week on admin';
     }
-    document.getElementById('calcPlanName').textContent = plan;
     document.getElementById('calcPrice').textContent = price;
     document.getElementById('calcSaving').textContent = saving;
+    var planDisplay = document.getElementById('calcPlanDisplay');
+    planDisplay.textContent = plan;
+    planDisplay.classList.add('active');
     var result = document.getElementById('calcResult');
     result.style.opacity = '0';
     result.style.display = 'flex';
