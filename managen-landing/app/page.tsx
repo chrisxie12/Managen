@@ -1,5 +1,6 @@
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
+import Stats from "./sections/Stats";
 import Pricing from "./sections/Pricing";
 import Calculator from "./sections/Calculator";
 import HowItWorks from "./sections/HowItWorks";
@@ -12,6 +13,7 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
+      <Stats />
       <Pricing />
       <Calculator />
       <HowItWorks />

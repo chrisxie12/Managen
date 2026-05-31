@@ -22,7 +22,10 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="text-xl font-bold text-white mb-3">Managen</div>
+            <div className="flex items-center gap-2.5 mb-3">
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: "#D4FF00", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 14, color: "#0B0F1C", fontFamily: "'Space Grotesk', sans-serif", flexShrink: 0 }}>M</div>
+              <span style={{ fontSize: 18, fontWeight: 600, color: "white", fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.01em" }}>Managen</span>
+            </div>
             <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
               School management for Ghanaian schools.
             </p>
@@ -46,8 +49,8 @@ export default function Footer() {
           {COLUMNS.map((col) => (
             <div key={col.label}>
               <div
-                className="text-xs font-semibold uppercase tracking-widest mb-4"
-                style={{ color: "rgba(255,255,255,0.35)" }}
+                className="text-xs font-semibold uppercase mb-4"
+                style={{ color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em", fontFamily: "'Space Grotesk', sans-serif" }}
               >
                 {col.label}
               </div>

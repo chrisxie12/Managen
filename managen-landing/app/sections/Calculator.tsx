@@ -53,7 +53,7 @@ export default function Calculator() {
     <section id="calculator" className="py-[100px]" style={{ background: "#F5F5F4" }}>
       <div className="max-w-[1200px] mx-auto px-6">
         <ScrollReveal className="text-center mb-12">
-          <h2 className="text-4xl md:text-[40px] font-bold text-[#0B0F1C] mb-4">
+          <h2 className="text-4xl md:text-[40px] font-bold text-[#0B0F1C] mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             See how much time you could save
           </h2>
           <p className="text-lg text-gray-500">Calculate — Find your perfect plan</p>

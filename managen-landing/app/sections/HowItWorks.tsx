@@ -178,7 +178,7 @@ export default function HowItWorks() {
 
         <div className="flex flex-col gap-5 mt-14">
           {FEATURES.map((feat, i) => (
-            <ScrollReveal key={feat.label} delay={i * 80}>
+            <ScrollReveal key={feat.label} delay={i * 100}>
               <div
                 className="bg-white rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-[#0B0F1C]"
                 style={{
@@ -195,7 +195,7 @@ export default function HowItWorks() {
                 >
                   <div
                     className="inline-flex items-center justify-center w-9 h-9 rounded-full text-xs font-black mb-4"
-                    style={{ background: "#D4FF00", color: "#0B0F1C" }}
+                    style={{ background: "#D4FF00", color: "#0B0F1C", fontFamily: "'Space Grotesk', sans-serif" }}
                   >
                     {i + 1}
                   </div>
