@@ -111,7 +111,7 @@ ul { list-style: none; }
 .float { animation: bobFloat 3s ease-in-out infinite; }
 
 /* ================================================================
-   BUTTONS
+   BUTTONS — Pill shaped (border-radius: 50px)
    ================================================================ */
 .btn-primary {
   background: #D4FF00;
@@ -119,7 +119,7 @@ ul { list-style: none; }
   font-size: 16px;
   font-weight: 700;
   padding: 16px 32px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: none;
   cursor: pointer;
   box-shadow: var(--lime-glow);
@@ -138,7 +138,7 @@ ul { list-style: none; }
   font-size: 16px;
   font-weight: 600;
   padding: 14px 30px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: 2px solid #0B0F1C;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -155,7 +155,7 @@ ul { list-style: none; }
   font-size: 16px;
   font-weight: 600;
   padding: 14px 30px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: 2px solid rgba(255,255,255,0.3);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -172,7 +172,7 @@ ul { list-style: none; }
   font-size: 14px;
   font-weight: 700;
   padding: 10px 22px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: none;
   cursor: pointer;
   box-shadow: var(--lime-glow);
@@ -314,7 +314,7 @@ ul { list-style: none; }
   font-size: 16px;
   font-weight: 700;
   padding: 14px 20px;
-  border-radius: 12px;
+  border-radius: 50px;
   text-decoration: none;
   margin-top: 4px;
 }
@@ -702,32 +702,18 @@ ul { list-style: none; }
   background: #E5E7EB;
   margin: 20px 0;
 }
-.plan-features {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+
+/* Plan features — pill badges (firsty style) */
+.plan-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.plan-feature { display: flex; }
+.plan-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #F3F4F6; border-radius: 50px; padding: 7px 12px;
+  font-size: 13px; color: #374151;
 }
-.plan-feature {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  font-size: 14px;
-  color: #374151;
-}
-.check-icon {
-  width: 16px;
-  height: 16px;
-  background: #F0FDF4;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: #0B4F30;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
+.plan-pill-icon { font-size: 14px; line-height: 1; }
+.pricing-card.featured .plan-pill { background: rgba(212,255,0,0.15); color: #1A1A1A; }
+
 .plan-cta {
   margin-top: 24px;
   width: 100%;
@@ -740,7 +726,7 @@ ul { list-style: none; }
   font-size: 15px;
   font-weight: 700;
   padding: 13px 20px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: none;
   cursor: pointer;
   width: 100%;
@@ -761,7 +747,7 @@ ul { list-style: none; }
   font-size: 15px;
   font-weight: 600;
   padding: 12px 20px;
-  border-radius: 12px;
+  border-radius: 50px;
   border: 2px solid #0B0F1C;
   cursor: pointer;
   width: 100%;
@@ -890,7 +876,7 @@ ul { list-style: none; }
 }
 
 /* ================================================================
-   SECTION 5 — HOW IT WORKS
+   SECTION 5 — HOW IT WORKS (alternating large sections, firsty style)
    ================================================================ */
 .howitworks-section {
   background: #F5F5F4;
@@ -913,46 +899,41 @@ ul { list-style: none; }
   max-width: 640px;
   margin: 0 auto;
 }
-.howitworks-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 56px;
-}
-.hiw-card {
-  background: white;
-  border: 1px solid #E5E7EB;
-  border-radius: 16px;
-  padding: 32px;
+
+/* New alternating rows layout */
+.hiw-rows { display: flex; flex-direction: column; gap: 16px; margin-top: 56px; }
+.hiw-row {
+  background: white; border: 1px solid #E5E7EB; border-radius: 24px;
+  display: grid; grid-template-columns: 1fr auto; align-items: center;
+  overflow: hidden; gap: 0;
   transition: all 0.3s var(--ease);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
-.hiw-card:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  transform: translateY(-3px);
-  border-color: #0B0F1C;
+.hiw-row:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10); border-color: #0B0F1C; }
+.hiw-row.reverse { grid-template-columns: auto 1fr; }
+.hiw-row-text {
+  padding: 48px;
 }
-.hiw-inner {
-  display: grid;
-  grid-template-columns: 55% 45%;
-  gap: 16px;
-  align-items: center;
+.hiw-row.reverse .hiw-row-text { order: 2; }
+.hiw-row-phone {
+  padding: 32px 40px;
+  display: flex; justify-content: center; align-items: center;
+  background: #F8F9FA;
+  min-width: 220px;
 }
-.hiw-step-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #D4FF00;
-  margin-bottom: 6px;
+.hiw-row.reverse .hiw-row-phone { order: 1; }
+.hiw-step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #D4FF00; color: #0B0F1C;
+  font-size: 13px; font-weight: 800;
+  margin-bottom: 16px;
 }
 .hiw-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #0B0F1C;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.3;
 }
 .hiw-body {
   font-size: 15px;
@@ -961,7 +942,7 @@ ul { list-style: none; }
   line-height: 1.65;
 }
 
-/* Small phone in HIW cards */
+/* Small phone in HIW rows */
 .hiw-phone {
   width: 140px;
   background: #0B0F1C;
@@ -1045,7 +1026,7 @@ ul { list-style: none; }
 }
 .hiw-wa-text { font-size: 7px; color: #0B0F1C; line-height: 1.5; }
 .hiw-wa-time { font-size: 6px; color: #6B7280; text-align: right; margin-top: 2px; }
-/* Plan selection screen */
+/* Plan selection / payment screen */
 .hiw-plan-bar {
   background: #0B0F1C;
   height: 28px;
@@ -1365,7 +1346,32 @@ ul { list-style: none; }
 }
 
 /* ================================================================
-   FAQ (used within HOW IT WORKS area - standalone section)
+   TESTIMONIALS / REVIEWS SECTION
+   ================================================================ */
+.reviews-section { background: #F5F5F4; padding: 120px 0; }
+.reviews-h2 { font-size: 40px; font-weight: 800; color: #0B0F1C; letter-spacing: -0.02em; text-align: center; margin-bottom: 14px; }
+.reviews-sub { font-size: 18px; color: #6B7280; text-align: center; margin-bottom: 56px; }
+.reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.review-card {
+  background: white; border: 1px solid #E5E7EB; border-radius: 20px; padding: 32px;
+  display: flex; flex-direction: column; gap: 16px;
+  transition: all 0.3s var(--ease);
+}
+.review-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.10); transform: translateY(-3px); border-color: #0B0F1C; }
+.review-stars { color: #FBBF24; font-size: 18px; letter-spacing: 2px; }
+.review-text { font-size: 15px; color: #374151; line-height: 1.7; flex: 1; }
+.review-author { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.review-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #0B0F1C, #0B4F30);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.review-name { font-size: 14px; font-weight: 600; color: #0B0F1C; }
+.review-role { font-size: 12px; color: #6B7280; }
+
+/* ================================================================
+   FAQ (standalone section)
    ================================================================ */
 .faq-section {
   background: #F5F5F4;
@@ -1486,7 +1492,7 @@ ul { list-style: none; }
 .footer-made { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.35); }
 
 /* ================================================================
-   RESPONSIVE — TABLET (≤1024px)
+   RESPONSIVE — TABLET (less than or equal to 1024px)
    ================================================================ */
 @media (max-width: 1024px) {
   .hero-h1 { font-size: 52px; }
@@ -1503,12 +1509,13 @@ ul { list-style: none; }
   .calc-section { padding: 70px 0; }
   .trust-section { padding: 70px 0; }
   .showcase-section { padding: 70px 0; }
+  .reviews-section { padding: 70px 0; }
   .faq-section { padding: 70px 0; }
   .site-footer { padding: 60px 0 40px; }
 }
 
 /* ================================================================
-   RESPONSIVE — MOBILE (≤768px)
+   RESPONSIVE — MOBILE (less than or equal to 768px)
    ================================================================ */
 @media (max-width: 768px) {
   /* Nav */
@@ -1531,6 +1538,7 @@ ul { list-style: none; }
   .howitworks-section,
   .trust-section,
   .showcase-section,
+  .reviews-section,
   .faq-section { padding: 60px 0; }
 
   /* Typography */
@@ -1545,14 +1553,19 @@ ul { list-style: none; }
   .calc-result { flex-direction: column; align-items: flex-start; gap: 12px; }
 
   /* How it works */
-  .howitworks-grid { grid-template-columns: 1fr; }
-  .hiw-inner { grid-template-columns: 1fr; }
-  .hiw-phone { display: none; }
+  .hiw-rows { gap: 12px; }
+  .hiw-row, .hiw-row.reverse { grid-template-columns: 1fr; }
+  .hiw-row-phone { display: none; }
+  .hiw-row-text { padding: 28px 24px; }
+  .hiw-row.reverse .hiw-row-text { order: 1; }
 
   /* Showcase */
   .showcase-inner { flex-direction: column; gap: 40px; text-align: center; }
   .showcase-list { align-items: center; }
   .showcase-h2 { font-size: 28px; }
+
+  /* Reviews */
+  .reviews-grid { grid-template-columns: 1fr; }
 
   /* Footer */
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -1616,11 +1629,11 @@ ul { list-style: none; }
       <!-- Left column -->
       <div class="hero-left">
         <div class="hero-badge">
-          🇬🇭 Built for Ghanaian Schools
+          🇬🇭 Free to start · No credit card
         </div>
 
         <h1 class="hero-h1">
-          Run Your School <span class="lime">Without</span> the Paperwork
+          The First Free<br><span class="lime">School Management</span><br>Platform
         </h1>
 
         <div class="hero-bullets">
@@ -1748,11 +1761,21 @@ ul { list-style: none; }
         <div class="plan-desc">Get started, no commitment</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Up to 50 students</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Attendance tracking</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Basic reports</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Email support</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>1 campus</span></li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📅</span> Attendance tracking</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">👥</span> Up to 50 students</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📊</span> Basic reports</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">✉️</span> Email support</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🏫</span> 1 campus</span>
+          </li>
         </ul>
         <a href="#" class="btn-plan-secondary plan-cta">Get Started</a>
       </div>
@@ -1766,11 +1789,21 @@ ul { list-style: none; }
         <div class="plan-desc">For small schools just getting started</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Up to 150 students</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Everything in Free</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>WhatsApp reports</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Exam scheduling</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>CSV import</span></li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">✅</span> Everything in Free</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">💬</span> WhatsApp reports</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📝</span> Exam scheduling</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📥</span> CSV import</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">👥</span> Up to 150 students</span>
+          </li>
         </ul>
         <a href="#" class="btn-plan-secondary plan-cta">Start Free Trial</a>
       </div>
@@ -1785,12 +1818,24 @@ ul { list-style: none; }
         <div class="plan-desc">For growing schools</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Up to 300 students</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Everything in Starter</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Fee invoicing</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Exams &amp; admissions</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Unlimited WhatsApp</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Priority support</span></li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">✅</span> Everything in Starter</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">💳</span> Fee invoicing &amp; MoMo</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🎓</span> Exams &amp; admissions</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">💬</span> Unlimited WhatsApp</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🆘</span> Priority support</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">👥</span> Up to 300 students</span>
+          </li>
         </ul>
         <a href="#" class="btn-plan-primary plan-cta">Start Free Trial</a>
       </div>
@@ -1804,12 +1849,24 @@ ul { list-style: none; }
         <div class="plan-desc">For large institutions</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Up to 800 students</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Everything in Growth</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Library &amp; hostel</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Payroll</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>All integrations</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Advanced analytics</span></li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">✅</span> Everything in Growth</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📚</span> Library &amp; hostel</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">💼</span> Payroll management</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🔗</span> All integrations</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">📈</span> Advanced analytics</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">👥</span> Up to 800 students</span>
+          </li>
         </ul>
         <a href="#" class="btn-plan-secondary plan-cta">Start Free Trial</a>
       </div>
@@ -1823,11 +1880,24 @@ ul { list-style: none; }
         <div class="plan-desc">For school groups &amp; districts</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Unlimited students</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Multi-campus dashboard</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Dedicated support</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>Custom integrations</span></li>
-          <li class="plan-feature"><span class="check-icon">✓</span><span>SLA guarantee</span></li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">✅</span> Everything in Pro</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🌐</span> Multi-campus dashboard</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🎯</span> Dedicated support</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">⚙️</span> Custom integrations</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">🔒</span> SLA guarantee</span>
+          </li>
+          <li class="plan-feature">
+            <span class="plan-pill"><span class="plan-pill-icon">👥</span> Unlimited students</span>
+          </li>
         </ul>
         <a href="mailto:hello@managen.app" class="btn-plan-secondary plan-cta">Contact Sales</a>
       </div>
@@ -1893,7 +1963,7 @@ ul { list-style: none; }
 </section>
 
 <!-- ============================================================
-     SECTION 5 — HOW IT WORKS
+     SECTION 5 — HOW IT WORKS (alternating rows, firsty style)
      ============================================================ -->
 <section class="howitworks-section" id="features">
   <div class="container">
@@ -1903,32 +1973,30 @@ ul { list-style: none; }
       <p class="section-sub">Start free. Add features. Scale up. Whether you have 50 students or 500, Managen adjusts to what you need. No commitments. No overpaying.</p>
     </div>
 
-    <div class="howitworks-grid">
+    <div class="hiw-rows">
 
-      <!-- Card A: Import -->
-      <div class="hiw-card reveal" style="transition-delay:0.1s">
-        <div class="hiw-inner">
-          <div class="hiw-text">
-            <div class="hiw-step-label">STEP 01</div>
-            <h3 class="hiw-title">One Dashboard, Every Department</h3>
-            <p class="hiw-body">No spreadsheets. No paper registers. No manual reports. Just add your school once and everything runs automatically.</p>
-          </div>
-          <div>
-            <div class="hiw-phone">
-              <div class="hiw-screen">
-                <div class="hiw-screen-inner">
-                  <div class="hiw-setup-bar">
-                    <span class="hiw-setup-bar-title">Setup Wizard</span>
-                  </div>
-                  <div class="hiw-setup-body">
-                    <div class="hiw-field filled short"></div>
-                    <div class="hiw-field filled med"></div>
-                    <div class="hiw-field filled"></div>
-                    <div class="hiw-field short"></div>
-                    <div class="hiw-field med"></div>
-                    <div class="hiw-progress">
-                      <div class="hiw-progress-bar"></div>
-                    </div>
+      <!-- Row 1: text left, phone right -->
+      <div class="hiw-row reveal" style="transition-delay:0.1s">
+        <div class="hiw-row-text">
+          <div class="hiw-step-num">01</div>
+          <h3 class="hiw-title">One Dashboard, Every Department</h3>
+          <p class="hiw-body">No spreadsheets. No paper registers. No manual reports. Just add your school once and everything runs automatically.</p>
+        </div>
+        <div class="hiw-row-phone">
+          <div class="hiw-phone">
+            <div class="hiw-screen">
+              <div class="hiw-screen-inner">
+                <div class="hiw-setup-bar">
+                  <span class="hiw-setup-bar-title">Setup Wizard</span>
+                </div>
+                <div class="hiw-setup-body">
+                  <div class="hiw-field filled short"></div>
+                  <div class="hiw-field filled med"></div>
+                  <div class="hiw-field filled"></div>
+                  <div class="hiw-field short"></div>
+                  <div class="hiw-field med"></div>
+                  <div class="hiw-progress">
+                    <div class="hiw-progress-bar"></div>
                   </div>
                 </div>
               </div>
@@ -1937,30 +2005,65 @@ ul { list-style: none; }
         </div>
       </div>
 
-      <!-- Card B: WhatsApp Reports -->
-      <div class="hiw-card reveal" style="transition-delay:0.2s">
-        <div class="hiw-inner">
-          <div class="hiw-text">
-            <div class="hiw-step-label">STEP 02</div>
-            <h3 class="hiw-title">Seamless Parent Communication</h3>
-            <p class="hiw-body">Send attendance, fee reminders, and report cards to every parent automatically via WhatsApp. No manual work, no missed updates.</p>
-          </div>
-          <div>
-            <div class="hiw-phone">
-              <div class="hiw-screen">
-                <div class="hiw-screen-inner">
-                  <div class="hiw-wa-bar">
-                    <span class="hiw-wa-bar-title">WhatsApp</span>
+      <!-- Row 2: phone left, text right -->
+      <div class="hiw-row reverse reveal" style="transition-delay:0.15s">
+        <div class="hiw-row-phone">
+          <div class="hiw-phone">
+            <div class="hiw-screen">
+              <div class="hiw-screen-inner">
+                <div class="hiw-wa-bar">
+                  <span class="hiw-wa-bar-title">WhatsApp</span>
+                </div>
+                <div class="hiw-wa-body">
+                  <div class="hiw-wa-bubble">
+                    <div class="hiw-wa-text">Kwame present today. Fee balance: ₵120.</div>
+                    <div class="hiw-wa-time">09:34 AM ✓✓</div>
                   </div>
-                  <div class="hiw-wa-body">
-                    <div class="hiw-wa-bubble">
-                      <div class="hiw-wa-text">Kwame present today. Fee balance: ₵120.</div>
-                      <div class="hiw-wa-time">09:34 AM ✓✓</div>
-                    </div>
-                    <div class="hiw-wa-bubble" style="background:#E7F3FF;border-radius:8px 0 8px 8px;margin-left:auto;">
-                      <div class="hiw-wa-text">Thank you!</div>
-                      <div class="hiw-wa-time">09:36 AM ✓✓</div>
-                    </div>
+                  <div class="hiw-wa-bubble" style="background:#E7F3FF;border-radius:8px 0 8px 8px;margin-left:auto;">
+                    <div class="hiw-wa-text">Thank you!</div>
+                    <div class="hiw-wa-time">09:36 AM ✓✓</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hiw-row-text">
+          <div class="hiw-step-num">02</div>
+          <h3 class="hiw-title">Seamless Parent Communication</h3>
+          <p class="hiw-body">Send attendance, fee reminders, and report cards to every parent automatically via WhatsApp. Zero manual work.</p>
+        </div>
+      </div>
+
+      <!-- Row 3: text left, phone right -->
+      <div class="hiw-row reveal" style="transition-delay:0.2s">
+        <div class="hiw-row-text">
+          <div class="hiw-step-num">03</div>
+          <h3 class="hiw-title">Collect Fees via MoMo Instantly</h3>
+          <p class="hiw-body">Accept payments via MTN Mobile Money, Vodafone Cash, and AirtelTigo. Parents pay from their phones. Instant receipts.</p>
+        </div>
+        <div class="hiw-row-phone">
+          <div class="hiw-phone">
+            <div class="hiw-screen">
+              <div class="hiw-screen-inner">
+                <div class="hiw-plan-bar">
+                  <span class="hiw-plan-bar-title">Fee Payment</span>
+                </div>
+                <div class="hiw-plan-body">
+                  <div class="hiw-plan-row">
+                    <div class="hiw-radio"></div>
+                    <span class="hiw-plan-name">Vodafone Cash</span>
+                    <span class="hiw-plan-price">₵199</span>
+                  </div>
+                  <div class="hiw-plan-row active">
+                    <div class="hiw-radio checked"></div>
+                    <span class="hiw-plan-name">MTN MoMo</span>
+                    <span class="hiw-plan-price">₵499</span>
+                  </div>
+                  <div class="hiw-plan-row">
+                    <div class="hiw-radio"></div>
+                    <span class="hiw-plan-name">AirtelTigo</span>
+                    <span class="hiw-plan-price">₵999</span>
                   </div>
                 </div>
               </div>
@@ -1969,36 +2072,34 @@ ul { list-style: none; }
         </div>
       </div>
 
-      <!-- Card C: Upgrade Anytime -->
-      <div class="hiw-card reveal" style="transition-delay:0.3s">
-        <div class="hiw-inner">
-          <div class="hiw-text">
-            <div class="hiw-step-label">STEP 03</div>
-            <h3 class="hiw-title">Upgrade or Pause — Whenever</h3>
-            <p class="hiw-body">Need more features? Upgrade in seconds. Growing? Add students instantly. Not using it? Pause and resume — your data never expires.</p>
-          </div>
-          <div>
-            <div class="hiw-phone">
-              <div class="hiw-screen">
-                <div class="hiw-screen-inner">
-                  <div class="hiw-plan-bar">
-                    <span class="hiw-plan-bar-title">Change Plan</span>
+      <!-- Row 4: phone left, text right -->
+      <div class="hiw-row reverse reveal" style="transition-delay:0.25s">
+        <div class="hiw-row-phone">
+          <div class="hiw-phone">
+            <div class="hiw-screen">
+              <div class="hiw-screen-inner">
+                <div class="hiw-analytics-bar">
+                  <span class="hiw-analytics-bar-title">Analytics</span>
+                </div>
+                <div class="hiw-analytics-body">
+                  <div class="hiw-analytics-label">Weekly Attendance</div>
+                  <div class="hiw-chart-bars">
+                    <div class="hiw-bar" style="height:18px"></div>
+                    <div class="hiw-bar" style="height:24px"></div>
+                    <div class="hiw-bar" style="height:20px"></div>
+                    <div class="hiw-bar" style="height:30px"></div>
+                    <div class="hiw-bar" style="height:26px"></div>
+                    <div class="hiw-bar" style="height:32px"></div>
+                    <div class="hiw-bar" style="height:28px"></div>
                   </div>
-                  <div class="hiw-plan-body">
-                    <div class="hiw-plan-row">
-                      <div class="hiw-radio"></div>
-                      <span class="hiw-plan-name">Starter</span>
-                      <span class="hiw-plan-price">₵199</span>
+                  <div class="hiw-kpi-row-sm">
+                    <div class="hiw-kpi-sm">
+                      <div class="hiw-kpi-num-sm green">94%</div>
+                      <div class="hiw-kpi-lbl-sm">Attend.</div>
                     </div>
-                    <div class="hiw-plan-row active">
-                      <div class="hiw-radio checked"></div>
-                      <span class="hiw-plan-name">Growth</span>
-                      <span class="hiw-plan-price">₵499</span>
-                    </div>
-                    <div class="hiw-plan-row">
-                      <div class="hiw-radio"></div>
-                      <span class="hiw-plan-name">Pro</span>
-                      <span class="hiw-plan-price">₵999</span>
+                    <div class="hiw-kpi-sm">
+                      <div class="hiw-kpi-num-sm">₵84K</div>
+                      <div class="hiw-kpi-lbl-sm">Fees</div>
                     </div>
                   </div>
                 </div>
@@ -2006,49 +2107,10 @@ ul { list-style: none; }
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Card D: Analytics -->
-      <div class="hiw-card reveal" style="transition-delay:0.4s">
-        <div class="hiw-inner">
-          <div class="hiw-text">
-            <div class="hiw-step-label">STEP 04</div>
-            <h3 class="hiw-title">Real-Time School Insights</h3>
-            <p class="hiw-body">Track attendance trends, fee collection rates, and academic performance from one dashboard. Export reports, spot issues fast.</p>
-          </div>
-          <div>
-            <div class="hiw-phone">
-              <div class="hiw-screen">
-                <div class="hiw-screen-inner">
-                  <div class="hiw-analytics-bar">
-                    <span class="hiw-analytics-bar-title">Analytics</span>
-                  </div>
-                  <div class="hiw-analytics-body">
-                    <div class="hiw-analytics-label">Weekly Attendance</div>
-                    <div class="hiw-chart-bars">
-                      <div class="hiw-bar" style="height:18px"></div>
-                      <div class="hiw-bar" style="height:24px"></div>
-                      <div class="hiw-bar" style="height:20px"></div>
-                      <div class="hiw-bar" style="height:30px"></div>
-                      <div class="hiw-bar" style="height:26px"></div>
-                      <div class="hiw-bar" style="height:32px"></div>
-                      <div class="hiw-bar" style="height:28px"></div>
-                    </div>
-                    <div class="hiw-kpi-row-sm">
-                      <div class="hiw-kpi-sm">
-                        <div class="hiw-kpi-num-sm green">94%</div>
-                        <div class="hiw-kpi-lbl-sm">Attend.</div>
-                      </div>
-                      <div class="hiw-kpi-sm">
-                        <div class="hiw-kpi-num-sm">₵84K</div>
-                        <div class="hiw-kpi-lbl-sm">Fees</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="hiw-row-text">
+          <div class="hiw-step-num">04</div>
+          <h3 class="hiw-title">Real-Time School Analytics</h3>
+          <p class="hiw-body">Track attendance trends, fee collection rates, and academic performance from one dashboard. Spot issues before they become problems.</p>
         </div>
       </div>
 
@@ -2193,7 +2255,56 @@ ul { list-style: none; }
 </section>
 
 <!-- ============================================================
-     FAQ (between showcase and footer)
+     TESTIMONIALS / REVIEWS (between showcase and FAQ)
+     ============================================================ -->
+<section class="reviews-section">
+  <div class="container">
+    <h2 class="reviews-h2">Schools Love Managen</h2>
+    <p class="reviews-sub">Here's what headmasters, bursars, and teachers across Ghana are saying.</p>
+    <div class="reviews-grid reveal">
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"We used to spend entire Fridays processing fee payments manually. Now Managen handles it automatically. Our bursar finally has weekends."</p>
+        <div class="review-author">
+          <div class="review-avatar">KO</div>
+          <div>
+            <div class="review-name">Kofi Osei</div>
+            <div class="review-role">Headmaster · Accra Academy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"WhatsApp reports to parents used to take our admin team half a day. Now they go out automatically every morning. Parents love it too."</p>
+        <div class="review-author">
+          <div class="review-avatar">AM</div>
+          <div>
+            <div class="review-name">Abena Mensah</div>
+            <div class="review-role">Deputy Head · Holy Trinity Secondary, Kumasi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"We went from 3 paper attendance registers to zero. Teachers mark attendance on phones in 30 seconds. No lost registers, ever."</p>
+        <div class="review-author">
+          <div class="review-avatar">SA</div>
+          <div>
+            <div class="review-name">Samuel Asante</div>
+            <div class="review-role">Administrator · Achimota School, Accra</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ (between reviews and footer)
      ============================================================ -->
 <section class="faq-section" id="faq">
   <div class="container-narrow">
