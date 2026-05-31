@@ -131,11 +131,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isLoaded, isSignedIn, exchangeToken, loadFromCookie]);
 
   const logout = useCallback(async () => {
-    await api.post("/api/auth/logout", {});
-    await signOut();
+    try { await api.post("/api/auth/logout", {}); } catch { /* ignore server errors */ }
+    try { await signOut(); } catch { /* ignore clerk errors */ }
     try { localStorage.removeItem('schoolos_jwt'); } catch { /* ignore */ }
+    try { localStorage.removeItem(SUBDOMAIN_KEY); } catch { /* ignore */ }
     setUser(null);
     setSchool(null);
+    window.location.replace('/auth');
   }, [signOut]);
 
   const refresh = useCallback(async () => {

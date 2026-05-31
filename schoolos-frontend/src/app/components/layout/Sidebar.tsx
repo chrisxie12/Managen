@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { getNavigation, UserRole } from "../../config/navigation";
-import { ChevronRight, Bell } from "lucide-react";
+import { ChevronRight, Bell, LogOut } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 interface SidebarProps {
@@ -15,7 +15,7 @@ interface SidebarProps {
 export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigation = getNavigation(role);
 
   const isPathActive = (path: string) =>
@@ -140,6 +140,36 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
           <button onClick={() => navigate("/dashboard/notifications")} className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent/10 hover:text-sidebar-foreground transition-colors duration-150 mb-2">
             <Bell className="w-[18px] h-[18px] stroke-[2] text-sidebar-foreground/50" />
             <span className="text-[13px] font-medium">Notifications</span>
+          </button>
+        )}
+
+        {/* Logout button */}
+        {collapsed ? (
+          <Tooltip.Provider delayDuration={200}>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <button
+                  onClick={() => logout()}
+                  className="w-full h-10 flex items-center justify-center rounded-md text-sidebar-foreground/50 hover:text-red-500 hover:bg-red-500/10 transition-colors duration-150"
+                >
+                  <LogOut className="w-[18px] h-[18px] stroke-[2]" />
+                </button>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content side="right" sideOffset={8} className="z-50 text-sidebar-foreground text-xs font-medium bg-sidebar border border-sidebar-border px-2 py-1 rounded shadow-lg">
+                  Log out
+                  <Tooltip.Arrow className="fill-sidebar" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        ) : (
+          <button
+            onClick={() => logout()}
+            className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md text-sidebar-foreground/50 hover:text-red-500 hover:bg-red-500/10 transition-colors duration-150 mb-1"
+          >
+            <LogOut className="w-[18px] h-[18px] stroke-[2]" />
+            <span className="text-[13px] font-medium">Log out</span>
           </button>
         )}
 

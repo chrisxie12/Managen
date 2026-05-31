@@ -54,16 +54,20 @@ interface KPICardProps {
   label: string;
   value: string | number;
   color: string;
+  gradient?: string;
   trend?: { direction: "up" | "down"; value: number };
   subtext?: string;
   onClick?: () => void;
   isLoading?: boolean;
+  delay?: number;
 }
 
-function KPICard({ icon, label, value, color, trend, subtext, onClick, isLoading }: KPICardProps) {
+function KPICard({ icon, label, value, color, gradient, trend, subtext, onClick, isLoading, delay = 0 }: KPICardProps) {
+  const iconBg = gradient || `linear-gradient(135deg, ${color}, ${color}cc)`;
+
   if (isLoading) {
     return (
-      <div className="p-5 rounded-2xl bg-card border border-border animate-pulse">
+      <div className="p-5 rounded-2xl bg-card border border-border animate-pulse" style={{ animationDelay: `${delay}ms` }}>
         <div className="flex items-start justify-between mb-4">
           <div className="w-11 h-11 rounded-xl bg-muted" />
           <div className="w-14 h-6 rounded-lg bg-muted" />
@@ -78,14 +82,36 @@ function KPICard({ icon, label, value, color, trend, subtext, onClick, isLoading
     <button
       onClick={onClick}
       disabled={!onClick}
-      className={`p-5 rounded-2xl text-left transition-all w-full ${
-        onClick ? "cursor-pointer hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98]" : "cursor-default"
+      className={`p-5 rounded-2xl text-left w-full group opacity-0 animate-slide-up-sm ${
+        onClick ? "cursor-pointer" : "cursor-default"
       } bg-card border border-border`}
-      style={{ boxShadow: "0 1px 8px rgba(3,27,78,0.06)" }}
+      style={{
+        boxShadow: "0 1px 8px rgba(3,27,78,0.06)",
+        animationDelay: `${delay}ms`,
+        animationFillMode: "forwards",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+      }}
+      onMouseEnter={(e) => {
+        if (onClick) {
+          (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(3,27,78,0.12)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 8px rgba(3,27,78,0.06)";
+      }}
+      onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.98)"; }}
+      onMouseUp={(e) => {
+        if (onClick) (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+      }}
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${color}14` }}>
-          <div style={{ color }}>{icon}</div>
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3"
+          style={{ background: iconBg, boxShadow: `0 4px 12px ${color}40` }}
+        >
+          <div style={{ color: "white" }}>{icon}</div>
         </div>
         {trend && (
           <div
@@ -100,8 +126,16 @@ function KPICard({ icon, label, value, color, trend, subtext, onClick, isLoading
           </div>
         )}
       </div>
-      <div className="font-bold text-foreground truncate"
-        style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(1.4rem, 3vw, 1.85rem)", lineHeight: 1, marginBottom: "0.2rem" }}
+      <div
+        className="font-bold text-foreground truncate opacity-0 animate-count-up"
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "clamp(1.4rem, 3vw, 1.85rem)",
+          lineHeight: 1,
+          marginBottom: "0.2rem",
+          animationDelay: `${delay + 150}ms`,
+          animationFillMode: "forwards",
+        }}
       >
         {value}
       </div>
@@ -263,27 +297,45 @@ function QuickActionsPanel() {
 
   return (
     <div
-      className="p-5 rounded-2xl"
-      style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)" }}
+      className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
+      style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "100ms", animationFillMode: "forwards" }}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Zap size={16} style={{ color: NAVY }} />
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #031B4E, #0069D9)" }}>
+            <Zap size={13} style={{ color: "white" }} />
+          </div>
           <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Quick Actions</h3>
         </div>
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-        {actions.map((action) => (
+        {actions.map((action, idx) => (
           <button
             id={`quick-action-${action.id}`}
             key={action.id}
             onClick={action.onClick}
-            className="flex flex-col items-center gap-2.5 p-4 rounded-xl transition-all hover:scale-105 active:scale-95 hover:shadow-md group"
-            style={{ background: CREAM, border: "1px solid rgba(10,36,114,0.06)" }}
+            className="flex flex-col items-center gap-2.5 p-4 rounded-xl group opacity-0 animate-bounce-in"
+            style={{
+              background: CREAM,
+              border: "1px solid rgba(10,36,114,0.06)",
+              animationDelay: `${150 + idx * 60}ms`,
+              animationFillMode: "forwards",
+              transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.03)";
+              (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 20px ${action.color}30`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0) scale(1)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+            onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.95)"; }}
+            onMouseUp={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.03)"; }}
           >
             <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
-              style={{ background: action.gradient }}
+              className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:rotate-6"
+              style={{ background: action.gradient, boxShadow: `0 4px 12px ${action.color}40` }}
             >
               <div style={{ color: "white" }}>{action.icon}</div>
             </div>
@@ -414,7 +466,7 @@ export function AdminOverview() {
   return (
     <div className="space-y-5 pb-10">
       {/* ── Hero Header ── */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between opacity-0 animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" }}>
         <div>
           <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.75rem", fontWeight: 700, lineHeight: 1.2 }}>
             {greeting}, {(user as any)?.firstName || (user?.fullName?.split(" ")[0]) || "Admin"} 👋
@@ -530,37 +582,45 @@ export function AdminOverview() {
           label="Total Students"
           value={totalStudents || 0}
           color={COLOR_SCHEME.info}
+          gradient="linear-gradient(135deg, #0080FF, #3B82F6)"
           trend={{ direction: "up", value: 5 }}
           onClick={() => navigate("/dashboard/students")}
           isLoading={isLoading}
+          delay={0}
         />
         <KPICard
           icon={<BookOpen size={22} />}
           label="Staff Members"
           value={anyDash.stats?.totalTeachers || 0}
           color={COLOR_SCHEME.success}
+          gradient="linear-gradient(135deg, #059669, #16A34A)"
           trend={{ direction: "up", value: 2 }}
           onClick={() => navigate("/dashboard/staff")}
           isLoading={isLoading}
+          delay={80}
         />
         <KPICard
           icon={<CalendarCheck size={22} />}
           label="Attendance"
           value={`${attendanceRate}%`}
           color={COLOR_SCHEME.purple}
+          gradient="linear-gradient(135deg, #7C3AED, #8B5CF6)"
           trend={{ direction: attendanceRate >= 80 ? "up" : "down", value: 3 }}
           onClick={() => navigate("/dashboard/attendance")}
           isLoading={isLoading}
+          delay={160}
         />
         <KPICard
           icon={<DollarSign size={22} />}
           label="Fee Collection"
           value={`${collectionRate}%`}
           color={COLOR_SCHEME.indigo}
+          gradient="linear-gradient(135deg, #4F46E5, #6366F1)"
           trend={{ direction: collectionRate >= 75 ? "up" : "down", value: 2 }}
           subtext={`₵${(totalCollected / 1000).toFixed(1)}K of ₵${(totalBilled / 1000).toFixed(1)}K`}
           onClick={() => navigate("/dashboard/fees/collect")}
           isLoading={isLoading}
+          delay={240}
         />
       </div>
 
@@ -571,36 +631,44 @@ export function AdminOverview() {
           label="Fee Defaulters"
           value={defaulters}
           color={COLOR_SCHEME.danger}
+          gradient="linear-gradient(135deg, #DC2626, #EF4444)"
           subtext="Students with unpaid fees"
           onClick={() => navigate("/dashboard/fees")}
           isLoading={isLoading}
+          delay={80}
         />
         <KPICard
           icon={<ClipboardList size={22} />}
           label="Pending Approvals"
           value={pendingCount}
           color={COLOR_SCHEME.warning}
+          gradient="linear-gradient(135deg, #D97706, #F59E0B)"
           subtext="Items awaiting review"
           onClick={() => navigate("/dashboard/assessments")}
           isLoading={isLoading}
+          delay={160}
         />
         <KPICard
-          icon={<DollarSign size={22} />}
+          icon={<TrendingUp size={22} />}
           label="Revenue (MTD)"
           value={`₵${(totalCollected / 1000).toFixed(1)}K`}
           color={COLOR_SCHEME.success}
+          gradient="linear-gradient(135deg, #047857, #059669)"
           subtext="Month to date"
           onClick={() => navigate("/dashboard/fees/reports")}
           isLoading={isLoading}
+          delay={240}
         />
         <KPICard
           icon={<School size={22} />}
           label="Active Classes"
           value={anyDash.stats?.activeClasses || 0}
           color={COLOR_SCHEME.info}
+          gradient="linear-gradient(135deg, #0369A1, #0284C7)"
           subtext="Scheduled today"
           onClick={() => navigate("/dashboard/classes")}
           isLoading={isLoading}
+          delay={320}
         />
       </div>
 
@@ -608,12 +676,17 @@ export function AdminOverview() {
       <div className="grid lg:grid-cols-3 gap-5">
         {/* Attendance Bar Chart */}
         <div
-          className="lg:col-span-2 p-5 rounded-2xl"
-          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)" }}
+          className="lg:col-span-2 p-5 rounded-2xl opacity-0 animate-slide-up-sm"
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "200ms", animationFillMode: "forwards" }}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Attendance Trend (7 days)</h3>
-            <span style={{ color: MUTED, fontSize: "0.78rem" }}>↑ +1.2% vs last week</span>
+            <span
+              className="px-2 py-1 rounded-lg text-xs font-semibold"
+              style={{ background: `${COLOR_SCHEME.success}15`, color: COLOR_SCHEME.success }}
+            >
+              ↑ +1.2% vs last week
+            </span>
           </div>
           {totalStudents === 0 && !isLoading ? (
             <EmptyState
@@ -627,20 +700,25 @@ export function AdminOverview() {
             <div className="h-44 flex items-end gap-1.5">
               {[78, 82, 81, 85, 83, 86, 87].map((val, i) => {
                 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+                const isGood = val >= 85;
                 return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <span style={{ fontSize: "0.65rem", color: val >= 85 ? COLOR_SCHEME.success : COLOR_SCHEME.warning, fontWeight: 700 }}>
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
+                    <span style={{ fontSize: "0.65rem", color: isGood ? COLOR_SCHEME.success : COLOR_SCHEME.warning, fontWeight: 700 }}>
                       {val}%
                     </span>
                     <div
-                      className="w-full rounded-t-lg transition-all hover:opacity-80 cursor-pointer"
+                      className="w-full rounded-t-lg cursor-pointer overflow-hidden relative"
                       style={{
-                        background: val >= 85
-                          ? `linear-gradient(180deg, ${COLOR_SCHEME.success}, ${COLOR_SCHEME.success}88)`
-                          : `linear-gradient(180deg, ${COLOR_SCHEME.info}, ${COLOR_SCHEME.info}88)`,
+                        background: isGood
+                          ? `linear-gradient(180deg, ${COLOR_SCHEME.success}, ${COLOR_SCHEME.success}66)`
+                          : `linear-gradient(180deg, ${COLOR_SCHEME.info}, ${COLOR_SCHEME.info}66)`,
                         height: `${(val / 100) * 140}px`,
                         minHeight: 4,
+                        transition: "transform 0.2s ease, opacity 0.2s ease",
+                        boxShadow: isGood ? `0 -2px 8px ${COLOR_SCHEME.success}40` : `0 -2px 8px ${COLOR_SCHEME.info}40`,
                       }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
                       title={`${days[i]}: ${val}%`}
                     />
                     <span style={{ fontSize: "0.68rem", color: MUTED }}>{days[i]}</span>
@@ -653,8 +731,8 @@ export function AdminOverview() {
 
         {/* Tasks Panel */}
         <div
-          className="p-5 rounded-2xl"
-          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)" }}
+          className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
+          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "280ms", animationFillMode: "forwards" }}
         >
           <div className="flex items-center justify-between mb-4">
             <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>
@@ -703,8 +781,8 @@ export function AdminOverview() {
 
       {/* ── Academic Performance Chart ── */}
       <div
-        className="p-5 rounded-2xl"
-        style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)" }}
+        className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
+        style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "320ms", animationFillMode: "forwards" }}
       >
         <div className="flex items-center justify-between mb-4">
           <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Academic Performance (6 months)</h3>
