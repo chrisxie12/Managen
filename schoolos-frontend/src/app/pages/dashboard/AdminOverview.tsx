@@ -9,14 +9,16 @@ import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
 
-const NAVY = "#031B4E";
-const NAVY_LIGHT = "#0069D9";
-const MUTED = "#6B7280";
-const PRIMARY = "#0080FF";
-const SUCCESS = "#16A34A";
-const WARNING = "#F59E0B";
-const DANGER = "#EF4444";
-const PURPLE = "#8B5CF6";
+const NAVY    = "#1C1917";      // stone-900 — headings, key text
+const MUTED   = "#78716C";      // stone-500 — secondary text
+const PRIMARY = "#0B4F30";      // forest green — primary brand
+const GOLD    = "#D4A017";      // warm gold — secondary CTA
+const SUCCESS = "#22C55E";      // green-500
+const WARNING = "#F59E0B";      // amber-500
+const DANGER  = "#EF4444";      // red-500
+const INFO    = "#3B82F6";      // blue-500
+const PURPLE  = "#8B5CF6";      // purple
+const ACCENT  = "#F0FDF4";      // green-50 bg
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 function Sparkline({ data, color }: { data: number[]; color: string }) {
@@ -344,10 +346,10 @@ export function AdminOverview() {
 
   // Quick action buttons
   const quickActions = [
-    { icon: <CalendarCheck size={20} />, label: "Mark Attendance", desc: "Record daily register", color: PRIMARY, gradient: "linear-gradient(135deg,#0080FF,#3B82F6)", href: "/dashboard/attendance" },
-    { icon: <Banknote size={20} />, label: "Collect Fee", desc: "MoMo or cash", color: SUCCESS, gradient: "linear-gradient(135deg,#059669,#16A34A)", href: "/dashboard/fees/collect" },
+    { icon: <CalendarCheck size={20} />, label: "Mark Attendance", desc: "Record daily register", color: PRIMARY, gradient: `linear-gradient(135deg,${PRIMARY},#16A34A)`, href: "/dashboard/attendance" },
+    { icon: <Banknote size={20} />, label: "Collect Fee", desc: "MoMo or cash", color: GOLD, gradient: "linear-gradient(135deg,#B8860B,#D4A017)", href: "/dashboard/fees/collect" },
     { icon: <MessageCircle size={20} />, label: "Send Notice", desc: "WhatsApp broadcast", color: PURPLE, gradient: "linear-gradient(135deg,#6D28D9,#8B5CF6)", href: "/dashboard/whatsapp" },
-    { icon: <Plus size={20} />, label: "Add Student", desc: "Enrol new pupil", color: NAVY, gradient: `linear-gradient(135deg,${NAVY},${NAVY_LIGHT})`, href: "/dashboard/students" },
+    { icon: <Plus size={20} />, label: "Add Student", desc: "Enrol new pupil", color: INFO, gradient: "linear-gradient(135deg,#2563EB,#3B82F6)", href: "/dashboard/students" },
   ];
 
   if (totalStudents === 0 && !isLoading) {
@@ -363,13 +365,15 @@ export function AdminOverview() {
         style={{ animationFillMode: "forwards" }}
       >
         <div>
-          <h1 className="font-bold" style={{ color: NAVY, fontSize: "1.45rem", lineHeight: 1.2 }}>
-            {greeting}, {firstName}!
+          <p className="text-[12px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: PRIMARY }}>
+            {school?.name}
+          </p>
+          <h1 className="font-bold" style={{ color: NAVY, fontSize: "1.5rem", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+            {greeting}, {firstName}! 👋
           </h1>
-          <p className="mt-0.5 text-[13px]" style={{ color: MUTED }}>
-            {school?.name} ·{" "}
+          <p className="mt-1 text-[13px]" style={{ color: MUTED }}>
+            Here's what's happening at your school today.{" "}
             {connected && <span style={{ color: SUCCESS, fontWeight: 600 }}>● Live</span>}
-            {!connected && <span style={{ color: WARNING, fontWeight: 600 }}>○ Connecting…</span>}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -379,9 +383,9 @@ export function AdminOverview() {
               onClick={() => setTimeFilter(r)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
               style={{
-                background: timeFilter === r ? NAVY : "white",
+                background: timeFilter === r ? PRIMARY : "white",
                 color: timeFilter === r ? "white" : MUTED,
-                border: `1px solid ${timeFilter === r ? NAVY : "#E5E7EB"}`,
+                border: `1px solid ${timeFilter === r ? PRIMARY : "#E7E5E4"}`,
               }}
             >
               {r.charAt(0).toUpperCase() + r.slice(1)}
@@ -389,7 +393,8 @@ export function AdminOverview() {
           ))}
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white hover:bg-gray-50 transition-colors"
+            style={{ color: MUTED, borderColor: "#E7E5E4" }}
           >
             <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
@@ -618,7 +623,7 @@ export function AdminOverview() {
           style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "300ms", animationFillMode: "forwards" }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg,#031B4E,#0069D9)" }}>
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: `linear-gradient(135deg,${PRIMARY},#16A34A)` }}>
               <Zap size={12} style={{ color: "white" }} />
             </div>
             <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>Quick Actions</h3>
@@ -649,17 +654,17 @@ export function AdminOverview() {
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-gray-50">
-            <div className="text-[11px] font-semibold uppercase tracking-wider mb-2.5" style={{ color: "#9CA3AF" }}>At a glance</div>
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: "#E7E5E4" }}>
+            <div className="text-[11px] font-semibold uppercase tracking-wider mb-2.5" style={{ color: "#A8A29E" }}>At a glance</div>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "Defaulters", value: defaulters, color: DANGER },
-                { label: "Active Classes", value: activeClasses, color: PRIMARY },
-                { label: "Fee Target", value: `${collectionRate}%`, color: SUCCESS },
-                { label: "Attendance", value: `${attendanceRate}%`, color: PURPLE },
+                { label: "Defaulters",     value: defaulters,          color: DANGER   },
+                { label: "Active Classes", value: activeClasses,       color: PRIMARY  },
+                { label: "Fee Target",     value: `${collectionRate}%`, color: GOLD    },
+                { label: "Attendance",     value: `${attendanceRate}%`, color: SUCCESS },
               ].map((stat) => (
-                <div key={stat.label} className="p-2.5 rounded-xl" style={{ background: `${stat.color}08`, border: `1px solid ${stat.color}15` }}>
-                  <div className="text-[10px] font-medium" style={{ color: MUTED }}>{stat.label}</div>
+                <div key={stat.label} className="p-2.5 rounded-xl" style={{ background: `${stat.color}0D`, border: `1px solid ${stat.color}20` }}>
+                  <div className="text-[10px] font-medium uppercase tracking-wide" style={{ color: "#A8A29E" }}>{stat.label}</div>
                   <div className="text-[15px] font-bold mt-0.5" style={{ color: stat.color, fontFamily: "JetBrains Mono, monospace" }}>{stat.value}</div>
                 </div>
               ))}

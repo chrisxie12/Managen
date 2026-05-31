@@ -239,82 +239,81 @@ function DashboardLayoutInner() {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[260px] md:ml-16 min-w-0">
-        <header className="flex items-center justify-between px-4 lg:px-6 py-4 flex-shrink-0 gap-3 bg-background/85 backdrop-blur-xl border-b border-border">
+      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[220px] md:ml-16 min-w-0">
+        <header className="flex items-center justify-between px-6 lg:px-8 py-0 flex-shrink-0 gap-4 bg-background border-b border-border" style={{ height: 64 }}>
           <div className="flex items-center gap-3">
             <button onClick={() => setMobileOpen(true)} className="lg:hidden text-foreground">
               <Menu size={20} />
             </button>
             <div>
-              <h1 className="text-foreground font-semibold" style={{ fontSize: "1.05rem", lineHeight: 1.3 }}>
-                {pageTitle}
+              <h1 className="font-semibold" style={{ fontSize: "1.1rem", color: "#1C1917", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                Welcome back, {(user as any)?.firstName || user?.fullName?.split(" ")[0] || "Admin"}!
               </h1>
               {school?.name && (
-                <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{school.name}</p>
+                <p style={{ fontSize: "0.75rem", color: "#78716C", lineHeight: 1 }}>{school.name}</p>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-            {/* Health Badges — only show after first successful poll */}
-            {health && (
-              <>
-              {health?.momo && (
-                  <HealthBadge
-                    label="MoMo"
-                    status="pilot"
-                    tooltip="Connect MTN MoMo API to go live"
-                  />
-                )}
-                {health?.whatsapp && (
-                  <HealthBadge
-                    label="WhatsApp"
-                    status="pilot"
-                    tooltip="Connect Arkesel to go live"
-                  />
-                )}
-                <SyncBadge isOnline={navigator.onLine} />
-              </>
-            )}
-          </div>
-
-          {installPrompt && (
-              <button onClick={handleInstall}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all active:scale-95 text-xs font-medium bg-card border border-border text-foreground">
-                <Download size={13} /> Install App
-              </button>
-            )}
-            {syncing && (
-              <span className="text-[11px] text-muted-foreground animate-pulse">Syncing...</span>
-            )}
-            <button
-              onClick={() => setGlobalSearchOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-95 bg-card border border-border"
-            >
-              <Search size={14} className="text-muted-foreground" />
-              <span className="text-muted-foreground" style={{ fontSize: "0.82rem" }}>Search...</span>
-              <kbd className="px-1.5 py-0.5 rounded text-[10px] font-medium ml-4 bg-muted text-muted-foreground">
+            {/* Search */}
+            <div className="relative hidden sm:block">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#A8A29E" }} />
+              <input
+                readOnly
+                onClick={() => setGlobalSearchOpen(true)}
+                placeholder="Search students, classes, reports..."
+                style={{
+                  width: 260,
+                  height: 40,
+                  border: "1px solid #E7E5E4",
+                  borderRadius: 10,
+                  padding: "0 14px 0 36px",
+                  background: "#FFFFFF",
+                  fontSize: 13,
+                  color: "#A8A29E",
+                  cursor: "pointer",
+                  outline: "none",
+                  fontFamily: "inherit",
+                }}
+              />
+              <kbd style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 4, background: "#F5F5F4", color: "#A8A29E", border: "1px solid #E7E5E4" }}>
                 ⌘K
               </kbd>
-            </button>
+            </div>
 
+            {/* Status badges — show only when available */}
+            {health && (
+              <div className="hidden md:flex items-center gap-2">
+                {health?.momo && <HealthBadge label="MoMo" status="pilot" tooltip="Connect MTN MoMo API to go live" />}
+                {health?.whatsapp && <HealthBadge label="WhatsApp" status="pilot" tooltip="Connect Arkesel to go live" />}
+                <SyncBadge isOnline={navigator.onLine} />
+              </div>
+            )}
+
+            {syncing && <span className="text-[11px] text-muted-foreground animate-pulse hidden sm:block">Syncing…</span>}
+
+            {/* Notifications */}
             <div className="relative">
-              <button onClick={() => setShowNotifDropdown(!showNotifDropdown)}
-                className="relative w-9 h-9 rounded-xl flex items-center justify-center bg-card border border-border">
-                <Bell size={16} className="text-foreground" />
+              <button
+                onClick={() => setShowNotifDropdown(!showNotifDropdown)}
+                style={{ width: 40, height: 40, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "#FFFFFF", border: "1px solid #E7E5E4", cursor: "pointer", position: "relative", transition: "background 0.15s" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#FAFAF9"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "#FFFFFF"; }}
+              >
+                <Bell size={18} style={{ color: "#78716C" }} />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 rounded-xl flex items-center justify-center text-xs font-bold"
-                    style={{ background: "#EF4444", color: "white", fontSize: "0.6rem", minWidth: 16, height: 16, padding: "0 3px" }}>{unreadCount > 99 ? "99+" : unreadCount}</span>
+                  <span style={{ position: "absolute", top: -4, right: -4, minWidth: 16, height: 16, borderRadius: 4, background: "#EF4444", color: "#fff", fontSize: 9, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px" }}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
                 )}
               </button>
               {showNotifDropdown && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-card border border-border sm:w-80">
-                    <div className="p-3 text-center text-sm text-muted-foreground">
-                      <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }}
-                        className="text-xs font-medium text-foreground hover:text-primary transition-colors">
+                  <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-2xl shadow-lg overflow-hidden bg-card border border-border">
+                    <div className="p-3 text-center">
+                      <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }} className="text-xs font-medium text-foreground hover:text-primary transition-colors">
                         View all notifications
                       </button>
                     </div>
@@ -323,42 +322,45 @@ function DashboardLayoutInner() {
               )}
             </div>
 
+            {/* User menu */}
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors hover:bg-card border border-transparent hover:border-border"
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 8px 4px 4px", borderRadius: 10, background: "transparent", border: "1px solid transparent", cursor: "pointer", transition: "all 0.15s" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#FAFAF9"; (e.currentTarget as HTMLElement).style.borderColor = "#E7E5E4"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.borderColor = "transparent"; }}
               >
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
-                  <span style={{ color: CREAM, fontSize: "0.75rem", fontWeight: 700 }}>{initials}</span>
+                <div style={{ width: 30, height: 30, borderRadius: "50%", background: `linear-gradient(135deg, #0B4F30, #22C55E)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ color: "#fff", fontSize: 11, fontWeight: 700 }}>{initials}</span>
                 </div>
-                <ChevronDown size={13} className="text-muted-foreground hidden sm:block" />
+                <ChevronDown size={13} style={{ color: "#A8A29E" }} className="hidden sm:block" />
               </button>
 
               {showUserMenu && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
-                  <div className="absolute right-0 top-full mt-2 z-50 w-52 rounded-2xl shadow-lg overflow-hidden bg-card border border-border py-1">
-                    <div className="px-3 py-2.5 border-b border-border mb-1">
-                      <div className="text-[13px] font-semibold text-foreground truncate">{user?.fullName || "User"}</div>
-                      <div className="text-[11px] text-muted-foreground truncate">{user?.email || ""}</div>
+                  <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, zIndex: 50, width: 200, borderRadius: 12, background: "#fff", border: "1px solid #E7E5E4", boxShadow: "0 8px 24px rgba(0,0,0,0.1)", padding: "6px 0", overflow: "hidden" }}>
+                    <div style={{ padding: "10px 14px 10px", borderBottom: "1px solid #E7E5E4", marginBottom: 4 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: "#1C1917", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.fullName || "User"}</div>
+                      <div style={{ fontSize: 11, color: "#78716C", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email || ""}</div>
                     </div>
-                    <button
-                      onClick={() => { setShowUserMenu(false); navigate("/dashboard/profile"); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-foreground hover:bg-accent/50 transition-colors"
-                    >
-                      <User size={14} className="text-muted-foreground" /> My Profile
-                    </button>
-                    <button
-                      onClick={() => { setShowUserMenu(false); navigate("/dashboard/settings"); }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-foreground hover:bg-accent/50 transition-colors"
-                    >
-                      <Settings size={14} className="text-muted-foreground" /> Settings
-                    </button>
-                    <div className="border-t border-border mt-1 pt-1">
-                      <button
-                        onClick={() => { setShowUserMenu(false); logout(); }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+                    {[
+                      { label: "My Profile",  Icon: User,     href: "/dashboard/profile" },
+                      { label: "Settings",    Icon: Settings, href: "/dashboard/settings" },
+                    ].map(({ label, Icon, href }) => (
+                      <button key={label} onClick={() => { setShowUserMenu(false); navigate(href); }}
+                        style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", fontSize: 13, color: "#1C1917", background: "transparent", border: "none", cursor: "pointer", transition: "background 0.12s", textAlign: "left" }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#FAFAF9"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                      >
+                        <Icon size={14} style={{ color: "#78716C" }} /> {label}
+                      </button>
+                    ))}
+                    <div style={{ borderTop: "1px solid #E7E5E4", marginTop: 4, paddingTop: 4 }}>
+                      <button onClick={() => { setShowUserMenu(false); logout(); }}
+                        style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", fontSize: 13, color: "#EF4444", background: "transparent", border: "none", cursor: "pointer", transition: "background 0.12s", textAlign: "left" }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#FEF2F2"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                       >
                         <LogOut size={14} /> Log out
                       </button>
@@ -370,7 +372,7 @@ function DashboardLayoutInner() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 w-full min-w-0">
+        <main className="flex-1 overflow-y-auto p-5 lg:p-8 pb-24 lg:pb-8 w-full min-w-0">
           {!pilotDismissed && (
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl mb-5 border border-blue-200 bg-blue-50">
               <Info className="w-4 h-4 text-blue-500 shrink-0" />

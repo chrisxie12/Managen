@@ -5,8 +5,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
-const NAVY = "#031B4E";
-const MUTED = "#6B7280";
+const FOREST = "#0B4F30";
+const MUTED  = "#78716C";
 
 // Role-specific bottom nav items (max 5)
 const roleBottomNav: Record<string, Array<{ icon: any; label: string; path: string }>> = {
@@ -89,8 +89,8 @@ export function MobileBottomNav() {
             <div
               className="flex items-center justify-center w-10 h-6 rounded-full transition-all"
               style={{
-                background: active ? "#0080FF" : "transparent",
-                boxShadow: active ? "0 2px 8px rgba(0,128,255,0.3)" : "none",
+                background: active ? FOREST : "transparent",
+                boxShadow: active ? "0 2px 8px rgba(11,79,48,0.3)" : "none",
               }}
             >
               <item.icon
@@ -101,7 +101,7 @@ export function MobileBottomNav() {
             </div>
             <span
               style={{
-                color: active ? "#0080FF" : MUTED,
+                color: active ? FOREST : MUTED,
                 fontSize: "0.58rem",
                 fontWeight: active ? 700 : 400,
               }}
