@@ -17,7 +17,7 @@ router.get('/', protect, requirePermission('settings.edit', 'grades.view', 'fees
         if (error) return res.status(400).json({ error: error.message });
         return res.json({ data: { approvals: approvals || [] } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching approvals.' });
+        return res.status(500).json({ error: err.message || 'Error fetching approvals.' });
     }
 });
 
@@ -46,7 +46,7 @@ router.post('/', protect, async (req, res) => {
         if (error) return res.status(400).json({ error: error.message });
         return res.status(201).json({ data: { approval: data, message: 'Approval request submitted.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error submitting approval request.' });
+        return res.status(500).json({ error: err.message || 'Error submitting approval request.' });
     }
 });
 
@@ -67,7 +67,7 @@ router.put('/:id/approve', protect, requirePermission('settings.edit', 'grades.v
         if (!data) return res.status(404).json({ error: 'Approval request not found or already processed.' });
         return res.json({ data: { approval: data, message: 'Request approved.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error approving request.' });
+        return res.status(500).json({ error: err.message || 'Error approving request.' });
     }
 });
 
@@ -90,7 +90,7 @@ router.put('/:id/reject', protect, requirePermission('settings.edit', 'grades.vi
         if (!data) return res.status(404).json({ error: 'Approval request not found or already processed.' });
         return res.json({ data: { approval: data, message: 'Request rejected.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error rejecting request.' });
+        return res.status(500).json({ error: err.message || 'Error rejecting request.' });
     }
 });
 

@@ -14,7 +14,7 @@ router.get('/stats', protect, requirePermission('messages.view'), async (req, re
   try {
     const data = await communicationService.getStats(req.tenant.id);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching communication stats.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching communication stats.' }); }
 });
 
 // ─── Messages ─────────────────────────────────────────────────────
@@ -26,7 +26,7 @@ router.get('/', protect, requirePermission('messages.view'), async (req, res) =>
       limit: parseLimit(req.query.limit),
     });
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching messages.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching messages.' }); }
 });
 
 router.post('/send', protect, requirePermission('messages.create'), async (req, res) => {
@@ -43,14 +43,14 @@ router.post('/drafts', protect, requirePermission('messages.create'), async (req
   try {
     const data = await communicationService.saveDraft(req.tenant.id, req.user.userId, req.body);
     return res.status(201).json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error saving draft.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error saving draft.' }); }
 });
 
 router.get('/recipient-options', protect, requirePermission('messages.view'), async (req, res) => {
   try {
     const data = await communicationService.getRecipientOptions(req.tenant.id);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching recipient options.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching recipient options.' }); }
 });
 
 router.get('/:id', protect, requirePermission('messages.view'), async (req, res) => {
@@ -67,14 +67,14 @@ router.get('/:id/recipients', protect, requirePermission('messages.view'), async
   try {
     const data = await communicationService.getRecipients(req.tenant.id, req.params.id);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching recipients.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching recipients.' }); }
 });
 
 router.delete('/:id', protect, requirePermission('messages.delete'), async (req, res) => {
   try {
     await communicationService.deleteMessage(req.tenant.id, req.params.id);
     return res.json({ data: { success: true } });
-  } catch (err) { return res.status(500).json({ error: 'Error deleting message.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting message.' }); }
 });
 
 router.post('/:id/resend', protect, requirePermission('messages.create'), async (req, res) => {
@@ -92,28 +92,28 @@ router.get('/templates/list', protect, requirePermission('messages.view'), async
   try {
     const data = await communicationService.getTemplates(req.tenant.id, req.query.category);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching templates.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching templates.' }); }
 });
 
 router.post('/templates', protect, requirePermission('messages.create', 'messages.edit'), async (req, res) => {
   try {
     const data = await communicationService.createTemplate(req.tenant.id, req.body);
     return res.status(201).json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error creating template.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error creating template.' }); }
 });
 
 router.put('/templates/:id', protect, requirePermission('messages.edit'), async (req, res) => {
   try {
     const data = await communicationService.updateTemplate(req.tenant.id, req.params.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating template.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating template.' }); }
 });
 
 router.delete('/templates/:id', protect, requirePermission('messages.delete'), async (req, res) => {
   try {
     await communicationService.deleteTemplate(req.tenant.id, req.params.id);
     return res.json({ data: { success: true } });
-  } catch (err) { return res.status(500).json({ error: 'Error deleting template.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting template.' }); }
 });
 
 // ─── Announcements ────────────────────────────────────────────────
@@ -125,14 +125,14 @@ router.get('/announcements/list', protect, requirePermission('announcements.view
       limit: parseLimit(req.query.limit),
     });
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching announcements.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching announcements.' }); }
 });
 
 router.post('/announcements', protect, requirePermission('announcements.create'), async (req, res) => {
   try {
     const data = await communicationService.createAnnouncement(req.tenant.id, req.user.userId, req.body);
     return res.status(201).json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error creating announcement.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error creating announcement.' }); }
 });
 
 router.put('/announcements/:id/publish', protect, requirePermission('announcements.edit'), async (req, res) => {
@@ -171,7 +171,7 @@ router.get('/events/list', protect, async (req, res) => {
     const { data, count, error } = await query;
     if (error) return res.status(500).json({ error: error.message });
     return res.json({ data: { records: data || [], total: count || 0, page: p, limit: l } });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching events.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching events.' }); }
 });
 
 router.post('/events', protect, requirePermission('announcements.create'), async (req, res) => {
@@ -193,7 +193,7 @@ router.post('/events', protect, requirePermission('announcements.create'), async
 
     if (error) return res.status(500).json({ error: error.message });
     return res.status(201).json({ data: { event } });
-  } catch (err) { return res.status(500).json({ error: 'Error creating event.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error creating event.' }); }
 });
 
 router.put('/events/:id/cancel', protect, requirePermission('announcements.edit'), async (req, res) => {
@@ -204,7 +204,7 @@ router.put('/events/:id/cancel', protect, requirePermission('announcements.edit'
       .eq('school_id', req.tenant.id);
     if (error) return res.status(500).json({ error: error.message });
     return res.json({ data: { message: 'Event cancelled.' } });
-  } catch (err) { return res.status(500).json({ error: 'Error cancelling event.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error cancelling event.' }); }
 });
 
 module.exports = router;

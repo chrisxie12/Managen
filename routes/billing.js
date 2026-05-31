@@ -66,7 +66,7 @@ router.get('/', (req, res) => {
     try {
         return res.json({ data: { plans: getPublicPlans() } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching plans.' });
+        return res.status(500).json({ error: err.message || 'Error fetching plans.' });
     }
 });
 
@@ -145,7 +145,7 @@ router.post('/paystack-initialize', protect, async (req, res) => {
         const reference = paystackResponse?.data?.reference;
 
         if (!reference) {
-            return res.status(502).json({ error: 'Failed to initialize payment with Paystack.' });
+            return res.status(502).json({ error: err.message || 'Failed to initialize payment with Paystack.' });
         }
 
         // Create a pending payment record

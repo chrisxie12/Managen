@@ -15,7 +15,7 @@ router.get('/', protect, requirePermission('audit_logs.view'), async (req, res) 
       limit: parseLimit(req.query.limit),
     });
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching audit logs.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching audit logs.' }); }
 });
 
 router.get('/export', protect, requirePermission('audit_logs.view'), async (req, res) => {
@@ -38,7 +38,7 @@ router.get('/export', protect, requirePermission('audit_logs.view'), async (req,
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="audit-logs-${Date.now()}.csv"`);
     return res.send(csv);
-  } catch (err) { return res.status(500).json({ error: 'Error exporting audit logs.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error exporting audit logs.' }); }
 });
 
 router.get('/:id', protect, requirePermission('audit_logs.view'), async (req, res) => {

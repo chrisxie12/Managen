@@ -111,11 +111,11 @@ router.get('/onboarding/status', protect, async (req, res) => {
             .select('onboarding_completed, metadata')
             .eq('id', schoolId)
             .single();
-        if (error) return res.status(500).json({ error: 'Error fetching onboarding status.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching onboarding status.' });
         const step = data.metadata?.onboarding_step ?? 0;
         return res.json({ data: { onboarding_completed: data.onboarding_completed, current_step: step, metadata: data.metadata } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching onboarding status.' });
+        return res.status(500).json({ error: err.message || 'Error fetching onboarding status.' });
     }
 });
 
@@ -127,10 +127,10 @@ router.post('/onboarding/survey', protect, async (req, res) => {
         const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
         const metadata = { ...(existing?.metadata || {}), survey, onboarding_step: 1 };
         const { error } = await supabase.from('schools').update({ metadata }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: 'Error saving survey.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error saving survey.' });
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving survey.' });
+        return res.status(500).json({ error: err.message || 'Error saving survey.' });
     }
 });
 
@@ -162,10 +162,10 @@ router.post('/onboarding/school', protect, async (req, res) => {
         const metadata = { ...(existing?.metadata || {}), onboarding_step: 2 };
         updateData.metadata = metadata;
         const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: 'Error saving school data.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error saving school data.' });
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving school data.' });
+        return res.status(500).json({ error: err.message || 'Error saving school data.' });
     }
 });
 
@@ -176,10 +176,10 @@ router.post('/onboarding/logo', protect, async (req, res) => {
         const { logo } = req.body;
         if (!logo) return res.status(400).json({ error: 'Logo data is required.' });
         const { error } = await supabase.from('schools').update({ logo_url: logo }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: 'Error saving logo.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error saving logo.' });
         return res.json({ data: { logo_url: logo } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving logo.' });
+        return res.status(500).json({ error: err.message || 'Error saving logo.' });
     }
 });
 
@@ -190,10 +190,10 @@ router.post('/onboarding/complete', protect, async (req, res) => {
         const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
         const metadata = { ...(existing?.metadata || {}), onboarding_step: 4, checklist: { profile_complete: true, first_class_added: false, first_teacher_added: false, first_student_added: false, fee_structure_setup: false, first_announcement_sent: false } };
         const { error } = await supabase.from('schools').update({ onboarding_completed: true, metadata }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: 'Error completing onboarding.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error completing onboarding.' });
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error completing onboarding.' });
+        return res.status(500).json({ error: err.message || 'Error completing onboarding.' });
     }
 });
 
@@ -206,10 +206,10 @@ router.get('/onboarding/resume', protect, async (req, res) => {
             .select('metadata')
             .eq('id', schoolId)
             .single();
-        if (error) return res.status(500).json({ error: 'Error fetching resume data.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching resume data.' });
         return res.json({ data: { metadata: data.metadata || {} } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching resume data.' });
+        return res.status(500).json({ error: err.message || 'Error fetching resume data.' });
     }
 });
 
@@ -219,7 +219,7 @@ router.get('/inbox', protect, async (req, res) => {
         const userId = req.user.userId || req.user.id;
         const messages = await schoolService.getUserInbox(req.tenant.id, userId, req.query);
         return res.json({ data: { messages } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching inbox.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching inbox.' }); }
 });
 
 // ─── User Notifications ──────────────────────────────────────
@@ -228,7 +228,7 @@ router.get('/notifications', protect, async (req, res) => {
         const userId = req.user.userId || req.user.id;
         const notifications = await schoolService.getUserNotifications(req.tenant.id, userId, req.query);
         return res.json({ data: { notifications } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching notifications.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching notifications.' }); }
 });
 
 // ─── In-App Notifications (Realtime-enabled) ──────────────────
@@ -246,7 +246,7 @@ router.get('/in-app-notifications', protect, async (req, res) => {
         });
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching notifications.' });
+        return res.status(500).json({ error: err.message || 'Error fetching notifications.' });
     }
 });
 
@@ -257,7 +257,7 @@ router.get('/in-app-notifications/unread-count', protect, async (req, res) => {
         const count = await notifService.getUnreadCount(userId, req.tenant.id);
         return res.json({ data: { count } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching unread count.' });
+        return res.status(500).json({ error: err.message || 'Error fetching unread count.' });
     }
 });
 
@@ -268,7 +268,7 @@ router.put('/in-app-notifications/:id/read', protect, async (req, res) => {
         const result = await notifService.markAsRead(req.params.id, userId);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error marking notification as read.' });
+        return res.status(500).json({ error: err.message || 'Error marking notification as read.' });
     }
 });
 
@@ -279,7 +279,7 @@ router.put('/in-app-notifications/read-all', protect, async (req, res) => {
         await notifService.markAllAsRead(userId, req.tenant.id);
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error marking all as read.' });
+        return res.status(500).json({ error: err.message || 'Error marking all as read.' });
     }
 });
 
@@ -293,7 +293,7 @@ router.get('/realtime-token', protect, async (req, res) => {
         const supabaseUrl = process.env.SUPABASE_URL;
 
         if (!supabaseJwtSecret || !supabaseUrl) {
-            return res.status(503).json({ error: 'Realtime is not configured.' });
+            return res.status(503).json({ error: err.message || 'Realtime is not configured.' });
         }
 
         const token = jwt.sign(
@@ -314,7 +314,7 @@ router.get('/realtime-token', protect, async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Error generating realtime token.' });
+        return res.status(500).json({ error: err.message || 'Error generating realtime token.' });
     }
 });
 
@@ -324,7 +324,7 @@ router.get('/dashboard', protect, async (req, res) => {
         const stats = await schoolService.getDashboardStats(req.tenant.id);
         return res.json({ data: stats });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching dashboard stats.' });
+        return res.status(500).json({ error: err.message || 'Error fetching dashboard stats.' });
     }
 });
 
@@ -341,7 +341,7 @@ router.get('/students', protect, requirePermission('students.view'), async (req,
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error fetching students.' });
+        return res.status(500).json({ error: err.message || 'Error fetching students.' });
     }
 });
 
@@ -352,7 +352,7 @@ router.get('/student/profile', protect, async (req, res) => {
         const student = await schoolService.getStudentByUser(req.tenant.id, userId);
         if (!student) return res.status(404).json({ error: 'Student profile not found. Contact your school admin to link your account.' });
         return res.json({ data: { student } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching profile.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching profile.' }); }
 });
 
 // GET /api/school/student/dashboard — full student dashboard data
@@ -363,7 +363,7 @@ router.get('/student/dashboard', protect, async (req, res) => {
         if (!student) return res.status(404).json({ error: 'Student profile not found.' });
         const data = await schoolService.getStudentDashboard(req.tenant.id, student.id);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching dashboard.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching dashboard.' }); }
 });
 
 // GET /api/school/parent/children — parent's linked children
@@ -373,7 +373,7 @@ router.get('/parent/children', protect, async (req, res) => {
         if (!email) return res.status(400).json({ error: 'No email on profile.' });
         const children = await schoolService.getParentChildren(req.tenant.id, email);
         return res.json({ data: { children } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching children.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching children.' }); }
 });
 
 // GET /api/school/parent/children/:id — brief summary of one child
@@ -386,7 +386,7 @@ router.get('/parent/children/:id', protect, async (req, res) => {
         if (!child) return res.status(403).json({ error: 'Access denied.' });
         const brief = await schoolService.getStudentBrief(req.tenant.id, child.id);
         return res.json({ data: brief });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching child details.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching child details.' }); }
 });
 
 // ─── Zod Schemas ──────────────────────────────────────────────
@@ -429,7 +429,7 @@ router.post('/students', protect, requirePermission('students.create', 'students
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error creating student.' });
+        return res.status(500).json({ error: err.message || 'Error creating student.' });
     }
 });
 
@@ -582,7 +582,7 @@ router.post('/students/import', protect, requirePermission('students.create'), u
         });
     } catch (err) {
         console.error('Import error:', err);
-        return res.status(500).json({ error: 'Error importing students.' });
+        return res.status(500).json({ error: err.message || 'Error importing students.' });
     }
 });
 
@@ -592,7 +592,7 @@ router.post('/attendance', protect, requirePermission('attendance.create', 'atte
         const data = await schoolService.submitAttendance(req.tenant.id, req.body.records);
         return res.status(201).json({ data: { message: 'Attendance recorded.', data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error recording attendance.' });
+        return res.status(500).json({ error: err.message || 'Error recording attendance.' });
     }
 });
 
@@ -602,7 +602,7 @@ router.post('/attendance/bulk', protect, requirePermission('attendance.create', 
         const result = await schoolService.submitAttendanceBulk(req.tenant.id, req.body.records);
         return res.status(200).json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error processing bulk attendance.' });
+        return res.status(500).json({ error: err.message || 'Error processing bulk attendance.' });
     }
 });
 
@@ -612,7 +612,7 @@ router.get('/attendance/stats', protect, async (req, res) => {
         const stats = await schoolService.getDashboardStats(req.tenant.id);
         return res.json({ data: { attendanceRate: stats.attendanceRate } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching attendance stats.' });
+        return res.status(500).json({ error: err.message || 'Error fetching attendance stats.' });
     }
 });
 
@@ -625,7 +625,7 @@ router.get('/fees', protect, requireModule('fees'), requirePermission('fees.view
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error fetching fees.' });
+        return res.status(500).json({ error: err.message || 'Error fetching fees.' });
     }
 });
 
@@ -659,7 +659,7 @@ router.post('/fees/reminders/send', protect, requireModule('fees'), requirePermi
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error sending fee reminders.' });
+        return res.status(500).json({ error: err.message || 'Error sending fee reminders.' });
     }
 });
 
@@ -670,28 +670,28 @@ router.get('/fee-structures', protect, requirePermission('fees.view'), async (re
     try {
         const fees = await schoolService.getFeeStructures(req.tenant.id);
         return res.json({ data: { feeStructures: fees } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching fee structures.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching fee structures.' }); }
 });
 
 router.post('/fee-structures', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
     try {
         const fee = await schoolService.createFeeStructure(req.tenant.id, req.body);
         return res.status(201).json({ data: { feeStructure: fee } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating fee structure.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating fee structure.' }); }
 });
 
 router.put('/fee-structures/:id', protect, requirePermission('fees.edit'), async (req, res) => {
     try {
         const fee = await schoolService.updateFeeStructure(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { feeStructure: fee } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating fee structure.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating fee structure.' }); }
 });
 
 router.delete('/fee-structures/:id', protect, requirePermission('fees.delete'), async (req, res) => {
     try {
         await schoolService.deleteFeeStructure(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Fee structure deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting fee structure.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting fee structure.' }); }
 });
 
 // Invoices
@@ -739,7 +739,7 @@ router.get('/invoices', protect, async (req, res) => {
 
         const result = await schoolService.getInvoices(req.tenant.id, req.query);
         return res.json({ data: result });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching invoices.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching invoices.' }); }
 });
 
 router.post('/invoices/generate', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
@@ -748,7 +748,7 @@ router.post('/invoices/generate', protect, requirePermission('fees.create', 'fee
         return res.status(201).json({ data: { invoice } });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error generating invoice.' });
+        return res.status(500).json({ error: err.message || 'Error generating invoice.' });
     }
 });
 
@@ -757,14 +757,14 @@ router.get('/invoices/:id', protect, requirePermission('fees.view'), async (req,
         const invoice = await schoolService.getInvoice(req.tenant.id, req.params.id);
         if (!invoice) return res.status(404).json({ error: 'Invoice not found.' });
         return res.json({ data: { invoice } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching invoice.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching invoice.' }); }
 });
 
 router.put('/invoices/:id/status', protect, requirePermission('fees.edit'), async (req, res) => {
     try {
         const invoice = await schoolService.updateInvoiceStatus(req.tenant.id, req.params.id, req.body.status);
         return res.json({ data: { invoice } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating invoice status.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating invoice status.' }); }
 });
 
 // Payments
@@ -772,7 +772,7 @@ router.get('/payments', protect, requirePermission('fees.view'), async (req, res
     try {
         const result = await schoolService.getPayments(req.tenant.id, req.query);
         return res.json({ data: result });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching payments.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching payments.' }); }
 });
 
 router.post('/payments', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
@@ -792,7 +792,7 @@ router.post('/payments', protect, requirePermission('fees.create', 'fees.edit'),
         return res.status(201).json({ data: { payment } });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error recording payment.' });
+        return res.status(500).json({ error: err.message || 'Error recording payment.' });
     }
 });
 
@@ -827,7 +827,7 @@ router.get('/payments/invoice/:invoiceId', protect, requirePermission('fees.view
     try {
         const payments = await schoolService.getPaymentsByInvoice(req.tenant.id, req.params.invoiceId);
         return res.json({ data: { payments } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching payments.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching payments.' }); }
 });
 
 // Waivers
@@ -835,28 +835,28 @@ router.get('/waivers', protect, requirePermission('fees.view'), async (req, res)
     try {
         const result = await schoolService.getWaivers(req.tenant.id, req.query);
         return res.json({ data: result });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching waivers.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching waivers.' }); }
 });
 
 router.post('/waivers', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
     try {
         const waiver = await schoolService.createWaiver(req.tenant.id, req.body);
         return res.status(201).json({ data: { waiver } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating waiver.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating waiver.' }); }
 });
 
 router.put('/waivers/:id/approve', protect, requirePermission('fees.edit'), async (req, res) => {
     try {
         const waiver = await schoolService.approveWaiver(req.tenant.id, req.params.id, req.user?.userId);
         return res.json({ data: { waiver } });
-    } catch (err) { return res.status(500).json({ error: 'Error approving waiver.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error approving waiver.' }); }
 });
 
 router.put('/waivers/:id/reject', protect, requirePermission('fees.edit'), async (req, res) => {
     try {
         const waiver = await schoolService.rejectWaiver(req.tenant.id, req.params.id, req.user?.userId);
         return res.json({ data: { waiver } });
-    } catch (err) { return res.status(500).json({ error: 'Error rejecting waiver.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error rejecting waiver.' }); }
 });
 
 // Discounts
@@ -864,28 +864,28 @@ router.get('/discounts', protect, requirePermission('fees.view'), async (req, re
     try {
         const discounts = await schoolService.getDiscounts(req.tenant.id);
         return res.json({ data: { discounts } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching discounts.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching discounts.' }); }
 });
 
 router.post('/discounts', protect, requirePermission('fees.create', 'fees.edit'), async (req, res) => {
     try {
         const discount = await schoolService.createDiscount(req.tenant.id, req.body);
         return res.status(201).json({ data: { discount } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating discount.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating discount.' }); }
 });
 
 router.put('/discounts/:id', protect, requirePermission('fees.edit'), async (req, res) => {
     try {
         const discount = await schoolService.updateDiscount(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { discount } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating discount.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating discount.' }); }
 });
 
 router.delete('/discounts/:id', protect, requirePermission('fees.delete'), async (req, res) => {
     try {
         await schoolService.deleteDiscount(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Discount deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting discount.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting discount.' }); }
 });
 
 // Finance Analytics
@@ -893,7 +893,7 @@ router.get('/finance/summary', protect, requirePermission('fees.view'), async (r
     try {
         const summary = await schoolService.getFinanceSummary(req.tenant.id);
         return res.json({ data: summary });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching finance summary.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching finance summary.' }); }
 });
 
 router.get('/finance/revenue', protect, requirePermission('fees.view'), async (req, res) => {
@@ -903,21 +903,21 @@ router.get('/finance/revenue', protect, requirePermission('fees.view'), async (r
         const startDate = start || new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0];
         const analytics = await schoolService.getRevenueAnalytics(req.tenant.id, startDate, endDate);
         return res.json({ data: analytics });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching revenue analytics.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching revenue analytics.' }); }
 });
 
 router.get('/finance/outstanding', protect, requirePermission('fees.view'), async (req, res) => {
     try {
         const balances = await schoolService.getOutstandingBalances(req.tenant.id);
         return res.json({ data: { outstanding: balances } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching outstanding balances.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching outstanding balances.' }); }
 });
 
 router.get('/finance/overdue-alerts', protect, requirePermission('fees.view'), async (req, res) => {
     try {
         const alerts = await schoolService.getOverdueAlerts(req.tenant.id);
         return res.json({ data: { overdueAlerts: alerts } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching overdue alerts.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching overdue alerts.' }); }
 });
 
 // Monthly Revenue (MRR-style)
@@ -926,7 +926,7 @@ router.get('/finance/monthly', protect, requirePermission('fees.view'), async (r
         const months = Math.min(36, Math.max(1, Number.parseInt(req.query.months) || 12));
         const data = await schoolService.getMonthlyRevenue(req.tenant.id, months);
         return res.json({ data: { monthly: data } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching monthly revenue.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching monthly revenue.' }); }
 });
 
 // Failed Payments
@@ -934,7 +934,7 @@ router.get('/finance/failed-payments', protect, requirePermission('fees.view'), 
     try {
         const result = await schoolService.getFailedPayments(req.tenant.id, req.query);
         return res.json({ data: result });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching failed payments.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching failed payments.' }); }
 });
 
 // Fee Defaulters
@@ -944,7 +944,7 @@ router.get('/finance/defaulters', protect, requirePermission('fees.view'), async
         const minBalance = Math.max(0, Number.parseInt(req.query.min_balance) || 0);
         const defaulters = await schoolService.getDefaulters(req.tenant.id, threshold, minBalance);
         return res.json({ data: { defaulters } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching defaulters.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching defaulters.' }); }
 });
 
 // Payment Status Breakdown
@@ -952,7 +952,7 @@ router.get('/finance/payment-status-breakdown', protect, requirePermission('fees
     try {
         const breakdown = await schoolService.getPaymentStatusBreakdown(req.tenant.id);
         return res.json({ data: { breakdown } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching payment breakdown.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching payment breakdown.' }); }
 });
 
 // Finance Data Export
@@ -988,7 +988,7 @@ router.get('/finance/export', protect, requirePermission('fees.view'), async (re
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
         return res.send(csv);
-    } catch (err) { return res.status(500).json({ error: 'Error exporting finance data.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error exporting finance data.' }); }
 });
 
 // ─── Analytics Routes ───────────────────────────────────────────
@@ -998,7 +998,7 @@ router.get('/analytics/attendance-trend', protect, async (req, res) => {
     try {
         const data = await schoolService.getAttendanceTrend(req.tenant.id, Number(req.query.days) || 30);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching attendance trend.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching attendance trend.' }); }
 });
 
 // GET /api/school/analytics/performance-trend
@@ -1008,7 +1008,7 @@ router.get('/analytics/performance-trend', protect, async (req, res) => {
         if (!term_id) return res.status(400).json({ error: 'term_id required.' });
         const data = await schoolService.getPerformanceTrend(req.tenant.id, term_id);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching performance trend.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching performance trend.' }); }
 });
 
 // GET /api/school/analytics/subject-comparison
@@ -1018,7 +1018,7 @@ router.get('/analytics/subject-comparison', protect, async (req, res) => {
         if (!term_id) return res.status(400).json({ error: 'term_id required.' });
         const data = await schoolService.getSubjectComparison(req.tenant.id, term_id);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching subject comparison.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching subject comparison.' }); }
 });
 
 // GET /api/school/analytics/class-comparison
@@ -1028,7 +1028,7 @@ router.get('/analytics/class-comparison', protect, async (req, res) => {
         if (!term_id) return res.status(400).json({ error: 'term_id required.' });
         const data = await schoolService.getClassComparison(req.tenant.id, term_id);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching class comparison.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching class comparison.' }); }
 });
 
 // GET /api/school/analytics/risk-alerts
@@ -1036,7 +1036,7 @@ router.get('/analytics/risk-alerts', protect, async (req, res) => {
     try {
         const data = await schoolService.getRiskAlerts(req.tenant.id);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching risk alerts.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching risk alerts.' }); }
 });
 
 // GET /api/school/analytics/top-bottom
@@ -1046,7 +1046,7 @@ router.get('/analytics/top-bottom', protect, async (req, res) => {
         if (!term_id) return res.status(400).json({ error: 'term_id required.' });
         const data = await schoolService.getTopBottomPerformers(req.tenant.id, term_id, class_id, Number(limit) || 5);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching performers.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching performers.' }); }
 });
 
 // ─── Exams & Results Routes ─────────────────────────────────────
@@ -1079,7 +1079,7 @@ router.get('/exams', protect, requirePermission('grades.view'), async (req, res)
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error fetching exams.' });
+        return res.status(500).json({ error: err.message || 'Error fetching exams.' });
     }
 });
 
@@ -1092,7 +1092,7 @@ router.post('/exams', protect, requirePermission('grades.create', 'grades.edit')
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error creating exam.' });
+        return res.status(500).json({ error: err.message || 'Error creating exam.' });
     }
 });
 
@@ -1102,7 +1102,7 @@ router.delete('/exams/:id', protect, requirePermission('grades.create', 'grades.
         await examService.deleteExam(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Exam removed.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error removing exam.' });
+        return res.status(500).json({ error: err.message || 'Error removing exam.' });
     }
 });
 
@@ -1118,7 +1118,7 @@ router.get('/results', protect, requirePermission('grades.view'), async (req, re
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error fetching results.' });
+        return res.status(500).json({ error: err.message || 'Error fetching results.' });
     }
 });
 
@@ -1131,7 +1131,7 @@ router.post('/results', protect, requirePermission('grades.create', 'grades.edit
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error saving result.' });
+        return res.status(500).json({ error: err.message || 'Error saving result.' });
     }
 });
 
@@ -1145,7 +1145,7 @@ router.get('/results/student/:studentId', protect, async (req, res) => {
         if (err.statusCode) {
             return res.status(err.statusCode).json({ error: err.message });
         }
-        return res.status(500).json({ error: 'Error fetching student results.' });
+        return res.status(500).json({ error: err.message || 'Error fetching student results.' });
     }
 });
 
@@ -1154,25 +1154,25 @@ router.get('/assessment-types', protect, async (req, res) => {
     try {
         const types = await examService.getAssessmentTypes(req.tenant.id);
         return res.json({ data: { types } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching assessment types.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching assessment types.' }); }
 });
 router.post('/assessment-types', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         const type = await examService.createAssessmentType(req.tenant.id, req.body);
         return res.status(201).json({ data: { type } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating assessment type.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating assessment type.' }); }
 });
 router.put('/assessment-types/:id', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         const type = await examService.updateAssessmentType(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { type } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating assessment type.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating assessment type.' }); }
 });
 router.delete('/assessment-types/:id', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         await examService.deleteAssessmentType(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Assessment type deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting assessment type.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting assessment type.' }); }
 });
 
 // ─── Grading Scales ──────────────────────────────────────────
@@ -1180,19 +1180,19 @@ router.get('/grading-scales', protect, async (req, res) => {
     try {
         const scales = await examService.getGradingScales(req.tenant.id);
         return res.json({ data: { scales } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching grading scales.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching grading scales.' }); }
 });
 router.post('/grading-scales', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         const scale = await examService.createGradingScale(req.tenant.id, req.body);
         return res.status(201).json({ data: { scale } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating grading scale.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating grading scale.' }); }
 });
 router.delete('/grading-scales/:id', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         await examService.deleteGradingScale(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Grading scale deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting grading scale.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting grading scale.' }); }
 });
 
 // ─── Grade Rules ─────────────────────────────────────────────
@@ -1202,7 +1202,7 @@ router.get('/grade-rules', protect, async (req, res) => {
         if (!scale_id) return res.status(400).json({ error: 'scale_id query param required.' });
         const rules = await examService.getGradeRules(scale_id);
         return res.json({ data: { rules } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching grade rules.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching grade rules.' }); }
 });
 router.post('/grade-rules', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
@@ -1210,13 +1210,13 @@ router.post('/grade-rules', protect, requirePermission('settings.edit'), async (
         if (!scale_id) return res.status(400).json({ error: 'scale_id query param required.' });
         const rule = await examService.setGradeRule(scale_id, req.body);
         return res.status(201).json({ data: { rule } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating grade rule.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating grade rule.' }); }
 });
 router.delete('/grade-rules/:id', protect, requirePermission('settings.edit'), async (req, res) => {
     try {
         await examService.deleteGradeRule(req.params.id);
         return res.json({ data: { message: 'Grade rule deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting grade rule.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting grade rule.' }); }
 });
 
 // ─── Assessments ─────────────────────────────────────────────
@@ -1224,25 +1224,25 @@ router.get('/assessments', protect, async (req, res) => {
     try {
         const assessments = await examService.getAssessments(req.tenant.id, req.query);
         return res.json({ data: { assessments } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching assessments.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching assessments.' }); }
 });
 router.post('/assessments', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
         const assessment = await examService.createAssessment(req.tenant.id, req.body, req.user?.userId);
         return res.status(201).json({ data: { assessment } });
-    } catch (err) { return res.status(500).json({ error: 'Error creating assessment.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error creating assessment.' }); }
 });
 router.put('/assessments/:id', protect, requirePermission('grades.edit'), async (req, res) => {
     try {
         const assessment = await examService.updateAssessment(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { assessment } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating assessment.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating assessment.' }); }
 });
 router.delete('/assessments/:id', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
         await examService.deleteAssessment(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Assessment deleted.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deleting assessment.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deleting assessment.' }); }
 });
 
 // ─── Assessment Scores ───────────────────────────────────────
@@ -1252,13 +1252,13 @@ router.get('/assessment-scores', protect, async (req, res) => {
         if (!assessment_id) return res.status(400).json({ error: 'assessment_id query param required.' });
         const scores = await examService.getAssessmentScores(req.tenant.id, assessment_id);
         return res.json({ data: { scores } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching scores.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching scores.' }); }
 });
 router.post('/assessment-scores/bulk', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
         const scores = await examService.bulkSubmitScores(req.tenant.id, req.body.scores);
         return res.status(201).json({ data: { scores, message: `${scores.length} scores saved.` } });
-    } catch (err) { return res.status(500).json({ error: 'Error saving scores.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error saving scores.' }); }
 });
 
 // ─── Term Grade Calculation ───────────────────────────────────
@@ -1268,7 +1268,7 @@ router.get('/assessments/calculate-grades', protect, requirePermission('grades.v
         if (!class_id || !term_id) return res.status(400).json({ error: 'class_id and term_id required.' });
         const result = await examService.calculateTermGrades(req.tenant.id, class_id, term_id, session_id, scale_id);
         return res.json({ data: result });
-    } catch (err) { return res.status(500).json({ error: 'Error calculating grades.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error calculating grades.' }); }
 });
 
 // ─── Report Cards ────────────────────────────────────────────
@@ -1276,7 +1276,7 @@ router.get('/report-cards', protect, async (req, res) => {
     try {
         const cards = await examService.getReportCards(req.tenant.id, req.query);
         return res.json({ data: { reportCards: cards } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching report cards.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching report cards.' }); }
 });
 router.post('/report-cards/generate', protect, requirePermission('grades.create', 'grades.edit'), async (req, res) => {
     try {
@@ -1288,13 +1288,13 @@ router.put('/report-cards/:id/publish', protect, requirePermission('grades.edit'
     try {
         const card = await examService.publishReportCard(req.tenant.id, req.params.id, req.user?.userId);
         return res.json({ data: { reportCard: card, message: 'Report card published.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error publishing report card.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error publishing report card.' }); }
 });
 router.put('/report-cards/:id/approve', protect, requirePermission('settings.edit', 'grades.edit'), async (req, res) => {
     try {
         const card = await examService.approveReportCard(req.tenant.id, req.params.id, req.user?.userId);
         return res.json({ data: { reportCard: card, message: 'Report card approved.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error approving report card.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error approving report card.' }); }
 });
 
 // ─── Gradebook ────────────────────────────────────────────────
@@ -1326,7 +1326,7 @@ router.get('/classes/:classId/terms/:termId/gradebook', protect, requirePermissi
         return res.json({ data: results });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error fetching gradebook.' });
+        return res.status(500).json({ error: err.message || 'Error fetching gradebook.' });
     }
 });
 
@@ -1369,7 +1369,7 @@ router.get('/students/:studentId/classes/:classId/terms/:termId/grade', protect,
         return res.json({ data: result });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error fetching grade.' });
+        return res.status(500).json({ error: err.message || 'Error fetching grade.' });
     }
 });
 
@@ -1408,7 +1408,7 @@ router.post('/report-cards/generate/:classId/:termId', protect, requirePermissio
         });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error generating report cards.' });
+        return res.status(500).json({ error: err.message || 'Error generating report cards.' });
     }
 });
 
@@ -1418,7 +1418,7 @@ router.get('/report-cards/status/:jobId', protect, async (req, res) => {
     try {
         const redis = require('../config/redis');
         if (!redis.isRedisConfigured()) {
-            return res.status(503).json({ error: 'Queue not available.' });
+            return res.status(503).json({ error: err.message || 'Queue not available.' });
         }
         const { getJobStatus } = require('../services/queueService');
         const status = await getJobStatus(req.params.jobId);
@@ -1428,7 +1428,7 @@ router.get('/report-cards/status/:jobId', protect, async (req, res) => {
         return res.json({ data: status });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error fetching job status.' });
+        return res.status(500).json({ error: err.message || 'Error fetching job status.' });
     }
 });
 
@@ -1438,7 +1438,7 @@ router.get('/teachers', protect, async (req, res) => {
         const teachers = await schoolService.getTeachers(req.tenant.id);
         return res.json({ data: { teachers } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching teachers.' });
+        return res.status(500).json({ error: err.message || 'Error fetching teachers.' });
     }
 });
 
@@ -1447,7 +1447,7 @@ router.post('/teachers', protect, requirePermission('teachers.create', 'teachers
         const teacher = await schoolService.createTeacher(req.tenant.id, req.body);
         return res.status(201).json({ data: { teacher } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating teacher.' });
+        return res.status(500).json({ error: err.message || 'Error creating teacher.' });
     }
 });
 
@@ -1456,7 +1456,7 @@ router.put('/teachers/:id', protect, requirePermission('teachers.create', 'teach
         const teacher = await schoolService.updateTeacher(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { teacher } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating teacher.' });
+        return res.status(500).json({ error: err.message || 'Error updating teacher.' });
     }
 });
 
@@ -1465,7 +1465,7 @@ router.delete('/teachers/:id', protect, requirePermission('teachers.create', 'te
         await schoolService.deleteTeacher(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Teacher removed.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error removing teacher.' });
+        return res.status(500).json({ error: err.message || 'Error removing teacher.' });
     }
 });
 
@@ -1475,7 +1475,7 @@ router.get('/classes', protect, async (req, res) => {
         const classes = await schoolService.getClasses(req.tenant.id);
         return res.json({ data: { classes } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching classes.' });
+        return res.status(500).json({ error: err.message || 'Error fetching classes.' });
     }
 });
 
@@ -1502,7 +1502,7 @@ router.get('/my-classes', protect, async (req, res) => {
         const classes = await schoolService.getTeacherClasses(req.tenant.id, teacherId);
         return res.json({ data: { classes } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching your classes.' });
+        return res.status(500).json({ error: err.message || 'Error fetching your classes.' });
     }
 });
 
@@ -1512,7 +1512,7 @@ router.get('/library/books', protect, async (req, res) => {
         const books = await schoolService.getBooks(req.tenant.id);
         return res.json({ data: { books } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching books.' });
+        return res.status(500).json({ error: err.message || 'Error fetching books.' });
     }
 });
 
@@ -1521,7 +1521,7 @@ router.post('/library/books', protect, requirePermission('classes.create', 'clas
         const book = await schoolService.addBook(req.tenant.id, req.body);
         return res.status(201).json({ data: { book } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error adding book.' });
+        return res.status(500).json({ error: err.message || 'Error adding book.' });
     }
 });
 
@@ -1530,7 +1530,7 @@ router.post('/library/issue', protect, requirePermission('students.view'), async
         const issue = await schoolService.issueBook(req.tenant.id, req.body);
         return res.status(201).json({ data: { issue } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error issuing book.' });
+        return res.status(500).json({ error: err.message || 'Error issuing book.' });
     }
 });
 
@@ -1539,7 +1539,7 @@ router.put('/library/return/:id', protect, requirePermission('students.view'), a
         const issue = await schoolService.returnBook(req.tenant.id, req.params.id);
         return res.json({ data: { issue } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error returning book.' });
+        return res.status(500).json({ error: err.message || 'Error returning book.' });
     }
 });
 
@@ -1549,7 +1549,7 @@ router.get('/timetable', protect, async (req, res) => {
         const timetable = await schoolService.getTimetable(req.tenant.id);
         return res.json({ data: { timetable } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching timetable.' });
+        return res.status(500).json({ error: err.message || 'Error fetching timetable.' });
     }
 });
 
@@ -1558,7 +1558,7 @@ router.post('/timetable', protect, requirePermission('timetable.create', 'timeta
         const session = await schoolService.assignPeriod(req.tenant.id, req.body);
         return res.status(201).json({ data: { session } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error assigning period.' });
+        return res.status(500).json({ error: err.message || 'Error assigning period.' });
     }
 });
 
@@ -1596,7 +1596,7 @@ router.get('/timetable/constraints', protect, requirePermission('timetable.view'
         ]);
         return res.json({ data: { settings, classes, teachers, rooms, subjects } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching constraints.' });
+        return res.status(500).json({ error: err.message || 'Error fetching constraints.' });
     }
 });
 
@@ -1607,7 +1607,7 @@ router.put('/timetable/teacher-availability', protect, requirePermission('timeta
         const teacher = await schoolService.updateTeacherAvailability(req.tenant.id, teacher_id, availability);
         return res.json({ data: { teacher } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating availability.' });
+        return res.status(500).json({ error: err.message || 'Error updating availability.' });
     }
 });
 
@@ -1617,7 +1617,7 @@ router.put('/timetable/:id', protect, requirePermission('timetable.edit'), async
         const entry = await schoolService.updateTimetableEntry(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { entry } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating timetable entry.' });
+        return res.status(500).json({ error: err.message || 'Error updating timetable entry.' });
     }
 });
 
@@ -1626,7 +1626,7 @@ router.delete('/timetable/:id', protect, requirePermission('timetable.delete'), 
         await schoolService.deleteTimetableEntry(req.tenant.id, req.params.id);
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error deleting timetable entry.' });
+        return res.status(500).json({ error: err.message || 'Error deleting timetable entry.' });
     }
 });
 
@@ -1636,7 +1636,7 @@ router.get('/scheduling-settings', protect, requirePermission('timetable.view'),
         const settings = await schoolService.getSchedulingSettings(req.tenant.id);
         return res.json({ data: { settings } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching scheduling settings.' });
+        return res.status(500).json({ error: err.message || 'Error fetching scheduling settings.' });
     }
 });
 
@@ -1645,7 +1645,7 @@ router.put('/scheduling-settings', protect, requirePermission('timetable.edit'),
         const settings = await schoolService.createOrUpdateSchedulingSettings(req.tenant.id, req.body);
         return res.json({ data: { settings } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating scheduling settings.' });
+        return res.status(500).json({ error: err.message || 'Error updating scheduling settings.' });
     }
 });
 
@@ -1655,7 +1655,7 @@ router.get('/rooms', protect, requirePermission('timetable.view'), async (req, r
         const rooms = await schoolService.getRooms(req.tenant.id);
         return res.json({ data: { rooms } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching rooms.' });
+        return res.status(500).json({ error: err.message || 'Error fetching rooms.' });
     }
 });
 
@@ -1664,7 +1664,7 @@ router.post('/rooms', protect, requirePermission('timetable.edit'), async (req, 
         const room = await schoolService.createRoom(req.tenant.id, req.body);
         return res.status(201).json({ data: { room } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating room.' });
+        return res.status(500).json({ error: err.message || 'Error creating room.' });
     }
 });
 
@@ -1673,7 +1673,7 @@ router.delete('/rooms/:id', protect, requirePermission('timetable.edit'), async 
         await schoolService.deleteRoom(req.tenant.id, req.params.id);
         return res.json({ data: { success: true } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error deleting room.' });
+        return res.status(500).json({ error: err.message || 'Error deleting room.' });
     }
 });
 
@@ -1685,7 +1685,7 @@ router.put('/class-subjects/:id/periods', protect, requirePermission('timetable.
         const cs = await schoolService.updateClassSubjectPeriods(req.tenant.id, req.params.id, periods_per_week);
         return res.json({ data: { class_subject: cs } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating periods.' });
+        return res.status(500).json({ error: err.message || 'Error updating periods.' });
     }
 });
 
@@ -1695,7 +1695,7 @@ router.get('/payroll', protect, requirePermission('fees.view'), async (req, res)
         const payroll = await schoolService.getPayroll(req.tenant.id);
         return res.json({ data: { payroll } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching payroll.' });
+        return res.status(500).json({ error: err.message || 'Error fetching payroll.' });
     }
 });
 
@@ -1704,7 +1704,7 @@ router.post('/payroll/run', protect, requirePermission('fees.create', 'fees.edit
         const record = await schoolService.runPayroll(req.tenant.id, req.body);
         return res.status(201).json({ data: { record } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error running payroll.' });
+        return res.status(500).json({ error: err.message || 'Error running payroll.' });
     }
 });
 
@@ -1714,7 +1714,7 @@ router.post('/notifications/broadcast', protect, requirePermission('announcement
         const log = await schoolService.broadcastNotification(req.tenant.id, req.body);
         return res.status(201).json({ data: { log } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error broadcasting notification.' });
+        return res.status(500).json({ error: err.message || 'Error broadcasting notification.' });
     }
 });
 
@@ -1723,7 +1723,7 @@ router.get('/notifications/log', protect, async (req, res) => {
         const logs = await schoolService.getNotificationLogs(req.tenant.id);
         return res.json({ data: { logs } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching notification logs.' });
+        return res.status(500).json({ error: err.message || 'Error fetching notification logs.' });
     }
 });
 
@@ -1735,7 +1735,7 @@ router.get('/attendance', protect, requirePermission('attendance.view'), async (
         const result = await schoolService.getAttendanceRecords(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching attendance records.' });
+        return res.status(500).json({ error: err.message || 'Error fetching attendance records.' });
     }
 });
 
@@ -1747,7 +1747,7 @@ router.get('/attendance/stats/range', protect, async (req, res) => {
         const stats = await schoolService.getAttendanceStats(req.tenant.id, start, end);
         return res.json({ data: { stats } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching attendance stats.' });
+        return res.status(500).json({ error: err.message || 'Error fetching attendance stats.' });
     }
 });
 
@@ -1757,7 +1757,7 @@ router.get('/attendance/student/:studentId', protect, async (req, res) => {
         const result = await schoolService.getAttendanceRecords(req.tenant.id, { student_id: req.params.studentId, ...req.query });
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching student attendance.' });
+        return res.status(500).json({ error: err.message || 'Error fetching student attendance.' });
     }
 });
 
@@ -1769,7 +1769,7 @@ router.get('/attendance/trends', protect, async (req, res) => {
         const trends = await schoolService.getAttendanceTrends(req.tenant.id, start, end);
         return res.json({ data: { trends } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching attendance trends.' });
+        return res.status(500).json({ error: err.message || 'Error fetching attendance trends.' });
     }
 });
 
@@ -1780,7 +1780,7 @@ router.get('/attendance/absentees/repeated', protect, async (req, res) => {
         const results = await schoolService.getRepeatedAbsences(req.tenant.id, min);
         return res.json({ data: { absentees: results } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching repeated absences.' });
+        return res.status(500).json({ error: err.message || 'Error fetching repeated absences.' });
     }
 });
 
@@ -1791,7 +1791,7 @@ router.post('/attendance/staff', protect, requirePermission('attendance.create',
         const data = await schoolService.submitStaffAttendance(req.tenant.id, req.body.records, markedBy);
         return res.status(201).json({ data: { message: 'Staff attendance recorded.', data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error recording staff attendance.' });
+        return res.status(500).json({ error: err.message || 'Error recording staff attendance.' });
     }
 });
 
@@ -1801,7 +1801,7 @@ router.get('/attendance/staff', protect, requirePermission('attendance.view'), a
         const result = await schoolService.getStaffAttendanceRecords(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching staff attendance.' });
+        return res.status(500).json({ error: err.message || 'Error fetching staff attendance.' });
     }
 });
 
@@ -1811,7 +1811,7 @@ router.get('/subjects', protect, requirePermission('subjects.view'), async (req,
         const subjects = await schoolService.getSubjects(req.tenant.id);
         return res.json({ data: { subjects } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching subjects.' });
+        return res.status(500).json({ error: err.message || 'Error fetching subjects.' });
     }
 });
 
@@ -1827,7 +1827,7 @@ router.post('/subjects', protect, requirePermission('subjects.create', 'subjects
         const subject = await schoolService.createSubject(req.tenant.id, req.body);
         return res.status(201).json({ data: { subject } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating subject.' });
+        return res.status(500).json({ error: err.message || 'Error creating subject.' });
     }
 });
 
@@ -1836,7 +1836,7 @@ router.put('/subjects/:id', protect, requirePermission('subjects.edit'), validat
         const subject = await schoolService.updateSubject(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { subject } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating subject.' });
+        return res.status(500).json({ error: err.message || 'Error updating subject.' });
     }
 });
 
@@ -1845,7 +1845,7 @@ router.delete('/subjects/:id', protect, requirePermission('subjects.delete'), as
         await schoolService.deleteSubject(req.tenant.id, req.params.id);
         return res.json({ data: { message: 'Subject deleted.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error deleting subject.' });
+        return res.status(500).json({ error: err.message || 'Error deleting subject.' });
     }
 });
 
@@ -1855,7 +1855,7 @@ router.get('/terms', protect, async (req, res) => {
         const terms = await schoolService.getTerms(req.tenant.id);
         return res.json({ data: { terms } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching terms.' });
+        return res.status(500).json({ error: err.message || 'Error fetching terms.' });
     }
 });
 
@@ -1875,7 +1875,7 @@ router.post('/terms', protect, requirePermission('settings.edit'), validate(term
         const term = await schoolService.createTerm(req.tenant.id, req.body);
         return res.status(201).json({ data: { term } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating term.' });
+        return res.status(500).json({ error: err.message || 'Error creating term.' });
     }
 });
 
@@ -1891,7 +1891,7 @@ router.get('/whatsapp/conversations', protect, requirePermission('communications
         const { data, count, error } = await query.order('created_at', { ascending: false }).range(offset, offset + Math.min(100, Number(limit)) - 1);
         if (error) return res.status(500).json({ error: error.message });
         return res.json({ data: { conversations: data || [], total: count, page: Number(page) } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching conversations.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching conversations.' }); }
 });
 
 // ─── Push Notification Subscriptions ─────────────────────────
@@ -1907,7 +1907,7 @@ router.post('/push/subscribe', protect, async (req, res) => {
         }, { onConflict: 'user_id,school_id' });
         if (error) return res.status(500).json({ error: error.message });
         return res.json({ data: { message: 'Subscribed.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error saving subscription.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error saving subscription.' }); }
 });
 
 router.delete('/push/unsubscribe', protect, async (req, res) => {
@@ -1918,7 +1918,7 @@ router.delete('/push/unsubscribe', protect, async (req, res) => {
             .eq('school_id', req.tenant.id);
         if (error) return res.status(500).json({ error: error.message });
         return res.json({ data: { message: 'Unsubscribed.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error removing subscription.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error removing subscription.' }); }
 });
 
 router.get('/push/vapid-public-key', async (req, res) => {
@@ -1936,7 +1936,7 @@ router.post('/push/broadcast', protect, requirePermission('announcements.create'
             await pushService.sendToSchool(req.tenant.id, { title, body, url });
         }
         return res.json({ data: { message: 'Push notification sent.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error sending push notification.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error sending push notification.' }); }
 });
 
 // ─── Events ────────────────────────────────────────────────
@@ -1954,7 +1954,7 @@ router.get('/events', protect, async (req, res) => {
       query = query.gte('event_date', new Date().toISOString().split('T')[0]);
     }
     const { data, error } = await query;
-    if (error) return res.status(500).json({ error: 'Error fetching events.' });
+    if (error) return res.status(500).json({ error: err.message || 'Error fetching events.' });
     const mapped = (data || []).map(e => ({
       id: e.id,
       title: e.title || e.name,
@@ -1964,7 +1964,7 @@ router.get('/events', protect, async (req, res) => {
     }));
     return res.json({ data: mapped });
   } catch (err) {
-    return res.status(500).json({ error: 'Error fetching events.' });
+    return res.status(500).json({ error: err.message || 'Error fetching events.' });
   }
 });
 
@@ -1979,7 +1979,7 @@ router.get('/announcements', protect, async (req, res) => {
       .eq('school_id', schoolId)
       .order('created_at', { ascending: false })
       .limit(limit);
-    if (error) return res.status(500).json({ error: 'Error fetching announcements.' });
+    if (error) return res.status(500).json({ error: err.message || 'Error fetching announcements.' });
     const mapped = (data || []).map(a => ({
       id: a.id,
       title: a.title,
@@ -1989,7 +1989,7 @@ router.get('/announcements', protect, async (req, res) => {
     }));
     return res.json({ data: mapped });
   } catch (err) {
-    return res.status(500).json({ error: 'Error fetching announcements.' });
+    return res.status(500).json({ error: err.message || 'Error fetching announcements.' });
   }
 });
 
@@ -2129,18 +2129,18 @@ router.get('/roles', protect, requirePermission('roles.view'), async (req, res) 
             .select('*')
             .is('school_id', null)
             .order('label');
-        if (sysErr) return res.status(500).json({ error: 'Error fetching roles.' });
+        if (sysErr) return res.status(500).json({ error: err.message || 'Error fetching roles.' });
 
         const { data: schoolRoles, error: schErr } = await supabase
             .from('roles')
             .select('*')
             .eq('school_id', req.tenant.id)
             .order('label');
-        if (schErr) return res.status(500).json({ error: 'Error fetching custom roles.' });
+        if (schErr) return res.status(500).json({ error: err.message || 'Error fetching custom roles.' });
 
         return res.json({ data: { roles: [...systemRoles, ...schoolRoles] } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching roles.' });
+        return res.status(500).json({ error: err.message || 'Error fetching roles.' });
     }
 });
 
@@ -2152,7 +2152,7 @@ router.get('/permissions', protect, requirePermission('permissions.view'), async
             .select('*')
             .order('module')
             .order('name');
-        if (error) return res.status(500).json({ error: 'Error fetching permissions.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching permissions.' });
 
         const grouped = (data || []).reduce((acc, p) => {
             if (!acc[p.module]) acc[p.module] = [];
@@ -2162,7 +2162,7 @@ router.get('/permissions', protect, requirePermission('permissions.view'), async
 
         return res.json({ data: { permissions: data || [], grouped } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching permissions.' });
+        return res.status(500).json({ error: err.message || 'Error fetching permissions.' });
     }
 });
 
@@ -2189,7 +2189,7 @@ router.post('/roles', protect, requirePermission('roles.create', 'roles.edit'), 
             .insert({ id: crypto.randomUUID(), name, label, description, school_id: req.tenant.id, is_system: false })
             .select()
             .single();
-        if (roleErr) return res.status(500).json({ error: 'Error creating role.' });
+        if (roleErr) return res.status(500).json({ error: err.message || 'Error creating role.' });
 
         if (permission_ids && permission_ids.length > 0) {
             const mappings = permission_ids.map(pid => ({
@@ -2203,7 +2203,7 @@ router.post('/roles', protect, requirePermission('roles.create', 'roles.edit'), 
 
         return res.status(201).json({ data: { role } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating role.' });
+        return res.status(500).json({ error: err.message || 'Error creating role.' });
     }
 });
 
@@ -2227,10 +2227,10 @@ router.put('/roles/:id', protect, requirePermission('roles.edit'), validate(upda
             .eq('id', req.params.id)
             .select()
             .single();
-        if (error) return res.status(500).json({ error: 'Error updating role.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error updating role.' });
         return res.json({ data: { role: data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating role.' });
+        return res.status(500).json({ error: err.message || 'Error updating role.' });
     }
 });
 
@@ -2244,10 +2244,10 @@ router.delete('/roles/:id', protect, requirePermission('roles.delete'), async (r
         if (role.school_id !== req.tenant.id) return res.status(403).json({ error: 'Access denied.' });
 
         const { error } = await supabase.from('roles').delete().eq('id', req.params.id);
-        if (error) return res.status(500).json({ error: 'Error deleting role.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error deleting role.' });
         return res.json({ data: { message: 'Role deleted.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error deleting role.' });
+        return res.status(500).json({ error: err.message || 'Error deleting role.' });
     }
 });
 
@@ -2275,12 +2275,12 @@ router.put('/roles/:id/permissions', protect, requirePermission('roles.edit', 'p
                 school_id: role.school_id ? req.tenant.id : null
             }));
             const { error: insErr } = await supabase.from('role_permissions').insert(mappings);
-            if (insErr) return res.status(500).json({ error: 'Error updating permissions.' });
+            if (insErr) return res.status(500).json({ error: err.message || 'Error updating permissions.' });
         }
 
         return res.json({ data: { message: 'Permissions updated.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating permissions.' });
+        return res.status(500).json({ error: err.message || 'Error updating permissions.' });
     }
 });
 
@@ -2308,7 +2308,7 @@ router.get('/users', protect, requirePermission('users.view'), async (req, res) 
         }
 
         const { data, count, error } = await query;
-        if (error) return res.status(500).json({ error: 'Error fetching users.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching users.' });
 
         // Attach role names
         const userIds = (data || []).map(u => u.role_id).filter(Boolean);
@@ -2326,7 +2326,7 @@ router.get('/users', protect, requirePermission('users.view'), async (req, res) 
 
         return res.json({ data: { users, total: count || 0, page, limit } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching users.' });
+        return res.status(500).json({ error: err.message || 'Error fetching users.' });
     }
 });
 
@@ -2374,7 +2374,7 @@ router.post('/users/invite', protect, requirePermission('users.create'), validat
             .select('id, full_name, email, phone, role, is_active, invited_at')
             .single();
 
-        if (error) return res.status(500).json({ error: 'Error creating user.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error creating user.' });
 
         return res.status(201).json({
             data: {
@@ -2384,7 +2384,7 @@ router.post('/users/invite', protect, requirePermission('users.create'), validat
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Error inviting user.' });
+        return res.status(500).json({ error: err.message || 'Error inviting user.' });
     }
 });
 
@@ -2422,10 +2422,10 @@ router.put('/users/:id', protect, requirePermission('users.edit'), validate(upda
             .select('id, full_name, email, phone, role, is_active, role_id')
             .single();
 
-        if (error) return res.status(500).json({ error: 'Error updating user.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error updating user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error updating user.' });
+        return res.status(500).json({ error: err.message || 'Error updating user.' });
     }
 });
 
@@ -2438,10 +2438,10 @@ router.put('/users/:id/suspend', protect, requirePermission('users.edit'), async
             .eq('tenant_id', req.tenant.id)
             .select('id, full_name, email, is_active, suspended_at')
             .single();
-        if (error) return res.status(500).json({ error: 'Error suspending user.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error suspending user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error suspending user.' });
+        return res.status(500).json({ error: err.message || 'Error suspending user.' });
     }
 });
 
@@ -2451,7 +2451,7 @@ router.get('/staff/summary', protect, async (req, res) => {
         const summary = await schoolService.getStaffSummary(req.tenant.id);
         return res.json({ data: summary });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching staff summary.' });
+        return res.status(500).json({ error: err.message || 'Error fetching staff summary.' });
     }
 });
 
@@ -2462,7 +2462,7 @@ router.get('/audit', protect, requirePermission('reports.view'), async (req, res
         const logs = await schoolService.getRecentAuditLogs(req.tenant.id, limit);
         return res.json({ data: { logs } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching audit logs.' });
+        return res.status(500).json({ error: err.message || 'Error fetching audit logs.' });
     }
 });
 
@@ -2475,10 +2475,10 @@ router.put('/users/:id/activate', protect, requirePermission('users.edit'), asyn
             .eq('tenant_id', req.tenant.id)
             .select('id, full_name, email, is_active')
             .single();
-        if (error) return res.status(500).json({ error: 'Error activating user.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error activating user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error activating user.' });
+        return res.status(500).json({ error: err.message || 'Error activating user.' });
     }
 });
 
@@ -2497,10 +2497,10 @@ router.get('/', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         const { data, error } = await supabase.from('schools').select('*').eq('id', schoolId).single();
-        if (error) return res.status(500).json({ error: 'Error fetching school profile.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching school profile.' });
         return res.json({ data });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching school profile.' });
+        return res.status(500).json({ error: err.message || 'Error fetching school profile.' });
     }
 });
 
@@ -2516,7 +2516,7 @@ router.patch('/', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving school profile.' });
+        return res.status(500).json({ error: err.message || 'Error saving school profile.' });
     }
 });
 
@@ -2544,10 +2544,10 @@ router.get('/settings', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         const { data, error } = await supabase.from('schools').select('*').eq('id', schoolId).single();
-        if (error) return res.status(500).json({ error: 'Error fetching settings.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching settings.' });
         return res.json({ data });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching settings.' });
+        return res.status(500).json({ error: err.message || 'Error fetching settings.' });
     }
 });
 
@@ -2562,7 +2562,7 @@ router.put('/settings/profile', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving profile.' });
+        return res.status(500).json({ error: err.message || 'Error saving profile.' });
     }
 });
 
@@ -2577,7 +2577,7 @@ router.patch('/settings/school-profile', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving school profile.' });
+        return res.status(500).json({ error: err.message || 'Error saving school profile.' });
     }
 });
 
@@ -2588,7 +2588,7 @@ router.get('/profile/status', protect, async (req, res) => {
         const result = await schoolService.checkProfileCompletion(schoolId);
         return res.json(result);
     } catch (err) {
-        return res.status(500).json({ error: 'Error checking profile completion.' });
+        return res.status(500).json({ error: err.message || 'Error checking profile completion.' });
     }
 });
 
@@ -2603,7 +2603,7 @@ router.put('/settings/academic', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving academic settings.' });
+        return res.status(500).json({ error: err.message || 'Error saving academic settings.' });
     }
 });
 
@@ -2618,7 +2618,7 @@ router.put('/settings/fee', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving fee settings.' });
+        return res.status(500).json({ error: err.message || 'Error saving fee settings.' });
     }
 });
 
@@ -2633,7 +2633,7 @@ router.put('/settings/notifications', protect, async (req, res) => {
         const { data: school } = await supabase.from('schools').select('*').eq('id', schoolId).single();
         return res.json({ data: school });
     } catch (err) {
-        return res.status(500).json({ error: 'Error saving notification settings.' });
+        return res.status(500).json({ error: err.message || 'Error saving notification settings.' });
     }
 });
 
@@ -2648,7 +2648,7 @@ router.get('/settings/billing', protect, async (req, res) => {
             .select('*').eq('school_id', schoolId).order('created_at', { ascending: false }).limit(20);
         return res.json({ data: { ...school, history: history || [] } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching billing info.' });
+        return res.status(500).json({ error: err.message || 'Error fetching billing info.' });
     }
 });
 
@@ -2671,7 +2671,7 @@ router.post('/settings/change-password', protect, validate(changePasswordSchema)
         await supabase.from('users').update({ password: hashed }).eq('id', userId);
         return res.json({ data: { message: 'Password updated successfully.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error changing password.' });
+        return res.status(500).json({ error: err.message || 'Error changing password.' });
     }
 });
 
@@ -2681,7 +2681,7 @@ router.post('/settings/export', protect, async (req, res) => {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         return res.json({ data: { message: 'Export job queued. You will receive an email when ready.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error queuing export.' });
+        return res.status(500).json({ error: err.message || 'Error queuing export.' });
     }
 });
 
@@ -2696,7 +2696,7 @@ router.post('/settings/reset-term', protect, async (req, res) => {
         await supabase.from('gradebook_entries').delete().eq('school_id', schoolId);
         return res.json({ data: { message: 'Term data reset successfully.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error resetting term.' });
+        return res.status(500).json({ error: err.message || 'Error resetting term.' });
     }
 });
 
@@ -2712,7 +2712,7 @@ router.delete('/settings/account', protect, async (req, res) => {
         await supabase.from('schools').update({ is_active: false, metadata }).eq('id', schoolId);
         return res.json({ data: { message: 'Deletion scheduled. A confirmation email will be sent. Your account will be deleted in 24 hours.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error scheduling deletion.' });
+        return res.status(500).json({ error: err.message || 'Error scheduling deletion.' });
     }
 });
 
@@ -2721,7 +2721,7 @@ router.put('/grading-scales/:id', protect, requirePermission('settings.edit'), a
     try {
         const scale = await examService.updateGradingScale(req.tenant.id, req.params.id, req.body);
         return res.json({ data: { scale } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating grading scale.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating grading scale.' }); }
 });
 
 // ─── Set Current Term ──────────────────────────────────────────
@@ -2731,7 +2731,7 @@ router.put('/terms/:id/set-current', protect, requirePermission('settings.edit')
         await supabase.from('academic_terms').update({ is_current: false }).eq('school_id', schoolId);
         const term = await schoolService.updateTerm(schoolId, req.params.id, { is_current: true });
         return res.json({ data: { term } });
-    } catch (err) { return res.status(500).json({ error: 'Error setting current term.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error setting current term.' }); }
 });
 
 // ─── Reorder Classes ────────────────────────────────────────────
@@ -2743,7 +2743,7 @@ router.put('/classes/reorder', protect, requirePermission('settings.edit'), asyn
             await supabase.from('classes').update({ sort_order: item.sort_order }).eq('id', item.id).eq('school_id', req.tenant.id);
         }
         return res.json({ data: { message: 'Classes reordered.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error reordering classes.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error reordering classes.' }); }
 });
 
 // ─── Class-Subject Assignments ─────────────────────────────────
@@ -2753,9 +2753,9 @@ router.get('/class-subjects/:classId', protect, requirePermission('subjects.view
             .select('*, subject:subjects(name, code)')
             .eq('school_id', req.tenant.id)
             .eq('class_id', req.params.classId);
-        if (error) return res.status(500).json({ error: 'Error fetching class subjects.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching class subjects.' });
         return res.json({ data: { subjects: data || [] } });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching class subjects.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching class subjects.' }); }
 });
 
 router.post('/class-subjects/assign', protect, requirePermission('subjects.create', 'subjects.edit'), async (req, res) => {
@@ -2772,7 +2772,7 @@ router.post('/class-subjects/assign', protect, requirePermission('subjects.creat
             inserted.push(cs);
         }
         return res.status(201).json({ data: { subjects: inserted } });
-    } catch (err) { return res.status(500).json({ error: 'Error assigning subjects.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error assigning subjects.' }); }
 });
 
 router.delete('/class-subjects/:classId/:subjectId', protect, requirePermission('subjects.delete'), async (req, res) => {
@@ -2782,7 +2782,7 @@ router.delete('/class-subjects/:classId/:subjectId', protect, requirePermission(
         if (!cs) return res.status(404).json({ error: 'Assignment not found.' });
         await schoolService.removeClassSubject(req.tenant.id, cs.id);
         return res.json({ data: { message: 'Subject removed from class.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error removing subject.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error removing subject.' }); }
 });
 
 // ─── User Login Sessions ────────────────────────────────────────
@@ -2792,23 +2792,23 @@ router.get('/sessions', protect, async (req, res) => {
             .select('*')
             .eq('user_id', req.user.id)
             .order('last_active_at', { ascending: false });
-        if (error) return res.status(500).json({ error: 'Error fetching sessions.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error fetching sessions.' });
         return res.json({ data: data || [] });
-    } catch (err) { return res.status(500).json({ error: 'Error fetching sessions.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching sessions.' }); }
 });
 
 router.delete('/sessions/:id', protect, async (req, res) => {
     try {
         await supabase.from('user_sessions').delete().eq('id', req.params.id).eq('user_id', req.user.id);
         return res.json({ data: { message: 'Session revoked.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error revoking session.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error revoking session.' }); }
 });
 
 router.post('/sessions/revoke-all', protect, async (req, res) => {
     try {
         await supabase.from('user_sessions').delete().neq('id', req.body.current_session_id || '').eq('user_id', req.user.id);
         return res.json({ data: { message: 'Other sessions revoked.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error revoking sessions.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error revoking sessions.' }); }
 });
 
 // ─── Bulk User Operations ───────────────────────────────────────
@@ -2820,9 +2820,9 @@ router.post('/users/bulk-deactivate', protect, requirePermission('users.edit'), 
             .update({ is_active: false, suspended_at: new Date().toISOString() })
             .in('id', user_ids)
             .eq('tenant_id', req.tenant.id);
-        if (error) return res.status(500).json({ error: 'Error deactivating users.' });
+        if (error) return res.status(500).json({ error: err.message || 'Error deactivating users.' });
         return res.json({ data: { message: `${user_ids.length} user(s) deactivated.` } });
-    } catch (err) { return res.status(500).json({ error: 'Error deactivating users.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deactivating users.' }); }
 });
 
 router.post('/users/:id/resend', protect, requirePermission('users.create'), async (req, res) => {
@@ -2832,7 +2832,7 @@ router.post('/users/:id/resend', protect, requirePermission('users.create'), asy
         if (error || !user) return res.status(404).json({ error: 'User not found.' });
         await supabase.from('users').update({ invited_at: new Date().toISOString() }).eq('id', user.id);
         return res.json({ data: { message: `Invitation resent to ${user.email}.` } });
-    } catch (err) { return res.status(500).json({ error: 'Error resending invitation.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error resending invitation.' }); }
 });
 
 // ─── Clear All Data ──────────────────────────────────────────────
@@ -2849,7 +2849,7 @@ router.post('/settings/clear-all-data', protect, async (req, res) => {
             await supabase.from(table).delete().eq('school_id', schoolId);
         }
         return res.json({ data: { message: 'All school data has been cleared.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error clearing data.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error clearing data.' }); }
 });
 
 // ─── Password Policy Settings ────────────────────────────────────
@@ -2866,7 +2866,7 @@ router.put('/settings/security-policy', protect, requirePermission('settings.edi
         const { error } = await supabase.from('schools').update({ password_policy }).eq('id', schoolId);
         if (error) return res.status(500).json({ error: error.message });
         return res.json({ data: { message: 'Security policy updated.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error updating security policy.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error updating security policy.' }); }
 });
 
 router.put('/settings/deactivate', protect, async (req, res) => {
@@ -2877,7 +2877,7 @@ router.put('/settings/deactivate', protect, async (req, res) => {
         if (confirm !== school.name) return res.status(400).json({ error: 'School name mismatch.' });
         await supabase.from('schools').update({ is_active: false }).eq('id', schoolId);
         return res.json({ data: { message: 'School deactivated. Contact support to reactivate.' } });
-    } catch (err) { return res.status(500).json({ error: 'Error deactivating school.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error deactivating school.' }); }
 });
 
 router.get('/search', protect, async (req, res) => {
@@ -2895,7 +2895,7 @@ router.get('/search', protect, async (req, res) => {
         }));
         const classes = (classesRes.data || []).map(c => ({ id: c.id, name: c.name, path: `/dashboard/students?classId=${c.id}` }));
         return res.json({ data: { students, classes } });
-    } catch (err) { return res.status(500).json({ error: 'Error performing search.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error performing search.' }); }
 });
 
 // ===== FILE STORAGE (DigitalOcean Spaces) =====
@@ -3012,6 +3012,6 @@ router.patch('/students/:id/avatar', protect, async (req, res) => {
 
     return res.json({ data: { message: 'Avatar updated.', key: finalKey, url: signedUrl } });
   } catch (err) {
-    return res.status(500).json({ error: 'Error updating avatar.' });
+    return res.status(500).json({ error: err.message || 'Error updating avatar.' });
   }
 });

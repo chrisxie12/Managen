@@ -31,7 +31,7 @@ router.post('/generate', protect, requirePermission('reports.manage'), async (re
         return res.status(202).json({ message: 'Report generation queued successfully', jobId: data.id });
     } catch (err) {
         console.error('Report generate error:', err);
-        return res.status(500).json({ error: 'Failed to queue report generation' });
+        return res.status(500).json({ error: err.message || 'Failed to queue report generation' });
     }
 });
 
@@ -40,7 +40,7 @@ router.get('/attendance', protect, requirePermission('reports.view', 'attendance
     try {
         const data = await reportService.getAttendanceReport(req.tenant.id, { ...req.query, page: parsePage(req.query.page), limit: parseLimit(req.query.limit) });
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating attendance report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating attendance report.' }); }
 });
 
 // ─── Staff Attendance Report ────────────────────────────────────
@@ -48,7 +48,7 @@ router.get('/staff-attendance', protect, requirePermission('reports.view'), asyn
     try {
         const data = await reportService.getStaffAttendanceReport(req.tenant.id, { ...req.query, page: parsePage(req.query.page), limit: parseLimit(req.query.limit) });
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating staff attendance report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating staff attendance report.' }); }
 });
 
 // ─── Academic Performance Report ────────────────────────────────
@@ -56,7 +56,7 @@ router.get('/academic-performance', protect, requirePermission('reports.view', '
     try {
         const data = await reportService.getAcademicPerformanceReport(req.tenant.id, req.query);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating academic performance report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating academic performance report.' }); }
 });
 
 // ─── Class Comparison Report ────────────────────────────────────
@@ -66,7 +66,7 @@ router.get('/class-comparison', protect, requirePermission('reports.view', 'grad
         return res.json({ data });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error generating class comparison report.' });
+        return res.status(500).json({ error: err.message || 'Error generating class comparison report.' });
     }
 });
 
@@ -77,7 +77,7 @@ router.get('/subject-performance', protect, requirePermission('reports.view', 'g
         return res.json({ data });
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error generating subject performance report.' });
+        return res.status(500).json({ error: err.message || 'Error generating subject performance report.' });
     }
 });
 
@@ -86,7 +86,7 @@ router.get('/fee-collection', protect, requirePermission('reports.view', 'fees.v
     try {
         const data = await reportService.getFeeCollectionReport(req.tenant.id, req.query);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating fee collection report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating fee collection report.' }); }
 });
 
 // ─── Outstanding Balance Report ─────────────────────────────────
@@ -94,7 +94,7 @@ router.get('/outstanding-balance', protect, requirePermission('reports.view', 'f
     try {
         const data = await reportService.getOutstandingBalanceReport(req.tenant.id, req.query);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating outstanding balance report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating outstanding balance report.' }); }
 });
 
 // ─── Admissions / Enrollment Report ─────────────────────────────
@@ -102,7 +102,7 @@ router.get('/admissions', protect, requirePermission('reports.view'), async (req
     try {
         const data = await reportService.getAdmissionsReport(req.tenant.id, req.query);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating admissions report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating admissions report.' }); }
 });
 
 // ─── Incidents / Disciplinary Report ────────────────────────────
@@ -110,7 +110,7 @@ router.get('/incidents', protect, requirePermission('reports.view', 'students.vi
     try {
         const data = await reportService.getIncidentsReport(req.tenant.id, req.query);
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating incidents report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating incidents report.' }); }
 });
 
 // ─── User Activity Report ───────────────────────────────────────
@@ -118,7 +118,7 @@ router.get('/activity', protect, requirePermission('reports.view', 'audit_logs.v
     try {
         const data = await reportService.getActivityReport(req.tenant.id, { ...req.query, page: parsePage(req.query.page), limit: parseLimit(req.query.limit) });
         return res.json({ data });
-    } catch (err) { return res.status(500).json({ error: 'Error generating activity report.' }); }
+    } catch (err) { return res.status(500).json({ error: err.message || 'Error generating activity report.' }); }
 });
 
 // ─── CSV Export ──────────────────────────────────────────────────
@@ -142,7 +142,7 @@ router.get('/export', protect, requirePermission('reports.view'), async (req, re
         return res.send(csv);
     } catch (err) {
         if (err.statusCode) return res.status(err.statusCode).json({ error: err.message });
-        return res.status(500).json({ error: 'Error exporting report.' });
+        return res.status(500).json({ error: err.message || 'Error exporting report.' });
     }
 });
 

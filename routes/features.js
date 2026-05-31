@@ -68,7 +68,7 @@ router.get('/attendance-links', protect, requirePermission('attendance.view'), a
         const links = await featureService.getAttendanceLinks(req.tenant.id);
         return res.json({ data: { links } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching attendance links.' });
+        return res.status(500).json({ error: err.message || 'Error fetching attendance links.' });
     }
 });
 
@@ -78,7 +78,7 @@ router.get('/geofence-attendance', protect, requirePermission('attendance.view')
         const result = await featureService.getGeofenceAttendanceRecords(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching geofence attendance.' });
+        return res.status(500).json({ error: err.message || 'Error fetching geofence attendance.' });
     }
 });
 
@@ -104,7 +104,7 @@ router.get('/report-card/templates', protect, async (req, res) => {
         const templates = await featureService.getReportCardTemplates(req.tenant.id);
         return res.json({ data: { templates } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching templates.' });
+        return res.status(500).json({ error: err.message || 'Error fetching templates.' });
     }
 });
 
@@ -124,7 +124,7 @@ router.get('/report-cards', protect, async (req, res) => {
         const cards = await featureService.getStudentReportCards(req.tenant.id, req.query);
         return res.json({ data: { cards } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching report cards.' });
+        return res.status(500).json({ error: err.message || 'Error fetching report cards.' });
     }
 });
 
@@ -137,7 +137,7 @@ router.get('/report-cards/download-zip', protect, requirePermission('reports.vie
             setTimeout(() => fs.unlink(zipPath, () => {}), 5000);
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Error downloading report cards.' });
+        return res.status(500).json({ error: err.message || 'Error downloading report cards.' });
     }
 });
 
@@ -175,7 +175,7 @@ router.get('/students', protect, requirePermission('students.view'), async (req,
         const result = await featureService.getStudentsEnhanced(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching students.' });
+        return res.status(500).json({ error: err.message || 'Error fetching students.' });
     }
 });
 
@@ -185,7 +185,7 @@ router.get('/teachers', protect, async (req, res) => {
         const result = await featureService.getTeachersEnhanced(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching teachers.' });
+        return res.status(500).json({ error: err.message || 'Error fetching teachers.' });
     }
 });
 
@@ -195,7 +195,7 @@ router.get('/non-teaching-staff', protect, async (req, res) => {
         const result = await featureService.getNonTeachingStaff(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching non-teaching staff.' });
+        return res.status(500).json({ error: err.message || 'Error fetching non-teaching staff.' });
     }
 });
 
@@ -207,7 +207,7 @@ router.post('/daily-attendance/generate-links', protect, requirePermission('atte
         const links = await featureService.generateDailyAttendanceLinks(req.tenant.id);
         return res.status(201).json({ data: { links, message: 'Daily attendance links generated.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error generating daily links.' });
+        return res.status(500).json({ error: err.message || 'Error generating daily links.' });
     }
 });
 
@@ -243,7 +243,7 @@ router.put('/daily-attendance/override/:id', protect, requirePermission('attenda
         const record = await featureService.overrideStaffAttendance(req.tenant.id, req.params.id, req.user.userId || req.user.id, req.body);
         return res.json({ data: { record, message: 'Attendance record updated.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error overriding attendance.' });
+        return res.status(500).json({ error: err.message || 'Error overriding attendance.' });
     }
 });
 
@@ -253,7 +253,7 @@ router.get('/daily-attendance', protect, requirePermission('attendance.view'), a
         const result = await featureService.getDailyStaffAttendance(req.tenant.id, req.query);
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching daily attendance.' });
+        return res.status(500).json({ error: err.message || 'Error fetching daily attendance.' });
     }
 });
 
@@ -263,7 +263,7 @@ router.get('/daily-attendance/current-links', protect, async (req, res) => {
         const links = await featureService.getCurrentDailyLinks(req.tenant.id);
         return res.json({ data: { links } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching current links.' });
+        return res.status(500).json({ error: err.message || 'Error fetching current links.' });
     }
 });
 
@@ -286,7 +286,7 @@ router.post('/cron/generate-daily-links', async (req, res) => {
         }
         return res.json({ data: { schoolsProcessed: schools?.length || 0, results } });
     } catch (err) {
-        return res.status(500).json({ error: 'Cron job failed.' });
+        return res.status(500).json({ error: err.message || 'Cron job failed.' });
     }
 });
 

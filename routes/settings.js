@@ -76,7 +76,7 @@ router.get('/', protect, requirePermission('settings.view'), async (req, res) =>
   try {
     const data = await settingsService.getAll(req.tenant.id);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching settings.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching settings.' }); }
 });
 
 // ─── Profile ───────────────────────────────────────────────────
@@ -84,7 +84,7 @@ router.put('/profile', protect, requirePermission('settings.edit'), validate(pro
   try {
     const data = await settingsService.updateProfile(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating profile.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating profile.' }); }
 });
 
 // ─── Branding ──────────────────────────────────────────────────
@@ -92,7 +92,7 @@ router.put('/branding', protect, requirePermission('settings.edit'), validate(br
   try {
     const data = await settingsService.updateBranding(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating branding.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating branding.' }); }
 });
 
 // ─── Notification Preferences ─────────────────────────────────
@@ -100,7 +100,7 @@ router.put('/notifications', protect, requirePermission('settings.edit'), valida
   try {
     const data = await settingsService.updateNotificationPrefs(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating notification preferences.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating notification preferences.' }); }
 });
 
 router.post('/test-email', protect, requirePermission('settings.edit'), validate(testEmailSchema), async (req, res) => {
@@ -129,7 +129,7 @@ router.put('/academic', protect, requirePermission('settings.edit'), async (req,
   try {
     const data = await settingsService.updateAcademic(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating academic settings.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating academic settings.' }); }
 });
 
 // ─── Fee Settings ──────────────────────────────────────────────
@@ -137,18 +137,18 @@ router.put('/fee', protect, requirePermission('settings.edit'), async (req, res)
   try {
     const data = await settingsService.updateFee(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error updating fee settings.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error updating fee settings.' }); }
 });
 
 // ─── Academic Terms ────────────────────────────────────────────
 router.get('/terms', protect, requirePermission('settings.view'), async (req, res) => {
   try { const data = await settingsService.getTerms(req.tenant.id); return res.json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error fetching terms.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error fetching terms.' }); }
 });
 
 router.post('/terms', protect, requirePermission('settings.edit'), validate(termSchema), async (req, res) => {
   try { const data = await settingsService.createTerm(req.tenant.id, req.body); return res.status(201).json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error creating term.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error creating term.' }); }
 });
 
 router.put('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
@@ -163,18 +163,18 @@ router.put('/terms/:id', protect, requirePermission('settings.edit'), async (req
 
 router.delete('/terms/:id', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteTerm(req.tenant.id, req.params.id); return res.json({ data: { success: true } }); }
-  catch (err) { return res.status(500).json({ error: 'Error deleting term.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error deleting term.' }); }
 });
 
 // ─── Academic Sessions ─────────────────────────────────────────
 router.get('/sessions', protect, requirePermission('settings.view'), async (req, res) => {
   try { const data = await settingsService.getSessions(req.tenant.id); return res.json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error fetching sessions.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error fetching sessions.' }); }
 });
 
 router.post('/sessions', protect, requirePermission('settings.edit'), validate(sessionSchema), async (req, res) => {
   try { const data = await settingsService.createSession(req.tenant.id, req.body); return res.status(201).json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error creating session.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error creating session.' }); }
 });
 
 router.put('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
@@ -189,49 +189,49 @@ router.put('/sessions/:id', protect, requirePermission('settings.edit'), async (
 
 router.delete('/sessions/:id', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteSession(req.tenant.id, req.params.id); return res.json({ data: { success: true } }); }
-  catch (err) { return res.status(500).json({ error: 'Error deleting session.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error deleting session.' }); }
 });
 
 // ─── Grading Scales ────────────────────────────────────────────
 router.get('/grading-scales', protect, requirePermission('settings.view'), async (req, res) => {
   try { const data = await settingsService.getGradingScales(req.tenant.id); return res.json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error fetching grading scales.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error fetching grading scales.' }); }
 });
 
 router.post('/grading-scales', protect, requirePermission('settings.edit'), validate(gradingScaleSchema), async (req, res) => {
   try { const data = await settingsService.createGradingScale(req.tenant.id, req.body); return res.status(201).json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error creating grading scale.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error creating grading scale.' }); }
 });
 
 router.delete('/grading-scales/:id', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteGradingScale(req.tenant.id, req.params.id); return res.json({ data: { success: true } }); }
-  catch (err) { return res.status(500).json({ error: 'Error deleting grading scale.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error deleting grading scale.' }); }
 });
 
 router.post('/grade-rules', protect, requirePermission('settings.edit'), validate(gradeRuleSchema), async (req, res) => {
   try { const data = await settingsService.setGradeRule(req.body.grading_scale_id, req.body); return res.status(201).json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error creating grade rule.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error creating grade rule.' }); }
 });
 
 router.delete('/grade-rules/:id', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteGradeRule(req.params.id); return res.json({ data: { success: true } }); }
-  catch (err) { return res.status(500).json({ error: 'Error deleting grade rule.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error deleting grade rule.' }); }
 });
 
 // ─── Key-Value Settings ────────────────────────────────────────
 router.get('/kv/:key', protect, async (req, res) => {
   try { const data = await settingsService.getSetting(req.tenant.id, req.params.key); return res.json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error fetching setting.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error fetching setting.' }); }
 });
 
 router.put('/kv', protect, requirePermission('settings.edit'), async (req, res) => {
   try { const data = await settingsService.updateSetting(req.tenant.id, req.body.key, req.body.value); return res.json({ data }); }
-  catch (err) { return res.status(500).json({ error: 'Error updating setting.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error updating setting.' }); }
 });
 
 router.delete('/kv/:key', protect, requirePermission('settings.edit'), async (req, res) => {
   try { await settingsService.deleteSetting(req.tenant.id, req.params.key); return res.json({ data: { success: true } }); }
-  catch (err) { return res.status(500).json({ error: 'Error deleting setting.' }); }
+  catch (err) { return res.status(500).json({ error: err.message || 'Error deleting setting.' }); }
 });
 
 // ─── WhatsApp Business API Config ─────────────────────────────
@@ -239,14 +239,14 @@ router.get('/whatsapp-config', protect, requirePermission('settings.view'), asyn
   try {
     const data = await settingsService.getWhatsAppConfig(req.tenant.id);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching WhatsApp config.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching WhatsApp config.' }); }
 });
 
 router.put('/whatsapp-config', protect, requirePermission('settings.edit'), validate(whatsappConfigSchema), async (req, res) => {
   try {
     const data = await settingsService.updateWhatsAppConfig(req.tenant.id, req.body);
     return res.json({ data });
-  } catch (err) { return res.status(500).json({ error: 'Error saving WhatsApp config.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error saving WhatsApp config.' }); }
 });
 
 // ─── Integrations ──────────────────────────────────────────────
@@ -257,7 +257,7 @@ router.get('/integrations', protect, requirePermission('settings.view'), async (
       settingsService.getDBIntegrations(req.tenant.id),
     ]);
     return res.json({ data: { system: sysIntegrations, custom: dbIntegrations } });
-  } catch (err) { return res.status(500).json({ error: 'Error fetching integrations.' }); }
+  } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching integrations.' }); }
 });
 
 module.exports = router;

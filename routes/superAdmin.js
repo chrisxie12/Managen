@@ -281,7 +281,7 @@ router.post('/mfa/setup', superAdminAuthOptional, async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Error setting up MFA.' });
+        return res.status(500).json({ error: err.message || 'Error setting up MFA.' });
     }
 });
 
@@ -327,7 +327,7 @@ router.post('/mfa/confirm', superAdminAuthOptional, async (req, res) => {
 
         return res.json({ data: { message: 'MFA enabled successfully.', backupCodes: mfaData.backups } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error confirming MFA.' });
+        return res.status(500).json({ error: err.message || 'Error confirming MFA.' });
     }
 });
 
@@ -406,7 +406,7 @@ router.post('/login', async (req, res) => {
         return res.json({ data: { message: 'Welcome, Super Admin!' } });
     } catch (err) {
         console.error('Super admin login error:', err);
-        return res.status(500).json({ error: 'Login failed.' });
+        return res.status(500).json({ error: err.message || 'Login failed.' });
     }
 });
 
@@ -416,7 +416,7 @@ router.post('/logout', (req, res) => {
         res.clearCookie('schoolos_admin_token', { path: '/' });
         return res.json({ data: { message: 'Logged out successfully.' } });
     } catch (err) {
-        return res.status(500).json({ error: 'Logout failed.' });
+        return res.status(500).json({ error: err.message || 'Logout failed.' });
     }
 });
 
@@ -577,7 +577,7 @@ router.get('/dashboard', superAdminAuth, async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Dashboard error.' });
+        return res.status(500).json({ error: err.message || 'Dashboard error.' });
     }
 });
 
@@ -615,7 +615,7 @@ router.get('/schools', superAdminAuth, async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching schools.' });
+        return res.status(500).json({ error: err.message || 'Error fetching schools.' });
     }
 });
 
@@ -645,7 +645,7 @@ router.get('/schools/:id', superAdminAuth, async (req, res) => {
 
         return res.json({ data: { school: mapTenant(school), payments: payments.map(mapPayment) } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching school.' });
+        return res.status(500).json({ error: err.message || 'Error fetching school.' });
     }
 });
 
@@ -724,7 +724,7 @@ router.get('/schools/:id/credentials', superAdminAuth, async (req, res) => {
 
         return res.json({ data: result });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching school credentials.' });
+        return res.status(500).json({ error: err.message || 'Error fetching school credentials.' });
     }
 });
 
@@ -763,7 +763,7 @@ router.delete('/schools/:id', superAdminAuth, async (req, res) => {
 
         return res.json({ data: { message: `School "${school.name}" deleted successfully.` } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error deleting school.' });
+        return res.status(500).json({ error: err.message || 'Error deleting school.' });
     }
 });
 
@@ -793,7 +793,7 @@ router.get('/schools/templates/:schoolId', superAdminAuth, async (req, res) => {
         const templates = await featureService.getReportCardTemplates(req.params.schoolId);
         return res.json({ data: { templates } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching templates.' });
+        return res.status(500).json({ error: err.message || 'Error fetching templates.' });
     }
 });
 
@@ -811,7 +811,7 @@ router.get('/payments', superAdminAuth, async (req, res) => {
 
         return res.json({ data: { payments: (payments || []).map(mapPayment) } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error fetching payments.' });
+        return res.status(500).json({ error: err.message || 'Error fetching payments.' });
     }
 });
 
