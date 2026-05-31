@@ -1481,10 +1481,17 @@ router.get('/classes', protect, async (req, res) => {
 
 router.post('/classes', protect, requirePermission('classes.create', 'classes.edit'), async (req, res) => {
     try {
-        const cls = await schoolService.createClass(req.tenant.id, req.body);
+        const { name, form, class_teacher, level, status } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Class name is required.' });
+        const payload = { name: name.trim() };
+        if (form) payload.form = form;
+        if (class_teacher) payload.class_teacher = class_teacher;
+        if (level) payload.level = level;
+        if (status) payload.status = status;
+        const cls = await schoolService.createClass(req.tenant.id, payload);
         return res.status(201).json({ data: { class: cls } });
     } catch (err) {
-        return res.status(500).json({ error: 'Error creating class.' });
+        return res.status(500).json({ error: err.message || 'Error creating class.' });
     }
 });
 
