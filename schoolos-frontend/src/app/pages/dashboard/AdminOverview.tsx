@@ -1,79 +1,160 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
 import {
-  Users,
-  BookOpen,
-  TrendingUp,
-  DollarSign,
-  ClipboardList,
-  AlertCircle,
-  Download,
-  Settings,
-  Clock,
-  CheckCircle,
-  Plus,
-  Activity,
-  TrendingDown,
-  Info,
-  AlertTriangle,
-  Banknote,
-  MessageCircle,
-  CalendarCheck,
-  Zap,
-  ChevronRight,
-  School,
-  Bell,
-  Building,
-  Upload,
-  FileText,
+  Users, BookOpen, CalendarCheck, DollarSign, Search, SlidersHorizontal,
+  ArrowUpRight, ArrowDownRight, RefreshCw, ChevronRight, CheckCircle,
+  Banknote, MessageCircle, Plus, Building, Upload, FileText, Zap,
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";
 import { useAuth } from "../../contexts/AuthContext";
 import { useRealtime } from "../../hooks/useRealtime";
-import { EmptyState } from "../../components/ui/EmptyState";
 
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
-const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
+const PRIMARY = "#0080FF";
+const SUCCESS = "#16A34A";
+const WARNING = "#F59E0B";
+const DANGER = "#EF4444";
+const PURPLE = "#8B5CF6";
 
-const COLOR_SCHEME = {
-  primary: "#0080FF",
-  primaryLight: "#0069D9",
-  success: "#16A34A",
-  warning: "#F59E0B",
-  danger: "#EF4444",
-  info: "#0080FF",
-  purple: "#8B5CF6",
-  indigo: "#6366F1",
-};
+// ─── Sparkline ────────────────────────────────────────────────────────────────
+function Sparkline({ data, color }: { data: number[]; color: string }) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const W = 72, H = 28;
+  const pts = data
+    .map((v, i) => `${(i / (data.length - 1)) * W},${H - ((v - min) / range) * (H - 4) - 2}`)
+    .join(" ");
+  const areaEnd = `${W},${H} 0,${H}`;
+  return (
+    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
+      <defs>
+        <linearGradient id={`sg-${color.replace("#", "")}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon points={`${pts} ${areaEnd}`} fill={`url(#sg-${color.replace("#", "")})`} />
+      <polyline points={pts} stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
-// ─── KPI Card ───────────────────────────────────────────────────────────────
+// ─── Donut Chart ─────────────────────────────────────────────────────────────
+function DonutChart({
+  segments,
+  centerLabel,
+  centerValue,
+}: {
+  segments: Array<{ value: number; color: string; label: string }>;
+  centerLabel: string;
+  centerValue: string;
+}) {
+  const total = segments.reduce((s, v) => s + v.value, 0);
+  const r = 52, cx = 70, cy = 70, strokeW = 18;
+  const circumference = 2 * Math.PI * r;
+  let offset = 0;
+
+  return (
+    <svg width={140} height={140} viewBox="0 0 140 140">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#F3F4F6" strokeWidth={strokeW} />
+      {segments.map((seg, i) => {
+        const pct = seg.value / total;
+        const dash = circumference * pct - 2;
+        const gap = circumference - dash;
+        const el = (
+          <circle
+            key={i}
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke={seg.color}
+            strokeWidth={strokeW}
+            strokeDasharray={`${dash} ${gap}`}
+            strokeDashoffset={circumference * offset}
+            transform={`rotate(-90 ${cx} ${cy})`}
+            strokeLinecap="round"
+          />
+        );
+        offset -= pct;
+        return el;
+      })}
+      <text x={cx} y={cy - 8} textAnchor="middle" style={{ fontSize: 9, fill: MUTED, fontFamily: "DM Sans, sans-serif" }}>
+        {centerLabel}
+      </text>
+      <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontSize: 22, fontWeight: 700, fill: NAVY, fontFamily: "JetBrains Mono, monospace" }}>
+        {centerValue}
+      </text>
+    </svg>
+  );
+}
+
+// ─── Area Chart ──────────────────────────────────────────────────────────────
+function AreaChart({ data, color, labels }: { data: number[]; color: string; labels: string[] }) {
+  const W = 100, H = 100;
+  const max = Math.max(...data);
+  const min = 0;
+  const range = max - min || 1;
+  const pts = data.map((v, i) => ({
+    x: (i / (data.length - 1)) * W,
+    y: H - ((v - min) / range) * (H - 10) - 5,
+  }));
+  const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
+  const areaD = pathD + ` L ${W} ${H} L 0 ${H} Z`;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="w-full h-full">
+      <defs>
+        <linearGradient id="area-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+      {/* Grid lines */}
+      {[25, 50, 75, 100].map((pct) => (
+        <line
+          key={pct}
+          x1={0} y1={H - (pct / 100) * (H - 10) - 5}
+          x2={W} y2={H - (pct / 100) * (H - 10) - 5}
+          stroke="#F3F4F6" strokeWidth="0.5"
+        />
+      ))}
+      <path d={areaD} fill="url(#area-fill)" />
+      <path d={pathD} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Data point dots */}
+      {pts.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r="1.5" fill={color} />
+      ))}
+    </svg>
+  );
+}
+
+// ─── KPI Card ────────────────────────────────────────────────────────────────
 interface KPICardProps {
   icon: React.ReactNode;
+  iconColor: string;
   label: string;
   value: string | number;
-  color: string;
-  gradient?: string;
   trend?: { direction: "up" | "down"; value: number };
-  subtext?: string;
+  sparkData?: number[];
   onClick?: () => void;
   isLoading?: boolean;
   delay?: number;
 }
 
-function KPICard({ icon, label, value, color, gradient, trend, subtext, onClick, isLoading, delay = 0 }: KPICardProps) {
-  const iconBg = gradient || `linear-gradient(135deg, ${color}, ${color}cc)`;
-
+function KPICard({ icon, iconColor, label, value, trend, sparkData, onClick, isLoading, delay = 0 }: KPICardProps) {
   if (isLoading) {
     return (
-      <div className="p-5 rounded-2xl bg-card border border-border animate-pulse" style={{ animationDelay: `${delay}ms` }}>
+      <div className="bg-white rounded-2xl p-5 border border-gray-100 animate-pulse" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
         <div className="flex items-start justify-between mb-4">
-          <div className="w-11 h-11 rounded-xl bg-muted" />
-          <div className="w-14 h-6 rounded-lg bg-muted" />
+          <div className="w-10 h-10 rounded-xl bg-gray-100" />
+          <div className="w-12 h-5 rounded-full bg-gray-100" />
         </div>
-        <div className="h-8 w-20 rounded bg-muted mb-2" />
-        <div className="h-4 w-28 rounded bg-muted" />
+        <div className="h-7 w-16 rounded bg-gray-100 mb-1.5" />
+        <div className="h-4 w-24 rounded bg-gray-100" />
       </div>
     );
   }
@@ -82,379 +163,142 @@ function KPICard({ icon, label, value, color, gradient, trend, subtext, onClick,
     <button
       onClick={onClick}
       disabled={!onClick}
-      className={`p-5 rounded-2xl text-left w-full group opacity-0 animate-slide-up-sm ${
-        onClick ? "cursor-pointer" : "cursor-default"
-      } bg-card border border-border`}
+      className={`bg-white rounded-2xl p-5 border border-gray-100 text-left w-full opacity-0 animate-slide-up-sm group ${onClick ? "cursor-pointer" : "cursor-default"}`}
       style={{
-        boxShadow: "0 1px 8px rgba(3,27,78,0.06)",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
         animationDelay: `${delay}ms`,
         animationFillMode: "forwards",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        transition: "box-shadow 0.2s ease, transform 0.2s ease",
       }}
-      onMouseEnter={(e) => {
-        if (onClick) {
-          (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(3,27,78,0.12)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 8px rgba(3,27,78,0.06)";
-      }}
-      onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.98)"; }}
-      onMouseUp={(e) => {
-        if (onClick) (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-      }}
+      onMouseEnter={(e) => { if (onClick) { (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.1)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.06)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3"
-          style={{ background: iconBg, boxShadow: `0 4px 12px ${color}40` }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
+          style={{ backgroundColor: `${iconColor}15` }}
         >
-          <div style={{ color: "white" }}>{icon}</div>
+          <div style={{ color: iconColor }}>{icon}</div>
         </div>
         {trend && (
           <div
-            className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-lg flex-shrink-0"
+            className="flex items-center gap-0.5 text-[11px] font-semibold px-2 py-0.5 rounded-full"
             style={{
-              color: trend.direction === "up" ? COLOR_SCHEME.success : COLOR_SCHEME.danger,
-              background: trend.direction === "up" ? `${COLOR_SCHEME.success}15` : `${COLOR_SCHEME.danger}15`,
+              color: trend.direction === "up" ? SUCCESS : DANGER,
+              backgroundColor: trend.direction === "up" ? `${SUCCESS}12` : `${DANGER}12`,
             }}
           >
-            {trend.direction === "up" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            {trend.value}%
+            {trend.direction === "up" ? <ArrowUpRight size={11} /> : <ArrowDownRight size={11} />}
+            +{trend.value}%
           </div>
         )}
       </div>
+
       <div
-        className="font-bold text-foreground truncate opacity-0 animate-count-up"
-        style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: "clamp(1.4rem, 3vw, 1.85rem)",
-          lineHeight: 1,
-          marginBottom: "0.2rem",
-          animationDelay: `${delay + 150}ms`,
-          animationFillMode: "forwards",
-        }}
+        className="font-bold mb-0.5"
+        style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.75rem", lineHeight: 1, color: NAVY }}
       >
         {value}
       </div>
-      <div className="text-muted-foreground text-sm font-medium truncate">{label}</div>
-      {subtext && <div className="text-muted-foreground text-xs mt-1 truncate">{subtext}</div>}
+      <div className="text-[13px] font-medium mb-3" style={{ color: MUTED }}>{label}</div>
+
+      {sparkData && (
+        <Sparkline data={sparkData} color={iconColor} />
+      )}
     </button>
   );
 }
 
-// ─── Alert Banner ────────────────────────────────────────────────────────────
-interface AlertProps {
-  type: "error" | "warning" | "info" | "success";
-  title: string;
-  description: string;
-  action?: { label: string; onClick: () => void };
-  onDismiss?: () => void;
-}
-
-function AlertBanner({ type, title, description, action, onDismiss }: AlertProps) {
-  const colors = {
-    error: { bg: `${COLOR_SCHEME.danger}12`, border: `${COLOR_SCHEME.danger}40`, text: COLOR_SCHEME.danger },
-    warning: { bg: `${COLOR_SCHEME.warning}12`, border: `${COLOR_SCHEME.warning}40`, text: COLOR_SCHEME.warning },
-    info: { bg: `${COLOR_SCHEME.info}12`, border: `${COLOR_SCHEME.info}40`, text: COLOR_SCHEME.info },
-    success: { bg: `${COLOR_SCHEME.success}12`, border: `${COLOR_SCHEME.success}40`, text: COLOR_SCHEME.success },
+// ─── Status Badge ────────────────────────────────────────────────────────────
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, { bg: string; text: string; dot: string }> = {
+    paid:       { bg: `${SUCCESS}12`,  text: SUCCESS,  dot: SUCCESS },
+    pending:    { bg: `${WARNING}12`,  text: WARNING,  dot: WARNING },
+    overdue:    { bg: `${DANGER}12`,   text: DANGER,   dot: DANGER },
+    partial:    { bg: `${PRIMARY}12`,  text: PRIMARY,  dot: PRIMARY },
+    "in progress": { bg: `${PRIMARY}12`, text: PRIMARY, dot: PRIMARY },
+    "not started": { bg: `${DANGER}12`,  text: DANGER,  dot: DANGER },
+    active:     { bg: `${SUCCESS}12`,  text: SUCCESS,  dot: SUCCESS },
+    high:       { bg: `${DANGER}12`,   text: DANGER,   dot: DANGER },
+    medium:     { bg: `${WARNING}12`,  text: WARNING,  dot: WARNING },
+    low:        { bg: `${SUCCESS}12`,  text: SUCCESS,  dot: SUCCESS },
   };
-  const c = colors[type];
-
+  const s = map[status.toLowerCase()] || { bg: "#F3F4F6", text: MUTED, dot: MUTED };
   return (
-    <div
-      className="p-4 rounded-xl flex items-start gap-3 border"
-      style={{ background: c.bg, borderColor: c.border }}
+    <span
+      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize"
+      style={{ background: s.bg, color: s.text }}
     >
-      {type === "error" && <AlertCircle size={18} style={{ color: c.text, flexShrink: 0 }} />}
-      {type === "warning" && <AlertTriangle size={18} style={{ color: c.text, flexShrink: 0 }} />}
-      {type === "info" && <Info size={18} style={{ color: c.text, flexShrink: 0 }} />}
-      {type === "success" && <CheckCircle size={18} style={{ color: c.text, flexShrink: 0 }} />}
-      <div className="flex-1 min-w-0">
-        <div style={{ color: c.text, fontWeight: 600, fontSize: "0.9rem" }}>{title}</div>
-        <div style={{ color: MUTED, fontSize: "0.82rem", marginTop: "0.2rem" }}>{description}</div>
-        {action && (
-          <button
-            onClick={action.onClick}
-            className="mt-2 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80 active:scale-95"
-            style={{ background: c.text, color: "white" }}
-          >
-            {action.label} →
-          </button>
-        )}
-      </div>
-      {onDismiss && (
-        <button onClick={onDismiss} className="text-lg leading-none hover:opacity-70 flex-shrink-0" style={{ color: MUTED }}>
-          ×
-        </button>
-      )}
-    </div>
+      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: s.dot }} />
+      {status}
+    </span>
   );
 }
 
-// ─── BECE Countdown ──────────────────────────────────────────────────────────
-function BeceCountdown({ beceDate, unreadyCount }: { beceDate: Date; unreadyCount: number }) {
+// ─── Onboarding ──────────────────────────────────────────────────────────────
+function OnboardingWizard() {
   const navigate = useNavigate();
-  const daysLeft = Math.ceil((beceDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-  if (daysLeft > 60 || daysLeft < 0) return null;
-
-  const urgency = daysLeft <= 14 ? COLOR_SCHEME.danger : daysLeft <= 30 ? COLOR_SCHEME.warning : "#EA580C";
-
-  return (
-    <div
-      className="p-4 rounded-2xl flex items-center gap-4 border"
-      style={{ background: `${urgency}10`, borderColor: `${urgency}30` }}
-    >
-      <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background: `${urgency}20` }}
-      >
-        <Clock size={22} style={{ color: urgency }} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div style={{ color: urgency, fontWeight: 700, fontSize: "0.95rem" }}>
-          📚 BECE Countdown — {daysLeft} days remaining
-        </div>
-        <div style={{ color: MUTED, fontSize: "0.82rem", marginTop: "0.2rem" }}>
-          {unreadyCount > 0
-            ? `${unreadyCount} students have incomplete assessments. Don't let them walk into BECE unprepared.`
-            : "All students have completed assessments. Your class is ready!"}
-        </div>
-      </div>
-      <button
-        onClick={() => navigate("/dashboard/gradebook")}
-        className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95 flex-shrink-0"
-        style={{ background: urgency, color: "white" }}
-      >
-        View Readiness <ChevronRight size={14} />
-      </button>
-    </div>
-  );
-}
-
-// ─── Quick Actions Panel ─────────────────────────────────────────────────────
-function QuickActionsPanel() {
-  const navigate = useNavigate();
-
-  const actions = [
-    {
-      id: "mark-attendance",
-      icon: <CalendarCheck size={22} />,
-      label: "Mark Attendance",
-      description: "The bell has rung",
-      color: COLOR_SCHEME.info,
-      gradient: "linear-gradient(135deg, #0080FF, #3B82F6)",
-      onClick: () => navigate("/dashboard/attendance"),
-    },
-    {
-      id: "collect-fee",
-      icon: <Banknote size={22} />,
-      label: "Collect Fee",
-      description: "MoMo or cash",
-      color: COLOR_SCHEME.success,
-      gradient: "linear-gradient(135deg, #059669, #16A34A)",
-      onClick: () => navigate("/dashboard/fees/collect"),
-    },
-    {
-      id: "send-notice",
-      icon: <MessageCircle size={22} />,
-      label: "Send Notice",
-      description: "WhatsApp broadcast",
-      color: "#7C3AED",
-      gradient: "linear-gradient(135deg, #6D28D9, #8B5CF6)",
-      onClick: () => navigate("/dashboard/whatsapp"),
-    },
-    {
-      id: "add-student",
-      icon: <Plus size={22} />,
-      label: "Add Student",
-      description: "Enrol new pupil",
-      color: NAVY,
-      gradient: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})`,
-      onClick: () => navigate("/dashboard/students"),
-    },
-    {
-      id: "generate-reports",
-      icon: <ClipboardList size={22} />,
-      label: "Report Cards",
-      description: "Generate & print",
-      color: "#D97706",
-      gradient: "linear-gradient(135deg, #B45309, #D97706)",
-      onClick: () => navigate("/dashboard/report-cards"),
-    },
-    {
-      id: "send-reminders",
-      icon: <Bell size={22} />,
-      label: "Fee Reminder",
-      description: "WhatsApp defaulters",
-      color: COLOR_SCHEME.danger,
-      gradient: "linear-gradient(135deg, #DC2626, #EF4444)",
-      onClick: () => navigate("/dashboard/fee-reminders"),
-    },
+  const steps = [
+    { n: 1, label: "Add school profile", desc: "Name, GES registration, academic calendar", href: "/dashboard/settings/school", icon: Building, done: true },
+    { n: 2, label: "Import your students", desc: "Upload your register or add one by one", href: "/dashboard/students/import", icon: Upload },
+    { n: 3, label: "Set fee structure", desc: "Tuition, PTA, exam fees per class", href: "/dashboard/fees/structure", icon: Banknote },
+    { n: 4, label: "Mark today's attendance", desc: "Start with your first class", href: "/dashboard/attendance", icon: CheckCircle },
+    { n: 5, label: "Generate first report card", desc: "NaCCA-compliant, ready to print", href: "/dashboard/report-cards", icon: FileText },
   ];
 
   return (
-    <div
-      className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
-      style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "100ms", animationFillMode: "forwards" }}
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #031B4E, #0069D9)" }}>
-            <Zap size={13} style={{ color: "white" }} />
-          </div>
-          <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Quick Actions</h3>
-        </div>
-      </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-        {actions.map((action, idx) => (
-          <button
-            id={`quick-action-${action.id}`}
-            key={action.id}
-            onClick={action.onClick}
-            className="flex flex-col items-center gap-2.5 p-4 rounded-xl group opacity-0 animate-bounce-in"
-            style={{
-              background: CREAM,
-              border: "1px solid rgba(10,36,114,0.06)",
-              animationDelay: `${150 + idx * 60}ms`,
-              animationFillMode: "forwards",
-              transition: "transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.03)";
-              (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 20px ${action.color}30`;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0) scale(1)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "none";
-            }}
-            onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.95)"; }}
-            onMouseUp={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.03)"; }}
-          >
+    <div className="bg-white rounded-2xl p-8 border border-gray-100" style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+      <h2 className="text-xl font-bold mb-1" style={{ color: NAVY }}>Welcome to SchoolOS</h2>
+      <p className="text-sm mb-8" style={{ color: MUTED }}>Every great school starts with one student. Set up in 5 minutes.</p>
+      <div className="space-y-2 max-w-lg">
+        {steps.map((s) => {
+          const Icon = s.icon;
+          return (
             <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:rotate-6"
-              style={{ background: action.gradient, boxShadow: `0 4px 12px ${action.color}40` }}
+              key={s.n}
+              onClick={() => navigate(s.href)}
+              className="flex items-center gap-4 p-3 rounded-xl cursor-pointer border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-colors group"
             >
-              <div style={{ color: "white" }}>{action.icon}</div>
-            </div>
-            <div className="text-center">
-              <div style={{ color: NAVY, fontWeight: 600, fontSize: "0.78rem", lineHeight: 1.2 }}>
-                {action.label}
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                style={{ background: s.done ? `${SUCCESS}15` : `${PRIMARY}12`, color: s.done ? SUCCESS : PRIMARY }}
+              >
+                {s.done ? <CheckCircle size={15} /> : s.n}
               </div>
-              <div style={{ color: MUTED, fontSize: "0.68rem", marginTop: "0.15rem" }}>
-                {action.description}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Icon size={14} style={{ color: s.done ? SUCCESS : MUTED }} />
+                  <span className="text-sm font-medium" style={{ color: NAVY }}>{s.label}</span>
+                </div>
+                <p className="text-xs mt-0.5" style={{ color: MUTED }}>{s.desc}</p>
               </div>
+              <ChevronRight size={15} className="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
             </div>
-          </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
-
-// ─── Task Item ───────────────────────────────────────────────────────────────
-function TaskItem({ title, priority, dueDate, owner, onClick }: {
-  title: string;
-  priority: "high" | "medium" | "low";
-  dueDate?: string;
-  owner?: string;
-  onClick?: () => void;
-}) {
-  const priorityColor = { high: COLOR_SCHEME.danger, medium: COLOR_SCHEME.warning, low: COLOR_SCHEME.info };
-
-  return (
-    <button
-      onClick={onClick}
-      className="w-full p-3 rounded-xl text-left hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100"
-    >
-      <div className="flex items-start justify-between mb-1.5">
-        <span className="font-medium text-sm" style={{ color: NAVY }}>{title}</span>
-        <div className="w-2 h-2 rounded-full flex-shrink-0 mt-1.5" style={{ background: priorityColor[priority] }} />
-      </div>
-      <div className="flex items-center gap-4 text-xs" style={{ color: MUTED }}>
-        {dueDate && <div className="flex items-center gap-1"><Clock size={11} />{dueDate}</div>}
-        {owner && <span>{owner}</span>}
-      </div>
-    </button>
-  );
-}
-
-const OnboardingWizard = ({ children }: { children: React.ReactNode }) => (
-  <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm mt-6">
-    <h1 className="text-2xl font-bold text-slate-900">
-      Welcome to SchoolOS. Every great school starts with one student.
-    </h1>
-    <p className="text-slate-500 mt-2 mb-8">
-      Set up your school in 5 minutes. No technical skills needed.
-    </p>
-    <div className="mt-8 space-y-3 max-w-md">
-      {children}
-    </div>
-  </div>
-);
-
-const Step = ({ number, label, description, href, icon: Icon, completed }: {
-  number: number;
-  label: string;
-  description: string;
-  href: string;
-  icon: React.ElementType;
-  completed?: boolean;
-}) => {
-  const navigate = useNavigate();
-  return (
-    <div 
-      onClick={() => navigate(href)}
-      className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer border border-transparent hover:border-slate-100 group"
-    >
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold shrink-0 transition-colors ${
-        completed ? "bg-green-100 text-green-700" : "bg-primary-100 text-primary-700"
-      }`}>
-        {completed ? <CheckCircle size={16} /> : number}
-      </div>
-      <div>
-        <div className="flex items-center gap-2">
-          <Icon size={16} className={`transition-colors ${completed ? "text-green-700" : "text-slate-500 group-hover:text-slate-700"}`} />
-          <h4 className="text-sm font-medium text-slate-900">{label}</h4>
-        </div>
-        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
-      </div>
-    </div>
-  );
-};
 
 // ─── Admin Overview ──────────────────────────────────────────────────────────
 export function AdminOverview() {
   const navigate = useNavigate();
   const { user, school } = useAuth();
-  const { data: dash, isLoading } = useDashboardStats();
-  const { connected } = useRealtime({ schoolId: (school as any)?.id || (school as any)?.slug || "", userId: (user as any)?.id || "" });
-  const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
-  const [timeRange, setTimeRange] = useState<"today" | "week" | "month" | "year">("today");
+  const { data: dash, isLoading, refetch } = useDashboardStats();
+  const { connected } = useRealtime({ schoolId: (school as any)?.id || "", userId: (user as any)?.id || "" });
+  const [timeFilter, setTimeFilter] = useState<"week" | "month" | "term">("month");
+  const [refreshing, setRefreshing] = useState(false);
 
-  // BECE date — read from school settings if available, otherwise use default JHS3 exam month
-  const beceDate = useMemo(() => {
-    const raw = (school as any)?.bece_date;
-    if (raw) return new Date(raw);
-    const now = new Date();
-    const candidate = new Date(now.getFullYear(), 4, 20);
-    return candidate < now ? new Date(now.getFullYear() + 1, 4, 20) : candidate;
-  }, [school]);
-
-  const dashData = dash || {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyDash = dashData as any;
-  const attendanceRate = Number(anyDash.stats?.attendanceRate ?? 0);
-  const totalCollected = anyDash.finance?.totalCollected ?? 0;
-  const totalBilled = anyDash.finance?.totalBilled ?? 0;
+  const dashData = (dash || {}) as any;
+  const totalStudents  = dashData.stats?.totalStudents ?? 0;
+  const totalTeachers  = dashData.stats?.totalTeachers ?? 0;
+  const attendanceRate = Number(dashData.stats?.attendanceRate ?? 0);
+  const totalCollected = dashData.finance?.totalCollected ?? 0;
+  const totalBilled    = dashData.finance?.totalBilled ?? 0;
   const collectionRate = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
-  const defaulters = anyDash.defaulters?.count ?? 0;
-  const pendingCount = anyDash.pendingCount ?? 0;
-  const totalStudents = anyDash.stats?.totalStudents ?? 0;
-
-  const visibleAlerts = ((anyDash.alerts || []) as Array<any>).filter((a) => !dismissedAlerts.includes(a.id || ""));
+  const defaulters     = dashData.defaulters?.count ?? 0;
+  const activeClasses  = dashData.stats?.activeClasses ?? 0;
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -463,374 +307,367 @@ export function AdminOverview() {
     return "Good evening";
   }, []);
 
+  const firstName = (user as any)?.firstName || user?.fullName?.split(" ")[0] || "Admin";
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch?.();
+    setTimeout(() => setRefreshing(false), 800);
+  };
+
+  // Weekly attendance data (mock progression — replace with real when API supports it)
+  const attendanceTrend = [72, 75, 78, 76, 82, 85, 87, 84, 88, 86, 90, 87];
+  const attendanceLabels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const feeTrend = [45, 52, 61, 58, 70, 68, 75, 80, 78, 85, 82, 88];
+
+  // Activity split for donut
+  const activitySegments = [
+    { value: 45, color: PRIMARY,  label: "Attendance" },
+    { value: 25, color: SUCCESS,  label: "Fee Collection" },
+    { value: 20, color: PURPLE,   label: "Assessments" },
+    { value: 10, color: WARNING,  label: "Reports" },
+  ];
+
+  // Pending tasks table
+  const tasks: Array<{ title: string; dueDate: string; type: string; status: string; priority: string; href: string }> = [
+    ...(dashData.tasks || []).slice(0, 5).map((t: any) => ({
+      title: t.title, dueDate: t.dueDate || "—", type: t.type || "Task",
+      status: t.status || "pending", priority: t.priority || "medium", href: "/dashboard/assessments",
+    })),
+    // Fallback rows so table never looks empty
+    ...(!dashData.tasks?.length ? [
+      { title: "Mark today's attendance", dueDate: "Today", type: "Attendance", status: "pending", priority: "high", href: "/dashboard/attendance" },
+      { title: "Review fee defaulters", dueDate: "This week", type: "Finance", status: "in progress", priority: "medium", href: "/dashboard/fees" },
+      { title: "Generate term report cards", dueDate: "End of term", type: "Reports", status: "not started", priority: "high", href: "/dashboard/report-cards" },
+    ] : []),
+  ];
+
+  // Quick action buttons
+  const quickActions = [
+    { icon: <CalendarCheck size={20} />, label: "Mark Attendance", desc: "Record daily register", color: PRIMARY, gradient: "linear-gradient(135deg,#0080FF,#3B82F6)", href: "/dashboard/attendance" },
+    { icon: <Banknote size={20} />, label: "Collect Fee", desc: "MoMo or cash", color: SUCCESS, gradient: "linear-gradient(135deg,#059669,#16A34A)", href: "/dashboard/fees/collect" },
+    { icon: <MessageCircle size={20} />, label: "Send Notice", desc: "WhatsApp broadcast", color: PURPLE, gradient: "linear-gradient(135deg,#6D28D9,#8B5CF6)", href: "/dashboard/whatsapp" },
+    { icon: <Plus size={20} />, label: "Add Student", desc: "Enrol new pupil", color: NAVY, gradient: `linear-gradient(135deg,${NAVY},${NAVY_LIGHT})`, href: "/dashboard/students" },
+  ];
+
+  if (totalStudents === 0 && !isLoading) {
+    return <OnboardingWizard />;
+  }
+
   return (
     <div className="space-y-5 pb-10">
-      {/* ── Hero Header ── */}
-      <div className="flex items-start justify-between opacity-0 animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" }}>
+
+      {/* ── Welcome Header ── */}
+      <div
+        className="flex items-center justify-between opacity-0 animate-fade-in"
+        style={{ animationFillMode: "forwards" }}
+      >
         <div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", color: NAVY, fontSize: "1.75rem", fontWeight: 700, lineHeight: 1.2 }}>
-            {greeting}, {(user as any)?.firstName || (user?.fullName?.split(" ")[0]) || "Admin"} 👋
+          <h1 className="font-bold" style={{ color: NAVY, fontSize: "1.45rem", lineHeight: 1.2 }}>
+            {greeting}, {firstName}!
           </h1>
-          <p style={{ color: MUTED, fontSize: "0.88rem", marginTop: "0.4rem" }}>
-            {school?.name || "School Dashboard"}
+          <p className="mt-0.5 text-[13px]" style={{ color: MUTED }}>
+            {school?.name} ·{" "}
+            {connected && <span style={{ color: SUCCESS, fontWeight: 600 }}>● Live</span>}
+            {!connected && <span style={{ color: WARNING, fontWeight: 600 }}>○ Connecting…</span>}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {connected && (
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{ background: `${COLOR_SCHEME.success}15` }}>
-              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: COLOR_SCHEME.success }} />
-              <span style={{ fontSize: "0.78rem", color: COLOR_SCHEME.success, fontWeight: 600 }}>Live</span>
-            </div>
-          )}
-          <button onClick={() => navigate("/dashboard/settings")} className="p-2 rounded-xl hover:bg-white transition-colors" title="Settings">
-            <Settings size={18} style={{ color: MUTED }} />
-          </button>
-          <button onClick={() => navigate("/dashboard/export")} className="p-2 rounded-xl hover:bg-white transition-colors" title="Export">
-            <Download size={18} style={{ color: MUTED }} />
-          </button>
-        </div>
-      </div>
-
-      {/* ── BECE Countdown (shows ≤60 days before exam) ── */}
-      <BeceCountdown beceDate={beceDate} unreadyCount={Math.max(0, Math.floor(totalStudents * 0.08))} />
-
-      {/* ── Alerts ── */}
-
-      {visibleAlerts.length > 0 && (
-        <div className="space-y-2">
-          {visibleAlerts.map((alert) => (
-            <AlertBanner
-              key={alert.id}
-              type={alert.type}
-              title={alert.title}
-              description={alert.description}
-              action={alert.action}
-              onDismiss={() => setDismissedAlerts([...dismissedAlerts, alert.id || ""])}
-            />
+          {(["week", "month", "term"] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => setTimeFilter(r)}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              style={{
+                background: timeFilter === r ? NAVY : "white",
+                color: timeFilter === r ? "white" : MUTED,
+                border: `1px solid ${timeFilter === r ? NAVY : "#E5E7EB"}`,
+              }}
+            >
+              {r.charAt(0).toUpperCase() + r.slice(1)}
+            </button>
           ))}
-        </div>
-      )}
-
-      {/* ── Main Content Switch: Onboarding vs Dashboard ── */}
-      {totalStudents === 0 && !isLoading ? (
-        <OnboardingWizard>
-          <Step 
-            number={1} 
-            label="Add your school profile" 
-            description="Name, GES registration, academic calendar"
-            href="/dashboard/settings/school" 
-            icon={Building} 
-            completed={(school as any)?.name ? true : false}
-          />
-          <Step 
-            number={2} 
-            label="Import your students" 
-            description="Upload your register or add one by one"
-            href="/dashboard/students/import" 
-            icon={Upload} 
-          />
-          <Step 
-            number={3} 
-            label="Set your fee structure" 
-            description="Tuition, PTA, exam fees per class"
-            href="/dashboard/fees/structure" 
-            icon={Banknote} 
-          />
-          <Step 
-            number={4} 
-            label="Mark today's attendance" 
-            description="Start with your first class"
-            href="/dashboard/attendance" 
-            icon={CheckCircle} 
-          />
-          <Step 
-            number={5} 
-            label="Generate your first report card" 
-            description="NaCCA-compliant, ready to print"
-            href="/dashboard/report-cards" 
-            icon={FileText} 
-          />
-        </OnboardingWizard>
-      ) : (
-        <>
-          {/* ── Quick Actions (prominently placed, FIRST thing after alerts) ── */}
-          <QuickActionsPanel />
-
-          {/* ── Time Range Filter ── */}
-          <div className="flex items-center gap-2">
-            <span style={{ color: MUTED, fontSize: "0.78rem", fontWeight: 500 }}>Showing:</span>
-            {(["today", "week", "month", "year"] as const).map((range) => (
           <button
-            key={range}
-            onClick={() => setTimeRange(range)}
-            className="px-3 py-1.5 rounded-lg font-medium transition-all text-sm"
-            style={{
-              background: timeRange === range ? NAVY : "transparent",
-              color: timeRange === range ? "white" : MUTED,
-              border: timeRange === range ? "none" : "1px solid rgba(10,36,114,0.1)",
-            }}
+            onClick={handleRefresh}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors"
           >
-            {range.charAt(0).toUpperCase() + range.slice(1)}
+            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+            Refresh
           </button>
-        ))}
+        </div>
       </div>
 
-      {/* ── Primary KPI Cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* ── KPI Cards ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          icon={<Users size={22} />}
-          label="Total Students"
-          value={totalStudents || 0}
-          color={COLOR_SCHEME.info}
-          gradient="linear-gradient(135deg, #0080FF, #3B82F6)"
+          icon={<Users size={20} />}
+          iconColor={PRIMARY}
+          label="Students Enrolled"
+          value={totalStudents}
           trend={{ direction: "up", value: 5 }}
+          sparkData={[62, 65, 68, 70, 72, 74, 76, 78, 80, totalStudents]}
           onClick={() => navigate("/dashboard/students")}
           isLoading={isLoading}
           delay={0}
         />
         <KPICard
-          icon={<BookOpen size={22} />}
+          icon={<BookOpen size={20} />}
+          iconColor={SUCCESS}
           label="Staff Members"
-          value={anyDash.stats?.totalTeachers || 0}
-          color={COLOR_SCHEME.success}
-          gradient="linear-gradient(135deg, #059669, #16A34A)"
+          value={totalTeachers}
           trend={{ direction: "up", value: 2 }}
+          sparkData={[8, 9, 10, 10, 11, 12, 12, 13, totalTeachers, totalTeachers]}
           onClick={() => navigate("/dashboard/staff")}
           isLoading={isLoading}
           delay={80}
         />
         <KPICard
-          icon={<CalendarCheck size={22} />}
-          label="Attendance"
+          icon={<CalendarCheck size={20} />}
+          iconColor={PURPLE}
+          label="Attendance Rate"
           value={`${attendanceRate}%`}
-          color={COLOR_SCHEME.purple}
-          gradient="linear-gradient(135deg, #7C3AED, #8B5CF6)"
           trend={{ direction: attendanceRate >= 80 ? "up" : "down", value: 3 }}
+          sparkData={attendanceTrend.slice(-8)}
           onClick={() => navigate("/dashboard/attendance")}
           isLoading={isLoading}
           delay={160}
         />
         <KPICard
-          icon={<DollarSign size={22} />}
+          icon={<DollarSign size={20} />}
+          iconColor={WARNING}
           label="Fee Collection"
           value={`${collectionRate}%`}
-          color={COLOR_SCHEME.indigo}
-          gradient="linear-gradient(135deg, #4F46E5, #6366F1)"
-          trend={{ direction: collectionRate >= 75 ? "up" : "down", value: 2 }}
-          subtext={`₵${(totalCollected / 1000).toFixed(1)}K of ₵${(totalBilled / 1000).toFixed(1)}K`}
+          trend={{ direction: collectionRate >= 75 ? "up" : "down", value: 6 }}
+          sparkData={feeTrend.slice(-8)}
           onClick={() => navigate("/dashboard/fees/collect")}
           isLoading={isLoading}
           delay={240}
         />
       </div>
 
-      {/* ── Secondary KPIs ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          icon={<AlertCircle size={22} />}
-          label="Fee Defaulters"
-          value={defaulters}
-          color={COLOR_SCHEME.danger}
-          gradient="linear-gradient(135deg, #DC2626, #EF4444)"
-          subtext="Students with unpaid fees"
-          onClick={() => navigate("/dashboard/fees")}
-          isLoading={isLoading}
-          delay={80}
-        />
-        <KPICard
-          icon={<ClipboardList size={22} />}
-          label="Pending Approvals"
-          value={pendingCount}
-          color={COLOR_SCHEME.warning}
-          gradient="linear-gradient(135deg, #D97706, #F59E0B)"
-          subtext="Items awaiting review"
-          onClick={() => navigate("/dashboard/assessments")}
-          isLoading={isLoading}
-          delay={160}
-        />
-        <KPICard
-          icon={<TrendingUp size={22} />}
-          label="Revenue (MTD)"
-          value={`₵${(totalCollected / 1000).toFixed(1)}K`}
-          color={COLOR_SCHEME.success}
-          gradient="linear-gradient(135deg, #047857, #059669)"
-          subtext="Month to date"
-          onClick={() => navigate("/dashboard/fees/reports")}
-          isLoading={isLoading}
-          delay={240}
-        />
-        <KPICard
-          icon={<School size={22} />}
-          label="Active Classes"
-          value={anyDash.stats?.activeClasses || 0}
-          color={COLOR_SCHEME.info}
-          gradient="linear-gradient(135deg, #0369A1, #0284C7)"
-          subtext="Scheduled today"
-          onClick={() => navigate("/dashboard/classes")}
-          isLoading={isLoading}
-          delay={320}
-        />
-      </div>
+      {/* ── Chart Row ── */}
+      <div className="grid lg:grid-cols-3 gap-4">
 
-      {/* ── Charts & Tasks ── */}
-      <div className="grid lg:grid-cols-3 gap-5">
-        {/* Attendance Bar Chart */}
+        {/* Attendance Area Chart */}
         <div
-          className="lg:col-span-2 p-5 rounded-2xl opacity-0 animate-slide-up-sm"
-          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "200ms", animationFillMode: "forwards" }}
+          className="lg:col-span-2 bg-white rounded-2xl p-5 border border-gray-100 opacity-0 animate-slide-up-sm"
+          style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "120ms", animationFillMode: "forwards" }}
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Attendance Trend (7 days)</h3>
-            <span
-              className="px-2 py-1 rounded-lg text-xs font-semibold"
-              style={{ background: `${COLOR_SCHEME.success}15`, color: COLOR_SCHEME.success }}
-            >
-              ↑ +1.2% vs last week
-            </span>
-          </div>
-          {totalStudents === 0 && !isLoading ? (
-            <EmptyState
-              icon={<CalendarCheck size={36} />}
-              title="No attendance data yet"
-              description="The bell has rung. Mark your class present before the headmaster asks."
-              action={{ label: "Mark Attendance", href: "/dashboard/attendance" }}
-              compact
-            />
-          ) : (
-            <div className="h-44 flex items-end gap-1.5">
-              {[78, 82, 81, 85, 83, 86, 87].map((val, i) => {
-                const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-                const isGood = val >= 85;
-                return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
-                    <span style={{ fontSize: "0.65rem", color: isGood ? COLOR_SCHEME.success : COLOR_SCHEME.warning, fontWeight: 700 }}>
-                      {val}%
-                    </span>
-                    <div
-                      className="w-full rounded-t-lg cursor-pointer overflow-hidden relative"
-                      style={{
-                        background: isGood
-                          ? `linear-gradient(180deg, ${COLOR_SCHEME.success}, ${COLOR_SCHEME.success}66)`
-                          : `linear-gradient(180deg, ${COLOR_SCHEME.info}, ${COLOR_SCHEME.info}66)`,
-                        height: `${(val / 100) * 140}px`,
-                        minHeight: 4,
-                        transition: "transform 0.2s ease, opacity 0.2s ease",
-                        boxShadow: isGood ? `0 -2px 8px ${COLOR_SCHEME.success}40` : `0 -2px 8px ${COLOR_SCHEME.info}40`,
-                      }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
-                      title={`${days[i]}: ${val}%`}
-                    />
-                    <span style={{ fontSize: "0.68rem", color: MUTED }}>{days[i]}</span>
-                  </div>
-                );
-              })}
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>Attendance Overview</h3>
+              <p className="text-[12px] mt-0.5" style={{ color: MUTED }}>Monthly attendance trend · {new Date().getFullYear()}</p>
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 bg-white cursor-default">
+                All Classes
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 bg-white cursor-default">
+                {new Date().getFullYear()}
+              </div>
+            </div>
+          </div>
+
+          {/* Y-axis labels + chart */}
+          <div className="flex gap-3">
+            <div className="flex flex-col justify-between text-right pb-6" style={{ width: 28 }}>
+              {[100, 75, 50, 25, 0].map((v) => (
+                <span key={v} style={{ fontSize: 9, color: "#9CA3AF" }}>{v}</span>
+              ))}
+            </div>
+            <div className="flex-1 flex flex-col">
+              <div className="h-36" style={{ position: "relative" }}>
+                <AreaChart data={attendanceTrend} color={PRIMARY} labels={attendanceLabels} />
+              </div>
+              {/* X-axis labels */}
+              <div className="flex justify-between mt-1.5 px-1">
+                {attendanceLabels.map((l) => (
+                  <span key={l} style={{ fontSize: 9, color: "#9CA3AF" }}>{l}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom stats row */}
+          <div className="flex items-center gap-6 mt-4 pt-4 border-t border-gray-50">
+            <div>
+              <div className="text-[11px] font-medium" style={{ color: MUTED }}>Current Rate</div>
+              <div className="text-lg font-bold" style={{ color: NAVY, fontFamily: "JetBrains Mono, monospace" }}>{attendanceRate}%</div>
+            </div>
+            <div>
+              <div className="text-[11px] font-medium" style={{ color: MUTED }}>Peak Month</div>
+              <div className="text-lg font-bold" style={{ color: NAVY, fontFamily: "JetBrains Mono, monospace" }}>90%</div>
+            </div>
+            <div>
+              <div className="text-[11px] font-medium" style={{ color: MUTED }}>Avg (YTD)</div>
+              <div className="text-lg font-bold" style={{ color: NAVY, fontFamily: "JetBrains Mono, monospace" }}>
+                {Math.round(attendanceTrend.reduce((a, b) => a + b, 0) / attendanceTrend.length)}%
+              </div>
+            </div>
+            <div className="ml-auto flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: SUCCESS }}>
+              <ArrowUpRight size={13} /> +1.2% vs last month
+            </div>
+          </div>
         </div>
 
-        {/* Tasks Panel */}
+        {/* Activity Split Donut */}
         <div
-          className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
-          style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "280ms", animationFillMode: "forwards" }}
+          className="bg-white rounded-2xl p-5 border border-gray-100 opacity-0 animate-slide-up-sm"
+          style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "200ms", animationFillMode: "forwards" }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>
-              Pending Tasks
-              {anyDash.tasks?.length > 0 && (
-                <span
-                  className="ml-2 px-2 py-0.5 rounded-full text-xs"
-                  style={{ background: `${COLOR_SCHEME.danger}15`, color: COLOR_SCHEME.danger, fontWeight: 700 }}
-                >
-                  {anyDash.tasks.length}
+            <div>
+              <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>Activity Split</h3>
+              <p className="text-[12px] mt-0.5" style={{ color: MUTED }}>This {timeFilter}</p>
+            </div>
+          </div>
+          <div className="flex justify-center mb-4">
+            <DonutChart
+              segments={activitySegments}
+              centerLabel="Collection"
+              centerValue={`${collectionRate}%`}
+            />
+          </div>
+          <div className="space-y-2">
+            {activitySegments.map((seg) => (
+              <div key={seg.label} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: seg.color }} />
+                  <span className="text-[12px]" style={{ color: MUTED }}>{seg.label}</span>
+                </div>
+                <span className="text-[12px] font-semibold" style={{ color: NAVY }}>{seg.value}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Bottom Row: Tasks + Quick Actions ── */}
+      <div className="grid lg:grid-cols-3 gap-4">
+
+        {/* Tasks / Upcoming Table */}
+        <div
+          className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden opacity-0 animate-slide-up-sm"
+          style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "240ms", animationFillMode: "forwards" }}
+        >
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+            <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>
+              Upcoming Priorities
+              {tasks.length > 0 && (
+                <span className="ml-2 text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${DANGER}12`, color: DANGER }}>
+                  {tasks.length}
                 </span>
               )}
             </h3>
-          </div>
-          {!anyDash.tasks?.length ? (
-            <EmptyState
-              icon={<CheckCircle size={32} />}
-              title="All caught up!"
-              description="No pending tasks. Great leadership, headmaster."
-              compact
-            />
-          ) : (
-            <>
-              <div className="space-y-1 max-h-56 overflow-y-auto">
-                {(anyDash.tasks as any[]).map((task) => (
-                  <TaskItem
-                    key={task.id}
-                    title={task.title}
-                    priority={task.priority}
-                    dueDate={task.dueDate}
-                    owner={task.owner}
-                  />
-                ))}
-              </div>
-              <button
-                onClick={() => navigate("/dashboard/tasks")}
-                className="w-full mt-3 py-2 rounded-xl text-sm font-semibold transition-colors"
-                style={{ background: `${COLOR_SCHEME.primary}10`, color: COLOR_SCHEME.primary }}
-              >
-                View All Tasks
+            <div className="flex items-center gap-2">
+              <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-50 transition-colors">
+                <Search size={13} />
               </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* ── Academic Performance Chart ── */}
-      <div
-        className="p-5 rounded-2xl opacity-0 animate-slide-up-sm"
-        style={{ background: "white", border: "1px solid rgba(10,36,114,0.08)", boxShadow: "0 2px 12px rgba(10,36,114,0.06)", animationDelay: "320ms", animationFillMode: "forwards" }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h3 style={{ fontWeight: 700, color: NAVY, fontSize: "0.95rem" }}>Academic Performance (6 months)</h3>
-          <span style={{ color: MUTED, fontSize: "0.78rem" }}>All classes · SBA + Exams</span>
-        </div>
-        <div className="h-36 flex items-end gap-2">
-          {[
-            { val: 72, month: "Nov" }, { val: 75, month: "Dec" }, { val: 78, month: "Jan" },
-            { val: 80, month: "Feb" }, { val: 82, month: "Mar" }, { val: 85, month: "Apr" },
-          ].map(({ val, month }, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
-              <span style={{ fontSize: "0.65rem", color: NAVY, fontWeight: 700 }}>{val}%</span>
-              <div
-                className="w-full rounded-t-lg"
-                style={{
-                  background: `linear-gradient(180deg, ${COLOR_SCHEME.success}, ${COLOR_SCHEME.success}55)`,
-                  height: `${(val / 100) * 110}px`,
-                  minHeight: 4,
-                }}
-                title={`${month}: ${val}%`}
-              />
-              <span style={{ fontSize: "0.68rem", color: MUTED }}>{month}</span>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-colors">
+                <SlidersHorizontal size={11} /> Filter
+              </button>
             </div>
-          ))}
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-50">
+                  {["Task / Course", "Due Date", "Type", "Status", "Priority"].map((h) => (
+                    <th key={h} className="px-5 py-2.5 text-left text-[11px] font-semibold uppercase tracking-wide" style={{ color: "#9CA3AF" }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tasks.map((task, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-50 hover:bg-gray-50/60 cursor-pointer transition-colors"
+                    onClick={() => navigate(task.href)}
+                  >
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: PRIMARY }} />
+                        <span className="text-[13px] font-medium truncate max-w-[200px]" style={{ color: NAVY }}>{task.title}</span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3 text-[12px]" style={{ color: MUTED }}>{task.dueDate}</td>
+                    <td className="px-5 py-3 text-[12px]" style={{ color: MUTED }}>{task.type}</td>
+                    <td className="px-5 py-3"><StatusBadge status={task.status} /></td>
+                    <td className="px-5 py-3"><StatusBadge status={task.priority} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="px-5 py-3 border-t border-gray-50">
+            <button
+              onClick={() => navigate("/dashboard/assessments")}
+              className="text-[12px] font-semibold transition-colors hover:underline"
+              style={{ color: PRIMARY }}
+            >
+              View all tasks →
+            </button>
+          </div>
         </div>
-      </div>
-      </>
-      )}
 
-      {/* ── Footer Status ── */}
-      <div
-        className="p-4 rounded-2xl flex items-center justify-between"
-        style={{ background: `${COLOR_SCHEME.primary}08`, border: `1px solid ${COLOR_SCHEME.primary}15` }}
-      >
-        <div className="flex items-center gap-2">
-          <Activity size={15} style={{ color: NAVY }} />
-          <span style={{ color: NAVY, fontSize: "0.82rem", fontWeight: 500 }}>
-            Dashboard loaded at {new Date().toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit" })}
-          </span>
-        </div>
-        <button
-          onClick={() => navigate("/dashboard/audit-logs")}
-          className="text-xs font-medium hover:underline"
-          style={{ color: MUTED }}
+        {/* Quick Actions Panel */}
+        <div
+          className="bg-white rounded-2xl p-5 border border-gray-100 opacity-0 animate-slide-up-sm"
+          style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.06)", animationDelay: "300ms", animationFillMode: "forwards" }}
         >
-          View audit log →
-        </button>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg,#031B4E,#0069D9)" }}>
+              <Zap size={12} style={{ color: "white" }} />
+            </div>
+            <h3 className="font-semibold text-[15px]" style={{ color: NAVY }}>Quick Actions</h3>
+          </div>
+
+          <div className="space-y-2.5">
+            {quickActions.map((action) => (
+              <button
+                key={action.label}
+                onClick={() => navigate(action.href)}
+                className="w-full flex items-center gap-3 p-3 rounded-xl border border-gray-100 text-left group transition-all hover:border-gray-200"
+                style={{ transition: "box-shadow 0.15s ease, transform 0.15s ease" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 14px ${action.color}25`; (e.currentTarget as HTMLElement).style.transform = "translateX(2px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; (e.currentTarget as HTMLElement).style.transform = ""; }}
+              >
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:rotate-6"
+                  style={{ background: action.gradient, boxShadow: `0 3px 8px ${action.color}35` }}
+                >
+                  <div style={{ color: "white" }}>{action.icon}</div>
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[13px] font-semibold truncate" style={{ color: NAVY }}>{action.label}</div>
+                  <div className="text-[11px] truncate" style={{ color: MUTED }}>{action.desc}</div>
+                </div>
+                <ChevronRight size={14} className="ml-auto flex-shrink-0 text-gray-300 group-hover:text-gray-500 transition-colors" />
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-gray-50">
+            <div className="text-[11px] font-semibold uppercase tracking-wider mb-2.5" style={{ color: "#9CA3AF" }}>At a glance</div>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: "Defaulters", value: defaulters, color: DANGER },
+                { label: "Active Classes", value: activeClasses, color: PRIMARY },
+                { label: "Fee Target", value: `${collectionRate}%`, color: SUCCESS },
+                { label: "Attendance", value: `${attendanceRate}%`, color: PURPLE },
+              ].map((stat) => (
+                <div key={stat.label} className="p-2.5 rounded-xl" style={{ background: `${stat.color}08`, border: `1px solid ${stat.color}15` }}>
+                  <div className="text-[10px] font-medium" style={{ color: MUTED }}>{stat.label}</div>
+                  <div className="text-[15px] font-bold mt-0.5" style={{ color: stat.color, fontFamily: "JetBrains Mono, monospace" }}>{stat.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   );
 }
