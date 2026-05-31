@@ -1,10 +1,8 @@
-import React from 'react';
 import { useStudentDashboard } from '../hooks/useStudentDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
 import { SectionError } from '../components/shared/SectionError';
 import { LiveBadge } from '../components/shared/LiveBadge';
-import { ProgressBar } from '../components/shared/ProgressBar';
 
 export function StudentDashboard() {
     const {

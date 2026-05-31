@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTeacherDashboard } from '../hooks/useTeacherDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
@@ -31,7 +30,7 @@ const EmptyState = ({ icon, title, description, action }: any) => (
 
 export function TeacherDashboard() {
     const {
-        stats, timetable, performance, homework, exams, attendance,
+        stats, timetable, performance, homework, exams,
         loading, error
     } = useTeacherDashboard();
 

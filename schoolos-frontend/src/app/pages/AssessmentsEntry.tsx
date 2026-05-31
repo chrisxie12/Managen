@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Loader2, Save, AlertCircle, Search, FileSpreadsheet,
-  Lock, Unlock, ChevronDown, CheckCircle2, ChevronRight, XCircle
+  Loader2, FileSpreadsheet,
+  Lock, CheckCircle2, XCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../services/api";
@@ -16,7 +16,7 @@ type Student = { id: string; name: string; roll_number: string };
 type Score = { id?: string; student_id: string; assessment_id: string; score: number | null; _status?: 'saving' | 'error' | 'saved' | 'unsaved' };
 
 export function AssessmentsEntry() {
-  const { user } = useAuth();
+  useAuth();
   
   const [classes, setClasses] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
@@ -96,7 +96,7 @@ export function AssessmentsEntry() {
   }, [gradeRules]);
 
   // Keyboard Nav
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, rowIndex: number, colIndex: number) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, _rowIndex: number, _colIndex: number) => {
     const inputs = Array.from(gridRef.current?.querySelectorAll('input') || []);
     const colCount = assessments.length;
     let targetIndex = -1;

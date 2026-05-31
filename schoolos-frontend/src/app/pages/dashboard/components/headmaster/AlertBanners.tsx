@@ -6,7 +6,7 @@ interface AlertBannersProps {
   onRetry?: () => void;
 }
 
-export function AlertBanners({ alerts, loading, onRetry }: AlertBannersProps) {
+export function AlertBanners({ alerts, loading }: AlertBannersProps) {
   if (loading) {
     return <div className="h-8 bg-gray-200 rounded animate-pulse mb-4" />;
   }

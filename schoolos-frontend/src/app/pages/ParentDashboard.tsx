@@ -1,16 +1,14 @@
-import React from 'react';
 import { useParentDashboard } from '../hooks/useParentDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
 import { SectionError } from '../components/shared/SectionError';
 import { AvatarInitials } from '../components/shared/AvatarInitials';
-import { ProgressBar } from '../components/shared/ProgressBar';
 import { formatCurrency } from '../utils/formatters';
 
 export function ParentDashboard() {
     const {
         children, selectedChildId, setSelectedChildId,
-        summary, weekSummary, attendance, fees, results, homework, exams, notices,
+        summary, weekSummary, fees, results, homework, exams,
         loading, error
     } = useParentDashboard();
 

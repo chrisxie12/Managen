@@ -1,4 +1,3 @@
-import React from 'react';
 import { useHeadmasterDashboard } from '../hooks/useHeadmasterDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
@@ -8,17 +7,17 @@ import { LiveBadge } from '../components/shared/LiveBadge';
 import { MiniSparkline } from '../components/shared/MiniSparkline';
 import { formatCurrency, formatNumber } from '../utils/formatters';
 import {
-    LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar, Cell, PieChart, Pie, Legend
 } from 'recharts';
-import { Plus, Download, Upload, Smartphone, MessageSquare } from 'lucide-react';
+import { Plus, Upload, Smartphone, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 export function HeadmasterDashboard() {
     const navigate = useNavigate();
     const {
         stats, alerts, finances, attendanceTrend,
-        feeStatus, studentTypes, classPerformance, activity,
+        feeStatus, classPerformance,
         loading, error
     } = useHeadmasterDashboard();
 
@@ -215,7 +214,7 @@ export function HeadmasterDashboard() {
                                     paddingAngle={5}
                                     dataKey="value"
                                 >
-                                    {feeStatus.map((entry, index) => (
+                                    {feeStatus.map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>

@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Upload, X, Loader2, FileText, ImageIcon } from "lucide-react";
+import { X, Loader2, ImageIcon } from "lucide-react";
 import { cn } from "./utils";
 import { Progress } from "./progress";
 import { api } from "../../services/api";

@@ -40,7 +40,7 @@ export function PerformanceChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [classRes, termsRes] = await Promise.all([
+        const [, termsRes] = await Promise.all([
           api.get<any>("/api/school/analytics/class-comparison"),
           api.get<any>("/api/school/terms"),
         ]);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAccountantDashboard } from '../hooks/useAccountantDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
@@ -221,7 +220,7 @@ export function AccountantDashboard() {
                                     paddingAngle={3}
                                     dataKey="value"
                                 >
-                                    {paymentModes.map((entry, index) => (
+                                    {paymentModes.map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>

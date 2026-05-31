@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Users, Wallet, TrendingUp, AlertCircle, Clock, CheckCircle2,
   ArrowUpRight, ArrowDownRight, Activity, MessageSquare, FileText,
-  BarChart3, Calendar, Settings, Download, Bell, Search,
-  ChevronRight, MoreHorizontal, Zap, DollarSign, BookOpen,
+  BarChart3, Settings, Download,
+  ChevronRight, MoreHorizontal, Zap, BookOpen,
   GraduationCap, ClipboardList, LucideIcon, CalendarCheck
 } from "lucide-react";
 import { useDashboardStats } from "../../hooks/useDashboardStats";

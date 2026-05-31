@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Zap, Eye, EyeOff, GripVertical } from "lucide-react";
+import { X, GripVertical } from "lucide-react";
 
 interface DashboardWidget {
   id: string;

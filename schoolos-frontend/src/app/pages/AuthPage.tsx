@@ -8,7 +8,6 @@ import {
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
 const AMBER = "#0080FF";
-const AMBER_LIGHT = "#EFF6FF";
 const CREAM = "#F8F9FA";
 const MUTED = "#6B7280";
 
@@ -62,7 +61,7 @@ export function AuthPage() {
   const [verified, setVerified] = useState(false);
   const { signUp } = useSignUp();
   const clerk = useClerk();
-  const { refresh, user, loading: authLoading } = useAuth();
+  const { refresh, user } = useAuth();
 
   useEffect(() => {
     setPasswordStrength(calculatePasswordStrength(form.password));

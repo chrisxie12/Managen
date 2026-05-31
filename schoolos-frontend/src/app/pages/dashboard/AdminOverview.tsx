@@ -11,15 +11,12 @@ import { useRealtime } from "../../hooks/useRealtime";
 
 const NAVY    = "#031B4E";
 const NAVY_L  = "#0069D9";
-const CREAM   = "#F8F9FC";
 const MUTED   = "#6B7280";
 const PRIMARY = "#0080FF";
 const SUCCESS = "#16A34A";
 const WARNING = "#F59E0B";
 const DANGER  = "#EF4444";
-const INFO    = "#3B82F6";
 const PURPLE  = "#8B5CF6";
-const BLUE_BG = "#EFF6FF";
 
 // ─── Sparkline ────────────────────────────────────────────────────────────────
 function Sparkline({ data, color }: { data: number[]; color: string }) {
@@ -96,7 +93,7 @@ function DonutChart({
 }
 
 // ─── Area Chart ──────────────────────────────────────────────────────────────
-function AreaChart({ data, color, labels }: { data: number[]; color: string; labels: string[] }) {
+function AreaChart({ data, color, labels: _labels }: { data: number[]; color: string; labels: string[] }) {
   const W = 100, H = 100;
   const max = Math.max(...data);
   const min = 0;

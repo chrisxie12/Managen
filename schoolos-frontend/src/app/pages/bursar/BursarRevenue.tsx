@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { api } from "../../services/api";
 
 const NAVY = "#031B4E";

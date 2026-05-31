@@ -3,11 +3,6 @@ import { useNavigate } from "react-router";
 import { Search, Users, GraduationCap, Building2, FileText, X, Clock } from "lucide-react";
 import { api } from "../../services/api";
 
-const NAVY = "#031B4E";
-const NAVY_LIGHT = "#0069D9";
-const CREAM = "#F8F9FA";
-const MUTED = "#6B7280";
-
 interface SearchResult {
   id: string;
   type: "student" | "staff" | "class" | "invoice";

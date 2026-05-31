@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import type { ReactElement } from "react";
 import {
   Search, User, Printer, Send, CheckCircle, CreditCard,
-  Smartphone, Banknote, Clock, Receipt, X, Loader2, FileText,
+  Smartphone, Banknote, Clock, Receipt, X, Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../services/api";

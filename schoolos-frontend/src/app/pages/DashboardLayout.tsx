@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Bell, Search, Menu, Download, Info, User, Settings, LogOut, ChevronDown,
+  Bell, Search, Menu, Info, User, Settings, LogOut, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
@@ -22,8 +22,6 @@ import { useHealthStatus } from "../hooks/useHealthStatus";
 
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
-const CREAM = "#F8F9FA";
-const MUTED = "#6B7280";
 
 
 
@@ -196,12 +194,6 @@ function DashboardLayoutInner() {
     syncOffline();
     return () => window.removeEventListener("online", syncOffline);
   }, []);
-
-  const handleInstall = () => {
-    if (!installPrompt) return;
-    (installPrompt as any).prompt();
-    (installPrompt as any).userChoice.then(() => setInstallPrompt(null));
-  };
 
   const initials = user?.fullName
     ? user.fullName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TrendingUp, ArrowRight } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 const COLORS = {
   NAVY: "#031B4E",
@@ -11,7 +11,7 @@ const COLORS = {
 export function ROICalculator() {
   const [students, setStudents] = useState(300);
   const [currentCollection, setCurrentCollection] = useState(40);
-  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [dark] = useState(() => localStorage.getItem("theme") === "dark");
 
   // Calculate ROI
   const monthlyFeePerStudent = 400; // GHS average

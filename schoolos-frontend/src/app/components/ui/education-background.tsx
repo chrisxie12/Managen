@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from "./utils";
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Education-themed floating particles background for SchoolOS
 // Features: graduation caps, books, pencils, chalk dust, school bells

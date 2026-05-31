@@ -64,7 +64,6 @@ export function DataTable<T extends Record<string, unknown>>({
   rowKey,
   exportFilename,
   bulkActions,
-  rowClassName,
 }: DataTableProps<T>) {
   const { getColumnPrefs, setColumnPrefs } = useUserPreferences();
   const isMobile = useIsMobile();
@@ -85,7 +84,6 @@ export function DataTable<T extends Record<string, unknown>>({
   }, [columns, savedPrefs]);
 
   const allSelected = data.length > 0 && data.every((row) => selectedIds.has(rowKey(row)));
-  const someSelected = data.some((row) => selectedIds.has(rowKey(row))) && !allSelected;
 
   const toggleAll = () => {
     if (allSelected) {
@@ -106,7 +104,6 @@ export function DataTable<T extends Record<string, unknown>>({
 
   const handleExport = () => {
     if (!exportFilename) return;
-    const visibleKeys = visibleColumns.map((c) => c.key);
     const exportData = data.map((row) => {
       const obj: Record<string, unknown> = {};
       visibleColumns.forEach((col) => {

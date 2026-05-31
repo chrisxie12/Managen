@@ -14,8 +14,6 @@ import {
   CARD_BG_C as CARD_BG, BORDER_C as BORDER, TEXT_C as TEXT, MUTED_C as MUTED, ACCENT_C as ACCENT,
 } from "./superadmin/Components";
 
-const DARK = "#080810";
-
 type DashboardData = {
   stats: {
     totalSchools: number; activeSchools: number; suspended: number; totalRevenue: number;

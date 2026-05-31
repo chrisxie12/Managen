@@ -3,7 +3,7 @@ import {
   CalendarCheck, Loader2, Search, Check, X, Clock,
   UserCheck, AlertCircle, Users, UserX,
   AlertTriangle, ChevronLeft, ChevronRight, BarChart3,
-  School, List, Wifi, WifiOff, CloudOff, RefreshCw
+  School, List, Wifi, WifiOff, RefreshCw
 } from "lucide-react";
 import { api } from "../services/api";
 import { db } from "../../lib/offline/db";

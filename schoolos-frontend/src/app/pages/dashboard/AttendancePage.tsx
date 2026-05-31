@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Plus, Download, Calendar, TrendingUp } from "lucide-react";
+import { Plus, Download, Calendar } from "lucide-react";
 import { PageTemplate } from "../../components/layout/PageTemplate";
 import { api } from "../../services/api";
 
@@ -9,7 +9,6 @@ const MUTED = "#6B7280";
 const PRIMARY = "#031B4E";
 const SUCCESS = "#16A34A";
 const WARNING = "#F59E0B";
-const INFO = "#3B82F6";
 
 interface AttendanceRecord {
   id: string;

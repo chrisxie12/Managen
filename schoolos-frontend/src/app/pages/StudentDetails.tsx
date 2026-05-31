@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   ArrowLeft, CalendarCheck, FileSpreadsheet, BarChart3, Calendar,
-  Wallet, AlertTriangle, Bell, Loader2, AlertCircle, User,
+  Wallet, AlertTriangle, Bell, Loader2, AlertCircle,
 } from "lucide-react";
 import { useParams, useNavigate } from "react-router";
 import { toast } from "sonner";

@@ -1,10 +1,8 @@
-import React from 'react';
 import { useLibrarianDashboard } from '../hooks/useLibrarianDashboard';
 import { StatCard } from '../components/shared/StatCard';
 import { DashboardSkeleton } from '../components/shared/DashboardSkeleton';
 import { SectionError } from '../components/shared/SectionError';
 import { LiveBadge } from '../components/shared/LiveBadge';
-import { ProgressBar } from '../components/shared/ProgressBar';
 import { formatCurrency } from '../utils/formatters';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -13,7 +11,7 @@ import {
 
 export function LibrarianDashboard() {
     const {
-        stats, circulationTrend, overdueBreakdown, overdueItems, activity, lowStock, topBooks,
+        stats, circulationTrend, overdueBreakdown, overdueItems, lowStock,
         loading, error
     } = useLibrarianDashboard();
 
@@ -123,7 +121,7 @@ export function LibrarianDashboard() {
                                     contentStyle={{ borderRadius: '8px', border: '1px solid var(--border)' }}
                                 />
                                 <Bar dataKey="count" name="Books" radius={[0, 4, 4, 0]}>
-                                    {overdueBreakdown.map((entry, index) => (
+                                    {overdueBreakdown.map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={index === overdueBreakdown.length - 1 ? 'var(--danger)' : index === overdueBreakdown.length - 2 ? 'var(--amber)' : 'var(--primary)'} />
                                     ))}
                                 </Bar>

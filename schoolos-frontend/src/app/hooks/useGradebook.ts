@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api } from "../services/api";
 
@@ -96,8 +96,6 @@ export function useGradebookData(classId: string, subjectId: string, termId: str
 }
 
 export function useSaveScores() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({
       studentId,

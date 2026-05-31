@@ -1,7 +1,5 @@
 import { Skeleton } from "./skeleton";
 
-const NAVY = "#031B4E";
-
 type SkeletonVariant = "card" | "table" | "form" | "chart" | "text" | "metric";
 
 interface SkeletonLoaderProps {

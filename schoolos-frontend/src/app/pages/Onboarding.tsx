@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { GraduationCap, Check } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { WelcomeStep, SurveyStep, SchoolSetupStep, SavingStep, CelebrationStep } from "./onboarding/index";
 import { toast } from "sonner";
 
 const NAVY = "#031B4E";
-const MUTED = "#6B7280";
 const INDIGO = "#6366F1";
 
 const STEPS = [
