@@ -35,7 +35,7 @@ function getTenantHeader(): Record<string, string> {
   return {};
 }
 
-async function getAuthHeaders() {
+async function getAuthHeaders(): Promise<Record<string, string>> {
   let token = null;
   if (typeof window !== 'undefined' && (window as any).Clerk?.session) {
     try {

@@ -8,7 +8,6 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 const BLUE   = "#0080FF";
 const NAVY   = "#031B4E";
 const NAVY_L = "#0069D9";
-const CREAM  = "#F8F9FC";
 const BLUE_BG = "#EFF6FF";   // active nav background
 const BORDER = "#E5E7EB";
 const TP     = "#111827";    // text-primary
@@ -56,12 +55,11 @@ function CollapsedSidebar({ role, onClose }: { role: UserRole; onClose?: () => v
                       display: "flex", alignItems: "center", justifyContent: "center",
                       background: active ? BLUE_BG : "transparent",
                       borderLeft: `3px solid ${active ? BLUE : "transparent"}`,
+                      borderTop: "none", borderRight: "none", borderBottom: "none",
                       color: active ? BLUE : TS,
                       cursor: isDisabled ? "not-allowed" : "pointer",
                       opacity: isDisabled ? 0.4 : 1,
                       transition: "all 0.15s ease",
-                      border: "none",
-                      borderLeft: `3px solid ${active ? BLUE : "transparent"}`,
                     }}
                     onMouseEnter={(e) => { if (!active && !isDisabled) (e.currentTarget as HTMLElement).style.background = SH; }}
                     onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}

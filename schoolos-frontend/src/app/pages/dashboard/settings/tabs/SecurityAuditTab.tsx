@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { Save, Loader2, Shield, Key, Smartphone, AlertTriangle, Check, X, Eye, EyeOff, Download } from "lucide-react";
+import { Save, Loader2, Shield, Key, Smartphone, AlertTriangle, Eye, EyeOff, Download } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../../../services/api";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { Switch } from "../../../../components/ui/switch";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "../../../../components/ui/select";
 
 const NAVY = "#031B4E";
 const NAVY_LIGHT = "#0069D9";
