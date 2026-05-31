@@ -166,7 +166,7 @@ export default function Hero() {
               </div>
 
               {/* Floating card 1 — Attendance */}
-              <div className="absolute" style={{ left: -64, top: "18%", animation: "bob 3s ease-in-out infinite" }}>
+              <div className="hidden md:block absolute" style={{ left: -64, top: "18%", animation: "bob 3s ease-in-out infinite" }}>
                 <div style={{ background: "rgba(255,255,255,0.97)", backdropFilter: "blur(16px)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 14, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(0,0,0,0.12)", whiteSpace: "nowrap" }}>
                   <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(11,79,48,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <CheckCircle2 size={16} style={{ color: "#0B4F30" }} strokeWidth={2.5} />
@@ -179,7 +179,7 @@ export default function Hero() {
               </div>
 
               {/* Floating card 2 — MoMo */}
-              <div className="absolute" style={{ right: -56, top: "44%", animation: "bob 3s ease-in-out infinite 0.8s" }}>
+              <div className="hidden md:block absolute" style={{ right: -56, top: "44%", animation: "bob 3s ease-in-out infinite 0.8s" }}>
                 <div style={{ background: "rgba(255,255,255,0.97)", backdropFilter: "blur(16px)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 14, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(0,0,0,0.12)", whiteSpace: "nowrap" }}>
                   <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(212,255,0,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <Banknote size={16} style={{ color: "#0B4F30" }} strokeWidth={2} />
@@ -192,7 +192,7 @@ export default function Hero() {
               </div>
 
               {/* Floating card 3 — WhatsApp */}
-              <div className="absolute" style={{ left: -52, bottom: "14%", animation: "bob 3s ease-in-out infinite 1.6s" }}>
+              <div className="hidden md:block absolute" style={{ left: -52, bottom: "14%", animation: "bob 3s ease-in-out infinite 1.6s" }}>
                 <div style={{ background: "rgba(255,255,255,0.97)", backdropFilter: "blur(16px)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 14, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px rgba(0,0,0,0.12)", whiteSpace: "nowrap" }}>
                   <div style={{ width: 32, height: 32, borderRadius: 10, background: "rgba(37,211,102,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <MessageSquare size={16} style={{ color: "#25D366" }} strokeWidth={2} />
@@ -203,6 +203,20 @@ export default function Hero() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Mobile-only stat pills below phone */}
+            <div className="flex md:hidden flex-wrap justify-center gap-2 mt-6">
+              {[
+                { icon: CheckCircle2, text: "94% Attendance", color: "#0B4F30", bg: "rgba(11,79,48,0.1)" },
+                { icon: Banknote, text: "₵2,400 via MoMo", color: "#0B4F30", bg: "rgba(212,255,0,0.12)" },
+                { icon: MessageSquare, text: "32 Parents Notified", color: "#25D366", bg: "rgba(37,211,102,0.1)" },
+              ].map(({ icon: Icon, text, color, bg }) => (
+                <div key={text} style={{ display: "flex", alignItems: "center", gap: 6, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 100, padding: "6px 12px" }}>
+                  <Icon size={13} style={{ color }} strokeWidth={2.5} />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.85)" }}>{text}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

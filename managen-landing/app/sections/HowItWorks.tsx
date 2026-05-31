@@ -181,37 +181,29 @@ export default function HowItWorks() {
             <ScrollReveal key={feat.label} delay={i * 100}>
               <div
                 className="bg-white rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-[#0B0F1C]"
-                style={{
-                  border: "1px solid #E5E7EB",
-                  display: "grid",
-                  gridTemplateColumns: feat.reverse ? "auto 1fr" : "1fr auto",
-                  alignItems: "center",
-                }}
+                style={{ border: "1px solid #E5E7EB" }}
               >
-                {/* Text */}
-                <div
-                  className="p-10 md:p-12"
-                  style={{ order: feat.reverse ? 2 : 1 }}
-                >
-                  <div
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-full text-xs font-black mb-4"
-                    style={{ background: "#D4FF00", color: "#0B0F1C", fontFamily: "'Space Grotesk', sans-serif" }}
-                  >
-                    {i + 1}
+                {/* Mobile: always text above phone. Desktop: alternate left/right via grid */}
+                <div className={`flex flex-col ${feat.reverse ? "md:flex-row-reverse" : "md:flex-row"} items-stretch`}>
+                  {/* Text */}
+                  <div className="flex-1 p-8 md:p-12">
+                    <div
+                      className="inline-flex items-center justify-center w-9 h-9 rounded-full text-xs font-black mb-4"
+                      style={{ background: "#D4FF00", color: "#0B0F1C", fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">{feat.label}</div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[#0B0F1C] mb-4 leading-snug">
+                      {feat.title}
+                    </h3>
+                    <p className="text-base text-gray-500 leading-relaxed max-w-md">{feat.text}</p>
                   </div>
-                  <div className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">{feat.label}</div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#0B0F1C] mb-4 leading-snug">
-                    {feat.title}
-                  </h3>
-                  <p className="text-base text-gray-500 leading-relaxed max-w-md">{feat.text}</p>
-                </div>
 
-                {/* Phone */}
-                <div
-                  className="px-10 py-8 flex justify-center items-center bg-gray-50"
-                  style={{ order: feat.reverse ? 1 : 2, minWidth: 220 }}
-                >
-                  <MiniPhone>{feat.screen}</MiniPhone>
+                  {/* Phone */}
+                  <div className="flex justify-center items-center px-8 py-8 bg-gray-50" style={{ minWidth: 220 }}>
+                    <MiniPhone>{feat.screen}</MiniPhone>
+                  </div>
                 </div>
               </div>
             </ScrollReveal>
