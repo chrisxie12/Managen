@@ -26,7 +26,8 @@ bun.lockb
 *.swo
 *.sublime-project
 *.sublime-workspace
-.claude/
+.claude/*
+!.claude/skills/
 .superdesign/
 .superpowers/
 
