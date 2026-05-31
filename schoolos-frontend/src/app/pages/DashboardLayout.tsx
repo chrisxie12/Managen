@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Bell, Search, Menu, Download, AlertTriangle
+  Bell, Search, Menu, Download, Info, User, Settings, LogOut, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../contexts/AuthContext";
@@ -126,7 +126,7 @@ function SyncBadge({ isOnline }: { isOnline: boolean }) {
 function DashboardLayoutInner() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, school } = useAuth();
+  const { user, school, logout } = useAuth();
   const { unreadCount } = useRealtimeNotifications(user?.id, school?.slug);
   const { addRecentItem } = useUserPreferences();
   const { data: health } = useHealthStatus();
@@ -134,9 +134,21 @@ function DashboardLayoutInner() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [pilotDismissed, setPilotDismissed] = useState(() => sessionStorage.getItem("pilotBannerDismissed") === "true");
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useKeyboardShortcuts();
 
@@ -234,10 +246,12 @@ function DashboardLayoutInner() {
               <Menu size={20} />
             </button>
             <div>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, lineHeight: 1.2 }} className="text-foreground">
+              <h1 className="text-foreground font-semibold" style={{ fontSize: "1.05rem", lineHeight: 1.3 }}>
                 {pageTitle}
               </h1>
-              <p className="text-muted-foreground" style={{ fontSize: "0.75rem" }}>{school?.name || "School"} Dashboard</p>
+              {school?.name && (
+                <p className="text-muted-foreground" style={{ fontSize: "0.72rem" }}>{school.name}</p>
+              )}
             </div>
           </div>
 
@@ -309,29 +323,66 @@ function DashboardLayoutInner() {
               )}
             </div>
 
-            <div className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-              style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
-              <span style={{ color: CREAM, fontSize: "0.78rem", fontWeight: 700 }}>{initials}</span>
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors hover:bg-card border border-transparent hover:border-border"
+              >
+                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: `linear-gradient(135deg, ${NAVY}, ${NAVY_LIGHT})` }}>
+                  <span style={{ color: CREAM, fontSize: "0.75rem", fontWeight: 700 }}>{initials}</span>
+                </div>
+                <ChevronDown size={13} className="text-muted-foreground hidden sm:block" />
+              </button>
+
+              {showUserMenu && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
+                  <div className="absolute right-0 top-full mt-2 z-50 w-52 rounded-2xl shadow-lg overflow-hidden bg-card border border-border py-1">
+                    <div className="px-3 py-2.5 border-b border-border mb-1">
+                      <div className="text-[13px] font-semibold text-foreground truncate">{user?.fullName || "User"}</div>
+                      <div className="text-[11px] text-muted-foreground truncate">{user?.email || ""}</div>
+                    </div>
+                    <button
+                      onClick={() => { setShowUserMenu(false); navigate("/dashboard/profile"); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-foreground hover:bg-accent/50 transition-colors"
+                    >
+                      <User size={14} className="text-muted-foreground" /> My Profile
+                    </button>
+                    <button
+                      onClick={() => { setShowUserMenu(false); navigate("/dashboard/settings"); }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-foreground hover:bg-accent/50 transition-colors"
+                    >
+                      <Settings size={14} className="text-muted-foreground" /> Settings
+                    </button>
+                    <div className="border-t border-border mt-1 pt-1">
+                      <button
+                        onClick={() => { setShowUserMenu(false); logout(); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut size={14} /> Log out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 lg:pb-6 w-full min-w-0">
           {!pilotDismissed && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg mb-6 p-4 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <h5 className="text-amber-800 font-medium mb-1">Pilot Mode</h5>
-                <p className="text-amber-700 text-sm">
-                  You're seeing a preview of SchoolOS. MoMo payments and WhatsApp messages are simulated. Your real data will appear once your school is connected.
-                </p>
-              </div>
-              <button 
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl mb-5 border border-blue-200 bg-blue-50">
+              <Info className="w-4 h-4 text-blue-500 shrink-0" />
+              <p className="flex-1 text-[13px] text-blue-700 font-medium">
+                Preview mode — MoMo payments and WhatsApp messages are simulated until your school is connected.
+              </p>
+              <button
                 onClick={() => {
                   sessionStorage.setItem("pilotBannerDismissed", "true");
                   setPilotDismissed(true);
                 }}
-                className="text-amber-800 hover:text-amber-900 text-sm font-medium px-2 py-1 rounded hover:bg-amber-100/50 transition-colors"
+                className="flex-shrink-0 text-[12px] font-semibold px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors active:scale-95"
               >
                 Got it
               </button>

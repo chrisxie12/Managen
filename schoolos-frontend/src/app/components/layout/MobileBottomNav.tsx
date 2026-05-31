@@ -13,36 +13,36 @@ const roleBottomNav: Record<string, Array<{ icon: any; label: string; path: stri
   school_admin: [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/admin" },
     { icon: Users, label: "Students", path: "/dashboard/students" },
-    { icon: CalendarCheck, label: "Attend.", path: "/dashboard/attendance" },
+    { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
     { icon: Wallet, label: "Fees", path: "/dashboard/fees/collect" },
-    { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
+    { icon: Bell, label: "Inbox", path: "/dashboard/notifications" },
   ],
   headmaster: [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/admin" },
     { icon: Users, label: "Students", path: "/dashboard/students" },
-    { icon: CalendarCheck, label: "Attend.", path: "/dashboard/attendance" },
+    { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
     { icon: Wallet, label: "Fees", path: "/dashboard/fees/collect" },
-    { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
+    { icon: Bell, label: "Inbox", path: "/dashboard/notifications" },
   ],
   admin: [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/admin" },
     { icon: Users, label: "Students", path: "/dashboard/students" },
-    { icon: CalendarCheck, label: "Attend.", path: "/dashboard/attendance" },
+    { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
     { icon: Wallet, label: "Fees", path: "/dashboard/fees/collect" },
-    { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
+    { icon: Bell, label: "Inbox", path: "/dashboard/notifications" },
   ],
   teacher: [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/teacher" },
-    { icon: CalendarCheck, label: "Attend.", path: "/dashboard/attendance" },
+    { icon: CalendarCheck, label: "Attendance", path: "/dashboard/attendance" },
     { icon: BookOpen, label: "Grades", path: "/dashboard/gradebook" },
     { icon: Clock, label: "Timetable", path: "/dashboard/timetable-scheduler" },
-    { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
+    { icon: Bell, label: "Inbox", path: "/dashboard/notifications" },
   ],
   accountant: [
     { icon: LayoutDashboard, label: "Home", path: "/dashboard/accountant" },
     { icon: Wallet, label: "Fees", path: "/dashboard/fees/collect" },
     { icon: BarChart3, label: "Reports", path: "/dashboard/fees/reports" },
-    { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
+    { icon: Bell, label: "Inbox", path: "/dashboard/notifications" },
   ],
 };
 
@@ -87,21 +87,23 @@ export function MobileBottomNav() {
             style={{ minWidth: 44, minHeight: 44 }}
           >
             <div
-              className="flex items-center justify-center w-8 h-6 rounded-lg transition-all"
-              style={{ background: active ? `${NAVY}12` : "transparent" }}
+              className="flex items-center justify-center w-10 h-6 rounded-full transition-all"
+              style={{
+                background: active ? "#0080FF" : "transparent",
+                boxShadow: active ? "0 2px 8px rgba(0,128,255,0.3)" : "none",
+              }}
             >
               <item.icon
-                size={18}
-                color={active ? NAVY : MUTED}
+                size={17}
+                color={active ? "#fff" : MUTED}
                 style={{ opacity: active ? 1 : 0.55 }}
               />
             </div>
             <span
               style={{
-                color: active ? NAVY : MUTED,
-                fontSize: "0.6rem",
+                color: active ? "#0080FF" : MUTED,
+                fontSize: "0.58rem",
                 fontWeight: active ? 700 : 400,
-                opacity: active ? 1 : 0.6,
               }}
             >
               {item.label}

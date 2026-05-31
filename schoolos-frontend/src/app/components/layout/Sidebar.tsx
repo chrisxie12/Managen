@@ -36,17 +36,17 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 ${sidebarWidth} bg-sidebar border-r border-sidebar-border flex flex-col overflow-y-auto h-screen scrollbar-thin transition-all duration-200 z-50`}
+      className={`fixed inset-y-0 left-0 ${sidebarWidth} border-r border-sidebar-border flex flex-col overflow-y-auto h-screen scrollbar-thin transition-all duration-200 z-50`}
+      style={{ backgroundColor: "#F7F9FC" }}
     >
       {/* Header */}
       <div className={`h-14 px-4 flex items-center gap-3 border-b border-sidebar-border flex-shrink-0 ${collapsed ? "justify-center px-0" : ""}`}>
         <img src="/schoolos-logo.svg" alt="SchoolOS" className="flex-shrink-0" style={{ height: "32px", width: "auto" }} />
         {!collapsed && (
           <>
-            <span className="font-semibold text-base tracking-tight truncate text-sidebar-foreground">
+            <span className="font-semibold text-base tracking-tight truncate" style={{ color: "#031B4E" }}>
               School<span style={{ background: "linear-gradient(135deg,#0080FF,#0069D9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>OS</span>
             </span>
-            <span className="ml-auto flex-shrink-0 text-[10px] bg-sidebar-primary text-sidebar-primary-foreground px-1.5 py-0.5 rounded font-medium">Pro</span>
           </>
         )}
       </div>
@@ -82,9 +82,10 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
                                 isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
                               } ${
                                 active
-                                  ? "bg-sidebar-accent/20 border-l-[3px] border-sidebar-primary"
-                                  : "hover:bg-sidebar-accent/10"
+                                  ? "border-l-[3px] border-[#0080FF]"
+                                  : "hover:bg-[#0080FF]/5"
                               }`}
+                            style={active ? { backgroundColor: "rgba(0,128,255,0.08)" } : {}}
                             >
                               <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-sidebar-foreground" : "text-sidebar-foreground/50"}`} />
                             </button>
@@ -111,14 +112,15 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
                       onClick={() => { if (!isDisabled) handleNavigation(item.path); }}
                       disabled={isDisabled}
                       className={`w-full h-9 px-3 flex items-center gap-2.5 rounded-md transition-colors duration-150 ${
-                        isDisabled ? "opacity-50 cursor-not-allowed text-sidebar-foreground/40" : "cursor-pointer"
+                        isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
                       } ${
                         active
-                          ? "bg-sidebar-accent/20 text-sidebar-foreground border-l-[3px] border-sidebar-primary pl-[calc(0.75rem-3px)]"
-                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/10 hover:text-sidebar-foreground"
+                          ? "border-l-[3px] border-[#0080FF] pl-[calc(0.75rem-3px)]"
+                          : "hover:bg-[#0080FF]/5"
                       }`}
+                    style={active ? { backgroundColor: "rgba(0,128,255,0.08)", color: "#031B4E" } : { color: "#6B7280" }}
                     >
-                      <Icon className={`w-[18px] h-[18px] stroke-[2] ${active ? "text-sidebar-foreground" : "text-sidebar-foreground/50"}`} />
+                      <Icon className="w-[18px] h-[18px] stroke-[2]" style={{ color: active ? "#0080FF" : "#9CA3AF" }} />
                       <span className="text-[13px] font-medium">{item.label}</span>
                       {isDisabled && (
                         <span className="ml-auto text-[9px] uppercase tracking-wider font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
@@ -179,11 +181,11 @@ export function Sidebar({ role, onClose, collapsed = false }: SidebarProps) {
           </div>
           {!collapsed && (
             <>
-              <div className="text-left overflow-hidden">
-                <div className="text-[13px] text-sidebar-foreground font-medium truncate">{user?.fullName || "User"}</div>
-                <div className="text-[11px] text-sidebar-foreground/50 truncate capitalize">{userRoleStr}</div>
+              <div className="text-left overflow-hidden flex-1 min-w-0">
+                <div className="text-[13px] font-semibold truncate" style={{ color: "#031B4E" }}>{user?.fullName || "User"}</div>
+                <div className="text-[11px] truncate capitalize" style={{ color: "#9CA3AF" }}>{userRoleStr}</div>
               </div>
-              <ChevronRight className="w-4 h-4 text-sidebar-foreground/40 ml-auto flex-shrink-0" />
+              <span className="flex-shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ background: "linear-gradient(135deg,#0080FF,#0069D9)", color: "white", letterSpacing: "0.03em" }}>PRO</span>
             </>
           )}
         </button>
