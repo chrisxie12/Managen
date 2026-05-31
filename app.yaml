@@ -34,6 +34,16 @@ services:
       - key: SENTRY_DSN
         value: "${SENTRY_DSN}"
 static_sites:
+  - name: managen-landing
+    github:
+      branch: main
+      repo: chrisxie12/Managen
+    build_command: cd managen-landing && npm install && npm run build
+    output_dir: /managen-landing/out
+    source_dir: /
+    error_document: 404/index.html
+    routes:
+      - path: /
   - name: managen-frontend
     github:
       branch: main
@@ -43,7 +53,7 @@ static_sites:
     source_dir: /
     error_document: index.html
     routes:
-      - path: /
+      - path: /app
     envs:
       - key: NODE_ENV
         value: production
