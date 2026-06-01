@@ -37,7 +37,6 @@ Thumbs.db
 
 # Production build artifacts
 schoolos-frontend/build/
-schoolos-frontend/dist/
 /Schoolos/
 
 # Test/Debug
