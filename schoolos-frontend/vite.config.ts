@@ -11,8 +11,8 @@ export default defineConfig({
     registerType: 'autoUpdate',
     includeAssets: ['icons/*.svg'],
     manifest: {
-      name: 'SchoolOS',
-      short_name: 'SchoolOS',
+      name: 'Managen',
+      short_name: 'Managen',
       description: 'School management platform for Ghanaian schools',
       start_url: '/dashboard',
       display: 'standalone',

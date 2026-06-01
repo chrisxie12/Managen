@@ -34,16 +34,6 @@ services:
       - key: SENTRY_DSN
         value: "${SENTRY_DSN}"
 static_sites:
-  - name: managen-landing
-    github:
-      branch: main
-      repo: chrisxie12/Managen
-    build_command: echo "static files pre-built in repo"
-    output_dir: /managen-landing/out
-    source_dir: /
-    error_document: 404/index.html
-    routes:
-      - path: /
   - name: managen-frontend
     github:
       branch: main
@@ -53,7 +43,7 @@ static_sites:
     source_dir: /
     error_document: index.html
     routes:
-      - path: /app
+      - path: /
     envs:
       - key: NODE_ENV
         value: production

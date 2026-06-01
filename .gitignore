@@ -1,10 +1,8 @@
 # Dependencies
 node_modules/
-dist/
 build/
 .parcel-cache/
 .next/
-out/
 
 # Lock files (keep only pnpm-lock.yaml)
 package-lock.json
@@ -37,6 +35,7 @@ Thumbs.db
 
 # Production build artifacts
 schoolos-frontend/build/
+managen-landing/build/
 /Schoolos/
 
 # Test/Debug
