@@ -38,7 +38,7 @@ static_sites:
     github:
       branch: main
       repo: chrisxie12/Managen
-    build_command: cd managen-landing && npm install && npm run build
+    build_command: echo "static files pre-built in repo"
     output_dir: /managen-landing/out
     source_dir: /
     error_document: 404/index.html
