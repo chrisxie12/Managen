@@ -54,12 +54,36 @@ jobs:
           fi
 
       - name: Trigger DigitalOcean deployment
-        if: ${{ env.DO_TOKEN != '' }}
+        if: ${{ secrets.DO_TOKEN != '' && secrets.DO_APP_ID != '' }}
         env:
           DO_TOKEN: ${{ secrets.DO_TOKEN }}
           DO_APP_ID: ${{ secrets.DO_APP_ID }}
         run: |
-          curl -s -o /dev/null -w "%{http_code}" -X POST \
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
             -H "Authorization: Bearer $DO_TOKEN" \
             -H "Content-Type: application/json" \
-            "https://api.digitalocean.com/v2/apps/$DO_APP_ID/deployments"
+            "https://api.digitalocean.com/v2/apps/$DO_APP_ID/deployments")
+          echo "DO deploy triggered: HTTP $STATUS"
+
+      - name: Wait for DO deployment
+        if: ${{ secrets.DO_TOKEN != '' && secrets.DO_APP_ID != '' }}
+        env:
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          DO_APP_ID: ${{ secrets.DO_APP_ID }}
+        run: |
+          echo "Waiting 90s for DO to deploy..."
+          sleep 90
+
+      - name: Purge Cloudflare cache
+        if: ${{ secrets.CF_TOKEN != '' && secrets.CF_ZONE_ID != '' }}
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+        run: |
+          STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" \
+            -H "Authorization: Bearer $CF_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}')
+          echo "Cloudflare purge: HTTP $STATUS"
+          cat response.json
