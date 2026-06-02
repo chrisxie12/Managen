@@ -173,8 +173,8 @@ app.post('/webhooks/momo', express.json(), async (req, res) => {
         } else if (status === 'FAILED') {
             await supabase.from('payments').update({ status: 'failed' }).eq('id', payment.id);
             // Notify bursar via dashboard alert
-            await supabase.from('in_app_notifications').insert({
-                tenant_id: payment.tenant_id,
+            await supabase.from('notifications').insert({
+                school_id: payment.tenant_id,
                 title: 'MoMo Payment Failed',
                 message: `Payment of GHS ${payment.amount} for reference ${referenceId} failed.`,
                 type: 'warning'

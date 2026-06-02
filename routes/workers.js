@@ -92,8 +92,8 @@ router.post('/process-receipt-queue', async (req, res) => {
                             failure_reason: err.message || 'Unknown Arkesel SMS error'
                         });
 
-                        await supabase.from('in_app_notifications').insert({
-                            tenant_id: job.tenant_id,
+                        await supabase.from('notifications').insert({
+                            school_id: job.tenant_id,
                             title: 'Receipt Delivery Failed',
                             message: `Failed to deliver receipt to ${job.parent_phone} after falling back to SMS.`,
                             type: 'error'

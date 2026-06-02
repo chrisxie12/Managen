@@ -4,7 +4,6 @@ BEGIN;
 
 -- Message templates (must be created before outbound_messages)
 CREATE TABLE IF NOT EXISTS message_templates (
-CREATE TABLE IF NOT EXISTS message_templates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   school_id UUID NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
   name VARCHAR(255) NOT NULL,
