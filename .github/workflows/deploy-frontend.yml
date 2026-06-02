@@ -25,19 +25,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Install dependencies
-        working-directory: schoolos-frontend
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build
-        working-directory: schoolos-frontend
+      - name: Install and build
         env:
           VITE_API_BASE_URL: https://api.getschoolos.me
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-        run: pnpm run build
+        run: |
+          cd schoolos-frontend
+          npm install
+          npm run build
 
       - name: Commit updated dist/
         run: |
