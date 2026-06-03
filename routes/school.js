@@ -111,7 +111,7 @@ router.get('/onboarding/status', protect, async (req, res) => {
             .select('onboarding_completed, metadata')
             .eq('id', schoolId)
             .single();
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching onboarding status.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching onboarding status.' });
         const step = data.metadata?.onboarding_step ?? 0;
         return res.json({ data: { onboarding_completed: data.onboarding_completed, current_step: step, metadata: data.metadata } });
     } catch (err) {
@@ -127,7 +127,7 @@ router.post('/onboarding/survey', protect, async (req, res) => {
         const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
         const metadata = { ...(existing?.metadata || {}), survey, onboarding_step: 1 };
         const { error } = await supabase.from('schools').update({ metadata }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: err.message || 'Error saving survey.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error saving survey.' });
         return res.json({ data: { success: true } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error saving survey.' });
@@ -162,7 +162,7 @@ router.post('/onboarding/school', protect, async (req, res) => {
         const metadata = { ...(existing?.metadata || {}), onboarding_step: 2 };
         updateData.metadata = metadata;
         const { error } = await supabase.from('schools').update(updateData).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: err.message || 'Error saving school data.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error saving school data.' });
         return res.json({ data: { success: true } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error saving school data.' });
@@ -176,7 +176,7 @@ router.post('/onboarding/logo', protect, async (req, res) => {
         const { logo } = req.body;
         if (!logo) return res.status(400).json({ error: 'Logo data is required.' });
         const { error } = await supabase.from('schools').update({ logo_url: logo }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: err.message || 'Error saving logo.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error saving logo.' });
         return res.json({ data: { logo_url: logo } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error saving logo.' });
@@ -190,7 +190,7 @@ router.post('/onboarding/complete', protect, async (req, res) => {
         const { data: existing } = await supabase.from('schools').select('metadata').eq('id', schoolId).single();
         const metadata = { ...(existing?.metadata || {}), onboarding_step: 4, checklist: { profile_complete: true, first_class_added: false, first_teacher_added: false, first_student_added: false, fee_structure_setup: false, first_announcement_sent: false } };
         const { error } = await supabase.from('schools').update({ onboarding_completed: true, metadata }).eq('id', schoolId);
-        if (error) return res.status(500).json({ error: err.message || 'Error completing onboarding.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error completing onboarding.' });
         return res.json({ data: { success: true } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error completing onboarding.' });
@@ -206,7 +206,7 @@ router.get('/onboarding/resume', protect, async (req, res) => {
             .select('metadata')
             .eq('id', schoolId)
             .single();
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching resume data.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching resume data.' });
         return res.json({ data: { metadata: data.metadata || {} } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error fetching resume data.' });
@@ -1954,7 +1954,7 @@ router.get('/events', protect, async (req, res) => {
       query = query.gte('event_date', new Date().toISOString().split('T')[0]);
     }
     const { data, error } = await query;
-    if (error) return res.status(500).json({ error: err.message || 'Error fetching events.' });
+    if (error) return res.status(500).json({ error: error.message || 'Error fetching events.' });
     const mapped = (data || []).map(e => ({
       id: e.id,
       title: e.title || e.name,
@@ -1979,7 +1979,7 @@ router.get('/announcements', protect, async (req, res) => {
       .eq('school_id', schoolId)
       .order('created_at', { ascending: false })
       .limit(limit);
-    if (error) return res.status(500).json({ error: err.message || 'Error fetching announcements.' });
+    if (error) return res.status(500).json({ error: error.message || 'Error fetching announcements.' });
     const mapped = (data || []).map(a => ({
       id: a.id,
       title: a.title,
@@ -2152,7 +2152,7 @@ router.get('/permissions', protect, requirePermission('permissions.view'), async
             .select('*')
             .order('module')
             .order('name');
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching permissions.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching permissions.' });
 
         const grouped = (data || []).reduce((acc, p) => {
             if (!acc[p.module]) acc[p.module] = [];
@@ -2227,7 +2227,7 @@ router.put('/roles/:id', protect, requirePermission('roles.edit'), validate(upda
             .eq('id', req.params.id)
             .select()
             .single();
-        if (error) return res.status(500).json({ error: err.message || 'Error updating role.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error updating role.' });
         return res.json({ data: { role: data } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error updating role.' });
@@ -2244,7 +2244,7 @@ router.delete('/roles/:id', protect, requirePermission('roles.delete'), async (r
         if (role.school_id !== req.tenant.id) return res.status(403).json({ error: 'Access denied.' });
 
         const { error } = await supabase.from('roles').delete().eq('id', req.params.id);
-        if (error) return res.status(500).json({ error: err.message || 'Error deleting role.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error deleting role.' });
         return res.json({ data: { message: 'Role deleted.' } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error deleting role.' });
@@ -2308,7 +2308,7 @@ router.get('/users', protect, requirePermission('users.view'), async (req, res) 
         }
 
         const { data, count, error } = await query;
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching users.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching users.' });
 
         // Attach role names
         const userIds = (data || []).map(u => u.role_id).filter(Boolean);
@@ -2374,7 +2374,7 @@ router.post('/users/invite', protect, requirePermission('users.create'), validat
             .select('id, full_name, email, phone, role, is_active, invited_at')
             .single();
 
-        if (error) return res.status(500).json({ error: err.message || 'Error creating user.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error creating user.' });
 
         return res.status(201).json({
             data: {
@@ -2422,7 +2422,7 @@ router.put('/users/:id', protect, requirePermission('users.edit'), validate(upda
             .select('id, full_name, email, phone, role, is_active, role_id')
             .single();
 
-        if (error) return res.status(500).json({ error: err.message || 'Error updating user.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error updating user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error updating user.' });
@@ -2438,7 +2438,7 @@ router.put('/users/:id/suspend', protect, requirePermission('users.edit'), async
             .eq('tenant_id', req.tenant.id)
             .select('id, full_name, email, is_active, suspended_at')
             .single();
-        if (error) return res.status(500).json({ error: err.message || 'Error suspending user.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error suspending user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error suspending user.' });
@@ -2475,7 +2475,7 @@ router.put('/users/:id/activate', protect, requirePermission('users.edit'), asyn
             .eq('tenant_id', req.tenant.id)
             .select('id, full_name, email, is_active')
             .single();
-        if (error) return res.status(500).json({ error: err.message || 'Error activating user.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error activating user.' });
         return res.json({ data: { user: data } });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error activating user.' });
@@ -2497,7 +2497,7 @@ router.get('/', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         const { data, error } = await supabase.from('schools').select('*').eq('id', schoolId).single();
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching school profile.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching school profile.' });
         return res.json({ data });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error fetching school profile.' });
@@ -2544,7 +2544,7 @@ router.get('/settings', protect, async (req, res) => {
     try {
         const schoolId = req.tenant?.id || req.user?.schoolId || req.user?.tenantId;
         const { data, error } = await supabase.from('schools').select('*').eq('id', schoolId).single();
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching settings.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching settings.' });
         return res.json({ data });
     } catch (err) {
         return res.status(500).json({ error: err.message || 'Error fetching settings.' });
@@ -2753,7 +2753,7 @@ router.get('/class-subjects/:classId', protect, requirePermission('subjects.view
             .select('*, subject:subjects(name, code)')
             .eq('school_id', req.tenant.id)
             .eq('class_id', req.params.classId);
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching class subjects.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching class subjects.' });
         return res.json({ data: { subjects: data || [] } });
     } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching class subjects.' }); }
 });
@@ -2792,7 +2792,7 @@ router.get('/sessions', protect, async (req, res) => {
             .select('*')
             .eq('user_id', req.user.id)
             .order('last_active_at', { ascending: false });
-        if (error) return res.status(500).json({ error: err.message || 'Error fetching sessions.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error fetching sessions.' });
         return res.json({ data: data || [] });
     } catch (err) { return res.status(500).json({ error: err.message || 'Error fetching sessions.' }); }
 });
@@ -2820,7 +2820,7 @@ router.post('/users/bulk-deactivate', protect, requirePermission('users.edit'), 
             .update({ is_active: false, suspended_at: new Date().toISOString() })
             .in('id', user_ids)
             .eq('tenant_id', req.tenant.id);
-        if (error) return res.status(500).json({ error: err.message || 'Error deactivating users.' });
+        if (error) return res.status(500).json({ error: error.message || 'Error deactivating users.' });
         return res.json({ data: { message: `${user_ids.length} user(s) deactivated.` } });
     } catch (err) { return res.status(500).json({ error: err.message || 'Error deactivating users.' }); }
 });

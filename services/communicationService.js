@@ -10,7 +10,7 @@ class CommunicationService {
     const isScheduled = !!scheduled_at && new Date(scheduled_at) > new Date();
     const status = isScheduled ? 'scheduled' : 'sending';
 
-    const { data: message, error: msgErr } = await supabase.from('messages').insert({
+    const { data: message, error: msgErr } = await supabase.from('outbound_messages').insert({
       id: crypto.randomUUID(),
       school_id: schoolId,
       subject,
@@ -25,7 +25,7 @@ class CommunicationService {
     if (msgErr) throw msgErr;
 
     if (!recipients || recipients.length === 0) {
-      await supabase.from('messages').update({ status: 'failed' }).eq('id', message.id);
+      await supabase.from('outbound_messages').update({ status: 'failed' }).eq('id', message.id);
       const err = new Error('No recipients specified.');
       err.statusCode = 400;
       throw err;
@@ -51,7 +51,7 @@ class CommunicationService {
       const finalStatus = sentCount === 0 ? 'failed' : sentCount < recipientRecords.length ? 'partial' : 'sent';
       const sentAt = sentCount > 0 ? new Date().toISOString() : null;
 
-      await supabase.from('messages').update({ status: finalStatus, sent_at: sentAt }).eq('id', message.id);
+      await supabase.from('outbound_messages').update({ status: finalStatus, sent_at: sentAt }).eq('id', message.id);
 
       for (const result of results) {
         await supabase.from('message_recipients')
@@ -93,7 +93,7 @@ class CommunicationService {
   }
 
   async getMessages(schoolId, filters = {}) {
-    let query = supabase.from('messages')
+    let query = supabase.from('outbound_messages')
       .select('*', { count: 'exact' })
       .eq('school_id', schoolId);
 
@@ -141,7 +141,7 @@ class CommunicationService {
   }
 
   async getMessageById(schoolId, messageId) {
-    const { data, error } = await supabase.from('messages')
+    const { data, error } = await supabase.from('outbound_messages')
       .select('*')
       .eq('id', messageId)
       .eq('school_id', schoolId)
@@ -182,7 +182,7 @@ class CommunicationService {
   }
 
   async deleteMessage(schoolId, messageId) {
-    const { error } = await supabase.from('messages').delete().eq('id', messageId).eq('school_id', schoolId);
+    const { error } = await supabase.from('outbound_messages').delete().eq('id', messageId).eq('school_id', schoolId);
     if (error) throw error;
     return true;
   }
@@ -204,17 +204,17 @@ class CommunicationService {
     const updated = await this.getMessageById(schoolId, messageId);
     const allSent = updated.recipients.every(r => r.status === 'sent');
     const anySent = updated.recipients.some(r => r.status === 'sent');
-    await supabase.from('messages').update({ status: allSent ? 'sent' : anySent ? 'partial' : 'failed' }).eq('id', messageId);
+    await supabase.from('outbound_messages').update({ status: allSent ? 'sent' : anySent ? 'partial' : 'failed' }).eq('id', messageId);
 
     return this.getMessageById(schoolId, messageId);
   }
 
   // ─── Drafts ────────────────────────────────────────────────────
   async saveDraft(schoolId, senderId, data) {
-    const { data: existing } = data.id ? await supabase.from('messages').select('id').eq('id', data.id).eq('school_id', schoolId).eq('status', 'draft').single().catch(() => ({})) : {};
+    const { data: existing } = data.id ? await supabase.from('outbound_messages').select('id').eq('id', data.id).eq('school_id', schoolId).eq('status', 'draft').single().catch(() => ({})) : {};
 
     if (existing) {
-      const { data: updated, error } = await supabase.from('messages').update({
+      const { data: updated, error } = await supabase.from('outbound_messages').update({
         subject: data.subject,
         body: data.body,
         channel: data.channel,
@@ -225,7 +225,7 @@ class CommunicationService {
       return updated;
     }
 
-    const { data: created, error } = await supabase.from('messages').insert({
+    const { data: created, error } = await supabase.from('outbound_messages').insert({
       id: crypto.randomUUID(),
       school_id: schoolId,
       subject: data.subject || '(no subject)',
@@ -346,7 +346,7 @@ class CommunicationService {
   // ─── Stats ─────────────────────────────────────────────────────
   async getStats(schoolId) {
     const [msgRes, tmplRes, annRes] = await Promise.all([
-      supabase.from('messages').select('status', { count: 'exact' }).eq('school_id', schoolId),
+      supabase.from('outbound_messages').select('status', { count: 'exact' }).eq('school_id', schoolId),
       supabase.from('message_templates').select('id', { count: 'exact', head: true }).eq('school_id', schoolId),
       supabase.from('announcements').select('status', { count: 'exact' }).eq('school_id', schoolId),
     ]);

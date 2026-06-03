@@ -62,7 +62,7 @@ async function getStudentContext(schoolId, studentId, student) {
   context.balance = total - paid;
 
   const { data: attendance } = await supabase
-    .from('attendance_records')
+    .from('attendance')
     .select('status')
     .eq('student_id', studentId);
 

@@ -453,6 +453,7 @@ app.use('/api/school/features', tenantMiddleware, featureRoutes);
 app.use('/api/user', tenantMiddleware, userRoutes);
 app.use('/api/grades', tenantMiddleware, require('./routes/grades'));
 app.use('/api/school/ai', tenantMiddleware, require('./routes/ai'));
+app.use('/api/school/assessments', tenantMiddleware, assessmentsRoutes);
 app.use('/api/school', tenantMiddleware, dashboardRoutes);
 
 // ─── Health / Queues Endpoint ──────────────────────────────────

@@ -181,7 +181,7 @@ export function DashboardHome() {
       {/* ─── Additional stat cards (PHASE 2) ───────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={MessageSquare} label="Fee Collection" value={`${collectionRate}%`} color="#25D366" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
-        <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" onClick={() => { console.warn('Staff attendance detail page not yet implemented – navigating to staff directory'); navigate('/dashboard/staff'); }} badge="Today" />
+        <StatCard icon={Clock} label="Staff Attendance" value={`${staffAttRate}%`} color="#F59E0B" onClick={() => navigate('/dashboard/staff')} badge="Today" />
         <StatCard icon={Wallet} label="Outstanding" value={`GHS ${(totalOutstanding / 100).toLocaleString()}`} color="#EF4444" onClick={() => navigate('/dashboard/fees', { state: { filter: 'overdue' } })} badge={`${financeSummary?.overdueCount || 0} overdue`} />
         <StatCard icon={TrendingUp} label="Collection Rate" value={`${collectionRate}%`} color="#16A34A" path="/dashboard/finance" badge={`${totalCollected}/${totalBilled}`} />
       </div>

@@ -10,8 +10,7 @@ function SentryTestButton() {
   return (
     <button
       onClick={() => {
-        console.log("Sentry DSN:", import.meta.env.VITE_SENTRY_DSN);
-        console.log("Sentry initialized:", !!Sentry.getClient?.());
+        Sentry.captureMessage("Sentry test triggered", "info");
         const error = new Error("This is your first error!");
         Sentry.captureException(error);
       }}
