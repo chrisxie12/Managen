@@ -265,6 +265,20 @@ const S = `
   .lp-footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
   .lp-footer-copy { font-size: 13px; color: rgba(255,255,255,0.28); }
 
+  /* ── SCHOOLS GALLERY ── */
+  .lp-schools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+  .lp-school-card { border-radius: 18px; overflow: hidden; background: #12182A; cursor: default; }
+  .lp-school-img { height: 178px; position: relative; overflow: hidden; }
+  .lp-school-svg { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; height: 100%; }
+  .lp-school-pattern { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.022) 20px, rgba(255,255,255,0.022) 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.022) 20px, rgba(255,255,255,0.022) 21px); }
+  .lp-school-badge { position: absolute; top: 12px; right: 12px; background: rgba(212,255,0,0.93); color: #0B0F1C; font-size: 9px; font-weight: 800; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.05em; }
+  .lp-school-watermark { position: absolute; bottom: 10px; left: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.09); letter-spacing: -0.02em; line-height: 1; }
+  .lp-school-info { padding: 14px 18px 18px; }
+  .lp-school-ghana-bar { height: 3px; border-radius: 2px; margin-bottom: 12px; background: linear-gradient(to right, #CE1126 33.33%, #FCD116 33.33%, #FCD116 66.66%, #006B3F 66.66%); }
+  .lp-school-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lp-school-loc { font-size: 11px; color: rgba(255,255,255,0.42); margin-bottom: 7px; }
+  .lp-school-stat { font-size: 11px; font-weight: 600; color: #D4FF00; }
+
   /* ── KEYFRAMES ── */
   @keyframes lpPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
 
@@ -273,6 +287,7 @@ const S = `
     .lp-pricing-grid { grid-template-columns: repeat(3, 1fr); }
     .lp-trust-grid { grid-template-columns: repeat(3, 1fr); }
     .lp-footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .lp-schools-grid { grid-template-columns: repeat(2, 1fr); }
     .lp-testimonials-grid { grid-template-columns: 1fr 1fr; }
     .lp-app-cards { grid-template-columns: repeat(2, 1fr); }
   }
@@ -294,10 +309,12 @@ const S = `
     .lp-stat:nth-child(odd) { border-right: 1px solid #E5E7EB; }
     .lp-browser-body { height: 220px; }
     .lp-app-cards { grid-template-columns: repeat(2, 1fr); }
+    .lp-schools-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 480px) {
     .lp-actions { flex-direction: column; align-items: center; }
     .lp-calc-wrap { padding: 28px 20px; }
+    .lp-schools-grid { grid-template-columns: 1fr; }
     .lp-cta-btns { flex-direction: column; align-items: center; }
     .lp-preview { display: none; }
   }
@@ -401,6 +418,43 @@ function AnalyticsScreen() {
         ))}
       </div>
     </div>
+  );
+}
+
+// ── School building SVG ───────────────────────────────────────────────────────
+
+function SchoolBuilding() {
+  return (
+    <svg viewBox="0 0 240 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="lp-school-svg">
+      {/* Ground */}
+      <rect x="0" y="122" width="240" height="8" fill="rgba(255,255,255,0.04)" />
+      {/* Main building body */}
+      <rect x="38" y="50" width="164" height="72" rx="2" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      {/* Roof overhang */}
+      <rect x="30" y="44" width="180" height="9" rx="1" fill="rgba(255,255,255,0.11)" />
+      {/* Windows row */}
+      <rect x="50" y="63" width="22" height="15" rx="1" fill="rgba(255,255,255,0.17)" />
+      <rect x="85" y="63" width="22" height="15" rx="1" fill="rgba(255,255,255,0.17)" />
+      <rect x="133" y="63" width="22" height="15" rx="1" fill="rgba(255,255,255,0.17)" />
+      <rect x="168" y="63" width="22" height="15" rx="1" fill="rgba(255,255,255,0.17)" />
+      {/* Door */}
+      <path d="M108 122 L108 96 Q120 87 132 96 L132 122" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+      {/* School sign above door */}
+      <rect x="95" y="83" width="50" height="8" rx="2" fill="rgba(255,255,255,0.1)" />
+      {/* Flag pole */}
+      <line x1="120" y1="7" x2="120" y2="45" stroke="rgba(255,255,255,0.28)" strokeWidth="1.5" />
+      {/* Ghana flag — red / gold / green */}
+      <rect x="121" y="7" width="22" height="6" fill="rgba(206,17,38,0.78)" />
+      <rect x="121" y="13" width="22" height="6" fill="rgba(252,209,22,0.78)" />
+      <rect x="121" y="19" width="22" height="6" fill="rgba(0,107,63,0.78)" />
+      {/* Black star on gold stripe */}
+      <polygon points="132,14 133.2,17 130.5,15.3 133.5,15.3 130.8,17" fill="rgba(0,0,0,0.55)" />
+      {/* Trees */}
+      <circle cx="16" cy="92" r="14" fill="rgba(0,107,63,0.22)" />
+      <rect x="13" y="103" width="6" height="19" rx="1" fill="rgba(0,80,40,0.18)" />
+      <circle cx="224" cy="92" r="14" fill="rgba(0,107,63,0.22)" />
+      <rect x="221" y="103" width="6" height="19" rx="1" fill="rgba(0,80,40,0.18)" />
+    </svg>
   );
 }
 
@@ -521,6 +575,15 @@ const TRUST_LOGOS = [
   { abbr: "M", name: "MTN MoMo", bg: "#FFCC00", color: "#333" },
   { abbr: "W", name: "WhatsApp", bg: "#25D366" },
   { abbr: "N", name: "NaCCA", bg: "#003893" },
+];
+
+const SCHOOLS = [
+  { name: "Accra Academy", short: "ACCADEC", city: "Accra", region: "Greater Accra", students: 847, gradient: "linear-gradient(145deg, #0D2137 0%, #0a3d62 55%, #1565C0 100%)" },
+  { name: "Opoku Ware School", short: "OWS", city: "Kumasi", region: "Ashanti", students: 1240, gradient: "linear-gradient(145deg, #3E2723 0%, #5D4037 45%, #7B5E3B 100%)" },
+  { name: "Wesley Girls' High", short: "WGHSS", city: "Cape Coast", region: "Central", students: 650, gradient: "linear-gradient(145deg, #4A148C 0%, #6A1B9A 50%, #7B1FA2 100%)" },
+  { name: "Tamale Senior High", short: "TAMASCO", city: "Tamale", region: "Northern", students: 920, gradient: "linear-gradient(145deg, #BF360C 0%, #D84315 50%, #E64A19 100%)" },
+  { name: "St. Augustine's College", short: "STAGCO", city: "Cape Coast", region: "Central", students: 1100, gradient: "linear-gradient(145deg, #1A237E 0%, #283593 50%, #3949AB 100%)" },
+  { name: "Sunyani Senior High", short: "SUASCO", city: "Sunyani", region: "Bono", students: 582, gradient: "linear-gradient(145deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%)" },
 ];
 
 function calcSavings(students: number, campuses: number) {
@@ -691,6 +754,52 @@ export function LandingPage() {
           ))}
         </motion.div>
       </div>
+
+      {/* ── SCHOOLS GALLERY ── */}
+      <section className="lp-section" style={{ background: "#0B0F1C", padding: "80px 24px" }}>
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
+          <span className="lp-section-label" style={{ color: "#D4FF00", background: "rgba(212,255,0,0.1)" }}>
+            <Building2 size={12} /> Schools Across Ghana
+          </span>
+          <h2 className="lp-section-h2" style={{ color: "#fff" }}>Trusted from Accra to Tamale</h2>
+          <p className="lp-section-p" style={{ margin: "0 auto", color: "rgba(255,255,255,0.48)" }}>
+            From senior high schools in Kumasi to JHS campuses in the Volta Region — 230+ schools run on Managen every day.
+          </p>
+        </motion.div>
+        <motion.div
+          className="lp-schools-grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          {SCHOOLS.map((school) => (
+            <motion.div
+              key={school.name}
+              className="lp-school-card"
+              variants={staggerItem}
+              whileHover={reduced ? {} : { y: -6, boxShadow: "0 20px 50px rgba(0,0,0,0.4)" }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="lp-school-img" style={{ background: school.gradient }}>
+                <SchoolBuilding />
+                <div className="lp-school-pattern" aria-hidden="true" />
+                <div className="lp-school-badge">● Active</div>
+                <div className="lp-school-watermark">{school.short}</div>
+              </div>
+              <div className="lp-school-info">
+                <div className="lp-school-ghana-bar" />
+                <div className="lp-school-name">{school.name}</div>
+                <div className="lp-school-loc">{school.city} · {school.region} Region</div>
+                <div className="lp-school-stat">
+                  <GraduationCap size={11} style={{ display: "inline", verticalAlign: "middle", marginRight: 4 }} />
+                  {school.students.toLocaleString()} students managed
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
 
       {/* ── PRICING ── */}
       <section className="lp-section" id="pricing" style={{ background: "#fff" }}>
