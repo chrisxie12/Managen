@@ -209,7 +209,7 @@ const S = `
   .lp-hiw-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 24px; overflow: hidden; }
   .lp-hiw-inner { display: flex; align-items: stretch; }
   .lp-hiw-inner.rev { flex-direction: row-reverse; }
-  .lp-hiw-text { flex: 1; padding: 48px 56px; }
+  .lp-hiw-text { flex: 1; padding: 48px 40px; }
   .lp-hiw-num { width: 36px; height: 36px; background: #D4FF00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 800; color: #0B0F1C; margin-bottom: 16px; }
   .lp-hiw-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
   .lp-hiw-h3 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: #0B0F1C; line-height: 1.2; margin-bottom: 16px; }
@@ -292,31 +292,85 @@ const S = `
     .lp-app-cards { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 768px) {
+    /* Nav */
     .lp-nav-links, .lp-nav-actions { display: none; }
     .lp-nav-hamburger { display: flex; }
-    .lp-section { padding: 64px 24px; }
+    .lp-mobile-menu { overflow-y: auto; max-height: calc(100dvh - 68px); }
+    /* Hero */
+    .lp-hero { padding: 104px 20px 60px; }
+    /* Sections */
+    .lp-section { padding: 64px 20px; }
+    .lp-section-header { margin-bottom: 40px; }
+    .lp-section-p { font-size: 15px; }
+    /* Stats */
+    .lp-stats { padding: 40px 20px; }
+    .lp-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .lp-stat { padding: 0 10px; }
+    .lp-stat + .lp-stat { border-left: none; }
+    .lp-stat:nth-child(odd) { border-right: 1px solid #E5E7EB; }
+    /* App preview */
+    .lp-browser-body { height: 220px; }
+    .lp-app-cards { grid-template-columns: repeat(2, 1fr); }
+    /* Features / How it works */
     .lp-hiw-inner, .lp-hiw-inner.rev { flex-direction: column !important; }
     .lp-hiw-text { padding: 28px 24px; }
     .lp-hiw-phone-wrap { padding: 24px; min-width: unset; }
-    .lp-pricing-grid { grid-template-columns: 1fr; }
+    /* Pricing */
+    .lp-pricing-grid { grid-template-columns: 1fr; gap: 12px; }
+    .lp-plan { padding: 24px 18px 20px; }
+    /* Calculator */
     .lp-calc-row { grid-template-columns: 1fr; }
-    .lp-trust-grid { grid-template-columns: repeat(2, 1fr); }
+    .lp-calc-wrap { padding: 32px 24px; }
+    /* Trust */
+    .lp-trust-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .lp-trust-logo { padding: 18px 12px; }
+    /* Testimonials */
     .lp-testimonials-grid { grid-template-columns: 1fr; }
-    .lp-footer-grid { grid-template-columns: 1fr; }
-    .lp-footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-    .lp-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-    .lp-stat + .lp-stat { border-left: none; }
-    .lp-stat:nth-child(odd) { border-right: 1px solid #E5E7EB; }
-    .lp-browser-body { height: 220px; }
-    .lp-app-cards { grid-template-columns: repeat(2, 1fr); }
+    /* Schools */
     .lp-schools-grid { grid-template-columns: repeat(2, 1fr); }
+    /* CTA */
+    .lp-cta { padding: 80px 20px; }
+    .lp-cta-sub { font-size: 16px; }
+    /* Footer */
+    .lp-footer { padding: 48px 20px 32px; }
+    .lp-footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    .lp-footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   }
   @media (max-width: 480px) {
-    .lp-actions { flex-direction: column; align-items: center; }
-    .lp-calc-wrap { padding: 28px 20px; }
-    .lp-schools-grid { grid-template-columns: 1fr; }
-    .lp-cta-btns { flex-direction: column; align-items: center; }
+    /* Hero */
+    .lp-hero { padding: 96px 20px 48px; }
+    .lp-actions { flex-direction: column; align-items: stretch; margin-bottom: 40px; }
+    .lp-btn-lime, .lp-btn-ghost { width: 100%; justify-content: center; }
     .lp-preview { display: none; }
+    /* Sections */
+    .lp-section { padding: 48px 20px; }
+    .lp-section-header { margin-bottom: 32px; }
+    .lp-section-p { font-size: 14px; }
+    /* Stats */
+    .lp-stats { padding: 32px 20px; }
+    .lp-stat { padding: 0 4px; }
+    .lp-stat-icon { width: 36px; height: 36px; margin-bottom: 10px; }
+    .lp-stat-label { font-size: 12px; }
+    /* Features */
+    .lp-hiw-text { padding: 24px 20px; }
+    /* Calculator */
+    .lp-calc-wrap { padding: 24px 18px; }
+    /* Trust */
+    .lp-trust-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .lp-trust-logo { padding: 14px 8px; }
+    .lp-trust-name { font-size: 9px; }
+    /* Testimonials */
+    .lp-testimonial { padding: 24px 20px; }
+    .lp-testimonial-text { font-size: 14px; }
+    /* Schools */
+    .lp-schools-grid { grid-template-columns: 1fr; }
+    .lp-school-img { height: 150px; }
+    /* CTA */
+    .lp-cta { padding: 60px 20px; }
+    .lp-cta-sub { font-size: 15px; }
+    .lp-cta-btns { flex-direction: column; align-items: stretch; }
+    /* Footer */
+    .lp-footer { padding: 40px 20px 28px; }
   }
 `;
 
@@ -756,7 +810,7 @@ export function LandingPage() {
       </div>
 
       {/* ── SCHOOLS GALLERY ── */}
-      <section className="lp-section" style={{ background: "#0B0F1C", padding: "80px 24px" }}>
+      <section className="lp-section" style={{ background: "#0B0F1C" }}>
         <motion.div className="lp-section-header" {...viewFadeUp()}>
           <span className="lp-section-label" style={{ color: "#D4FF00", background: "rgba(212,255,0,0.1)" }}>
             <Building2 size={12} /> Schools Across Ghana
