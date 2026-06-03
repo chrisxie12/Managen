@@ -612,10 +612,10 @@ function AppPreview({ reduced }: { reduced: boolean | null }) {
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const PLANS = [
-  { tier: "Free", amount: "₵0", period: "Forever free", features: ["Up to 50 students", "Basic attendance tracking", "1 teacher account", "Basic reports", "Email support"], btnClass: "ghost", btnLabel: "Get Started Free", href: "/app/auth/signup", featured: false },
-  { tier: "Starter", currency: "GHS", amount: "199", period: "/month · up to 100 students", features: ["Up to 100 students", "Full attendance system", "5 teacher accounts", "Fee management", "Basic WhatsApp reports"], btnClass: "ghost", btnLabel: "Start Starter", href: "/app/auth/signup", featured: false },
-  { tier: "Growth", currency: "GHS", amount: "499", period: "/month · up to 300 students", features: ["Up to 300 students", "Unlimited teacher accounts", "Full WhatsApp reports", "Fee invoicing & MoMo", "Exam scheduling & analytics"], btnClass: "lime", btnLabel: "Start Growth Plan", href: "/app/auth/signup", featured: true },
-  { tier: "Pro", currency: "GHS", amount: "999", period: "/month · up to 1,000 students", features: ["Up to 1,000 students", "Multi-campus support", "Custom report templates", "Priority support & API", "WAEC results import"], btnClass: "ghost", btnLabel: "Start Pro", href: "/app/auth/signup", featured: false },
+  { tier: "Free", amount: "₵0", period: "Forever free", features: ["Up to 50 students", "Basic attendance tracking", "1 teacher account", "Basic reports", "Email support"], btnClass: "ghost", btnLabel: "Get Started Free", href: "/auth?mode=signup", featured: false },
+  { tier: "Starter", currency: "GHS", amount: "199", period: "/month · up to 100 students", features: ["Up to 100 students", "Full attendance system", "5 teacher accounts", "Fee management", "Basic WhatsApp reports"], btnClass: "ghost", btnLabel: "Start Starter", href: "/auth?mode=signup", featured: false },
+  { tier: "Growth", currency: "GHS", amount: "499", period: "/month · up to 300 students", features: ["Up to 300 students", "Unlimited teacher accounts", "Full WhatsApp reports", "Fee invoicing & MoMo", "Exam scheduling & analytics"], btnClass: "lime", btnLabel: "Start Growth Plan", href: "/auth?mode=signup", featured: true },
+  { tier: "Pro", currency: "GHS", amount: "999", period: "/month · up to 1,000 students", features: ["Up to 1,000 students", "Multi-campus support", "Custom report templates", "Priority support & API", "WAEC results import"], btnClass: "ghost", btnLabel: "Start Pro", href: "/auth?mode=signup", featured: false },
   { tier: "Enterprise", amount: "Custom", period: "Tailored for your district", features: ["Unlimited students", "District-wide rollout", "Dedicated account manager", "Custom integrations", "SLA guarantee & on-site training"], btnClass: "dark", btnLabel: "Contact Sales", href: "mailto:hello@getschoolos.me", featured: false },
 ];
 
@@ -705,10 +705,10 @@ export function LandingPage() {
             <li><a href="#trust">About</a></li>
           </ul>
           <div className="lp-nav-actions">
-            <a className="lp-nav-signin" href="/app/auth/signin">Sign in</a>
+            <a className="lp-nav-signin" href="/auth">Sign in</a>
             <motion.a
               className="lp-nav-cta"
-              href="/app/auth/signup"
+              href="/auth?mode=signup"
               whileHover={reduced ? {} : { scale: 1.04 }}
               whileTap={reduced ? {} : { scale: 0.97 }}
             >
@@ -742,8 +742,8 @@ export function LandingPage() {
               <li><a href="#trust" onClick={() => setMenuOpen(false)}>About</a></li>
             </ul>
             <div className="lp-mobile-btns">
-              <a className="mb-signin" href="/app/auth/signin">Sign in</a>
-              <a className="mb-start" href="/app/auth/signup">Start Free — No credit card</a>
+              <a className="mb-signin" href="/auth">Sign in</a>
+              <a className="mb-start" href="/auth?mode=signup">Start Free — No credit card</a>
             </div>
           </motion.div>
         )}
@@ -789,7 +789,7 @@ export function LandingPage() {
           <motion.div className="lp-actions" {...fadeUp(0.4)}>
             <motion.a
               className="lp-btn-lime"
-              href="/app/auth/signup"
+              href="/auth?mode=signup"
               whileHover={reduced ? {} : { scale: 1.04, y: -2, boxShadow: "0 10px 32px rgba(212,255,0,0.4)" }}
               whileTap={reduced ? {} : { scale: 0.97 }}
             >
@@ -1141,7 +1141,7 @@ export function LandingPage() {
           <div className="lp-cta-btns">
             <motion.a
               className="lp-btn-lime"
-              href="/app/auth/signup"
+              href="/auth?mode=signup"
               whileHover={reduced ? {} : { scale: 1.05, y: -2, boxShadow: "0 12px 36px rgba(212,255,0,0.4)" }}
               whileTap={reduced ? {} : { scale: 0.97 }}
             >
