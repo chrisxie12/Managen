@@ -1,4 +1,72 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import {
+  Check, ArrowRight, Building2, GraduationCap, MessageCircle, Banknote,
+  LayoutDashboard, Users, CalendarDays, BarChart3, Settings2,
+  Menu, X, Sparkles,
+} from "lucide-react";
+
+// ── Animation helpers ─────────────────────────────────────────────────────────
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 28 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease, delay },
+});
+
+const viewFadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 22 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" } as const,
+  transition: { duration: 0.55, ease, delay },
+});
+
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0 } },
+};
+const staggerItem = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
+};
+
+// ── CountUp ───────────────────────────────────────────────────────────────────
+
+function CountUp({ to, prefix = "", suffix = "" }: { to: number; prefix?: string; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        obs.disconnect();
+        if (reduced) { setCount(to); return; }
+        const dur = 1600;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setCount(Math.round(to * eased));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [to, reduced]);
+
+  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+}
+
+// ── Styles ────────────────────────────────────────────────────────────────────
 
 const S = `
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -18,15 +86,10 @@ const S = `
   .lp-nav-actions { display: flex; align-items: center; gap: 8px; }
   .lp-nav-signin { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); text-decoration: none; padding: 8px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.16); transition: all 0.18s; }
   .lp-nav-signin:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
-  .lp-nav-cta { font-size: 14px; font-weight: 700; color: #0B0F1C; text-decoration: none; background: #D4FF00; padding: 9px 20px; border-radius: 100px; transition: all 0.18s; white-space: nowrap; }
-  .lp-nav-cta:hover { background: #c4ef00; transform: translateY(-1px); }
-  .lp-nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none; }
-  .lp-nav-hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.8); border-radius: 2px; transition: all 0.2s; }
-  .lp-nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .lp-nav-hamburger.open span:nth-child(2) { opacity: 0; }
-  .lp-nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-  .lp-mobile-menu { display: none; position: fixed; top: 68px; left: 0; right: 0; background: #0D1220; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 24px 24px; z-index: 99; }
-  .lp-mobile-menu.open { display: block; }
+  .lp-nav-cta { font-size: 14px; font-weight: 700; color: #0B0F1C; text-decoration: none; background: #D4FF00; padding: 9px 20px; border-radius: 100px; transition: background 0.18s; white-space: nowrap; }
+  .lp-nav-cta:hover { background: #c4ef00; }
+  .lp-nav-hamburger { display: none; align-items: center; justify-content: center; cursor: pointer; padding: 6px; background: none; border: none; color: rgba(255,255,255,0.8); }
+  .lp-mobile-menu { position: fixed; top: 68px; left: 0; right: 0; background: #0D1220; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 24px 24px; z-index: 99; }
   .lp-mobile-links { list-style: none; margin-bottom: 16px; }
   .lp-mobile-links li { border-bottom: 1px solid rgba(255,255,255,0.06); }
   .lp-mobile-links a { display: block; font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; padding: 13px 0; }
@@ -47,21 +110,18 @@ const S = `
   .lp-sub { font-size: clamp(16px, 2.2vw, 18px); color: rgba(255,255,255,0.55); max-width: 520px; line-height: 1.7; margin-bottom: 32px; }
   .lp-bullets { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
   .lp-bullet { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
-  .lp-bullet-dot { width: 7px; height: 7px; background: #D4FF00; border-radius: 50%; flex-shrink: 0; }
   .lp-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 64px; }
-  .lp-btn-lime { background: #D4FF00; color: #0B0F1C; border: none; border-radius: 100px; padding: 15px 32px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
-  .lp-btn-lime:hover { background: #c4ef00; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,255,0,0.35); }
-  .lp-btn-ghost { background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.22); border-radius: 100px; padding: 15px 32px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+  .lp-btn-lime { background: #D4FF00; color: #0B0F1C; border: none; border-radius: 100px; padding: 15px 28px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .lp-btn-ghost { background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.22); border-radius: 100px; padding: 15px 28px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, color 0.2s; }
   .lp-btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
 
-  /* ── APP PREVIEW FRAME ── */
-  .lp-preview { position: relative; z-index: 1; width: 100%; max-width: 900px; animation: lpFloat 7s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) { .lp-preview { animation: none; } }
+  /* ── APP PREVIEW ── */
+  .lp-preview { position: relative; z-index: 1; width: 100%; max-width: 900px; }
   .lp-browser { background: #1A1F35; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 40px 120px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04) inset; overflow: hidden; }
   .lp-browser-bar { background: #252B44; padding: 11px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); }
   .lp-browser-dots { display: flex; gap: 6px; }
   .lp-browser-dot { width: 11px; height: 11px; border-radius: 50%; }
-  .lp-browser-url { flex: 1; background: rgba(255,255,255,0.07); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: rgba(255,255,255,0.32); font-family: 'DM Sans', sans-serif; letter-spacing: 0.01em; }
+  .lp-browser-url { flex: 1; background: rgba(255,255,255,0.07); border-radius: 6px; padding: 4px 12px; font-size: 12px; color: rgba(255,255,255,0.32); font-family: 'DM Sans', sans-serif; }
   .lp-browser-body { display: flex; height: 330px; }
   .lp-app-sidebar { width: 54px; background: #0B0F1C; border-right: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; padding: 14px 0; gap: 4px; flex-shrink: 0; }
   .lp-app-logo { width: 30px; height: 30px; background: #D4FF00; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 13px; color: #0B0F1C; margin-bottom: 12px; }
@@ -92,21 +152,21 @@ const S = `
   .lp-stats-inner { max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; }
   .lp-stat { padding: 0 24px; }
   .lp-stat + .lp-stat { border-left: 1px solid #E5E7EB; }
+  .lp-stat-icon { width: 44px; height: 44px; background: rgba(212,255,0,0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
   .lp-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px, 4vw, 44px); font-weight: 800; color: #0B0F1C; line-height: 1; margin-bottom: 6px; }
   .lp-stat-num em { color: #D4FF00; font-style: normal; }
   .lp-stat-label { font-size: 14px; color: #6B7280; font-weight: 500; line-height: 1.4; }
 
   /* ── SECTION SHARED ── */
   .lp-section { padding: 96px 24px; }
-  .lp-section-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5a6800; background: rgba(212,255,0,0.15); padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+  .lp-section-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5a6800; background: rgba(212,255,0,0.15); padding: 5px 14px; border-radius: 100px; margin-bottom: 16px; }
   .lp-section-h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(28px, 5vw, 44px); font-weight: 700; color: #0B0F1C; line-height: 1.12; letter-spacing: -0.02em; margin-bottom: 16px; }
   .lp-section-p { font-size: 17px; color: #6B7280; line-height: 1.7; max-width: 600px; }
   .lp-section-header { text-align: center; margin-bottom: 56px; }
 
   /* ── PRICING ── */
   .lp-pricing-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; max-width: 1240px; margin: 0 auto; align-items: start; }
-  .lp-plan { background: #fff; border: 1px solid #E5E7EB; border-radius: 20px; padding: 28px 22px 24px; position: relative; transition: transform 0.25s, box-shadow 0.25s; }
-  .lp-plan:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+  .lp-plan { background: #fff; border: 1px solid #E5E7EB; border-radius: 20px; padding: 28px 22px 24px; position: relative; cursor: default; }
   .lp-plan.featured { background: #0B0F1C; border: 2px solid #D4FF00; }
   .lp-popular { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: #D4FF00; color: #0B0F1C; font-size: 10px; font-weight: 800; padding: 4px 14px; border-radius: 100px; white-space: nowrap; letter-spacing: 0.06em; }
   .lp-plan-tier { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: #9CA3AF; margin-bottom: 10px; }
@@ -122,7 +182,7 @@ const S = `
   .lp-plan.featured .lp-plan-divider { background: rgba(255,255,255,0.1); }
   .lp-plan-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
   .lp-plan-feature { display: flex; gap: 8px; font-size: 13px; color: #374151; line-height: 1.4; align-items: flex-start; }
-  .lp-plan-check { color: #0B4F30; font-weight: 700; flex-shrink: 0; line-height: 1.4; }
+  .lp-plan-check { flex-shrink: 0; margin-top: 1px; color: #15803D; }
   .lp-plan.featured .lp-plan-feature { color: rgba(255,255,255,0.75); }
   .lp-plan.featured .lp-plan-check { color: #D4FF00; }
   .lp-plan-btn { width: 100%; padding: 12px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.18s; text-decoration: none; display: block; text-align: center; border: none; }
@@ -146,13 +206,12 @@ const S = `
 
   /* ── HOW IT WORKS ── */
   .lp-hiw-cards { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-  .lp-hiw-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 24px; overflow: hidden; transition: box-shadow 0.3s, border-color 0.3s; }
-  .lp-hiw-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.09); border-color: #c4c8d0; }
+  .lp-hiw-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 24px; overflow: hidden; }
   .lp-hiw-inner { display: flex; align-items: stretch; }
   .lp-hiw-inner.rev { flex-direction: row-reverse; }
   .lp-hiw-text { flex: 1; padding: 48px 56px; }
   .lp-hiw-num { width: 36px; height: 36px; background: #D4FF00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 800; color: #0B0F1C; margin-bottom: 16px; }
-  .lp-hiw-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
+  .lp-hiw-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9CA3AF; margin-bottom: 8px; }
   .lp-hiw-h3 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: #0B0F1C; line-height: 1.2; margin-bottom: 16px; }
   .lp-hiw-p { font-size: 15px; color: #6B7280; line-height: 1.75; max-width: 420px; }
   .lp-hiw-phone-wrap { min-width: 260px; display: flex; align-items: center; justify-content: center; padding: 40px; background: #F8F9FA; flex-shrink: 0; }
@@ -162,8 +221,7 @@ const S = `
 
   /* ── TESTIMONIALS ── */
   .lp-testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
-  .lp-testimonial { background: #fff; border: 1px solid #E5E7EB; border-radius: 20px; padding: 32px; transition: box-shadow 0.22s, border-color 0.22s; display: flex; flex-direction: column; }
-  .lp-testimonial:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-color: #d1d5db; }
+  .lp-testimonial { background: #fff; border: 1px solid #E5E7EB; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; }
   .lp-stars { display: flex; gap: 4px; margin-bottom: 20px; }
   .lp-star { width: 20px; height: 20px; background: #D4FF00; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .lp-testimonial-text { font-size: 15px; color: #374151; line-height: 1.75; flex: 1; margin-bottom: 24px; }
@@ -174,8 +232,7 @@ const S = `
 
   /* ── TRUST ── */
   .lp-trust-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; max-width: 1000px; margin: 0 auto 48px; }
-  .lp-trust-logo { background: #fff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: box-shadow 0.2s; }
-  .lp-trust-logo:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lp-trust-logo { background: #fff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: default; }
   .lp-trust-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0; }
   .lp-trust-name { font-size: 11px; font-weight: 700; color: #6B7280; text-align: center; }
 
@@ -183,7 +240,7 @@ const S = `
   .lp-cta { background: #0B0F1C; padding: 100px 24px; text-align: center; position: relative; overflow: hidden; }
   .lp-cta-glow { position: absolute; border-radius: 50%; pointer-events: none; }
   .lp-cta-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
-  .lp-cta-pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #D4FF00; background: rgba(212,255,0,0.1); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
+  .lp-cta-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #D4FF00; background: rgba(212,255,0,0.1); padding: 5px 14px; border-radius: 100px; margin-bottom: 24px; }
   .lp-cta-h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(34px, 5.5vw, 58px); font-weight: 800; color: #fff; line-height: 1.06; letter-spacing: -0.03em; margin-bottom: 20px; }
   .lp-cta-h2 span { color: #D4FF00; }
   .lp-cta-sub { font-size: 18px; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 40px; }
@@ -208,14 +265,8 @@ const S = `
   .lp-footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; display: flex; align-items: center; justify-content: space-between; }
   .lp-footer-copy { font-size: 13px; color: rgba(255,255,255,0.28); }
 
-  /* ── SCROLL REVEAL ── */
-  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
-  .reveal.revealed { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } }
-
   /* ── KEYFRAMES ── */
   @keyframes lpPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
-  @keyframes lpFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1100px) {
@@ -252,7 +303,7 @@ const S = `
   }
 `;
 
-// ── Mini phone screens (unchanged) ──────────────────────────────────────────
+// ── Mini phone screens ────────────────────────────────────────────────────────
 
 function MiniPhone({ children }: { children: React.ReactNode }) {
   return (
@@ -353,9 +404,17 @@ function AnalyticsScreen() {
   );
 }
 
-// ── App dashboard preview (browser frame) ───────────────────────────────────
+// ── App dashboard preview ─────────────────────────────────────────────────────
 
-function AppPreview() {
+const SIDEBAR_NAV = [
+  { Icon: LayoutDashboard, active: true },
+  { Icon: Users, active: false },
+  { Icon: CalendarDays, active: false },
+  { Icon: BarChart3, active: false },
+  { Icon: Settings2, active: false },
+];
+
+function AppPreview({ reduced }: { reduced: boolean | null }) {
   const CARDS = [
     { label: "Attendance", val: "94%", trend: "↑ +2%" },
     { label: "Fees Collected", val: "₵48k", trend: "↑ +12%" },
@@ -368,15 +427,12 @@ function AppPreview() {
     { name: "Kofi Boateng", chip: "a" as const, label: "Absent" },
     { name: "Ama Owusu", chip: "w" as const, label: "WhatsApp Sent" },
   ];
-  const NAV_ICONS = [
-    { active: true, d: "M4 6h16M4 12h16M4 18h10" },
-    { active: false, d: "M17 20H7M12 4a4 4 0 100 8 4 4 0 000-8z" },
-    { active: false, d: "M8 7V3M16 7V3M3 11h18M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-    { active: false, d: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
-    { active: false, d: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
-  ];
   return (
-    <div className="lp-preview">
+    <motion.div
+      className="lp-preview"
+      animate={reduced ? {} : { y: [0, -12, 0] }}
+      transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+    >
       <div className="lp-browser">
         <div className="lp-browser-bar">
           <div className="lp-browser-dots">
@@ -389,11 +445,9 @@ function AppPreview() {
         <div className="lp-browser-body">
           <div className="lp-app-sidebar">
             <div className="lp-app-logo">M</div>
-            {NAV_ICONS.map((icon, i) => (
-              <div key={i} className={`lp-app-nav${icon.active ? " active" : ""}`}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={icon.active ? "#D4FF00" : "rgba(255,255,255,0.35)"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d={icon.d} />
-                </svg>
+            {SIDEBAR_NAV.map(({ Icon, active }, i) => (
+              <div key={i} className={`lp-app-nav${active ? " active" : ""}`}>
+                <Icon size={14} color={active ? "#D4FF00" : "rgba(255,255,255,0.3)"} strokeWidth={1.8} />
               </div>
             ))}
           </div>
@@ -426,97 +480,38 @@ function AppPreview() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const PLANS = [
-  {
-    tier: "Free",
-    amount: "₵0",
-    period: "Forever free",
-    features: ["Up to 50 students", "Basic attendance tracking", "1 teacher account", "Basic reports", "Email support"],
-    btnClass: "ghost",
-    btnLabel: "Get Started Free",
-    href: "/app/auth/signup",
-    featured: false,
-  },
-  {
-    tier: "Starter",
-    currency: "GHS",
-    amount: "199",
-    period: "/month · up to 100 students",
-    features: ["Up to 100 students", "Full attendance system", "5 teacher accounts", "Fee management", "Basic WhatsApp reports"],
-    btnClass: "ghost",
-    btnLabel: "Start Starter",
-    href: "/app/auth/signup",
-    featured: false,
-  },
-  {
-    tier: "Growth",
-    currency: "GHS",
-    amount: "499",
-    period: "/month · up to 300 students",
-    features: ["Up to 300 students", "Unlimited teacher accounts", "Full WhatsApp reports", "Fee invoicing & MoMo", "Exam scheduling & analytics"],
-    btnClass: "lime",
-    btnLabel: "Start Growth Plan",
-    href: "/app/auth/signup",
-    featured: true,
-  },
-  {
-    tier: "Pro",
-    currency: "GHS",
-    amount: "999",
-    period: "/month · up to 1,000 students",
-    features: ["Up to 1,000 students", "Multi-campus support", "Custom report templates", "Priority support & API", "WAEC results import"],
-    btnClass: "ghost",
-    btnLabel: "Start Pro",
-    href: "/app/auth/signup",
-    featured: false,
-  },
-  {
-    tier: "Enterprise",
-    amount: "Custom",
-    period: "Tailored for your district",
-    features: ["Unlimited students", "District-wide rollout", "Dedicated account manager", "Custom integrations", "SLA guarantee & on-site training"],
-    btnClass: "dark",
-    btnLabel: "Contact Sales",
-    href: "mailto:hello@getschoolos.me",
-    featured: false,
-  },
+  { tier: "Free", amount: "₵0", period: "Forever free", features: ["Up to 50 students", "Basic attendance tracking", "1 teacher account", "Basic reports", "Email support"], btnClass: "ghost", btnLabel: "Get Started Free", href: "/app/auth/signup", featured: false },
+  { tier: "Starter", currency: "GHS", amount: "199", period: "/month · up to 100 students", features: ["Up to 100 students", "Full attendance system", "5 teacher accounts", "Fee management", "Basic WhatsApp reports"], btnClass: "ghost", btnLabel: "Start Starter", href: "/app/auth/signup", featured: false },
+  { tier: "Growth", currency: "GHS", amount: "499", period: "/month · up to 300 students", features: ["Up to 300 students", "Unlimited teacher accounts", "Full WhatsApp reports", "Fee invoicing & MoMo", "Exam scheduling & analytics"], btnClass: "lime", btnLabel: "Start Growth Plan", href: "/app/auth/signup", featured: true },
+  { tier: "Pro", currency: "GHS", amount: "999", period: "/month · up to 1,000 students", features: ["Up to 1,000 students", "Multi-campus support", "Custom report templates", "Priority support & API", "WAEC results import"], btnClass: "ghost", btnLabel: "Start Pro", href: "/app/auth/signup", featured: false },
+  { tier: "Enterprise", amount: "Custom", period: "Tailored for your district", features: ["Unlimited students", "District-wide rollout", "Dedicated account manager", "Custom integrations", "SLA guarantee & on-site training"], btnClass: "dark", btnLabel: "Contact Sales", href: "mailto:hello@getschoolos.me", featured: false },
+];
+
+const STATS = [
+  { Icon: Building2, value: 230, suffix: "+", label: "Schools onboarded" },
+  { Icon: GraduationCap, value: 45, suffix: "k+", label: "Students managed" },
+  { Icon: MessageCircle, value: 2, prefix: "", suffix: "M+", label: "WhatsApp reports sent" },
+  { Icon: Banknote, value: 12, prefix: "₵", suffix: "M+", label: "In fees processed" },
 ];
 
 const FEATURES = [
-  {
-    eyebrow: "Dashboard",
-    title: "One Dashboard, Every Department",
-    text: "Attendance, fees, exams, reports — all in one place. Your whole school runs from a single screen. No switching apps, no chasing data.",
-    screen: <AttendanceScreen />,
-    rev: false,
-  },
-  {
-    eyebrow: "WhatsApp Reports",
-    title: "Seamless Parent Communication",
-    text: "Now live across Ghana. Send attendance, fee reminders, and report cards to every parent automatically. No manual work, no missed updates — ever.",
-    screen: <WhatsAppScreen />,
-    rev: true,
-  },
-  {
-    eyebrow: "Flexible Plans",
-    title: "Upgrade or Pause — Whenever You Want",
-    text: "Need more features? Upgrade in a tap. Growing? Add students instantly. Not using it? Pause your plan and resume later — your data never expires.",
-    screen: <PlanScreen />,
-    rev: false,
-  },
-  {
-    eyebrow: "Analytics",
-    title: "Real-Time School Insights",
-    text: "Track attendance trends, fee collection rates, and academic performance from one dashboard. Export reports, identify issues, celebrate wins.",
-    screen: <AnalyticsScreen />,
-    rev: true,
-  },
+  { eyebrow: "Dashboard", title: "One Dashboard, Every Department", text: "Attendance, fees, exams, reports — all in one place. Your whole school runs from a single screen. No switching apps, no chasing data.", screen: <AttendanceScreen />, rev: false },
+  { eyebrow: "WhatsApp Reports", title: "Seamless Parent Communication", text: "Now live across Ghana. Send attendance, fee reminders, and report cards to every parent automatically. No manual work, no missed updates — ever.", screen: <WhatsAppScreen />, rev: true },
+  { eyebrow: "Flexible Plans", title: "Upgrade or Pause — Whenever You Want", text: "Need more features? Upgrade in a tap. Growing? Add students instantly. Not using it? Pause your plan and resume later — your data never expires.", screen: <PlanScreen />, rev: false },
+  { eyebrow: "Analytics", title: "Real-Time School Insights", text: "Track attendance trends, fee collection rates, and academic performance from one dashboard. Export reports, identify issues, celebrate wins.", screen: <AnalyticsScreen />, rev: true },
+];
+
+const TESTIMONIALS = [
+  { text: "Finally, a school management system that understands how Ghanaian schools actually work. The WhatsApp integration alone saves me two hours every Monday.", name: "Adjoa Owusu", role: "Head Teacher · Accra Academy Primary", initials: "AO", bg: "#0B4F30" },
+  { text: "Fee collection used to be a nightmare — chasing parents, keeping paper ledgers. Now MoMo payments come in automatically and the bursar report is one click.", name: "Kwabena Mensah", role: "Bursar · St. Joseph's JHS, Kumasi", initials: "KM", bg: "#003893" },
+  { text: "We set it up in an afternoon. Three weeks later, every teacher is using it and parents are getting attendance updates in real time. I wish we'd had this years ago.", name: "Abena Asante", role: "Principal · Cape Coast Academy", initials: "AA", bg: "#1A3055" },
 ];
 
 const TRUST_LOGOS = [
@@ -528,38 +523,12 @@ const TRUST_LOGOS = [
   { abbr: "N", name: "NaCCA", bg: "#003893" },
 ];
 
-const TESTIMONIALS = [
-  {
-    text: "Finally, a school management system that understands how Ghanaian schools actually work. The WhatsApp integration alone saves me two hours every Monday.",
-    name: "Adjoa Owusu",
-    role: "Head Teacher · Accra Academy Primary",
-    initials: "AO",
-    bg: "#0B4F30",
-  },
-  {
-    text: "Fee collection used to be a nightmare — chasing parents, keeping paper ledgers. Now MoMo payments come in automatically and the bursar report is one click.",
-    name: "Kwabena Mensah",
-    role: "Bursar · St. Joseph's JHS, Kumasi",
-    initials: "KM",
-    bg: "#003893",
-  },
-  {
-    text: "We set it up in an afternoon. Three weeks later, every teacher is using it and parents are getting attendance updates in real time. I wish we'd had this years ago.",
-    name: "Abena Asante",
-    role: "Principal · Cape Coast Academy",
-    initials: "AA",
-    bg: "#1A3055",
-  },
-];
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function calcSavings(students: number, campuses: number): number {
+function calcSavings(students: number, campuses: number) {
   const base = students <= 100 ? 3 : students <= 300 ? 6 : students <= 600 ? 10 : 16;
   return base * campuses;
 }
 
-function recommendedPlan(students: number): string {
+function recommendedPlan(students: number) {
   if (students <= 50) return "Free";
   if (students <= 100) return "Starter";
   if (students <= 300) return "Growth";
@@ -574,6 +543,7 @@ export function LandingPage() {
   const [calcCampuses, setCalcCampuses] = useState(1);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const reduced = useReducedMotion();
 
   const savings = calcSavings(calcStudents, calcCampuses);
   const recommended = recommendedPlan(calcStudents);
@@ -582,22 +552,6 @@ export function LandingPage() {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
-    );
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -618,103 +572,157 @@ export function LandingPage() {
           </ul>
           <div className="lp-nav-actions">
             <a className="lp-nav-signin" href="/app/auth/signin">Sign in</a>
-            <a className="lp-nav-cta" href="/app/auth/signup">Start Free</a>
+            <motion.a
+              className="lp-nav-cta"
+              href="/app/auth/signup"
+              whileHover={reduced ? {} : { scale: 1.04 }}
+              whileTap={reduced ? {} : { scale: 0.97 }}
+            >
+              Start Free
+            </motion.a>
           </div>
           <button
-            className={`lp-nav-hamburger${menuOpen ? " open" : ""}`}
+            className="lp-nav-hamburger"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((o) => !o)}
           >
-            <span /><span /><span />
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </nav>
 
-      <div className={`lp-mobile-menu${menuOpen ? " open" : ""}`} aria-hidden={!menuOpen}>
-        <ul className="lp-mobile-links" role="list">
-          <li><a href="#features" onClick={() => setMenuOpen(false)}>Features</a></li>
-          <li><a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a></li>
-          <li><a href="#trust" onClick={() => setMenuOpen(false)}>About</a></li>
-        </ul>
-        <div className="lp-mobile-btns">
-          <a className="mb-signin" href="/app/auth/signin">Sign in</a>
-          <a className="mb-start" href="/app/auth/signup">Start Free — No credit card</a>
-        </div>
-      </div>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="lp-mobile-menu"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            aria-hidden={!menuOpen}
+          >
+            <ul className="lp-mobile-links" role="list">
+              <li><a href="#features" onClick={() => setMenuOpen(false)}>Features</a></li>
+              <li><a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a></li>
+              <li><a href="#trust" onClick={() => setMenuOpen(false)}>About</a></li>
+            </ul>
+            <div className="lp-mobile-btns">
+              <a className="mb-signin" href="/app/auth/signin">Sign in</a>
+              <a className="mb-start" href="/app/auth/signup">Start Free — No credit card</a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── HERO ── */}
       <section className="lp-hero" id="home">
         <div className="lp-grid" aria-hidden="true" />
-        <div className="lp-glow" style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(212,255,0,0.09) 0%, transparent 70%)", top: -200, left: -150 }} aria-hidden="true" />
-        <div className="lp-glow" style={{ width: 500, height: 500, background: "radial-gradient(circle, rgba(11,79,48,0.14) 0%, transparent 70%)", bottom: -150, right: -100 }} aria-hidden="true" />
+        <motion.div
+          className="lp-glow"
+          style={{ width: 600, height: 600, background: "radial-gradient(circle, rgba(212,255,0,0.1) 0%, transparent 70%)", top: -200, left: -150 }}
+          animate={reduced ? {} : { scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          aria-hidden="true"
+        />
+        <motion.div
+          className="lp-glow"
+          style={{ width: 500, height: 500, background: "radial-gradient(circle, rgba(11,79,48,0.18) 0%, transparent 70%)", bottom: -150, right: -100 }}
+          animate={reduced ? {} : { scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          aria-hidden="true"
+        />
         <div className="lp-inner">
-          <div className="lp-badge">
+          <motion.div className="lp-badge" {...fadeUp(0)}>
             <div className="lp-badge-dot" aria-hidden="true" />
             Now live across Ghana &amp; West Africa
-          </div>
-          <h1 className="lp-h1">
+          </motion.div>
+          <motion.h1 className="lp-h1" {...fadeUp(0.1)}>
             Run Your School<br />
             <span className="lp-lime">Without</span> the Paperwork
-          </h1>
-          <p className="lp-sub">
+          </motion.h1>
+          <motion.p className="lp-sub" {...fadeUp(0.2)}>
             The all-in-one platform for Ghanaian schools. Attendance, fees, WhatsApp reports — all automated.
-          </p>
-          <div className="lp-bullets" role="list">
-            <div className="lp-bullet" role="listitem"><div className="lp-bullet-dot" aria-hidden="true" />Attendance in 30 Seconds</div>
-            <div className="lp-bullet" role="listitem"><div className="lp-bullet-dot" aria-hidden="true" />Fees via MoMo, Automatically</div>
-            <div className="lp-bullet" role="listitem"><div className="lp-bullet-dot" aria-hidden="true" />WhatsApp Reports to Every Parent</div>
-          </div>
-          <div className="lp-actions">
-            <a className="lp-btn-lime" href="/app/auth/signup">Start Free Trial</a>
+          </motion.p>
+          <motion.div className="lp-bullets" role="list" {...fadeUp(0.3)}>
+            {["Attendance in 30 Seconds", "Fees via MoMo, Automatically", "WhatsApp Reports to Every Parent"].map((b) => (
+              <div key={b} className="lp-bullet" role="listitem">
+                <Check size={13} color="#D4FF00" strokeWidth={2.5} aria-hidden="true" />
+                {b}
+              </div>
+            ))}
+          </motion.div>
+          <motion.div className="lp-actions" {...fadeUp(0.4)}>
+            <motion.a
+              className="lp-btn-lime"
+              href="/app/auth/signup"
+              whileHover={reduced ? {} : { scale: 1.04, y: -2, boxShadow: "0 10px 32px rgba(212,255,0,0.4)" }}
+              whileTap={reduced ? {} : { scale: 0.97 }}
+            >
+              Start Free Trial <ArrowRight size={16} />
+            </motion.a>
             <a className="lp-btn-ghost" href="#features">See How It Works</a>
-          </div>
-          <AppPreview />
+          </motion.div>
+          <motion.div {...fadeUp(0.55)} style={{ width: "100%" }}>
+            <AppPreview reduced={reduced} />
+          </motion.div>
         </div>
       </section>
 
       {/* ── STATS ── */}
       <div className="lp-stats">
-        <div className="lp-stats-inner">
-          <div className="lp-stat reveal">
-            <div className="lp-stat-num">230<em>+</em></div>
-            <div className="lp-stat-label">Schools onboarded</div>
-          </div>
-          <div className="lp-stat reveal">
-            <div className="lp-stat-num">45<em>k+</em></div>
-            <div className="lp-stat-label">Students managed</div>
-          </div>
-          <div className="lp-stat reveal">
-            <div className="lp-stat-num">2<em>M+</em></div>
-            <div className="lp-stat-label">WhatsApp reports sent</div>
-          </div>
-          <div className="lp-stat reveal">
-            <div className="lp-stat-num">₵12<em>M+</em></div>
-            <div className="lp-stat-label">In fees processed</div>
-          </div>
-        </div>
+        <motion.div
+          className="lp-stats-inner"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+        >
+          {STATS.map(({ Icon, value, prefix = "", suffix, label }) => (
+            <motion.div key={label} className="lp-stat" variants={staggerItem}>
+              <div className="lp-stat-icon">
+                <Icon size={20} color="#5a6800" strokeWidth={2} />
+              </div>
+              <div className="lp-stat-num">
+                <CountUp to={value} prefix={prefix} suffix={suffix} />
+              </div>
+              <div className="lp-stat-label">{label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
       {/* ── PRICING ── */}
       <section className="lp-section" id="pricing" style={{ background: "#fff" }}>
-        <div className="lp-section-header reveal">
-          <span className="lp-section-label">Pricing</span>
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
+          <span className="lp-section-label">
+            <Sparkles size={12} /> Pricing
+          </span>
           <h2 className="lp-section-h2">Choose Your Plan</h2>
           <p className="lp-section-p" style={{ margin: "0 auto" }}>
             Start free. Add features. Scale up. No commitments, no overpaying.
           </p>
-        </div>
-        <div className="lp-pricing-grid">
+        </motion.div>
+        <motion.div
+          className="lp-pricing-grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
           {PLANS.map((plan) => (
-            <div key={plan.tier} className={`lp-plan reveal${plan.featured ? " featured" : ""}`}>
+            <motion.div
+              key={plan.tier}
+              className={`lp-plan${plan.featured ? " featured" : ""}`}
+              variants={staggerItem}
+              whileHover={reduced ? {} : { y: -6, boxShadow: plan.featured ? "0 24px 60px rgba(212,255,0,0.15)" : "0 24px 60px rgba(0,0,0,0.1)" }}
+              transition={{ duration: 0.2 }}
+            >
               {plan.featured && <div className="lp-popular">★ MOST POPULAR</div>}
               <div className="lp-plan-tier">{plan.tier}</div>
               <div className="lp-plan-price">
                 {plan.currency && <span className="lp-plan-currency">{plan.currency}</span>}
-                <span
-                  className="lp-plan-amount"
-                  style={!plan.currency ? { fontSize: plan.amount === "Custom" ? 26 : 30, color: plan.featured ? "#fff" : "#9CA3AF" } : {}}
-                >
+                <span className="lp-plan-amount" style={!plan.currency ? { fontSize: plan.amount === "Custom" ? 26 : 30, color: plan.featured ? "#fff" : "#9CA3AF" } : {}}>
                   {plan.amount}
                 </span>
               </div>
@@ -723,29 +731,27 @@ export function LandingPage() {
               <ul className="lp-plan-features">
                 {plan.features.map((f) => (
                   <li key={f} className="lp-plan-feature">
-                    <span className="lp-plan-check" aria-hidden="true">✓</span>
+                    <Check size={13} className="lp-plan-check" strokeWidth={2.5} aria-hidden="true" />
                     {f}
                   </li>
                 ))}
               </ul>
-              <a className={`lp-plan-btn ${plan.btnClass}`} href={plan.href}>
-                {plan.btnLabel}
-              </a>
-            </div>
+              <a className={`lp-plan-btn ${plan.btnClass}`} href={plan.href}>{plan.btnLabel}</a>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── CALCULATOR ── */}
       <section className="lp-section" style={{ background: "#F5F5F4" }}>
-        <div className="lp-section-header reveal">
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
           <span className="lp-section-label">Time Savings</span>
           <h2 className="lp-section-h2">See how much time you could save</h2>
           <p className="lp-section-p" style={{ margin: "0 auto" }}>
             Schools using Managen report saving hours every week on admin work.
           </p>
-        </div>
-        <div className="lp-calc-wrap reveal">
+        </motion.div>
+        <motion.div className="lp-calc-wrap" {...viewFadeUp(0.1)}>
           <div className="lp-calc-row">
             <div className="lp-calc-field">
               <label htmlFor="calc-students">How many students?</label>
@@ -769,36 +775,47 @@ export function LandingPage() {
             </div>
             <div className="lp-calc-field">
               <label htmlFor="calc-plan">Recommended plan</label>
-              <select
-                id="calc-plan"
-                disabled
-                value={recommended}
-                style={{ background: "rgba(212,255,0,0.08)", borderColor: "#D4FF00", color: "#0B4F30", fontWeight: 700 }}
-              >
+              <select id="calc-plan" disabled value={recommended} style={{ background: "rgba(212,255,0,0.08)", borderColor: "#D4FF00", color: "#0B4F30", fontWeight: 700 }}>
                 <option>{recommended}</option>
               </select>
             </div>
           </div>
           <div className="lp-calc-result" aria-live="polite">
             <div className="lp-calc-result-label">You could save</div>
-            <div className="lp-calc-result-val">{savings} hours</div>
+            <motion.div
+              className="lp-calc-result-val"
+              key={savings}
+              initial={reduced ? {} : { scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.25, ease }}
+            >
+              {savings} hours
+            </motion.div>
             <div className="lp-calc-result-sub">per week on admin work</div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
       <section className="lp-section" id="features" style={{ background: "#fff" }}>
-        <div className="lp-section-header reveal">
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
           <span className="lp-section-label">How It Works</span>
           <h2 className="lp-section-h2">Set up in 10 minutes. Run for years.</h2>
           <p className="lp-section-p" style={{ margin: "0 auto" }}>
             No spreadsheets. No paper registers. Add your school once — everything else runs automatically.
           </p>
-        </div>
+        </motion.div>
         <div className="lp-hiw-cards">
           {FEATURES.map((feat, i) => (
-            <div key={feat.eyebrow} className="lp-hiw-card reveal">
+            <motion.div
+              key={feat.eyebrow}
+              className="lp-hiw-card"
+              initial={reduced ? { opacity: 1 } : { opacity: 0, x: feat.rev ? 40 : -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, ease, delay: 0.05 * i }}
+              whileHover={reduced ? {} : { y: -4, boxShadow: "0 24px 70px rgba(0,0,0,0.09)" }}
+            >
               <div className={`lp-hiw-inner${feat.rev ? " rev" : ""}`}>
                 <div className="lp-hiw-text">
                   <div className="lp-hiw-num" aria-hidden="true">{i + 1}</div>
@@ -810,23 +827,34 @@ export function LandingPage() {
                   <MiniPhone>{feat.screen}</MiniPhone>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
       <section className="lp-section" style={{ background: "#F5F5F4" }}>
-        <div className="lp-section-header reveal">
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
           <span className="lp-section-label">Testimonials</span>
           <h2 className="lp-section-h2">Trusted by educators across Ghana</h2>
           <p className="lp-section-p" style={{ margin: "0 auto" }}>
             Headmasters, bursars, and teachers from Accra to Kumasi to Cape Coast use Managen every day.
           </p>
-        </div>
-        <div className="lp-testimonials-grid">
+        </motion.div>
+        <motion.div
+          className="lp-testimonials-grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
           {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="lp-testimonial reveal">
+            <motion.div
+              key={t.name}
+              className="lp-testimonial"
+              variants={staggerItem}
+              whileHover={reduced ? {} : { y: -5, boxShadow: "0 12px 40px rgba(0,0,0,0.09)", borderColor: "#d1d5db" }}
+            >
               <div className="lp-stars" aria-label="5 stars">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <div key={i} className="lp-star" aria-hidden="true">
@@ -844,45 +872,71 @@ export function LandingPage() {
                   <div className="lp-testimonial-role">{t.role}</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── TRUST ── */}
       <section className="lp-section" id="trust" style={{ background: "#fff" }}>
-        <div className="lp-section-header reveal">
+        <motion.div className="lp-section-header" {...viewFadeUp()}>
           <span className="lp-section-label">Built For Ghana</span>
           <h2 className="lp-section-h2">Built with input from Ghanaian educators</h2>
           <p className="lp-section-p" style={{ margin: "0 auto" }}>
             We spent months interviewing headmasters, bursars, and teachers across Accra, Kumasi, and Cape Coast.
           </p>
-        </div>
-        <div className="lp-trust-grid">
+        </motion.div>
+        <motion.div
+          className="lp-trust-grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
           {TRUST_LOGOS.map((logo, i) => (
-            <div key={i} className="lp-trust-logo reveal">
+            <motion.div
+              key={i}
+              className="lp-trust-logo"
+              variants={staggerItem}
+              whileHover={reduced ? {} : { y: -4, boxShadow: "0 6px 20px rgba(0,0,0,0.09)" }}
+            >
               <div className="lp-trust-icon" style={{ background: logo.bg, color: logo.color ?? "#fff" }}>{logo.abbr}</div>
               <div className="lp-trust-name">{logo.name}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── FINAL CTA ── */}
       <section className="lp-cta">
         <div className="lp-cta-glow" style={{ width: 700, height: 700, background: "radial-gradient(circle, rgba(212,255,0,0.08) 0%, transparent 65%)", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} aria-hidden="true" />
-        <div className="lp-cta-inner reveal">
-          <div className="lp-cta-pill">Get Started Today</div>
+        <motion.div
+          className="lp-cta-inner"
+          initial={reduced ? { opacity: 1 } : { opacity: 0, scale: 0.96, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.65, ease }}
+        >
+          <div className="lp-cta-pill">
+            <Sparkles size={12} /> Get Started Today
+          </div>
           <h2 className="lp-cta-h2">Ready to ditch<br />the <span>paperwork?</span></h2>
           <p className="lp-cta-sub">
             Join 230+ schools already running smarter with Managen. Set up takes 10 minutes.
           </p>
           <div className="lp-cta-btns">
-            <a className="lp-btn-lime" href="/app/auth/signup">Start Free — No credit card</a>
+            <motion.a
+              className="lp-btn-lime"
+              href="/app/auth/signup"
+              whileHover={reduced ? {} : { scale: 1.05, y: -2, boxShadow: "0 12px 36px rgba(212,255,0,0.4)" }}
+              whileTap={reduced ? {} : { scale: 0.97 }}
+            >
+              Start Free — No credit card <ArrowRight size={16} />
+            </motion.a>
             <a className="lp-btn-ghost" href="mailto:hello@getschoolos.me">Talk to Sales</a>
           </div>
           <p className="lp-cta-note">Free plan available. Upgrade anytime.</p>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── FOOTER ── */}
