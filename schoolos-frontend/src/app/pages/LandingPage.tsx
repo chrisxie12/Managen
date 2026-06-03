@@ -110,10 +110,23 @@ const S = `
   .lp-sub { font-size: clamp(16px, 2.2vw, 18px); color: rgba(255,255,255,0.55); max-width: 520px; line-height: 1.7; margin-bottom: 32px; }
   .lp-bullets { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
   .lp-bullet { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
-  .lp-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 64px; }
+  .lp-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
   .lp-btn-lime { background: #D4FF00; color: #0B0F1C; border: none; border-radius: 100px; padding: 15px 28px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
   .lp-btn-ghost { background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.22); border-radius: 100px; padding: 15px 28px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, color 0.2s; }
   .lp-btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+  .lp-social-proof { display: flex; align-items: center; gap: 14px; margin-bottom: 56px; flex-wrap: wrap; justify-content: center; }
+  .lp-sp-stars { display: flex; gap: 3px; }
+  .lp-sp-star { width: 16px; height: 16px; background: #D4FF00; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .lp-sp-rating { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.9); }
+  .lp-sp-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+  .lp-sp-count { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  /* ── TICKER ── */
+  .lp-ticker { background: #0B0F1C; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 14px 0; overflow: hidden; }
+  .lp-ticker-track { display: flex; gap: 0; width: max-content; animation: lpTicker 38s linear infinite; }
+  .lp-ticker-track:hover { animation-play-state: paused; }
+  .lp-ticker-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 28px; white-space: nowrap; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.55); }
+  .lp-ticker-dot { width: 5px; height: 5px; border-radius: 50%; background: #D4FF00; flex-shrink: 0; }
 
   /* ── APP PREVIEW ── */
   .lp-preview { position: relative; z-index: 1; width: 100%; max-width: 900px; }
@@ -281,6 +294,7 @@ const S = `
 
   /* ── KEYFRAMES ── */
   @keyframes lpPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
+  @keyframes lpTicker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1100px) {
@@ -339,7 +353,7 @@ const S = `
   @media (max-width: 480px) {
     /* Hero */
     .lp-hero { padding: 96px 20px 48px; }
-    .lp-actions { flex-direction: column; align-items: stretch; margin-bottom: 40px; }
+    .lp-actions { flex-direction: column; align-items: stretch; margin-bottom: 16px; }
     .lp-btn-lime, .lp-btn-ghost { width: 100%; justify-content: center; }
     .lp-preview { display: none; }
     /* Sections */
@@ -369,6 +383,9 @@ const S = `
     .lp-cta { padding: 60px 20px; }
     .lp-cta-sub { font-size: 15px; }
     .lp-cta-btns { flex-direction: column; align-items: stretch; }
+    /* Social proof */
+    .lp-social-proof { gap: 10px; margin-bottom: 40px; }
+    .lp-sp-sep { display: none; }
     /* Footer */
     .lp-footer { padding: 40px 20px 28px; }
   }
@@ -780,7 +797,19 @@ export function LandingPage() {
             </motion.a>
             <a className="lp-btn-ghost" href="#features">See How It Works</a>
           </motion.div>
-          <motion.div {...fadeUp(0.55)} style={{ width: "100%" }}>
+          <motion.div className="lp-social-proof" {...fadeUp(0.48)}>
+            <div className="lp-sp-stars" aria-label="5 stars">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="lp-sp-star" aria-hidden="true">
+                  <svg viewBox="0 0 10 10" width="9" height="9" fill="#5a6800"><path d="M5 1l1.12 2.26 2.5.36-1.81 1.77.43 2.5L5 6.67 2.76 7.89l.43-2.5L1.38 3.62l2.5-.36z"/></svg>
+                </div>
+              ))}
+            </div>
+            <span className="lp-sp-rating">4.9 / 5</span>
+            <div className="lp-sp-sep" aria-hidden="true" />
+            <span className="lp-sp-count">Rated by 230+ schools across Ghana</span>
+          </motion.div>
+          <motion.div {...fadeUp(0.6)} style={{ width: "100%" }}>
             <AppPreview reduced={reduced} />
           </motion.div>
         </div>
@@ -807,6 +836,28 @@ export function LandingPage() {
             </motion.div>
           ))}
         </motion.div>
+      </div>
+
+      {/* ── TICKER ── */}
+      <div className="lp-ticker" aria-hidden="true">
+        <div className="lp-ticker-track">
+          {[
+            "Accra Academy","Opoku Ware School","Wesley Girls' High","Tamale Senior High",
+            "St. Augustine's College","Sunyani Senior High","Prempeh College","Mfantsipim School",
+            "Adisadel College","T.I. Ahmadiyya SHS","Ho Senior High","Navrongo Senior High",
+            "Achimota School","Ghana National College","Pope John SHS","Presec Legon",
+          ].concat([
+            "Accra Academy","Opoku Ware School","Wesley Girls' High","Tamale Senior High",
+            "St. Augustine's College","Sunyani Senior High","Prempeh College","Mfantsipim School",
+            "Adisadel College","T.I. Ahmadiyya SHS","Ho Senior High","Navrongo Senior High",
+            "Achimota School","Ghana National College","Pope John SHS","Presec Legon",
+          ]).map((name, i) => (
+            <span key={i} className="lp-ticker-item">
+              <span className="lp-ticker-dot" />
+              {name}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* ── SCHOOLS GALLERY ── */}
