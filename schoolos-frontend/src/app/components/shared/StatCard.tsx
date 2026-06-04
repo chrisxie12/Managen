@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,8 +45,9 @@ export const StatCard: React.FC<StatCardProps> = ({
   className,
   loading,
 }) => {
+  const navigate = useNavigate();
   const heading = title || label || '';
-  const handleClick = onClick || (href ? () => { window.location.href = href; } : undefined);
+  const handleClick = onClick || (href ? () => { navigate(href); } : undefined);
   return (
     <div
       onClick={handleClick}

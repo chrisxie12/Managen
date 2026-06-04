@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import type { StatsData } from '../../hooks/useDashboardData';
 import { formatCurrency } from '../../../../utils/formatters';
 
@@ -78,6 +79,7 @@ const CARD_CONFIG = [
 ] as const;
 
 export function KpiCards({ stats, loading, error, onRetry }: KpiCardsProps) {
+  const navigate = useNavigate();
   if (error) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
@@ -106,7 +108,7 @@ export function KpiCards({ stats, loading, error, onRetry }: KpiCardsProps) {
           <div key={card.label}
             className="rounded-xl p-3 flex flex-col justify-between min-h-[100px] cursor-pointer hover:opacity-90 transition-opacity"
             style={{ background: card.bg }}
-            onClick={() => window.location.href = card.href}
+            onClick={() => navigate(card.href)}
           >
             <div className="flex items-start justify-between">
               <span className="text-lg">{card.icon}</span>

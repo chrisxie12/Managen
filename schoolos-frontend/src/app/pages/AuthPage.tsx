@@ -124,10 +124,6 @@ export function AuthPage() {
         storeSubdomain(res.data!.slug || "");
 
         await refresh();
-        if (!user) {
-          window.location.href = "/dashboard";
-          return;
-        }
         toast.success("Account created! Welcome to SchoolOS.");
         navigate("/dashboard");
       } else if (mode === "superadmin") {
@@ -189,7 +185,7 @@ export function AuthPage() {
         if (!user) {
           const retryRes = await api.get<{ user: Record<string, any>; school: Record<string, any> }>("/api/auth/me", { headers: authHeaders });
           if (retryRes.data) {
-            window.location.href = "/dashboard";
+            navigate("/dashboard");
             return;
           }
           throw new Error("Session was created but could not be verified. Please try again.");
