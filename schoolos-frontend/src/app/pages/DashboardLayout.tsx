@@ -302,7 +302,7 @@ function DashboardLayoutInner() {
               </button>
               {showNotifDropdown && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowNotifDropdown(false)} />
+                  <div className="fixed inset-0 z-30" onClick={() => setShowNotifDropdown(false)} />
                   <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-2xl shadow-lg overflow-hidden bg-card border border-border">
                     <div className="p-3 text-center">
                       <button onClick={() => { setShowNotifDropdown(false); navigate("/dashboard/notifications"); }} className="text-xs font-medium text-foreground hover:text-primary transition-colors">
@@ -330,7 +330,7 @@ function DashboardLayoutInner() {
 
               {showUserMenu && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
+                  <div className="fixed inset-0 z-30" onClick={() => setShowUserMenu(false)} />
                   <div style={{ position: "absolute", right: 0, top: "100%", marginTop: 8, zIndex: 50, width: 200, borderRadius: 12, background: "#fff", border: "1px solid #E7E5E4", boxShadow: "0 8px 24px rgba(0,0,0,0.1)", padding: "6px 0", overflow: "hidden" }}>
                     <div style={{ padding: "10px 14px 10px", borderBottom: "1px solid #E7E5E4", marginBottom: 4 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: "#1C1917", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.fullName || "User"}</div>
@@ -364,7 +364,7 @@ function DashboardLayoutInner() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-5 lg:p-8 pb-24 lg:pb-8 w-full min-w-0">
+        <main className="flex-1 overflow-y-auto p-5 lg:p-8 pb-24 md:pb-8 w-full min-w-0">
           {!pilotDismissed && (
             <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl mb-5 border border-blue-200 bg-blue-50">
               <Info className="w-4 h-4 text-blue-500 shrink-0" />

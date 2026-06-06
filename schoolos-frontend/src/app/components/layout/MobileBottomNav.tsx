@@ -68,7 +68,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden flex items-center justify-around px-2 pb-safe-area-inset-bottom pt-1"
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden flex items-center justify-around px-2 pt-1"
       style={{
         background: "rgba(255,255,255,0.97)",
         backdropFilter: "blur(20px)",

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
 import {
   Home, User, Wallet, FileText, Settings, LogOut,
@@ -28,14 +28,14 @@ export function ParentLayout() {
 
   // PWA install
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
-  useState(() => {
+  useEffect(() => {
     const handler = (e: Event) => { e.preventDefault(); setInstallPrompt(e); };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
-  });
+  }, []);
 
   // Offline sync
-  useState(() => {
+  useEffect(() => {
     const sync = async () => {
       if (!navigator.onLine) return;
       try {
@@ -49,7 +49,7 @@ export function ParentLayout() {
     window.addEventListener("online", sync);
     sync();
     return () => window.removeEventListener("online", sync);
-  });
+  }, []);
 
   const handleInstall = useCallback(() => {
     if (!installPrompt) return;
@@ -80,11 +80,11 @@ export function ParentLayout() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <main className="flex-1 overflow-y-auto px-4 py-4 pb-20">
         <Outlet />
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 px-2 py-2"
+      <nav className="fixed bottom-0 left-0 right-0 z-40 px-2 py-2"
         style={{ background: "rgba(248,249,250,0.95)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(10,36,114,0.07)" }}>
         <div className="flex items-center justify-around max-w-lg mx-auto">
           {NAV_ITEMS.map((item) => {
