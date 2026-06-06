@@ -231,7 +231,7 @@ function DashboardLayoutInner() {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden lg:ml-[220px] md:ml-16 min-w-0">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <header className="flex items-center justify-between px-6 lg:px-8 py-0 flex-shrink-0 gap-4 bg-background border-b border-border" style={{ height: 64 }}>
           <div className="flex items-center gap-3">
             <button onClick={() => setMobileOpen(true)} className="lg:hidden text-foreground">
